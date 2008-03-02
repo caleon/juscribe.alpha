@@ -30,12 +30,14 @@ ActionController::Routing::Routes.draw do |map|
   # See how all your routes lay out with "rake routes"
   
   map.resources :users,
-                :collection => { :login => :any, :mine => :get, :logout => :get, :mailbox => :get },
-                :member => { :mailbox => :get, :friends => :get, :befriend => :any, :unfriend => :any, :message => :any }
+                :collection => { :login => :any, :mine => :get, :mailbox => :get },
+                :member => { :logout => :any, :friends => :get, :befriend => :any, :unfriend => :any, :message => :any }
   
   map.resources :articles
   
   map.resources :pictures
+  
+  map.error 'error', :controller => :application, :action => :error
   
 
   # Install the default routes as the lowest priority.

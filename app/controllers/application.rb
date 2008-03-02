@@ -10,6 +10,10 @@ class ApplicationController < ActionController::Base
   protect_from_forgery # :secret => 'a241500281274090ecdf656d5074d028'
   
   before_filter :load_config, :get_viewer
+                 
+  def error
+    render :template => 'shared/warning'
+  end
   
   def authenticate(object)
     return true if object && @viewer && object.editable_by?(@viewer)
@@ -33,6 +37,21 @@ class ApplicationController < ActionController::Base
   #######
   private
   #######
+  
+  def display_error(klass_name=nil)
+    klass = params[:controller].singularize.capitalize.constantize
+    flash[:warning] = "That #{klass_name || klass.name.humanize} could not be found."
+    respond_to do |format|
+      format.html { redirect_to error_path || get_error_view(:html) }
+      format.js { render :layout => false,
+                         :template => error_path || get_error_view(:js) }
+    end
+  end
+  
+  def get_error_view(format)
+    { :html      =>  error_url,
+      :js        =>  'shared/error' }[format]
+  end
 
   def load_config
     @config = SITE

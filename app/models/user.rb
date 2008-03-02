@@ -51,14 +51,16 @@ class User < ActiveRecord::Base
   def wants_notifications_for?(*args)
     false # TODO: stubbed :event_share
   end
+    
+  def to_param; self.nick; end #test
   
-  def full_name
+  def full_name #test
     self.first_name +
     (self.middle_initial ? "#{self.middle_initial}." : " ") +
     self.last_name
   end
   
-  def email_address
+  def email_address #test
     "#{self.full_name} <#{self.email}>"
   end
   

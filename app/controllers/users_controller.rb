@@ -1,6 +1,5 @@
 class UsersController < ApplicationController
   before_filter :verify_logged_in, :except => [ :index, :list, :show, :login ]
-  before_filter :setup, :only => [ :show, :edit, :update, :destroy, :mine ]
   #FIXME: before_filter :only => [:edit, :update, :destroy, :mine] { authenticate(@user) }
   
   verify :method => :post, :only => [ ],
@@ -22,7 +21,7 @@ class UsersController < ApplicationController
   end
       
   def show
-    
+    setup
   end
   
   def new
@@ -34,19 +33,19 @@ class UsersController < ApplicationController
   end
   
   def edit
-    
+    setup
   end
   
   def update
-    
+    setup
   end
   
   def change_password
-    
+    setup
   end
   
   def destroy
-    
+    setup
   end
   
   def login
@@ -54,15 +53,35 @@ class UsersController < ApplicationController
   end
   
   def logout
-    
+    setup
   end
   
   def mine
-    
+
+  end
+  
+  def friends
+    setup
+  end
+  
+  def befriend
+    setup
+  end
+  
+  def unfriend
+    setup
+  end
+  
+  def mailbox
+    setup
+  end
+  
+  def message
+    setup
   end
   
   private
-  def setup(includes=nil)
-    
+  def setup(includes=nil, error_path=nil)
+    params[:id] ? @user = User.find_by_nick(params[:id]) : display_error
   end
 end

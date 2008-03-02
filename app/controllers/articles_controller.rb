@@ -2,7 +2,7 @@ class ArticlesController < ApplicationController
   before_filter :verify_logged_in, :only => [:new, :create, :edit, :update]  
   before_filter :setup, :except => [ :index, :list, :new, :create ]
   # FIXME: before_filter :only => [:edit, :update] { authenticate(@article) }
-  
+    
   verify :method => :post, :only => [ ],
          :redirect_to => { :action => :index }
   
