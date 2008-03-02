@@ -91,7 +91,7 @@ module Synthesis
     end
     
     # instance methods
-    attr_accessor :asset_type, :target, :target_dir, :sources
+    attr_accessor :asset_type, :target, :target_dir, :sources, :testing_string
   
     def initialize(asset_type, package_hash)
       target_parts = self.class.parse_path(package_hash.keys.first)
@@ -99,10 +99,10 @@ module Synthesis
       @target = target_parts[2].to_s
       @sources = package_hash[package_hash.keys.first]
       @asset_type = asset_type
-      @asset_path = ($asset_base_path ? "#{$asset_base_path}/" : "#{RAILS_ROOT}/public/") +
-          "#{@asset_type}#{@target_dir.gsub(/^(.+)$/, '/\1')}"
+      @asset_path = @@asset_base_path +
+          "/#{@asset_type}#{@target_dir.gsub(/^(.+)$/, '/\1')}"
       @extension = get_extension
-      @match_regex = Regexp.new("\\A#{@target}_\\d+.#{@extension}\\z")
+      @match_regex = Regexp.new("\\A#{@target}_[0-9a-z]+.#{@extension}\\z")
     end
   
     def current_file
@@ -130,25 +130,11 @@ module Synthesis
     private
       def revision
         unless @revision
-          revisions = [1]
-          @sources.each do |source|
-            revisions << get_file_revision("#{@asset_path}/#{source}.#{@extension}")
+          if `git-show-ref -h HEAD` =~ /(.*?) .*?/
+            @revision = $1
           end
-          @revision = revisions.max
         end
         @revision
-      end
-  
-      def get_file_revision(path)
-        if File.exists?(path)
-          begin
-            `svn info #{path}`[/Last Changed Rev: (.*?)\n/][/(\d+)/].to_i
-          rescue # use filename timestamp if not in subversion
-            File.mtime(path).to_i
-          end
-        else
-          0
-        end
       end
 
       def create_new_build
@@ -230,6 +216,8 @@ module Synthesis
         file_list.reverse! if extension == "js"
         file_list
       end
+   
+      @@asset_base_path = ($asset_base_path ? "#{$asset_base_path}/" : "#{RAILS_ROOT}/public/")
    
   end
 end

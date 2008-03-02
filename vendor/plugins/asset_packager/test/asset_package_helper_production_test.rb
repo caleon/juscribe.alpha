@@ -23,8 +23,10 @@ class AssetPackageHelperProductionTest < Test::Unit::TestCase
 
   def setup
     Synthesis::AssetPackage.any_instance.stubs(:log)
+    Synthesis::AssetPackage.send(:class_variable_set, :@@asset_packages_yml, $asset_packages_yml) # CHANGED
+    Synthesis::AssetPackage.send(:class_variable_set, :@@asset_base_path, $asset_base_path) # CHANGED
     self.stubs(:should_merge?).returns(true)
-
+    
     @controller = Class.new do
 
       attr_reader :request
@@ -40,7 +42,7 @@ class AssetPackageHelperProductionTest < Test::Unit::TestCase
 
     build_packages_once
   end
-
+  
   def build_packages_once
     unless @@packages_built
       Synthesis::AssetPackage.build_all
@@ -147,7 +149,7 @@ class AssetPackageHelperProductionTest < Test::Unit::TestCase
   
   def test_image_tag
     timestamp = rails_asset_id("images/rails.png")
-    assert_dom_equal %(<img alt="Rails" src="/images/rails.png?#{timestamp}" />), image_tag("rails")
+    assert_dom_equal %(<img alt="Rails" src="/images/rails.png?#{timestamp}" />), image_tag("rails.png") # CHANGED
   end
   
 end

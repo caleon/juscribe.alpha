@@ -4,3 +4,4 @@ config/preferences/*
 tmp/*
 log/*.log
 coverage/*
+vendor/plugins/asset_packager/test/assets/*
