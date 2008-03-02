@@ -14,6 +14,7 @@ ActionController::Routing::Routes.reload rescue nil
 $asset_packages_yml = YAML.load_file("#{RAILS_ROOT}/vendor/plugins/asset_packager/test/asset_packages.yml")
 $asset_base_path = "#{RAILS_ROOT}/vendor/plugins/asset_packager/test/assets"
 
+
 class AssetPackageHelperProductionTest < Test::Unit::TestCase
   include ActionView::Helpers::TagHelper
   include ActionView::Helpers::AssetTagHelper
@@ -51,10 +52,16 @@ class AssetPackageHelperProductionTest < Test::Unit::TestCase
   end
   
   def build_js_expected_string(*sources)
-    sources.map {|s| %(<script src="/javascripts/#{s}.js" type="text/javascript"></script>) }.join("\n")
+    if false
+      sources = Synthesis::AssetPackage.targets_from_sources("javascripts", sources)
+    end
+    sources.map {|s| %(<script src="/javascripts/#{s}.js" type="text/javascript"></script>) }.join("\n");
   end
     
   def build_css_expected_string(*sources)
+    if false
+      sources = Synthesis::AssetPackage.targets_from_sources("stylesheets", sources)
+    end
     sources.map {|s| %(<link href="/stylesheets/#{s}.css" rel="Stylesheet" type="text/css" media="screen" />) }.join("\n")
   end
 

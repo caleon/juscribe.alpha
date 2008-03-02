@@ -1,4 +1,4 @@
-# TODO: MOG had this moved here from vendor/plugins... not sure why...
+# CHANGED: This needs to be here why?
 #require 'yaml'
 #require File.dirname(__FILE__) + '/../lib/synthesis/asset_package'
 #

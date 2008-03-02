@@ -1,6 +1,12 @@
 set :application, "colinsite"
-set :repository,  "/usr/local/repos/colinsite.git"
+set :repository,  "g5:/Users/caleon/repos/colinsite.git"
 set :domain, "webserver"
+
+set :mongrel_conf, "#{current_path}/config/mongrel_cluster.yml"
+ssh_options[:paranoid] = false
+set :user, "sshuser" # FIXME
+set :runner, "mongrel"
+set :user_sudo, false
 
 # If you aren't deploying to /u/apps/#{application} on the target
 # servers (which is the default), you can specify the actual location
@@ -11,14 +17,8 @@ set :deploy_to, "/var/www/#{application}"
 # If you aren't using Subversion to manage your source code, specify
 # your SCM below:
 # set :scm, :subversion
-set :mongrel_conf, "#{current_path}/config/mongrel_cluster.yml"
 set :scm, :git
 set :deploy_via, :remote_cache
-ssh_options[:paranoid] = false
-
-set :user, "mongrel"
-set :runner, "mongrel"
-set :user_sudo, false
 
 role :app, "your app-server here" # set these to "domain" instead, i.e.
 # role :app, domain
