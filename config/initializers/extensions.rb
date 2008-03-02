@@ -58,35 +58,35 @@ ActiveRecord::Acts::List::InstanceMethods.class_eval do
 end
 
 ### AssetPackage to work with GIT and for testing to work
-Synthesis::AssetPackage.class_eval do
-  @@asset_base_path = ($asset_base_path ? "#{$asset_base_path}/" : "#{RAILS_ROOT}/public/")
-  
-  class << self
-    
-    alias_method :old_initialize, :initialize
-    def initialize(asset_type, package_hash)
-      target_parts = self.class.parse_path(package_hash.keys.first)
-      @target_dir = target_parts[1].to_s
-      @target = target_parts[2].to_s
-      @sources = package_hash[package_hash.keys.first]
-      @asset_type = asset_type
-      @asset_path = @@asset_base_path +
-          "/#{@asset_type}#{@target_dir.gsub(/^(.+)$/, '/\1')}"
-      @extension = get_extension
-      @match_regex = Regexp.new("\\A#{@target}_[0-9a-z]+.#{@extension}\\z")
-    end
-    
-  end
-    
-  alias_method :old_revision, :revision
-  def revision
-    unless @revision
-      if `git-show-ref -h HEAD` =~ /(.*?) .*?/
-        @revision = $1
-      end
-    end
-    @revision
-  end
-  private :revision
-
-end
+#Synthesis::AssetPackage.class_eval do
+#  @@asset_base_path = ($asset_base_path ? "#{$asset_base_path}/" : "#{RAILS_ROOT}/public/")
+#  
+#  class << self
+#    
+#    alias_method :old_initialize, :initialize
+#    def initialize(asset_type, package_hash)
+#      target_parts = self.class.parse_path(package_hash.keys.first)
+#      @target_dir = target_parts[1].to_s
+#      @target = target_parts[2].to_s
+#      @sources = package_hash[package_hash.keys.first]
+#      @asset_type = asset_type
+#      @asset_path = @@asset_base_path +
+#          "/#{@asset_type}#{@target_dir.gsub(/^(.+)$/, '/\1')}"
+#      @extension = get_extension
+#      @match_regex = Regexp.new("\\A#{@target}_[0-9a-z]+.#{@extension}\\z")
+#    end
+#    
+#  end
+#    
+#  alias_method :old_revision, :revision
+#  def revision
+#    unless @revision
+#      if `git-show-ref -h HEAD` =~ /(.*?) .*?/
+#        @revision = $1
+#      end
+#    end
+#    @revision
+#  end
+#  private :revision
+#
+#end

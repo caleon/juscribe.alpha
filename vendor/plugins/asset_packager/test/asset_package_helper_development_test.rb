@@ -22,7 +22,9 @@ class AssetPackageHelperProductionTest < Test::Unit::TestCase
 
   def setup
     Synthesis::AssetPackage.any_instance.stubs(:log)
-
+    Synthesis::AssetPackage.send(:class_variable_set, :@@asset_packages_yml, $asset_packages_yml) # CHANGED
+    Synthesis::AssetPackage.send(:class_variable_set, :@@asset_base_path, $asset_base_path) # CHANGED
+    
     @controller = Class.new do
       attr_reader :request
       def initialize
@@ -37,7 +39,7 @@ class AssetPackageHelperProductionTest < Test::Unit::TestCase
   end
   
   def build_js_expected_string(*sources)
-    sources.map {|s| %(<script src="/javascripts/#{s}.js" type="text/javascript"></script>) }.join("\n")
+    sources.map {|s| timestamp = rails_asset_id("javascripts/#{s}.js"); %(<script src="/javascripts/#{s}.js#{timestamp.blank? ? '' : "?#{timestamp}"}" type="text/javascript"></script>) }.join("\n")
   end
     
   def build_css_expected_string(*sources)

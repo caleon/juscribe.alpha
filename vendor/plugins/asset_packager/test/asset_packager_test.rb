@@ -38,8 +38,8 @@ class AssetPackagerTest < Test::Unit::TestCase
   
   def test_delete_and_build
     Synthesis::AssetPackage.delete_all
-    js_package_names = Dir.new("#{$asset_base_path}/javascripts").entries.delete_if { |x| ! (x =~ /\A\w+_\d+.js/) }
-    css_package_names = Dir.new("#{$asset_base_path}/stylesheets").entries.delete_if { |x| ! (x =~ /\A\w+_\d+.css/) }
+    js_package_names = Dir.new("#{$asset_base_path}/javascripts").entries.delete_if { |x| ! (x =~ /\A\w+_[0-9a-z]+.js/) }
+    css_package_names = Dir.new("#{$asset_base_path}/stylesheets").entries.delete_if { |x| ! (x =~ /\A\w+_[0-9a-z]+.css/) }
     css_subdir_package_names = Dir.new("#{$asset_base_path}/stylesheets/subdir").entries.delete_if { |x| ! (x =~ /\A\w+_\d+.css/) }
     
     assert_equal 0, js_package_names.length
@@ -47,35 +47,35 @@ class AssetPackagerTest < Test::Unit::TestCase
     assert_equal 0, css_subdir_package_names.length
 
     Synthesis::AssetPackage.build_all
-    js_package_names = Dir.new("#{$asset_base_path}/javascripts").entries.delete_if { |x| ! (x =~ /\A\w+_\d+.js/) }.sort
-    css_package_names = Dir.new("#{$asset_base_path}/stylesheets").entries.delete_if { |x| ! (x =~ /\A\w+_\d+.css/) }.sort
-    css_subdir_package_names = Dir.new("#{$asset_base_path}/stylesheets/subdir").entries.delete_if { |x| ! (x =~ /\A\w+_\d+.css/) }.sort
+    js_package_names = Dir.new("#{$asset_base_path}/javascripts").entries.delete_if { |x| ! (x =~ /\A\w+_[0-9a-z]+.js/) }.sort
+    css_package_names = Dir.new("#{$asset_base_path}/stylesheets").entries.delete_if { |x| ! (x =~ /\A\w+_[0-9a-z]+.css/) }.sort
+    css_subdir_package_names = Dir.new("#{$asset_base_path}/stylesheets/subdir").entries.delete_if { |x| ! (x =~ /\A\w+_[0-9a-z]+.css/) }.sort
     
     assert_equal 2, js_package_names.length
     assert_equal 2, css_package_names.length
     assert_equal 1, css_subdir_package_names.length
-    assert js_package_names[0].match(/\Abase_\d+.js\z/)
-    assert js_package_names[1].match(/\Asecondary_\d+.js\z/)
-    assert css_package_names[0].match(/\Abase_\d+.css\z/)
-    assert css_package_names[1].match(/\Asecondary_\d+.css\z/)
-    assert css_subdir_package_names[0].match(/\Astyles_\d+.css\z/)
+    assert js_package_names[0].match(/\Abase_[0-9a-z]+.js\z/)
+    assert js_package_names[1].match(/\Asecondary_[0-9a-z]+.js\z/)
+    assert css_package_names[0].match(/\Abase_[0-9a-z]+.css\z/)
+    assert css_package_names[1].match(/\Asecondary_[0-9a-z]+.css\z/)
+    assert css_subdir_package_names[0].match(/\Astyles_[0-9a-z]+.css\z/)
   end
   
   def test_js_names_from_sources
     package_names = Synthesis::AssetPackage.targets_from_sources("javascripts", ["prototype", "effects", "noexist1", "controls", "foo", "noexist2"])
     assert_equal 4, package_names.length
-    assert package_names[0].match(/\Abase_\d+\z/)
+    assert package_names[0].match(/\Abase_[0-9a-z]+\z/)
     assert_equal package_names[1], "noexist1"
-    assert package_names[2].match(/\Asecondary_\d+\z/)
+    assert package_names[2].match(/\Asecondary_[0-9a-z]+\z/)
     assert_equal package_names[3], "noexist2"
   end
   
   def test_css_names_from_sources
     package_names = Synthesis::AssetPackage.targets_from_sources("stylesheets", ["header", "screen", "noexist1", "foo", "noexist2"])
     assert_equal 4, package_names.length
-    assert package_names[0].match(/\Abase_\d+\z/)
+    assert package_names[0].match(/\Abase_[0-9a-z]+\z/)
     assert_equal package_names[1], "noexist1"
-    assert package_names[2].match(/\Asecondary_\d+\z/)
+    assert package_names[2].match(/\Asecondary_[0-9a-z]+\z/)
     assert_equal package_names[3], "noexist2"
   end
   
