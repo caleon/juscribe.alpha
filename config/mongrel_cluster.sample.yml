@@ -1,0 +1,10 @@
+--- 
+user: mongrel
+group: mongrel
+log_file: log/mongrel.log
+cwd: /u/apps/notetaker/current
+port: 3000
+environment: production
+pid_file: tmp/pids/mongrel.pid
+address: 127.0.0.1
+servers: 2

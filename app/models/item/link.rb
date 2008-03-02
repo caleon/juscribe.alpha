@@ -1,0 +1,3 @@
+class Link < Item
+  
+end

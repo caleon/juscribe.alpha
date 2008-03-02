@@ -1,0 +1,24 @@
+colin_friends:
+  group: friends
+  user: colin
+  rank: 10
+colin_company:
+  group: company
+  user: colin
+  rank: 10
+colin_team:
+  group: team
+  user: colin
+  rank: 10
+colin_party:
+  group: party
+  user: colin
+  rank: 10
+colin_clan:
+  group: clan
+  user: colin
+  rank: 10
+keira_friends:
+  group: friends
+  user: keira
+  rank: ~

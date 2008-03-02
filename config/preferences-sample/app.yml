@@ -1,0 +1,7 @@
+--- 
+:rating_increment: 1
+:mailer_from: noreply@venturous.net
+:contact: colin@venturous.net
+:limits:
+  :memberships: 30
+  :groups: 10

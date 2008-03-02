@@ -1,0 +1,12 @@
+--- 
+development:
+  :wheel_id: 1
+  
+staging:
+  :wheel_id: 1
+  
+test:
+  :wheel_id: ~
+
+production:
+  :wheel_id: ~

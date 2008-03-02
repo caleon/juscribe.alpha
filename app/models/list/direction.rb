@@ -1,0 +1,3 @@
+class Direction < List
+  
+end

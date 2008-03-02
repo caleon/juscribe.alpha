@@ -1,0 +1,29 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+colin:
+  first_name: $LABEL
+  middle_initial: p
+  last_name: chun
+  nick: colin
+  email: colin@venturous.net
+nana:
+  first_name: $LABEL
+  middle_initial: n
+  last_name: park
+  nick: nana
+  email: nana@venturous.net
+alessandra:
+  first_name: $LABEL
+  last_name: ambrosio
+  nick: ale
+  email: ale@venturous.net
+megan:
+  first_name: $LABEL
+  last_name: fox
+  nick: mfox
+  email: mfox@venturous.net
+keira:
+  first_name: $LABEL
+  last_name: knightley
+  nick: kknight
+  email: kknight@venturous.net

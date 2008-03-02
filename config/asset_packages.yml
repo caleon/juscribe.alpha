@@ -1,0 +1,12 @@
+--- 
+javascripts: 
+- base: 
+  - prototype
+  - lowpro
+  - effects
+  - dragdrop
+  - controls
+  - application
+stylesheets: 
+- base: 
+  - standard

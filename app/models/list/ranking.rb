@@ -1,0 +1,3 @@
+class Ranking < List
+  
+end

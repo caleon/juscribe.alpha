@@ -1,0 +1,17 @@
+DEFAULTS: &DEFAULTS
+  user: colin
+friends:
+  name: $LABEL
+  <<: *DEFAULTS
+company:
+  name: $LABEL
+  <<: *DEFAULTS
+team:
+  name: $LABEL
+  <<: *DEFAULTS
+party:
+  name: $LABEL
+  <<: *DEFAULTS
+clan:
+  name: $LABEL
+  <<: *DEFAULTS

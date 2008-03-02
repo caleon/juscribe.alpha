@@ -1,0 +1,7 @@
+---
+:report:
+  :dupe: 1
+  :explicit: 2
+  :questionable: 3
+  :banned: 4
+  :incorrect: 5
