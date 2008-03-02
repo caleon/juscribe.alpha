@@ -31,7 +31,9 @@ ActiveRecord::Base.class_eval do
       create(attributes, true)
     end
   end
-  
+
+  # The following is to allow either a model or its ID to be supplied as
+  # arguments to a method.  
   def to_id; self[:id].to_i; end
   
   def internal_name(opts={})
@@ -39,6 +41,8 @@ ActiveRecord::Base.class_eval do
   end
 end
 
+# The following is to allow either a model or its ID to be supplied as
+# arguments to a method.
 class Fixnum
   def to_id; self; end;
 end
