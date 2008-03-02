@@ -3,3 +3,4 @@ config/
 config/preferences/*
 tmp/*
 log/*.log
+coverage/*

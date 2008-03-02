@@ -6,6 +6,8 @@ class User < ActiveRecord::Base
   acts_as_accessible
   acts_as_responsible
   acts_as_widgetable
+  
+  @@note_to_colin = "Hello"
     
   has_many :articles
   has_many :entries
