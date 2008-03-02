@@ -2,4 +2,4 @@ config/database.yml
 config/
 config/preferences/*
 tmp/*
-log/*
+log/*.log
