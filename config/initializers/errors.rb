@@ -8,6 +8,15 @@ class FriendshipError < StandardError
     def field; @arr[0]; end
     def msg_str; @arr[1]; end
     def users; @arr[2..-1]; end
+    
+    def message(user, friend)
+      hash = {:user => user, :friend => friend}
+      msg_str % users.map{|sym| hash[sym].internal_name }
+    end
+    
+    def error_args(user, friend)
+      field ? [:add, field, message(user, friend)] : [:add_to_base, message(user, friend)]
+    end
   end
   
   MESSAGES = { :forbidden   =>  MsgSet.new(nil, "Friendship requests are forbidden"),
@@ -28,9 +37,7 @@ class FriendshipError < StandardError
   
   def add_error
     msg_set = MESSAGES[@kind]
-    msg = msg_set.msg_str % msg_set.users.map {|sym| get_user(sym) }
-    error_args = msg_set.field ? [:add, msg_set.field, msg] : [:add_to_base, msg]
-    erroring_user.errors.send(*error_args)
+    erroring_user.errors.send(*msg_set.error_args(@user, @friend))
   end
   
   def get_user(sym)
