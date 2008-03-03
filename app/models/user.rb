@@ -28,10 +28,10 @@ class User < ActiveRecord::Base
     def groups; find(:all, :conditions => "responsible_type = 'Group'"); end
   end
   
-  validates_presence_of :email, :first_name, :last_name, :nick
-  validates_presence_of :password_hash, :password_salt unless RAILS_ENV = 'test'
-  validates_uniqueness_of :nick, :email
-  validates_format_of :email, :with => /^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i, :on => :save
+  validates_presence_of     :email, :first_name, :last_name, :nick
+  validates_presence_of     :password_hash, :password_salt unless RAILS_ENV = 'test'
+  validates_uniqueness_of   :nick, :email
+  validates_format_of       :email, :with => /^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i, :on => :save
   
   attr_protected :password_salt, :password_hash
   
@@ -62,6 +62,10 @@ class User < ActiveRecord::Base
   
   def email_address #test
     "#{self.full_name} <#{self.email}>"
+  end
+  
+  def layout
+    self[:layout] || 'default_user'
   end
   
   def found(attrs={})
