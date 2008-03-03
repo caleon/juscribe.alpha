@@ -1,6 +1,6 @@
 module Mime
-  #EXTENSIONS = EXTENSION_LOOKUP.keys.map(&:intern)
-  EXTENSIONS = [:html, :js]
+  EXTENSIONS = EXTENSION_LOOKUP.keys.map(&:intern)
+  #EXTENSIONS = [:html, :js]
 end
 
 # This was to step around the doubleRender error, but for some reason

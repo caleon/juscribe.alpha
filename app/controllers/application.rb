@@ -66,7 +66,7 @@ class ApplicationController < ActionController::Base
       redirect_to error_path || error_url
     else
       @warning = msg
-      render error_path || { :layout => 'error', :template => 'shared/error' }
+      render error_path || { :template => 'shared/error' }
     end
   end
   

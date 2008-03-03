@@ -1,5 +1,6 @@
-This be standard layout right herre<br />
-=====================<br />
-<%= yield %>
-<br />
-=====================
+<html>
+<%= render :partial => 'shared/head' %>
+<% body_tag_for(main_record) do %>
+	<%= yield %>
+<% end %>
+</html>

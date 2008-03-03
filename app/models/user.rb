@@ -65,7 +65,11 @@ class User < ActiveRecord::Base
   end
   
   def layout
-    self[:layout] || 'default_user'
+    self[:layout] || 'user_default'
+  end
+  
+  def skin # FIXME: setup remote web server to hold custom skins
+    self[:skin] ? "#{RAILS_ROOT}/blah/blah/#{self[:skin]}" : 'default.css'
   end
   
   def found(attrs={})
