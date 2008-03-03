@@ -37,8 +37,7 @@ ActionController::Routing::Routes.draw do |map|
   
   map.resources :pictures
   
-  map.error 'error', :controller => :application, :action => :error
-  
+  map.user 'user/view/:id', :controller => 'users', :action => 'show'  
 
   # Install the default routes as the lowest priority.
   map.connect ':controller/:action/:id'
