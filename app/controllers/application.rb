@@ -68,7 +68,6 @@ class ApplicationController < ActionController::Base
       @warning = msg
       render error_path || { :layout => 'error', :template => 'shared/error' }
     end
-    # @skip_default_render = true
   end
   
   def load_config
