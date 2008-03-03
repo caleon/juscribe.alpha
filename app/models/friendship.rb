@@ -13,8 +13,8 @@ class User < ActiveRecord::Base
   
   def befriend(*args)
     raise ArgumentError unless ((user = args.shift).is_a?(User) && user != self)
-    raise FriendshipError, "is invalid: #{self.internal_name} is already friends with #{user.internal_name}" if self.friends_with?(user)
-    raise FriendshipError, "is invalid: #{self.internal_name} already has a friendship request with #{user.internal_name}" if self.friend_ids.include?(user.id)
+    raise FriendshipError.new(:already, self, user) if self.friends_with?(user)
+    raise FriendshipError.new(:pending, self, user) if self.friend_ids.include?(user.id)
     opts = args.extract_options!
     new_friend_ids = self.friend_ids | [user.to_id]
     (@friends ||= []) << user
@@ -25,12 +25,12 @@ class User < ActiveRecord::Base
     else
       self.friend_ids = new_friend_ids
     end
-    self
+    self.friends_with?(user) ? 1 : 0
   rescue ArgumentError
-    self.errors.add_to_base("Invalid argument for User to befriend")
+    self.errors.add_to_base("Invalid argument for befriending")
     false
   rescue FriendshipError => e
-    self.errors.add(:friend_ids, e.message)
+    e.add_error
     false
   rescue ActiveRecord::RecordInvalid
     false

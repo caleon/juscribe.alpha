@@ -54,6 +54,8 @@ class User < ActiveRecord::Base
     
   def to_param; self.nick; end #test
   
+  def to_s; "#{self.full_name} (#{self.nick})"; end
+  
   def full_name #test
     self.first_name +
     (self.middle_initial ? "#{self.middle_initial}." : " ") +

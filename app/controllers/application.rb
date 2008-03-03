@@ -9,10 +9,10 @@ class ApplicationController < ActionController::Base
   # Uncomment the :secret if you're not using the cookie session store
   protect_from_forgery # :secret => 'a241500281274090ecdf656d5074d028'
   
-  before_filter :load_config, :get_viewer
+  #before_filter :load_config, :get_viewer
                  
   def error
-    render :template => 'shared/warning'
+    render :template => 'shared/warning', :layout => false
   end
   
   def authenticate(object)
@@ -38,21 +38,39 @@ class ApplicationController < ActionController::Base
   private
   #######
   
-  def display_error(klass_name=nil)
-    klass = params[:controller].singularize.capitalize.constantize
-    flash[:warning] = "That #{klass_name || klass.name.humanize} could not be found."
+  # Example call from PermissionRulesController:
+  # display_error(:class_name => 'Permission Rule', :message => 'Kaboom!',
+  #               :html => {:redirect => true, :error_path => @permission_rule})
+  def display_error(opts={})
+    valid_mimes = Mime::EXTENSIONS & (opts.keys.blank? ? [:html, :js, :xml] : opts.keys)
+    valid_mimes.each do |mime|
+      instance_eval(%{ @#{mime}_opts = opts.delete(:#{mime}) || {} })
+    end    
     respond_to do |format|
-      format.html { redirect_to error_path || get_error_view(:html) }
-      format.js { render :layout => false,
-                         :template => error_path || get_error_view(:js) }
+      valid_mimes.each do |mime|
+          instance_eval(%{
+            @#{mime}_opts.merge!(opts)
+            format.#{mime} { return_error_view(:#{mime}, @#{mime}_opts) }
+          })
+      end
     end
   end
   
-  def get_error_view(format)
-    { :html      =>  error_url,
-      :js        =>  'shared/error' }[format]
+  def return_error_view(format, opts={})
+    klass = opts[:class]
+    klass_name = opts[:class_name] || klass.name.humanize rescue nil
+    msg = opts[:message] || "Error accessing #{klass_name || 'action'}."
+    error_path = opts[:error_path]
+    if opts[:redirect] ||= false
+      flash[:warning] = msg
+      redirect_to error_path || error_url
+    else
+      @warning = msg
+      render error_path || { :layout => 'error', :template => 'shared/error' }
+    end
+    @skip_default_render = true
   end
-
+  
   def load_config
     @config = SITE
     # TODO: set up a special table where a "recheck" value can be toggled. This

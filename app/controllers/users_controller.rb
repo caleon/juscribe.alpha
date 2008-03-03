@@ -1,16 +1,11 @@
 class UsersController < ApplicationController
-  before_filter :verify_logged_in, :except => [ :index, :list, :show, :login ]
+  #before_filter :verify_logged_in, :except => [ :index, :list, :show, :login, :friends ]
   #FIXME: before_filter :only => [:edit, :update, :destroy, :mine] { authenticate(@user) }
   
-  verify :method => :post, :only => [ ],
-         :redirect_to => { :action => :index }
+  #verify :method => :post, :only => [ ],
+  #       :redirect_to => { :action => :index }
   
   def index
-    list
-    render :action => 'list'
-  end
-  
-  def list
     limit, page = 10, params[:page].to_i + 1
     offset = params[:page].to_i * limit
     @users = User.find(:all, :limit => limit, :offset => offset, :order => 'id DESC')
@@ -62,10 +57,29 @@ class UsersController < ApplicationController
   
   def friends
     setup
+    @friends = @user.friends
   end
   
   def befriend
     setup
+    if res = @viewer.befriend(@user)
+      @notice = [ "You have requested friendship with #{@user}.",
+                  "You are now friends with #{@user}." ][res]
+      
+      respond_to do |format|
+        format.html { }
+      end
+    else
+      # My guess is flash[:warning] followed by a render will maintain flash's state
+      # onto the next page.
+      @warning = "There was an error establishing friendship with #{@user}."
+      display_error()
+      respond_to do |format|
+        format.html { render :action => 'show' }
+        format.js { render}
+      end
+      redirect_to @user
+    end
   end
   
   def unfriend
@@ -81,7 +95,7 @@ class UsersController < ApplicationController
   end
   
   private
-  def setup(includes=nil, error_path=nil)
-    params[:id] ? @user = User.find_by_nick(params[:id]) : display_error
+  def setup(includes=nil, opts={})
+    display_error(opts) unless (params[:id] && @user = User.find_by_nick(params[:id]))
   end
 end

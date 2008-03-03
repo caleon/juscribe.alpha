@@ -1,17 +1,13 @@
 class ArticlesController < ApplicationController  
-  before_filter :verify_logged_in, :only => [:new, :create, :edit, :update]  
-  before_filter :setup, :except => [ :index, :list, :new, :create ]
+  #before_filter :verify_logged_in, :only => [:new, :create, :edit, :update]  
+  #before_filter :setup, :except => [ :index, :list, :new, :create ]
   # FIXME: before_filter :only => [:edit, :update] { authenticate(@article) }
     
-  verify :method => :post, :only => [ ],
-         :redirect_to => { :action => :index }
-  
+  #verify :method => :post, :only => [ ],
+  #       :redirect_to => { :action => :index }
+    
   def index
-    list
-    render :action => 'list'
-  end
-  
-  def list
+    subredirect
     limit, page = 10, params[:page].to_i + 1
     offset = params[:page].to_i * limit
     @articles = Article.find(:all, :limit => limit, :offset => offset, :order => 'id DESC')
@@ -94,5 +90,9 @@ class ArticlesController < ApplicationController
       end
     end
   end
-  
+
+  def subredirect
+    render :action => 'list'
+    @skip_default_render = true
+  end
 end
