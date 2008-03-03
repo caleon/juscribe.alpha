@@ -17,6 +17,8 @@ class UsersController < ApplicationController
       
   def show
     setup
+    @widgets = @user.widgets # TODO: including :widgetable not allowed. write sql.
+    
   end
   
   def new

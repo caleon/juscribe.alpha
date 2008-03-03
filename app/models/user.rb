@@ -1,5 +1,5 @@
 require 'digest/sha2'
-require_dependency 'friendship'
+require 'friendship'
 
 class User < ActiveRecord::Base
   acts_as_taggable

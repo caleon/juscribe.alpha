@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 34) do
+ActiveRecord::Schema.define(:version => 35) do
 
   create_table "articles", :force => true do |t|
     t.string   "title"
@@ -181,6 +181,8 @@ ActiveRecord::Schema.define(:version => 34) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.text     "friend_ids"
+    t.string   "layout"
+    t.string   "skin"
   end
 
   create_table "widgets", :force => true do |t|
