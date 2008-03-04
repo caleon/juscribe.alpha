@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  #before_filter :verify_logged_in, :except => [ :index, :list, :show, :login, :friends ]
+  before_filter :verify_logged_in, :except => [ :index, :show, :login, :friends, :about ]
   #FIXME: before_filter :only => [:edit, :update, :destroy, :mine] { authenticate(@user) }
   
   #verify :method => :post, :only => [ ],
@@ -51,11 +51,30 @@ class UsersController < ApplicationController
   end
   
   def login
-    
+    @page_title = "Login Page"
+    if request.post?
+      if (@user = User.find_by_nick(params[:user][:nick])) && @user.authenticate(params[:user][:password])
+          session[:user_id] = @user.id
+          flash[:notice] = "You are now logged in."
+          redirect_to @user and return
+      else
+        @user ||= User.new
+        @user.errors.add(:nick, "is not a user in our database.") unless @user.nick
+      end
+    else
+      if session[:user_id]
+        flash[:notice] = "You are already logged in."
+        redirect_to User.find(session[:user_id])
+      else
+        @user = User.new
+      end
+    end
   end
   
   def logout
-    setup
+    flash[:notice] = "You are now logged out. See you soon!"
+    redirect_to User.find(session[:user_id])
+    session[:user_id] = nil # TODO: reset_sessions and stuff like that.
   end
   
   def mine

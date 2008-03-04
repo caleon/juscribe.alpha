@@ -22,4 +22,8 @@ module ApplicationHelper
     @user || @group || @widget || @article || @event || @entry || @list || @item
   end
   
+  def notice_field
+    content_tag(:div, flash[:notice], :id => 'flashNotice', :class => 'flashNotice') if flash[:notice]
+  end
+  
 end

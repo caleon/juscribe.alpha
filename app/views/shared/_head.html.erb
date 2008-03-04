@@ -1,6 +1,6 @@
 <head>
 	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
-		<title><%= APP[:name] %>: <%= main_record ? main_record.to_s : @page_title || 'Welcome' %></title>
+		<title><%= APP[:name] %>: <%= @page_title || (main_record ? main_record.to_s : 'Welcome') %></title>
 	<% set_meta_keywords! 'blog', 'news', 'social' %>
 	<%= meta_tags %>
 	<%= auto_discovery_link_tag if action_accepts?(:xml) %>

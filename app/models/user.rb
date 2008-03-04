@@ -24,16 +24,16 @@ class User < ActiveRecord::Base
     
   def to_param; self.nick; end #test
   
-  def to_s; self.full_name; end
+  def to_s; self.nick; end
   
   def name_and_nick
     self.full_name + "(#{self.nick})"
   end
   
   def full_name #test
-    self.first_name +
+    self.first_name.to_s +
     (self.middle_initial ? "#{self.middle_initial}." : " ") +
-    self.last_name
+    self.last_name.to_s
   end
   
   def email_address #test
@@ -54,6 +54,8 @@ class User < ActiveRecord::Base
     return false
   end
   
+  def password; nil; end
+  
   def password=(pass)
     raise AbuseError, "You are not permitted to modify THAT user." if self.wheel?
     salt = [Array.new(6){rand(256).chr}.join].pack('m').chomp
@@ -67,6 +69,14 @@ class User < ActiveRecord::Base
       return false
     end
     user
+  end
+  
+  def authenticate(password)
+    if Digest::SHA256.hexdigest(password + self.password_salt) != self.password_hash
+      self.errors.add(:password, "is incorrect.")
+      return false
+    end
+    return true
   end
   
 end
