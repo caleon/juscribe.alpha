@@ -48,7 +48,7 @@ module JavascriptHelper
   
   def print_scripts_block?(pos=nil)
     if pos == :top
-      !(@extra_behaviors.blank && @extra_top_scripts.blank?)
+      !(@extra_behaviors.blank? && @extra_top_scripts.blank?)
     elsif pos == :bottom
       !(@extra_behaviors.blank? && @extra_bottom_scripts.blank?)
     else
