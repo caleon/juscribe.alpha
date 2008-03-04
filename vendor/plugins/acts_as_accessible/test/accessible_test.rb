@@ -1,8 +1,5 @@
 require File.dirname(__FILE__) + "/../../../../test/test_helper"
 
-#ActiveRecord::Base.establish_connection(:adapter => "sqlite3", :dbfile => ":memory:")
-#ActiveRecord::Base.establish_connection(:adapter => "mysql", :encoding => 'utf8', :database => 'colinsite_test', :username => 'root', :socket => '/tmp/mysql.sock')
-
 class Mixin < ActiveRecord::Base
 end
 
@@ -10,7 +7,8 @@ class AccessibleMixin < Mixin
   acts_as_accessible
   belongs_to :user
 
-  def self.table_name() "articles" end
+  def self.table_name() "articles" end # CHANGED: set this to an existing table
+    # ALSO this test requires a Group model associated to User
 end
 
 class AccessibleMixinSub1 < AccessibleMixin
@@ -22,7 +20,7 @@ end
 
 class AccessibleTest < Test::Unit::TestCase
 
-  def setup
+  def setup # CHANGED: these can be set to User.create(..)
     @user = users(:keira)
     @stranger = users(:megan)
     @colin = users(:colin)
