@@ -51,7 +51,7 @@ module ActiveRecord
         
         def create_rule(attrs={})
           attrs[:user_id] = self[:user_id] || attrs[:user_id] || (attrs.delete(:user).id if attrs[:user]) rescue nil
-          raise ArgumentError unless attrs[:user_id]
+          raise ArgumentError, 'Need to supply a user or user_id.' unless attrs[:user_id]
           self.rule = PermissionRule.create!(attrs)          
         end
         

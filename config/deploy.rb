@@ -30,12 +30,3 @@ task :update_config, :roles => [ :app ] do
   run "cp -Rf #{shared_path}/config/* #{release_path}/config/"
 end
 after "deploy:update_code", :update_config
-
-namespace :deploy do
- desc "Create asset packages for production" 
- task :after_update_code, :roles => [:web] do
-   run <<-EOF
-     cd #{release_path} && rake RAILS_ENV=production asset:packager:build_all
-   EOF
- end
-end

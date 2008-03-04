@@ -4,11 +4,13 @@ module JavascriptHelper
     add_inline_scripts("'#{selector}' : #{behavior}", :add_behavior)
   end
   
-  def add_inline_scripts(content, kind=nil)
+  def add_inline_scripts(content, *args)
+    html_opts = args.extract_options!
+    kind = args.shift
     if @config[:scripts_at_bottom]
       add_by_type(content, kind, true)
     else
-      javascript_tag(kind == :add_behavior ? "Event.addBehavior({#{content}});" : content)
+      javascript_tag((kind == :add_behavior ? "Event.addBehavior({#{content}});" : content), html_opts)
     end
   end
   

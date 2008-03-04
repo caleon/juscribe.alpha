@@ -18,7 +18,7 @@ class UsersController < ApplicationController
   def show
     setup
     @widgets = @user.widgets # TODO: including :widgetable not allowed. write sql.
-    @skin = @user.skin
+    @skin_file = @user.skin_file
     @layout = @user.layout
     respond_to do |format|
       format.html

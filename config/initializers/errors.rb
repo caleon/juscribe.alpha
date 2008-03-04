@@ -39,7 +39,7 @@ class FriendshipError < StandardError
   end
   
   def get_user(sym)
-    instance_variable_get(:"@#{sym}")
+    instance_variable_get(:"@#{sym}") if [:user, :friend].include?(sym)
   end
   
   def erroring_user

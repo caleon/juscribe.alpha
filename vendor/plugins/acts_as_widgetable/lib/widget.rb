@@ -11,20 +11,20 @@ class Widget < ActiveRecord::Base
   # A user can widget an article written by someone else.
   
   def full_name
-    "#{self.name}: #{self.widgetable.name}"
+    (self.name ? "#{self.name}: " : "") + self.widgetable.name
   end
   
   def placed?; self.position?; end
-
+  
+  def place(pos)
+    self.place!(pos, true)
+  end
+  
   def place!(pos=nil, without_save=false)
     if other_wid = Widget.find(:first, :conditions => ["user_id = ? AND position = ?", self.user_id, pos])
       other_wid.unplace!
     end
     without_save ? self.position = pos : self.update_attribute(:position, pos)
-  end
-  
-  def place(pos)
-    self.place!(pos, true)
   end
   
   def unplace!(pos)

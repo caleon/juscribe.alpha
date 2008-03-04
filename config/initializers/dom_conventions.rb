@@ -14,6 +14,7 @@ ActionController::RecordIdentifier.class_eval do
 end
 
 ActionView::Helpers::RecordTagHelper.class_eval do
+  alias_method :orig_content_tag_for, :content_tag_for
   def content_tag_for(tag_name, record, *args, &block)
     prefix  = args.first.is_a?(Hash) ? nil : args.shift
     options = args.first.is_a?(Hash) ? args.shift : {}

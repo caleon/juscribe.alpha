@@ -8,7 +8,7 @@
 	
 	<%= stylesheet_link_tag 'main', :cache => 'standard' %>
 	<%= yield :extra_stylesheets %>
-	<%= stylesheet_link_tag @skin if @skin %>
+	<%= stylesheet_link_tag @skin_file if @skin_file %>
 
 	<%= render :partial => 'shared/javascripts' unless @config[:scripts_at_bottom] %>
 	
