@@ -26,7 +26,7 @@ module ActiveRecord
         
       end
       
-      module InstanceMethods
+      module InstanceMethods        
         # example: article.create_rule(:title => 'for friends', :description => 'blah blah blah', :allow => {:user => 2}, :deny => {})
         def public?; self.rule.public?; end
         def private?; self.rule.private?; end

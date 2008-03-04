@@ -1,8 +1,5 @@
 class Article < ActiveRecord::Base
-  acts_as_taggable
-  acts_as_accessible
-  acts_as_responsible
-  acts_as_widgetable
+  include PluginPackage
   
   belongs_to :user
   has_many :pictures, :as => :depictable

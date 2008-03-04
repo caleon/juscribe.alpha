@@ -1,5 +1,7 @@
-class User < ActiveRecord::Base
-  serialize :friend_ids
+module Friendship
+  def self.included(base)
+    base.class_eval(%{serialize :friend_ids})
+  end
   
   def friends_with?(user)
     self.friend_ids.include?(user.id) && user.friend_ids.include?(self.id)

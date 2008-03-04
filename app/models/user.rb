@@ -1,32 +1,9 @@
 require 'digest/sha2'
-require 'friendship'
+require 'user_associations'
 
 class User < ActiveRecord::Base
-  acts_as_taggable
-  acts_as_accessible
-  acts_as_responsible
-  acts_as_widgetable
-      
-  has_many :articles
-  has_many :entries
-  has_many :songs
-  has_many :events
-  has_many :projects
-  has_many :taggings
-  has_many :owned_pictures, :class_name => 'Picture'
-  has_many :pictures, :as => :depictable
-  has_many :memberships
-  has_many :groups, :through => :memberships
-  has_many :owned_groups, :class_name => 'Group'
-  has_many :widgets, :order => :position
-  has_many :favorite, :class_name => 'Favorite', :order => 'id desc' do
-    def articles; find(:all, :conditions => "responsible_type = 'Article'"); end
-    def comments; find(:all, :conditions => "responsible_type = 'Comment'"); end
-    def entries; find(:all, :conditions => "repsonsible_type = 'Entry'"); end
-    def projects; find(:all, :conditions => "responsible_type = 'Project'"); end
-    def pictures; find(:all, :conditions => "responsible_type = 'Picture'"); end
-    def groups; find(:all, :conditions => "responsible_type = 'Group'"); end
-  end
+  include Friendship
+  include PluginPackage
   
   validates_presence_of     :email, :first_name, :last_name, :nick
   validates_presence_of     :password_hash, :password_salt unless RAILS_ENV = 'test'
@@ -62,14 +39,6 @@ class User < ActiveRecord::Base
   
   def email_address #test
     "#{self.full_name} <#{self.email}>"
-  end
-  
-  def layout
-    self[:layout] || 'user_default'
-  end
-  
-  def skin # FIXME: setup remote web server to hold custom skins
-    self[:skin] ? "#{RAILS_ROOT}/blah/blah/#{self[:skin]}" : 'default.css'
   end
   
   def found(attrs={})

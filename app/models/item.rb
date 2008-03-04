@@ -1,8 +1,5 @@
 class Item < ActiveRecord::Base
-  acts_as_taggable
-  acts_as_accessible
-  acts_as_responsible
-  acts_as_widgetable
+  include PluginPackage
   
   belongs_to :user # This may not be necessary, but for collaborative lists, yes.
   has_one :picture, :as => :depictable

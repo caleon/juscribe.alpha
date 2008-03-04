@@ -1,9 +1,6 @@
 # Submodels are included via the environment.rb file's config.load_paths.
 class List < ActiveRecord::Base  
-  acts_as_taggable
-  acts_as_accessible
-  acts_as_responsible
-  acts_as_widgetable
+  include PluginPackage
   
   has_many :items, :order => :position, :foreign_key => 'list_id' do
     def reversed
