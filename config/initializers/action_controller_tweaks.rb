@@ -24,6 +24,9 @@ end
 #  private :performed?
 #end
 
+ActionController::Base.class_eval do
+  alias_method :orig_respond_to, :respond_to
+end
 module MimeRespondsAddendum
   def respond_to(*types, &block)
     raise ArgumentError, "respond_to takes either types or a block, never both" unless types.any? ^ block

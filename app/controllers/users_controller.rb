@@ -16,12 +16,13 @@ class UsersController < ApplicationController
   end
       
   def show
-    setup
+    return unless setup
     @widgets = @user.widgets # TODO: including :widgetable not allowed. write sql.
     @skin_file = @user.skin_file
     @layout = @user.layout
     respond_to do |format|
       format.html
+      format.xml
     end
   end
   
@@ -34,19 +35,19 @@ class UsersController < ApplicationController
   end
   
   def edit
-    setup
+    return unless setup
   end
   
   def update
-    setup
+    return unless setup
   end
   
   def change_password
-    setup
+    return unless setup
   end
   
   def destroy
-    setup
+    return unless setup
   end
   
   def login
@@ -62,12 +63,12 @@ class UsersController < ApplicationController
   end
   
   def friends
-    setup
+    return unless setup
     @friends = @user.friends(:include => :primary_picture)
   end
   
   def befriend
-    setup
+    return unless setup
     if res = @viewer.befriend(@user)
       @notice = [ "You have requested friendship with #{@user}.",
                   "You are now friends with #{@user}." ][res]
@@ -84,23 +85,28 @@ class UsersController < ApplicationController
   end
   
   def unfriend
-    setup
+    return unless setup
   end
   
   def mailbox
-    setup
+    return unless setup
   end
   
   def message
-    setup
+    return unless setup
   end
   
   def about
-    setup
+    return unless setup
   end
   
   private
   def setup(includes=nil, opts={})
-    display_error(opts) unless (params[:id] && @user = User.find_by_nick(params[:id]))
+    if params[:id] && @user = User.find_by_nick(params[:id])
+      true
+    else
+      display_error(opts)
+      false
+    end
   end
 end

@@ -19,7 +19,7 @@ class ApplicationController < ActionController::Base
   
   def authenticate(object)
     return true if object && @viewer && object.editable_by?(@viewer)
-    respond_to do |format|
+    orig_respond_to do |format|
       format.html { redirect_to login_users_url and return false }
       format.js { render :controller => 'users', :action => 'login' and return false }
     end
@@ -30,9 +30,10 @@ class ApplicationController < ActionController::Base
   end
   
   def verify_logged_in
-    respond_to do |format|
-      format.html { redirect_to login_users_url and return false unless session[:user_id] }
-      format.js { render :controller => 'users', :action => 'login' and return false unless session[:user_id] }
+    return true if session[:user_id]
+    orig_respond_to do |format|
+      format.html { redirect_to login_users_url and return false }
+      format.js { render :controller => 'users', :action => 'login' and return false }
     end
   end
   
@@ -48,7 +49,7 @@ class ApplicationController < ActionController::Base
     valid_mimes.each do |mime|
       instance_eval(%{ @#{mime}_opts = opts.delete(:#{mime}) || {} })
     end    
-    respond_to do |format|
+    orig_respond_to do |format|
       valid_mimes.each do |mime|
           instance_eval(%{
             @#{mime}_opts.merge!(opts)
