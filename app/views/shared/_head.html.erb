@@ -1,9 +1,11 @@
 <head>
 	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
-	<%= yield :description %>
-	<%= yield :meta %>
+		<title><%= APP[:name] %>: <%= main_record ? main_record.to_s : @page_title || 'Welcome' %></title>
+	<% set_meta_keywords! 'blog', 'news', 'social' %>
+	<%= meta_tags %>
+	<%= link_tags %>
+	<%= auto_discovery_link_tag if action_accepts?(:xml) %>
 	
-	<title><%= APP[:name] %>: <%= main_record ? main_record.to_s : @page_title || 'Welcome' %></title>
 	<%= stylesheet_link_tag 'main', :cache => 'standard' %>
 	<%= yield :extra_stylesheets %>
 	<%= stylesheet_link_tag @skin if @skin %>
@@ -12,7 +14,8 @@
 	
 <% if print_scripts_block?(:top) %>
 	<script type="text/javascript">
-	<%= yield :extra_top_scripts %>
+	<%= extra_behaviors %>
+	<%= extra_scripts(:top) %>
 	</script>
 <% end %>
 </head>

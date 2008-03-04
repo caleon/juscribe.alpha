@@ -20,6 +20,9 @@ class UsersController < ApplicationController
     @widgets = @user.widgets # TODO: including :widgetable not allowed. write sql.
     @skin = @user.skin
     @layout = @user.layout
+    respond_to do |format|
+      format.html
+    end
   end
   
   def new
@@ -89,6 +92,10 @@ class UsersController < ApplicationController
   end
   
   def message
+    setup
+  end
+  
+  def about
     setup
   end
   

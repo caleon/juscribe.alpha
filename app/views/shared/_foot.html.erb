@@ -1,10 +1,8 @@
 <%= render :partial => 'shared/javascripts' if @config[:scripts_at_bottom] %>
-<!-- TODO: Re-setup this functionality -->
-<%= #add_behavior('input.favorite-action', 'FavoriteAction') %>
 
 <% if print_scripts_block?(:bottom) %>
 	<script type="text/javascript">
 	<%= extra_behaviors %>
-	<%= yield :extra_bottom_scripts %>
+	<%= extra_scripts(:bottom) %>
 	</script>
 <% end %>

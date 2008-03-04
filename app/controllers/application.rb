@@ -4,6 +4,8 @@
 class ApplicationController < ActionController::Base
   helper :all # include all helpers, all the time
   layout 'standard'
+  
+  # append_view_path('views/shared') doesn't work as desired.
 
   # See ActionController::RequestForgeryProtection for details
   # Uncomment the :secret if you're not using the cookie session store

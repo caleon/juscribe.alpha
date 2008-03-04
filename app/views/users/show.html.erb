@@ -1,2 +1,8 @@
 This user's nick is <%= @user.nick %>
 <%= render :partial => 'user', :layout => @layout %>
+
+<% add_meta_keyword!('colin') %>
+<% add_meta_keyword!('money') %>
+<% set_link_author!(@user) %>
+<% set_meta_description!('fun way to see some things')%>
+<br />

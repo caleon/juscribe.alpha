@@ -26,6 +26,10 @@ class User < ActiveRecord::Base
   
   def to_s; self.full_name; end
   
+  def name_and_nick
+    self.full_name + "(#{self.nick})"
+  end
+  
   def full_name #test
     self.first_name +
     (self.middle_initial ? "#{self.middle_initial}." : " ") +
