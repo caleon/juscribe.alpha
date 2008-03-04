@@ -55,12 +55,12 @@ class UsersController < ApplicationController
   end
   
   def mine
-
+    
   end
   
   def friends
     setup
-    @friends = @user.friends
+    @friends = @user.friends(:include => :primary_picture)
   end
   
   def befriend
@@ -68,20 +68,15 @@ class UsersController < ApplicationController
     if res = @viewer.befriend(@user)
       @notice = [ "You have requested friendship with #{@user}.",
                   "You are now friends with #{@user}." ][res]
-      
       respond_to do |format|
-        format.html { }
+        format.html do
+          flash[:notice] = @notice
+          redirect_to @user
+        end
+        format.js          
       end
     else
-      # My guess is flash[:warning] followed by a render will maintain flash's state
-      # onto the next page.
-      @warning = "There was an error establishing friendship with #{@user}."
-      display_error()
-      respond_to do |format|
-        format.html { render :action => 'show' }
-        format.js { render}
-      end
-      redirect_to @user
+      display_error(:message => "There was an error establishing friendship with #{@user}.")
     end
   end
   

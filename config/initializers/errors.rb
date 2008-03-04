@@ -27,8 +27,6 @@ class FriendshipError < StandardError
                     :pending      =>  :user,
                     :already      =>  :user }
   
-  attr_accessor :kind, :user, :friend
-  
   def initialize(*args)
     @kind = args.shift if args.first.is_a?(Symbol)
     @user = args.first

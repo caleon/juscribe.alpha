@@ -9,8 +9,8 @@ module Friendship
   
   def friend_ids; self[:friend_ids].to_a; end
   
-  def friends
-    @friends ||= User.find(self.friend_ids)
+  def friends(opts={})
+    @friends ||= User.find(self.friend_ids, opts)
   end
   
   def befriend(*args)

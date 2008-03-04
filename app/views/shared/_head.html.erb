@@ -1,5 +1,18 @@
 <head>
 	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
-	<title><%= APP[:name] %>: <%= main_record.to_s %></title>
-	<%= stylesheet_link_tag @skin %>
+	<%= yield :description %>
+	<%= yield :meta %>
+	
+	<title><%= APP[:name] %>: <%= main_record ? main_record.to_s : @page_title || 'Welcome' %></title>
+	<%= stylesheet_link_tag 'main', :cache => 'standard' %>
+	<%= yield :extra_stylesheets %>
+	<%= stylesheet_link_tag @skin if @skin %>
+
+	<%= render :partial => 'shared/javascripts' unless @config[:scripts_at_bottom] %>
+	
+<% if print_scripts_block?(:top) %>
+	<script type="text/javascript">
+	<%= yield :extra_top_scripts %>
+	</script>
+<% end %>
 </head>

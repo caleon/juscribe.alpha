@@ -6,7 +6,9 @@ class User < ActiveRecord::Base
   has_many :projects
   has_many :taggings
   has_many :owned_pictures, :class_name => 'Picture'
-  has_many :pictures, :as => :depictable
+  has_many :pictures, :as => :depictable, :order => :position
+  has_one :primary_picture, :class_name => 'Picture', :foreign_key => 'depictable_id',
+          :conditions => ["depictable_type = ?", 'User']
   has_many :memberships
   has_many :groups, :through => :memberships
   has_many :owned_groups, :class_name => 'Group'

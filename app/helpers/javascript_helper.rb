@@ -1,15 +1,12 @@
 module JavascriptHelper
+  
+  def add_behavior(selector, behavior)
+    add_inline_scripts("'#{selector}' : #{behavior}", :add_behavior)
+  end
+  
   def add_inline_scripts(content, kind=nil)
     if @config[:scripts_at_bottom]
-      case kind
-      when :add_behavior
-        content
-        (@extra_behaviors ||= []) << content
-      else
-        content += ';' unless content.rstrig.last == ';'
-        (@extra_scripts ||= []) << content
-      end
-      return nil
+      add_by_type(kind, content, true)
     else
       javascript_tag(kind == :add_behavior ? "Event.addBehavior({#{content}});" : content)
     end
@@ -17,15 +14,7 @@ module JavascriptHelper
   
   def add_scripts(kind=nil, &block)
     if @config[:scripts_at_bottom]
-      res = (str = capture(&block).rstrip).last == ';' ? str : "#{str};"
-      case kind
-      when :add_behavior
-        (@extra_behaviors ||= []) << res; return nil
-      when nil
-        (@extra_scripts ||= []) << res; return nil
-      else
-        raise ArgumentError, "Invalid `kind` in arguments. Expected nil or predefined symbols."
-      end
+      add_by_type(kind, res)
     else
       concat('<script type="text/javascript">', block.binding)
       concat(capture(&block), block.binding)
@@ -33,7 +22,49 @@ module JavascriptHelper
     end
   end
   
-  def add_behavior(selector, behavior)
-    add_inline_scripts("'#{selector}' : #{behavior}", :add_behavior)
+  def extra_behaviors
+    "Event.addBehavior({" + @extra_behaviors.join(', ') + "});" unless @extra_behaviors.blank?
+  end
+  
+  def print_scripts_block?(pos)
+    if pos == :top
+      !@content_for_extra_top_scripts.blank?
+    else
+      !(@extra_behaviors.blank? && @content_for_extra_bottom_scripts.blank?)
+    end
+  end
+  
+  #######
+  private
+  #######
+  def add_by_type(kind=nil, content, inline=false)
+    case kind
+    when :add_behavior
+      add_to_behaviors(res)
+    when nil
+      add_to_scripts(res)
+    else
+      raise ArgumentError, "Invalid `kind` in arguments. Expected nil or predefined symbols."
+    end
+  end
+  
+  def add_to_behaviors(content)
+    add_to_js_array(:behaviors, content)
+  end
+  
+  def add_to_scripts(content)
+    add_to_js_array(:scripts, content)
+  end
+  
+  def add_to_js_array(kind, content)
+    content.strip!
+    content += ';' unless content.rstrip.last == ';'
+    case kind
+    when :behaviors
+      (@extra_behaviors ||= []) << content
+    when :scripts
+      (@extra_scripts ||= []) << content
+    else
+    end
   end
 end

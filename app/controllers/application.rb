@@ -9,7 +9,7 @@ class ApplicationController < ActionController::Base
   # Uncomment the :secret if you're not using the cookie session store
   protect_from_forgery # :secret => 'a241500281274090ecdf656d5074d028'
   
-  #before_filter :load_config, :get_viewer
+  before_filter :load_config, :get_viewer
                  
   def error
     render :template => 'shared/warning', :layout => false

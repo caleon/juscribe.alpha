@@ -10,5 +10,4 @@ module Layoutable
   def skin_file
     "#{self.class.class_name.downcase}/" + skin
   end
-
 end

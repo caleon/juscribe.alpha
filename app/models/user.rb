@@ -1,20 +1,15 @@
 require 'digest/sha2'
 require 'user_associations'
+require 'user_validations'
 
 class User < ActiveRecord::Base
   include Friendship
   include PluginPackage
   
-  validates_presence_of     :email, :first_name, :last_name, :nick
-  validates_presence_of     :password_hash, :password_salt unless RAILS_ENV = 'test'
-  validates_uniqueness_of   :nick, :email
-  validates_format_of       :email, :with => /^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i, :on => :save
-  
   attr_protected :password_salt, :password_hash
   
   def wheel?
-    # Hardcoding this as well as preventing wheel password-changing because SQL values are too
-    # easily modified. TODO: For more security the wheel list should be in a file with restrictive
+    # TODO: For more security the wheel list should be in a file with restrictive
     # write privileges.
     ['colin'].include?(self.nick)
   end
@@ -29,7 +24,7 @@ class User < ActiveRecord::Base
     
   def to_param; self.nick; end #test
   
-  def to_s; "#{self.full_name} (#{self.nick})"; end
+  def to_s; self.full_name; end
   
   def full_name #test
     self.first_name +
