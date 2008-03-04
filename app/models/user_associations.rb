@@ -4,7 +4,7 @@ class User < ActiveRecord::Base
   has_many :songs
   has_many :events
   has_many :projects
-  has_many :taggings
+  has_many :owned_taggings, :class_name => 'Tagging'
   has_many :owned_pictures, :class_name => 'Picture'
   has_many :pictures, :as => :depictable, :order => :position
   has_one :primary_picture, :class_name => 'Picture', :foreign_key => 'depictable_id',

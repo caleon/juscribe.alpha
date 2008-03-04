@@ -49,7 +49,7 @@ class TaggableTest < Test::Unit::TestCase
     assert acc1.tags.empty?
     assert tag = acc1.add_tag('test', :user => @user)
     assert tag.valid? && tag.is_a?(Tag)
-    assert tagging = @user.taggings.first
+    assert tagging = @user.owned_taggings.first
     assert acc1, tagging.taggable
     assert !acc1.reload.tags.empty?
     assert tag2 = acc1.add_tag('test2', :user => @user)
