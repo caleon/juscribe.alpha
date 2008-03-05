@@ -122,6 +122,7 @@ class UsersController < ApplicationController
         flash[:notice] = "You are now logged in."
         redirect_to @user
       else
+        flash.now[:warning] = "There was an error logging you in."
         @user ||= User.new
         @user.errors.add(:nick, "is not a user in our database.") unless @user.nick
       end

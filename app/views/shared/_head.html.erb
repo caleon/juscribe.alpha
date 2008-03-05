@@ -5,7 +5,7 @@
 	<%= meta_tags %>
 	<%= auto_discovery_link_tag if action_accepts?(:xml) %>
 	<%= link_tags %>	
-	<%= stylesheet_link_tag 'main', :cache => true %>
+	<%= stylesheet_link_tag 'setup', 'main', :cache => true %>
 	<%= yield :extra_stylesheets %>
 	<%= stylesheet_link_tag @skin_file if @skin_file %>
 

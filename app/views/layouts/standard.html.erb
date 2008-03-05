@@ -4,11 +4,13 @@
 <%= render :partial => 'shared/head' %>
 <% body_tag_for(main_record) do %>
 	<% content_tag(:div, :id => 'wrapper') do %>
-		<%= render :partial => 'header' %>
-		<%= warning_field %>
-		<%= notice_field %>
-		<%= yield %>
-		<%= render :partial => 'footer' %>
+		<%= render :partial => 'shared/header' %>
+		<% content_tag(:div, :id => 'content') do %>
+			<%= warning_field %>
+			<%= notice_field %>
+			<%= yield %>
+		<% end %>
+		<%= render :partial => 'shared/footer' %>
 	<% end %>
 	<%= render :partial => 'shared/foot' %>
 <% end %>

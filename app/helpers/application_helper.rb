@@ -1,5 +1,8 @@
 # Methods added to this helper will be available to all templates in the application.
 module ApplicationHelper
+  def logged_in?
+    !@viewer.nil?
+  end
   
   ### Refer to config/initializers/action_controller_tweaks.rb
   def responding_types
@@ -23,11 +26,11 @@ module ApplicationHelper
   end
   
   def warning_field
-    content_tag(:div, flash[:warning], :id => 'flashWarning', :class => 'flashWarning') if flash[:warning]
+    content_tag(:div, flash[:warning], :id => 'flashWarning', :class => 'flashBox') if flash[:warning]
   end
   
   def notice_field
-    content_tag(:div, flash[:notice], :id => 'flashNotice', :class => 'flashNotice') if flash[:notice]
+    content_tag(:div, flash[:notice], :id => 'flashNotice', :class => 'flashBox') if flash[:notice]
   end
   
 end

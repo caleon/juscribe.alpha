@@ -1,0 +1,71 @@
+/**************** FONTS ******************************/
+
+/*
+Copyright (c) 2006, Yahoo! Inc. All rights reserved.
+Code licensed under the BSD License:
+http://developer.yahoo.net/yui/license.txt
+version: 0.11.0
+*/
+
+/**
+ * 84.5% for !IE, keywords for IE
+ * Percents could work for IE, but for backCompat purposes, we are using keywords.
+ * x-small is for IE < 6 and IE6 quirks mode.
+ * 
+ */
+body { font:13px #fff "Century Gothic", verdana, arial,helvetica,clean,sans-serif;*font-size:small;*font:x-small; }
+table { font-size:inherit;font:100%; }
+
+/**
+ * 99% for safari; 100% is too large
+ */
+select, input, textarea { font:99% arial,helvetica,clean,sans-serif; }
+
+/**
+ * Bump up !IE to get to 13px equivalent
+ */
+pre { font:115% monospace;*font-size:100%;background-color: #eee;padding: 10px;overflow: auto; margin-left: 0px; margin-right: 0px; width: auto; max-width: 300px; color: #333; min-height: 3em;}
+
+code { font:115% monospace;*font-size:100%;padding: 2px;overflow: auto; margin-left: 0px;, margin-right: 0px; width: auto; max-width: 300px; color: #333; }
+
+/**
+ * Default line-height based on font-size rather than "computed-value"
+ * see: http://www.w3.org/TR/CSS21/visudet.html#line-height
+ */
+body * { line-height:1.22em; }
+
+a { text-decoration: none; }
+a:visited { text-decoration: none; }
+a:hover { text-decoration: underline; }
+a:active { text-decoration: underline; }
+
+/* fonts-min file
+Copyright (c) 2006, Yahoo! Inc. All rights reserved.
+Code licensed under the BSD License:
+http://developer.yahoo.net/yui/license.txt
+version: 0.10.0
+*/
+body { font:13px arial,helvetica,clean,sans-serif;*font-size:small;*font:x-small;}table {font-size:inherit;font:100%; }
+select, input, textarea { font:99% arial,helvetica,clean,sans-serif;}
+pre, code { font:115% monospace;*font-size:100%;}
+body * { line-height:1.22em; }
+
+a.external, a[href^="http://bah"] {
+	background: url('/images/rails.png') no-repeat right top;
+	padding-right: 10px;
+}
+
+a.internal { background: url('/images/arrow.png') no-repeat right top; padding-right: 18px; }
+a.internal.small { background: url('/images/arrow10.png') no-repeat right top; padding-right: 14px; }
+a:hover.internal { background-image: url('/images/arrow-on.png'); }
+a:hover.internal.small { background-image: url('/images/arrow10-on.png'); }
+
+
+/**************** LAYOUT ******************************/
+
+body { margin: 0; padding: 0; }
+ul, ol { margin: 0; padding: 0; }
+li { margin: 0; padding: 0; }
+
+a {  }
+a img { border: none; }
