@@ -2,7 +2,9 @@
 config/database.yml
 config/
 config/preferences/*
-tmp/*
-log/*.log
 coverage/*
+log/*.log
+public/javascripts/all.js
+public/stylesheets/all.css
+tmp/*
 vendor/plugins/asset_packager/test/assets/*
