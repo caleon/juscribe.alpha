@@ -54,12 +54,13 @@ class User < ActiveRecord::Base
     return false
   end
   
-  def password; nil; end
-  
+  def password; self[:password]; end
+    
   def password=(pass)
     raise AbuseError, "You are not permitted to modify THAT user." if self.wheel?
     salt = [Array.new(6){rand(256).chr}.join].pack('m').chomp
     self.password_salt, self.password_hash = salt, Digest::SHA256.hexdigest(pass + salt)
+    self[:password] = pass
     return self
   end
 

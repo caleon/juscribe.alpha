@@ -2,8 +2,8 @@ class UsersController < ApplicationController
   before_filter :verify_logged_in, :except => [ :index, :show, :login, :friends, :about ]
   #FIXME: before_filter :only => [:edit, :update, :destroy, :mine] { authenticate(@user) }
   
-  #verify :method => :post, :only => [ ],
-  #       :redirect_to => { :action => :index }
+  verify :method => :post, :only => [ :create ],
+         :redirect_to => { :action => :index }
   
   def index
     limit, page = 10, params[:page].to_i + 1
@@ -27,11 +27,18 @@ class UsersController < ApplicationController
   end
   
   def new
-    
+    @user = User.new
   end
   
   def create
-    
+    @user = User.new(params[:user])
+    if @user.save
+      session[:user_id] = @user.id
+      flash[:notice] = "You are now a registered user! Welcome!"
+      redirect_to @user
+    else
+      render :action => 'new'
+    end
   end
   
   def edit
@@ -74,11 +81,12 @@ class UsersController < ApplicationController
   def logout
     flash[:notice] = "You are now logged out. See you soon!"
     redirect_to User.find(session[:user_id])
-    session[:user_id] = nil # TODO: reset_sessions and stuff like that.
+    session[:user_id] = nil
+    reset_session
   end
   
   def mine
-    
+    redirect_to User.find(session[:user_id])
   end
   
   def friends
