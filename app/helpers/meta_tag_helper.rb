@@ -6,6 +6,7 @@ module MetaTagHelper
     end
     
     def content; @content; end
+    def has_content?; !@content.nil?; end
     def options; @options; end
   end
   
@@ -45,7 +46,7 @@ module MetaTagHelper
   end
   
   def tagarize_meta(*meta_abstracts)
-    meta_abstracts.compact.map {|ma| content_tag(:meta, ma.content, ma.options) }.join("\r\n")
+    meta_abstracts.compact.select(&:has_content?).map {|ma| content_tag(:meta, ma.content, ma.options) }.join("\r\n")
   end
     
 end

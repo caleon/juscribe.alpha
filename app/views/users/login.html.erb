@@ -1,9 +1,9 @@
 <% form_for :user, @user do |f| %>
-	<%= label(:user, :nick) %><br />
+	<%= f.label :nick %><br />
 	<%= f.text_field :nick %>
 	<%= error_message_on @user, 'nick' %>
 	<br />
-	<%= label(:user, :password) %><br />
+	<%= f.label :password %><br />
 	<%= f.password_field :password %>
 	<%= error_message_on @user, 'password' %>
 <% end %>

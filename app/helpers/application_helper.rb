@@ -14,7 +14,7 @@ module ApplicationHelper
     opts = args.extract_options!
     record = args.shift
     concat content_tag(:body, capture(&block),
-                       (opts.merge(record ? { :id => "#{record.class}_page" } : {}))),
+                       (opts.merge(record ? { :id => "#{record.class.class_name.downcase}Page" } : {:id => 'Page'}))),
            block.binding
   end
   

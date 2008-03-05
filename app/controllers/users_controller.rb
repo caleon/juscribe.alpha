@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_filter :verify_logged_in, :except => [ :index, :show, :login, :friends, :about ]
+  before_filter :verify_logged_in, :except => [ :index, :show, :new, :create, :login, :friends, :about ]
   #FIXME: before_filter :only => [:edit, :update, :destroy, :mine] { authenticate(@user) }
   
   verify :method => :post, :only => [ :create ],
@@ -27,6 +27,7 @@ class UsersController < ApplicationController
   end
   
   def new
+    @page_title = "Registration Page"
     @user = User.new
   end
   
