@@ -31,9 +31,10 @@ class ApplicationController < ActionController::Base
   
   def verify_logged_in
     return true if session[:user_id]
+    msg = "You need to be logged in to do that."
     orig_respond_to do |format|
-      format.html { redirect_to login_url and return false }
-      format.js { render :controller => 'users', :action => 'login' and return false }
+      format.html { flash[:warning] = msg; redirect_to login_url and return false }
+      format.js { flash.now[:warning] = msg; render :controller => 'users', :action => 'login' and return false }
     end
   end
   

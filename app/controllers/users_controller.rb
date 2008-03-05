@@ -137,10 +137,10 @@ class UsersController < ApplicationController
   end
   
   def logout
-    flash[:notice] = "You are now logged out. See you soon!"
     redirect_to user_url(User.find(session[:user_id]))
     session[:user_id] = nil
     reset_session
+    flash[:notice] = "You are now logged out. See you soon!"
   end
   
   def mine
