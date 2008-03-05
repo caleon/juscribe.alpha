@@ -5,6 +5,7 @@
 <% body_tag_for(main_record) do %>
 	<% content_tag(:div, :id => 'wrapper') do %>
 		<%= render :partial => 'header' %>
+		<%= warning_field %>
 		<%= notice_field %>
 		<%= yield %>
 		<%= render :partial => 'footer' %>
