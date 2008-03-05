@@ -6,6 +6,7 @@ class User < ActiveRecord::Base
   include Friendship
   include PluginPackage
   
+  after_validation {|user| @password, user.password_confirmation = nil, nil}
   attr_protected :password_salt, :password_hash
   
   def wheel?
@@ -54,14 +55,19 @@ class User < ActiveRecord::Base
     return false
   end
   
-  def password; self[:password]; end
+  def password; @password; end
     
   def password=(pass)
     raise AbuseError, "You are not permitted to modify THAT user." if self.wheel?
     salt = [Array.new(6){rand(256).chr}.join].pack('m').chomp
+    @old_password_hash = self.password_hash
     self.password_salt, self.password_hash = salt, Digest::SHA256.hexdigest(pass + salt)
-    self[:password] = pass
+    @password = pass
     return self
+  end
+  
+  def password_changed?
+    self.new_record? || (self.instance_variable_get(:@old_password_hash) != self.password_hash)
   end
 
   def self.authenticate(nick, password)
