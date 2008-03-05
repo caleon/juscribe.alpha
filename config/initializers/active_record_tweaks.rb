@@ -22,7 +22,11 @@ module ActiveRecord
     def to_id; self[:id].to_i; end
   
     def internal_name(opts={})
-      "#{self.class}(#{self[:id]})"
-    end   
+      "#{self.to_param} (#{self.class}-#{self[:id]})"
+    end
+    
+    def display_name(opts={})
+      "#{self.to_param} (#{self.class})"
+    end
   end
 end

@@ -68,7 +68,7 @@ class ApplicationController < ActionController::Base
       flash[:warning] = msg
       redirect_to error_path || error_url
     else
-      @warning = msg
+      flash.now[:warning] = msg
       render error_path || { :template => 'shared/error' }
     end
   end

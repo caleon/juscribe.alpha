@@ -1,0 +1,16 @@
+<%= f.label :email %><br />
+<%= f.text_field :email %>
+<%= error_message_on @user, 'email' %>
+<br />
+<%= f.label :first_name %><br />
+<%= f.text_field :first_name %>
+<%= error_message_on @user, 'first_name' %>
+<br />
+<%= f.label :middle_initial %><br />
+<%= f.text_field :middle_initial, :size => 2, :maxlength => 1 %>
+<%= error_message_on @user, 'middle_initial '%>
+<br />
+<%= f.label :last_name %><br />
+<%= f.text_field :last_name %>
+<%= error_message_on @user, 'last_name' %>
+<br />

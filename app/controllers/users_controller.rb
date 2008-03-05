@@ -4,6 +4,8 @@ class UsersController < ApplicationController
   
   verify :method => :post, :only => [ :create ],
          :redirect_to => { :action => :index }
+  verify :method => :put, :only => [ :edit ],
+         :redirect_to => @user
   
   def index
     limit, page = 10, params[:page].to_i + 1
@@ -22,7 +24,7 @@ class UsersController < ApplicationController
     @layout = @user.layout
     respond_to do |format|
       format.html
-      format.xml
+      format.xml # Feed for user comment thread
     end
   end
   
@@ -33,21 +35,30 @@ class UsersController < ApplicationController
   
   def create
     @user = User.new(params[:user])
+    @user.nick, @user.email = params[:user][:nick], params[:user][:email]
     if @user.save
       session[:user_id] = @user.id
       flash[:notice] = "You are now a registered user! Welcome!"
       redirect_to @user
     else
+      flash.now[:warning] = "There was an issue with the registration form."
       render :action => 'new'
     end
   end
   
   def edit
-    return unless setup
+    return unless (setup && @user.editable_by?(@viewer))      
   end
   
   def update
-    return unless setup
+    return unless (setup && @user.editable_by?(@viewer))
+    if @user.update_attributes(params[:user])
+      flash[:notice] = "You have successfully edited #{@user.display_name}."
+      redirect_to @user
+    else
+      flash.now[:warning] = "There was an issue with the update form."
+      render :action => 'edit'
+    end
   end
   
   def change_password
@@ -62,17 +73,18 @@ class UsersController < ApplicationController
     @page_title = "Login Page"
     if request.post?
       if (@user = User.find_by_nick(params[:user][:nick])) && @user.authenticate(params[:user][:password])
-          session[:user_id] = @user.id
-          flash[:notice] = "You are now logged in."
-          redirect_to @user and return
+        session[:user_id] = @user.id
+        flash[:notice] = "You are now logged in."
+        redirect_to @user
       else
         @user ||= User.new
         @user.errors.add(:nick, "is not a user in our database.") unless @user.nick
       end
     else
       if session[:user_id]
+        user = User.find(session[:user_id])
         flash[:notice] = "You are already logged in."
-        redirect_to User.find(session[:user_id])
+        redirect_to user
       else
         @user = User.new
       end
@@ -81,12 +93,13 @@ class UsersController < ApplicationController
   
   def logout
     flash[:notice] = "You are now logged out. See you soon!"
-    redirect_to User.find(session[:user_id])
+    redirect_to user_url(User.find(session[:user_id]))
     session[:user_id] = nil
     reset_session
   end
   
   def mine
+    user = User.find(session[:user_id])
     redirect_to User.find(session[:user_id])
   end
   

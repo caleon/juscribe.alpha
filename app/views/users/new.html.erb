@@ -1,31 +1,4 @@
 <% form_for @user do |f| %>
-	<%= f.label :email %><br />
-	<%= f.text_field :email %>
-	<%= error_message_on @user, 'email' %>
-	<br />
-	<%= f.label :nick %><br />
-	<%= f.text_field :nick %>
-	<%= error_message_on @user, 'nick' %>
-	<br />
-	<%= f.label :password %><br />
-	<%= f.password_field :password %>
-	<%= error_message_on @user, 'password' %>
-	<br />
-	<%= f.label :password_confirmation %><br />
-	<%= f.password_field :password_confirmation %>
-	<%= error_message_on @user, 'password_confirmation' %>
-	<br />
-	<%= f.label :first_name %><br />
-	<%= f.text_field :first_name %>
-	<%= error_message_on @user, 'first_name' %>
-	<br />
-	<%= f.label :middle_initial %><br />
-	<%= f.text_field :first_name, :size => 1 %>
-	<%= error_message_on @user, 'middle_initial '%>
-	<br />
-	<%= f.label :last_name %><br />
-	<%= f.text_field :last_name %>
-	<%= error_message_on @user, 'last_name' %>
-	<br />
+	<%= render :partial => 'form', :layout => 'new_form', :locals => {:f => f} %>
 	<%= submit_tag "Register", :disable_with => "Please wait..." %>
 <% end %>

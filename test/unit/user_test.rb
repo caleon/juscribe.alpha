@@ -49,12 +49,13 @@ class UserTest < ActiveSupport::TestCase
                     :last_name         =>  'corleone',
                     :nick              =>  'mcorleone',
                     :email             =>  'mcorleone@venturous.net')
+    user.nick, user.email = 'mcorleone', 'mcorleone@venturous.net'
     assert user.password = pass_string, 'Setting a password should have returned an array.'
     assert user.password_salt, 'Password salt should be set at this point.'
     assert user.password_hash, 'Password hash should be set at this point.'
     assert !user.save, 'User should not save without confirmation.'
     user.password_confirmation = pass_string
-    assert user.save, 'User should properly save.'
+    assert user.save, "User should properly save. #{user.errors.inspect}"
     assert User.authenticate(user.nick, pass_string), 'User should properly authenticate'
     assert !User.authenticate(user.nick, 'wrong_password'), 'Wrong password should return false'
   end

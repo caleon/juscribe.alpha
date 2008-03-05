@@ -6,9 +6,11 @@ class User < ActiveRecord::Base
   include Friendship
   include PluginPackage
   
-  after_validation {|user| @password, user.password_confirmation = nil, nil}
-  attr_protected :password_salt, :password_hash
+  #set_primary_key "nick"
   
+  after_validation {|user| @password, user.password_confirmation = nil, nil}
+  attr_protected :nick, :email, :password_salt, :password_hash
+    
   def wheel?
     # TODO: For more security the wheel list should be in a file with restrictive
     # write privileges.
@@ -22,6 +24,12 @@ class User < ActiveRecord::Base
   def wants_notifications_for?(*args)
     false # TODO: stubbed :event_share
   end
+  
+  #def id; self.nick; end
+  # This is done as last resort for activeresource to properly generate urls
+  # But this makes things nasty and i woudl rather not make this change.
+  # TODO: Find the code that calls #id on the record from within
+  # ActionController::Base or ::Routing
     
   def to_param; self.nick; end #test
   
