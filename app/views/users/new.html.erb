@@ -1,5 +1,5 @@
 <% form_for @user do |f| %>
 	<%= error_messages_for :user %>
-	<%= render :partial => 'form', :layout => 'new_form', :locals => {:f => f} %>
+	<%= render :partial => 'form', :layout => 'new_form', :locals => { :f => f } %>
 	<%= submit_tag "Register", :disable_with => "Please wait..." %>
 <% end %>

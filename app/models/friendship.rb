@@ -4,11 +4,11 @@ module Friendship
   end
   
   def friends_with?(user)
-    self.friend_ids.include?(user.id) && user.friend_ids.include?(self.id)
+    self != user && self.friend_ids.include?(user.id) && user.friend_ids.include?(self.id)
   end
   
   def kinda_friends_with?(user)
-    self.friend_ids.include?(user.id)
+    self != user && self.friend_ids.include?(user.id)
   end
       
   def friend_ids; self[:friend_ids].to_a; end

@@ -1,0 +1,19 @@
+<div class="sub navigation">
+	<ul class="navigationList">
+<% if logged_in? && @user %>
+		<li class="navigationEl"><%= link_to @user.nick, @user %></li>
+	<% if @user.editable_by?(@viewer) %>
+		<li class="navigationEl"><%= link_to 'Edit', edit_user_path(@user) %></li>
+		<li class="navigationEl"><%= link_to 'Change Password', edit_password_user_path(@user) %></li>
+	<% end %>
+<% end %>
+		<li class="navigationEl"><%= link_to 'Friends', friends_user_path(@user) %></li>
+<% if logged_in? && @user %>
+	<% if @viewer.friends_with?(@user) %>
+		<li class="navigationEl"><%= link_to 'Unfriend', unfriend_user_path(@user) %></li>
+	<% elsif @viewer != @user && !@viewer.kinda_friends_with?(@user) %>
+		<li class="navigationEl"><%= link_to 'Request Friendship', befriend_user_path(@user) %></li>
+	<% end %>
+<% end %>
+	</ul>
+</div>
