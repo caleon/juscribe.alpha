@@ -3,8 +3,7 @@ class ArticlesController < ApplicationController
   #before_filter :setup, :except => [ :index, :list, :new, :create ]
   # FIXME: before_filter :only => [:edit, :update] { authenticate(@article) }
     
-  #verify :method => :post, :only => [ ],
-  #       :redirect_to => { :action => :index }
+  #verify :method => :post, :only => [ ]
     
   def index
     subredirect

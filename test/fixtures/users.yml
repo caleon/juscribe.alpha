@@ -6,24 +6,29 @@ colin:
   last_name: chun
   nick: colin
   email: colin@venturous.net
+  birthdate: 1985-01-29
 nana:
   first_name: $LABEL
   middle_initial: n
   last_name: park
   nick: nana
   email: nana@venturous.net
+  birthdate: 1985-01-29
 alessandra:
   first_name: $LABEL
   last_name: ambrosio
   nick: ale
   email: ale@venturous.net
+  birthdate: 1985-01-29
 megan:
   first_name: $LABEL
   last_name: fox
   nick: mfox
   email: mfox@venturous.net
+  birthdate: 1985-01-29
 keira:
   first_name: $LABEL
   last_name: knightley
   nick: kknight
   email: kknight@venturous.net
+  birthdate: 1985-01-29

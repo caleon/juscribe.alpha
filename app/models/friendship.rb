@@ -7,6 +7,10 @@ module Friendship
     self.friend_ids.include?(user.id) && user.friend_ids.include?(self.id)
   end
   
+  def kinda_friends_with?(user)
+    self.friend_ids.include?(user.id)
+  end
+      
   def friend_ids; self[:friend_ids].to_a; end
   
   def friends(opts={})
@@ -23,9 +27,10 @@ module Friendship
     if opts[:save] ||= true
       self[:friend_ids] = new_friend_ids
       self.save!
-      Notifier.deliver_friendship_request(user, :friend_id => self.id)
+      Notifier.deliver_friendship_request(user, :friend_id => self.id) unless self.friends_with?(user)
     else
       self.friend_ids = new_friend_ids
+      # Needs to deliver request email separately.
     end
     self.friends_with?(user) ? 1 : 0
   rescue ArgumentError

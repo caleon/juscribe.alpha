@@ -2,10 +2,9 @@ class UsersController < ApplicationController
   before_filter :verify_logged_in, :except => [ :index, :show, :new, :create, :login, :friends, :about ]
   #FIXME: before_filter :only => [:edit, :update, :destroy, :mine] { authenticate(@user) }
   
-  verify :method => :post, :only => [ :create ],
-         :redirect_to => { :action => :index }
-  verify :method => :put, :only => [ :update ],
-         :redirect_to => @user
+  verify :method => :post, :only => [ :create ]
+  verify :method => :put, :only => [ :update ]
+  verify :method => :put, :only => :update_password
   
   def index
     limit, page = 10, params[:page].to_i + 1
@@ -29,7 +28,7 @@ class UsersController < ApplicationController
   end
   
   def new
-    @page_title = "Registration Page"
+    @page_title = "Registration"
     @user = User.new
   end
   
@@ -38,39 +37,85 @@ class UsersController < ApplicationController
     @user.nick, @user.email = params[:user][:nick], params[:user][:email]
     if @user.save
       session[:user_id] = @user.id
-      flash[:notice] = "You are now a registered user! Welcome!"
-      redirect_to @user
+      msg = "You are now a registered user! Welcome!"
+      respond_to do |format|
+        format.html { flash[:notice] = msg; redirect_to @user }
+        format.js { flash.now[:notice] = msg }
+      end
     else
       flash.now[:warning] = "There was an issue with the registration form."
-      render :action => 'new'
+      respond_to do |format|
+        format.html { render :action => 'new' }
+        format.js { render :action => 'create_error' }
+      end
     end
   end
   
   def edit
     return unless (setup && @user.editable_by?(@viewer))      
+    @page_title = "#{@user.nick} - Edit"
   end
   
   def update
     return unless (setup && @user.editable_by?(@viewer))
     if @user.update_attributes(params[:user])
-      flash[:notice] = "You have successfully edited #{@user.display_name}."
-      redirect_to @user
+      msg = "You have successfully edited #{@user.display_name}."
+      respond_to do |format|
+        format.html { flash[:notice] = msg; redirect_to @user }
+        format.js { flash.now[:notice] = msg }
+      end
     else
       flash.now[:warning] = "There was an issue with the update form."
-      render :action => 'edit'
+      respond_to do |format|
+        format.html { render :action => 'edit' }
+        format.js { render :action => 'update_error' }
+      end
     end
   end
   
-  def change_password
-    return unless setup
+  def edit_password
+    return unless (setup && @user.editable_by?(@viewer))
+    @page_title = "#{@user.nick} - Edit Password"
+  end
+  
+  def update_password
+    return unless (setup && @user.editable_by?(@viewer))
+    if @user.update_attributes(params[:user])
+      msg = "You have successfully changed your password."
+      respond_to do |format|
+        format.html { flash[:notice] = msg; redirect_to @user }
+        format.js { flash.now[:notice] = msg }
+      end
+    else
+      flash.now[:warning] = "There was an issue with the change password form."
+      respond_to do |format|
+        format.html { render :action => 'edit_password' }
+        format.js { render :action => 'update_password_error' }
+      end
+    end      
   end
   
   def destroy
     return unless setup
+    if @user.editable_by?(@viewer)
+      # Set to disabled user if !admin?
+      # Delete if admin?
+      msg = "You have deleted #{@user.display_name}."
+      respond_to do |format|
+        format.html { flash[:notice] = msg; redirect_to :back }
+        format.js { flash.now[:notice] = msg }
+      end
+    else
+      flash.now[:warning] = "You are not allowed to delete #{@user.display_name}."
+      respond_to do |format|
+        format.html { render :action => 'edit' }
+        format.js { render :action => 'destroy_error' }
+      end
+    end
   end
   
-  def login
-    @page_title = "Login Page"
+  def login # login and logout actions only responds to html
+    @page_title = "Login"
     if request.post?
       if (@user = User.find_by_nick(params[:user][:nick])) && @user.authenticate(params[:user][:password])
         session[:user_id] = @user.id
@@ -110,7 +155,7 @@ class UsersController < ApplicationController
   
   def befriend
     return unless setup
-    if res = @viewer.befriend(@user)
+    if res = @viewer.befriend(@user) # This sends out notifier.
       @notice = [ "You have requested friendship with #{@user}.",
                   "You are now friends with #{@user}." ][res]
       respond_to do |format|
@@ -121,20 +166,47 @@ class UsersController < ApplicationController
         format.js          
       end
     else
-      display_error(:message => "There was an error establishing friendship with #{@user}.")
+      flash.now[:warning] = "There wasn an error friending #{@user.display_name}."
+      respond_to do |format|
+        format.html do
+          params[:id] = @viewer.nick
+          show
+          render :action => 'show'
+        end
+        format.js { render :action => 'befriend_error' }
+      end
     end
   end
   
   def unfriend
     return unless setup
+    if @viewer.kinda_friends_with?(@user) && @viewer.unfriend(@user)
+      msg = "You are no longer friends with #{@user.display_name}."
+      respond_to do |format|
+        format.html { flash[:notice] = msg; redirect_to @viewer }
+        format.js { flash.now[:notice] = msg; }
+      end
+    else
+      flash.now[:warning] = "You cannot unfriend #{@user.display_name}."
+      respond_to do |format|
+        format.html do
+          params[:id] = @viewer.friends_with?(@user) ? @user.nick : @viewer.nick
+          show
+          render :action => 'show'
+        end
+        format.js { render :action => 'unfriend_error'}
+      end
+    end
   end
   
   def mailbox
-    return unless setup
-  end
-  
-  def message
-    return unless setup
+    # FIXME: The following includes array makes it draw ALL associated messages.
+    return unless setup([{ :messages => { :sender => :primary_picture } },
+                         { :sent_messages => { :recipient => :primary_picture } },
+                         { :drafts => {:recipient => :primary_picture } }])
+    @messages = @viewer.messages.find(:all, :include => {:sender => :primary_picture}, :limit => 20)
+    @sent_messages = @viewer.sent_messages.find(:all, :include => {:recipient => :primary_picture}, :limit => 20)
+    @drafts = @viewer.drafts.find(:all, :include => {:recipient => :primary_picture}, :limit => 20)
   end
   
   def about
@@ -143,7 +215,7 @@ class UsersController < ApplicationController
   
   private
   def setup(includes=nil, opts={})
-    if params[:id] && @user = User.find_by_nick(params[:id])
+    if params[:id] && @user = User.find_by_nick(params[:id], :include => includes)
       true
     else
       display_error(opts)

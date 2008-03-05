@@ -8,8 +8,8 @@ class User < ActiveRecord::Base
   
   #set_primary_key "nick"
   
-  after_validation {|user| @password, user.password_confirmation = nil, nil}
   attr_protected :nick, :email, :password_salt, :password_hash
+  attr_accessor :tos_agreement
   # TODO: verify changed email with Notifier.
     
   def wheel?
@@ -50,6 +50,19 @@ class User < ActiveRecord::Base
     "#{self.full_name} <#{self.email}>"
   end
   
+  def age
+    today, bday = Date.today, self.birthdate
+    years = today.year - bday.year
+    years -= 1 if (bday + years.years) > today
+    years
+  end
+  
+  def sex(full=false)
+    return nil unless self[:sex]
+    sym = [:f, :m][self[:sex]]
+    full ? { :f => 'female', :m => 'male' }[sym] : sym.to_s
+  end
+  
   def found(attrs={})
     grp = self.owned_groups.new(attrs)
     raise LimitError, "You (#{self.internal_name}) have reached the maximum number of groups you can found (#{APP[:limits][:groups]}). Please contact #{APP[:contact]} to resolve this issue." if self.owned_groups.count >= APP[:limits][:groups]
@@ -62,6 +75,11 @@ class User < ActiveRecord::Base
   rescue LimitError => e
     grp.errors.add_to_base(e.message)
     return false
+  end
+  
+  def email=(addy)
+    @old_email = self.email
+    self[:email] = addy
   end
   
   def password; @password; end

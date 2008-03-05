@@ -4,6 +4,12 @@ class User < ActiveRecord::Base
   has_many :songs
   has_many :events
   has_many :projects
+  has_many :messages, :foreign_key => 'recipient_id', :conditions => "sent IS TRUE",
+           :order => 'id DESC'
+  has_many :sent_messages, :class_name => 'Message', :foreign_key => 'sender_id',
+           :conditions => "sent IS TRUE", :order => 'id DESC'
+  has_many :drafts, :class_name => 'Message', :foreign_key => 'sender_id',
+           :conditions => "sent IS FALSE", :order => 'id DESC'
   has_many :owned_taggings, :class_name => 'Tagging'
   has_many :owned_pictures, :class_name => 'Picture'
   has_many :pictures, :as => :depictable, :order => :position

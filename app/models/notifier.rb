@@ -14,6 +14,14 @@ class Notifier < ActionMailer::Base
     @headers = {}
   end
   
+  def password_change_notification(user)
+    
+  end
+  
+  def email_change_notification(user)
+    
+  end
+  
   def comment_notification(comment_id, orig_comment_id=nil)
     comment = Comment.find(comment_id, :include => (orig_comment_id ? {:original => :user} : {:responsible => :user}))
     if orig_comment_id && orig_comment = comment.original

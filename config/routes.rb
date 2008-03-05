@@ -30,8 +30,8 @@ ActionController::Routing::Routes.draw do |map|
   # See how all your routes lay out with "rake routes"
   
   map.resources :users,
-                :collection => { :login => :any, :logout => :any, :mine => :get, :mailbox => :get },
-                :member => { :friends => :get, :befriend => :any, :unfriend => :any, :message => :any, :about => :get }
+                :member => { :friends => :get, :befriend => :any, :unfriend => :any, :about => :get, :edit_password => :get }
+  map.resources :messages
   
   map.resources :articles
   
@@ -39,6 +39,10 @@ ActionController::Routing::Routes.draw do |map|
   
   map.resources :search
 
+  map.login 'login', :controller => 'users', :action => 'login'
+  map.logout 'logout', :controller => 'users', :action => 'logout'
+  map.mine 'mine', :controller => 'users', :action => 'mine'
+  map.mailbox 'mailbox', :controller => 'users', :action => 'mailbox'
   map.contents 'contents/:topic', :controller => 'main', :action => 'contents', :topic => nil
   map.help 'help/:topic', :controller => 'main', :action => 'help', :topic => nil
   map.copyright 'copyright', :controller => 'main', :action => 'copyright'
