@@ -10,6 +10,7 @@ class User < ActiveRecord::Base
   
   after_validation {|user| @password, user.password_confirmation = nil, nil}
   attr_protected :nick, :email, :password_salt, :password_hash
+  # TODO: verify changed email with Notifier.
     
   def wheel?
     # TODO: For more security the wheel list should be in a file with restrictive
@@ -40,8 +41,8 @@ class User < ActiveRecord::Base
   end
   
   def full_name #test
-    self.first_name.to_s +
-    (self.middle_initial ? "#{self.middle_initial}." : " ") +
+    self.first_name.to_s + " " +
+    (self.middle_initial ? "#{self.middle_initial}. " : " ") +
     self.last_name.to_s
   end
   
@@ -72,10 +73,6 @@ class User < ActiveRecord::Base
     self.password_salt, self.password_hash = salt, Digest::SHA256.hexdigest(pass + salt)
     @password = pass
     return self
-  end
-  
-  def password_changed?
-    self.new_record? || (self.instance_variable_get(:@old_password_hash) != self.password_hash)
   end
 
   def self.authenticate(nick, password)

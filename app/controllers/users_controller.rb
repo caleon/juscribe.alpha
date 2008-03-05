@@ -4,7 +4,7 @@ class UsersController < ApplicationController
   
   verify :method => :post, :only => [ :create ],
          :redirect_to => { :action => :index }
-  verify :method => :put, :only => [ :edit ],
+  verify :method => :put, :only => [ :update ],
          :redirect_to => @user
   
   def index

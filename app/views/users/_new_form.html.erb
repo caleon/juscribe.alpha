@@ -10,4 +10,8 @@
 <%= f.password_field :password_confirmation %>
 <%= error_message_on @user, 'password_confirmation' %>
 <br />
+<%= f.label :email %><br />
+<%= f.text_field :email %>
+<%= error_message_on @user, 'email' %>
+<br />
 <%= yield %>
