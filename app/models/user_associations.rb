@@ -27,4 +27,10 @@ class User < ActiveRecord::Base
     def pictures; find(:all, :conditions => "responsible_type = 'Picture'"); end
     def groups; find(:all, :conditions => "responsible_type = 'Group'"); end
   end
+  
+  def primary_picture_path
+    self.primary_picture.file_path
+  rescue NoMethodError
+    nil
+  end
 end

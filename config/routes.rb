@@ -46,7 +46,6 @@ ActionController::Routing::Routes.draw do |map|
   map.contents 'contents/:topic', :controller => 'main', :action => 'contents', :topic => nil
   map.help 'help/:topic', :controller => 'main', :action => 'help', :topic => nil
   map.copyright 'copyright', :controller => 'main', :action => 'copyright'
-  #map.user 'user/view/:id', :controller => 'users', :action => 'show'  
 
   # Install the default routes as the lowest priority.
   map.connect ':controller/:action/:id'
