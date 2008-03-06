@@ -18,9 +18,9 @@ class UsersController < ApplicationController
       
   def show
     return unless setup
-    @widgets = @user.widgets # TODO: including :widgetable not allowed. write sql.
+    @widgets = @user.widgets.placed # TODO: including :widgetable not allowed. write sql.
     @skin_file = @user.skin_file
-    @layout = @user.layout
+    @layout_file = @user.layout_file
     respond_to do |format|
       format.html
       format.xml # Feed for user comment thread

@@ -18,7 +18,14 @@ class User < ActiveRecord::Base
   has_many :memberships
   has_many :groups, :through => :memberships
   has_many :owned_groups, :class_name => 'Group'
-  has_many :widgets, :order => :position
+  has_many :widgets, :order => :position do
+    def placed(limit=nil)
+      find(:all, :conditions => "position IS NOT NULL", :limit => limit)
+    end
+    def unplaced(limit=nil)
+      find(:all, :conditions => "position IS NULL", :limit => limit)
+    end 
+  end
   has_many :favorite, :class_name => 'Favorite', :order => 'id desc' do
     def articles; find(:all, :conditions => "responsible_type = 'Article'"); end
     def comments; find(:all, :conditions => "responsible_type = 'Comment'"); end

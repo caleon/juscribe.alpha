@@ -7,6 +7,7 @@ class Article < ActiveRecord::Base
   before_save :make_permalink
   validates_uniqueness_of :permalink
   
+  def name; self.title; end
   def to_param; self.permalink; end # This should mean the permalink becomes param[:id]
   
   def publish!; self.published = true; self.save!; end
