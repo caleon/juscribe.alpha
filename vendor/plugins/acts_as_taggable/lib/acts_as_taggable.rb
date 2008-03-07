@@ -2,6 +2,11 @@ module ActiveRecord
   module Acts #:nodoc:
     module Taggable #:nodoc:
       def self.included(base)
+        # CHANGED: this following class_eval. Actually a lot in this file.
+        base.class_eval <<-EOS
+          def self.taggable?; false; end
+          def taggable?; false; end
+        EOS
         base.extend(ClassMethods)  
       end
       
@@ -42,6 +47,8 @@ module ActiveRecord
           opts = args.extract_options!
           # TODO: Stubbed. Make look like #find_similar
         end
+        
+        def taggable?; true; end
       end
       
       module InstanceMethods
@@ -88,7 +95,8 @@ module ActiveRecord
               (options[:threshold] ? "HAVING similar_count > #{options[:threshold]} " : "") +
               "ORDER BY similar_count DESC LIMIT #{limit}")
         end
-
+        
+        def taggable?; true; end
       end
     end
   end

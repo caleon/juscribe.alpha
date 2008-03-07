@@ -1,4 +1,7 @@
-module Layoutable
+module Layoutable # included when PluginPackage is included
+  # don't use this unless this module needs to add class level methods.
+  # def layoutable?; true; end
+  
   def layout
     self[:layout] || 'default'
   end

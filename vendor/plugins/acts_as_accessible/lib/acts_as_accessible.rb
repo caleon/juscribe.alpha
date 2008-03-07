@@ -2,6 +2,10 @@ module ActiveRecord
   module Acts #:nodoc:
     module Accessible #:nodoc:
       def self.included(base)
+        base.class_eval <<-EOS
+          def self.accessible?; false; end
+          def accessible?; false; end
+        EOS
         base.extend(ClassMethods)  
       end
       
@@ -23,7 +27,7 @@ module ActiveRecord
       end
       
       module SingletonMethods
-        
+        def accessible?; true; end
       end
       
       module InstanceMethods        
@@ -63,7 +67,8 @@ module ActiveRecord
           end
           permission_rule
         end
-
+        
+        def accessible?; true; end
       end
     end
   end

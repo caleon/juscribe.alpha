@@ -3,6 +3,10 @@ module ActiveRecord
   module Acts #:nodoc:
     module Responsible #:nodoc:
       def self.included(base)
+        base.class_eval <<-EOS
+          def self.responsible?; false; end
+          def responsible?; false; end
+        EOS
         base.extend(ClassMethods)  
       end
       
@@ -36,7 +40,7 @@ module ActiveRecord
       end
       
       module SingletonMethods
-        
+        def responsible?; true; end
       end
       
       module InstanceMethods
@@ -77,6 +81,7 @@ module ActiveRecord
           self.ratings.create(attrs)          
         end
 
+        def responsible?; true; end
       end
     end
   end

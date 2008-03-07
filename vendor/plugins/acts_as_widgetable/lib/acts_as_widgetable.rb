@@ -2,7 +2,11 @@ module ActiveRecord
   module Acts #:nodoc:
     module Widgetable #:nodoc:
       def self.included(base)
-        base.extend(ClassMethods)  
+        base.class_eval <<-EOS
+          def self.widgetable?; false; end
+          def widgetable?; false; end
+        EOS
+        base.extend(ClassMethods)
       end
       
       module ClassMethods
@@ -28,7 +32,7 @@ module ActiveRecord
       end
       
       module SingletonMethods
-        
+        def widgetable?; true; end
       end
       
       module InstanceMethods
@@ -53,7 +57,8 @@ module ActiveRecord
           raise ArgumentError, "Hash pair for :user_id/:user must be supplied." unless attrs[:user_id] ||= (attrs[:user].id if attrs[:user].is_a?(User))
           self.clips.find_by_user_id(attrs[:user_id]).destroy rescue nil
         end
-
+        
+        def widgetable?; true; end
       end
     end
   end
