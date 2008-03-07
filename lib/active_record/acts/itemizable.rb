@@ -39,7 +39,6 @@ module ActiveRecord::Acts::Itemizable
 
       validates_uniqueness_of :id,
             :scope => :"#{acts_as_itemizable_options[:list_class_id]}" # => :list_id
-      #validates_presence_of :position, :unless => :no_list?
       
       include ActiveRecord::Acts::Itemizable::InstanceMethods
       extend ActiveRecord::Acts::Itemizable::SingletonMethods
@@ -61,10 +60,6 @@ module ActiveRecord::Acts::Itemizable
   module InstanceMethods
     def accessible_by?(user)
       self.list.nil? ? super : (self.list.accessible_by?(user) && super)
-    end
-  
-    def no_list?
-      self.list.nil?
     end
     
     def itemizable?; true; end

@@ -1,0 +1,23 @@
+caleon:
+  type: UserAdmin
+  id: 0
+  nick: top
+  email: caleon@venturous.net
+  first_name: caleon
+  middle_initial: ~
+  last_name: chun
+  birthdate: <%= Date.parse('1/29/1985') %>
+  sex: 1
+  password_salt: nTD3j1K1
+  password_hash:36b193abe2ef178baf3517dbb1cc1862c3ad598ad9a81d66d2af17b56528fcac
+colin:
+  id: 1
+  nick: colin
+  email: colin@venturous.net
+  first_name: colin
+  middle_initial: p
+  last_name: chun
+  birthdate: <%= Date.parse('1/29/1985') %>
+  sex: 1
+  password_salt: BgymlDt+
+  password_hash: 0aac32388a4c248e232bec68771a4dd03c4ce60466cbdfb128353998622caec0

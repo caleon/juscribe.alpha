@@ -1,0 +1,8 @@
+everyone:
+  id: 0
+  name: Everyone
+  user_id: 0
+admins:
+  id: 1
+  name: Administrators
+  user_id: 0
