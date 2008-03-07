@@ -4,4 +4,9 @@ class Item < ActiveRecord::Base
 
   belongs_to :user
   
+  validates_presence_of :user_id, :list_id
+  validates_associated :list
+  
+  def name; self[:name] || "Untitled Item"; end
+  
 end

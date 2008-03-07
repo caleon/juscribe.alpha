@@ -120,7 +120,7 @@ class AccessibleTest < Test::Unit::TestCase
     rule1.undo_allow!(:user, @stranger)
     assert rule1.allowed[:user].empty?
     assert !acc1.accessible_by?(@stranger)
-    group = Group.create(:name => 'makito')
+    group = Group.create(:name => 'makito', :user => @stranger)
     mem = group.memberships.create
     @stranger.memberships << mem
     assert group.users.include?(@stranger)

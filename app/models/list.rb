@@ -18,12 +18,17 @@ class List < ActiveRecord::Base
     end
     private :set_itemizables
   end
-  
+    
   set_itemizables
   include PluginPackage
 
   belongs_to :user
   
+  validates_presence_of :user_id
+  validates_associated :items
+  
   STYLES = %w( cardinal ordinal roman numerical dashed dotted )
+  
+  def name; self[:name] || "Untitled List"; end
   
 end

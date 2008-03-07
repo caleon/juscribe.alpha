@@ -5,6 +5,13 @@ class Article < ActiveRecord::Base
   has_many :pictures, :as => :depictable
   
   before_save :make_permalink
+  
+  validates_presence_of :user_id, :title, :permalink, :content
+  # The following necessary because of... of what? (permalink is a different issue)
+  # validates_format_of :title, :with => /[-_a-z0-9'"\s\/:;\(\)\&\*\%\$\#\@\!\?\.\,\+\=\~]{3,}/i
+  validates_format_of :permalink, :with => /[-_a-z0-9]{3,}/i,
+                      :message => "is already taken: please edit your title"
+  validates_length_of :title, :in => (3..50)
   validates_uniqueness_of :permalink
   
   def name; self.title; end
@@ -12,6 +19,11 @@ class Article < ActiveRecord::Base
   
   def publish!; self.published = true; self.save!; end
   def unpublish!; self.published = false; self.save!; end
+  
+  def title=(str)
+    self[:title] = str
+    make_permalink
+  end
   
   ############ CLASS METHODS ###
   class << self    
@@ -43,10 +55,10 @@ class Article < ActiveRecord::Base
   #######
   private
   #######
-  def make_permalink(arg=nil)
-    str = (arg || self.title).gsub(/['"]+/i, '').gsub(/[^a-z0-9]+/i, '-')
+  def make_permalink(opts={})
+    str = (opts[:title] || self.title).gsub(/['"]+/i, '').gsub(/[^a-z0-9]+/i, '-')
     str.chop! if str.last == "-"
-    self.permalink = str unless arg
+    self.permalink = str unless opts[:with_save]
   end
      
 end

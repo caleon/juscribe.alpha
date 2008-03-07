@@ -5,7 +5,7 @@ class Event < ActiveRecord::Base
   has_many :picture, :as => :depictable
   has_many :entries, :order => 'created_at DESC'
     
-  validates_presence_of :user_id, :title
+  validates_presence_of :user_id, :name
   
   def begin!(time=Time.now, force=false)
     if !self.begins_at.nil? && !force

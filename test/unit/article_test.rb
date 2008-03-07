@@ -3,7 +3,7 @@ require File.dirname(__FILE__) + '/../test_helper'
 class ArticleTest < ActiveSupport::TestCase
   # Replace this with your real tests.
   def setup
-    @sample_article = Article.create(:title => 'Testing post a6^% 8j4$9)1&!2@ lala[]', :content => 'hi hi hi 2ja z; 39fr; a893; 23;fjkdkja"]3zcv8 "')
+    @sample_article = Article.create(:title => 'Testing post a6^% 8j4$9)1&!2@ lala[]', :content => 'hi hi hi 2ja z; 39fr; a893; 23;fjkdkja"]3zcv8 "', :user => users(:colin))
   end
   
   def test_publish_and_unpublish

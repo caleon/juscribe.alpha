@@ -4,8 +4,10 @@ class Song < ActiveRecord::Base
 
   belongs_to :user
   
-  #alias :name :title
-  #alias :name= :title=
-  #widget_alias :name, :title
+  validates_presence_of :title, :artist, :user_id
+  
+  # something like 'widget_alias :name, :title' can handle the following mapping.
+  def name; self.title; end
+  def name=(str); self.title = str; end
   
 end

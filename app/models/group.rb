@@ -10,7 +10,7 @@ class Group < ActiveRecord::Base
   end
   has_many :pictures, :as => :depictable
   
-  validates_presence_of :name
+  validates_presence_of :name, :user_id
   validates_uniqueness_of :name
   
   attr_protected :rank
