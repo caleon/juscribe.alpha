@@ -12,6 +12,8 @@ class Group < ActiveRecord::Base
   
   validates_presence_of :name, :user_id
   validates_uniqueness_of :name
+  validates_length_of :name, :in => (3..20)
+  validates_format_of :name, :with => /^[^\s].+[^\s]$/i
   
   attr_protected :rank
     

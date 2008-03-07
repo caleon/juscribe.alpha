@@ -20,7 +20,7 @@ module ActiveRecord::Acts::Itemizable
         :list_class => list_class, # => Gallery
         :list_class_sym => list_class.to_s.underscore.intern, # => :gallery
         :list_table_name => list_table_name, # => "lists"
-        :list_class_id => list_table_name.singularize + '_id' # => "list_id"
+        :list_class_id => list_table_name.singularize + '_id'
       })
       
       class_inheritable_reader :acts_as_itemizable_options
@@ -33,11 +33,13 @@ module ActiveRecord::Acts::Itemizable
         belongs_to :list, :class_name => acts_as_itemizable_options[:list_class_name],
                    :foreign_key => acts_as_itemizable_options[:list_class_id]
       end
-      acts_as_list :scope => acts_as_itemizable_options[:list_class_sym] # => :gallery
+      acts_as_list :scope =>
+      acts_as_itemizable_options[:list_table_name].singularize.intern # => :list
+      #{}"#{acts_as_itemizable_options[:list_table_name].singularize}_id = self"
 
       validates_uniqueness_of :id,
             :scope => :"#{acts_as_itemizable_options[:list_class_id]}" # => :list_id
-      validates_presence_of :position, :unless => :no_list?
+      #validates_presence_of :position, :unless => :no_list?
       
       include ActiveRecord::Acts::Itemizable::InstanceMethods
       extend ActiveRecord::Acts::Itemizable::SingletonMethods

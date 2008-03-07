@@ -15,9 +15,8 @@ module ActiveRecord
 end
 
 
-### acts_as_list fix For Widgetable
-ActiveRecord::Acts::List::InstanceMethods.class_eval do
-  alias_method :orig_add_to_list_bottom, :add_to_list_bottom
+## acts_as_list fix For Widgetable
+module ActiveRecord::Acts::List::InstanceMethods
   def add_to_list_bottom
     self[position_column] = bottom_position_in_list.to_i + 1 unless (self.new_record? && self.is_a?(Widget))
   end

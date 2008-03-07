@@ -5,7 +5,7 @@ class Item < ActiveRecord::Base
   belongs_to :user
   
   validates_presence_of :user_id, :list_id
-  validates_associated :list
+  validates_format_of :name, :with => /^[^\s].+[^\s]$/i
   
   def name; self[:name] || "Untitled Item"; end
   

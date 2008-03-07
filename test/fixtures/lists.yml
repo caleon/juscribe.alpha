@@ -7,4 +7,22 @@
 #   column: value
 
 normal:
+  name: $LABEL
   user: colin
+  type: ~
+gallery:
+  name: $LABEL
+  user: colin
+  type: Gallery
+portfolio:
+  name: $LABEL
+  user: colin
+  type: Portfolio
+playlist:
+  name: $LABEL
+  user: colin
+  type: Playlist
+blank:
+  name: $LABEL
+  user: colin
+  type: ~

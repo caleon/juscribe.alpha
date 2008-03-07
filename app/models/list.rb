@@ -26,6 +26,7 @@ class List < ActiveRecord::Base
   
   validates_presence_of :user_id
   validates_associated :items
+  validates_format_of :name, :with => /^[^\s].+[^\s]$/i
   
   STYLES = %w( cardinal ordinal roman numerical dashed dotted )
   

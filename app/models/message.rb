@@ -4,6 +4,7 @@ class Message < ActiveRecord::Base
   
   validates_associated :recipient, :sender
   validates_presence_of :body
+  validates_format_of :body, :with => /^[^\s].+[^\s]$/i
     
   def subject
     self[:subject] || "(no subject)"

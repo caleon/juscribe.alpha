@@ -6,6 +6,8 @@ class Event < ActiveRecord::Base
   has_many :entries, :order => 'created_at DESC'
     
   validates_presence_of :user_id, :name
+  validates_length_of :name, :in => (3..20)
+  validates_format_of :name, :with => /^[^\s].+[^\s]$/i
   
   def begin!(time=Time.now, force=false)
     if !self.begins_at.nil? && !force

@@ -1,8 +1,19 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class ListTest < ActiveSupport::TestCase
-  # Replace this with your real tests.
-  def test_truth
-    assert true
+  def setup
+    
   end
+  
+  def test_initial_validity
+    #assert lists(:normal).valid?, lists(:normal).errors.inspect
+    #assert lists(:gallery).valid?
+    #assert lists(:portfolio).valid?
+    #assert lists(:playlist).valid?
+  end
+  
+  def test_items_association
+
+  end
+  
 end

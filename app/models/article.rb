@@ -9,10 +9,12 @@ class Article < ActiveRecord::Base
   validates_presence_of :user_id, :title, :permalink, :content
   # The following necessary because of... of what? (permalink is a different issue)
   # validates_format_of :title, :with => /[-_a-z0-9'"\s\/:;\(\)\&\*\%\$\#\@\!\?\.\,\+\=\~]{3,}/i
-  validates_format_of :permalink, :with => /[-_a-z0-9]{3,}/i,
-                      :message => "is already taken: please edit your title"
   validates_length_of :title, :in => (3..50)
   validates_uniqueness_of :permalink
+  validates_format_of :permalink, :with => /[-_a-z0-9]{3,}/i,
+                      :message => "is already taken: please edit your title"
+  validates_format_of :title, :with => /^[^\s].+[^\s]$/i
+  validates_format_of :content, :with => /^[^\s].+[^\s]$/i
   
   def name; self.title; end
   def to_param; self.permalink; end # This should mean the permalink becomes param[:id]
