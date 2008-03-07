@@ -1,47 +1,71 @@
+ActiveRecord::Base.class_eval do
+  def self.itemizable?; false; end
+  def itemizable?; false; end
+end
+
 module Itemizable
   def self.included(base)
     base.extend(ClassMethods)
-    
-    ActiveRecord::Base.class_eval do
-      def self.itemizable?; false; end
+  end
+
+  module ClassMethods
+    def acts_as_itemizable(*args) 
+      options = args.extract_options!     
+      list_class_sym = args.shift || :list
+      list_class = list_class_sym.to_s.classify.constantize
+      list_table_name = list_class.table_name
+      
+      write_inheritable_attribute(:acts_as_itemizable_options, {
+        :itemizable_type => ActiveRecord::Base.send(:class_name_of_active_record_descendant, self).to_s,
+        :list_class_name => list_class.to_s, # => "Gallery"
+        :list_class => list_class, # => Gallery
+        :list_class_sym => list_class.to_s.underscore.intern, # => :gallery
+        :list_table_name => list_table_name, # => "lists"
+        :list_class_id => list_table_name.singularize + '_id' # => "list_id"
+      })
+      
+      class_inheritable_reader :acts_as_itemizable_options
+      
+      has_one :picture, :as => :depictable
+      belongs_to acts_as_itemizable_options[:list_class_sym], # => :gallery
+                 :foreign_key => acts_as_itemizable_options[:list_class_id]
+      if acts_as_itemizable_options[:list_class_sym] != :list
+        # duplicating above association this time calling it :list. TODO: undefine instead first.
+        belongs_to :list, :class_name => acts_as_itemizable_options[:list_class_name],
+                   :foreign_key => acts_as_itemizable_options[:list_class_id]
+      end
+      acts_as_list :scope => acts_as_itemizable_options[:list_class_sym] # => :gallery
+
+      validates_uniqueness_of :id,
+            :scope => :"#{acts_as_itemizable_options[:list_class_id]}" # => :list_id
+      validates_presence_of :position, :unless => :no_list?
+      
+      include Itemizable::InstanceMethods
+      extend Itemizable::SingletonMethods
     end
   end
-  
-  module ClassMethods
-    cattr_accessor :list_class
-    def set_list_class(arg)
-      list_class = arg.constantize
+
+  module SingletonMethods
+    def list_class # Possibly needed for custom SQL within instance methods.
+      inheritable_attributes[:acts_as_itemizable_options][:list_class]
     end
-    
+          
     def list_class_sym
-      list_class.table_name.singularize.intern
-    rescue
-      set_list_class(List)
-      :list
+      inheritable_attributes[:acts_as_itemizable_options][:list_class_sym]
     end
-    alias_method :list, list_class_sym
-    alias_method :list=, :"#{list_class_sym}="
     
     def itemizable?; true; end
-        
-    belongs_to :user
-    has_one :picture, :as => :depictable
-    belongs_to list_class_sym
-    acts_as_list :scope => list_class_sym
-    
-    validates_uniqueness_of :id, :scope => :"#{list_class_sym}_id"
-    
-    include ActiveRecord::Acts::Widgetable::InstanceMethods
-    extend ActiveRecord::Acts::Widgetable::SingletonMethods
   end
-  
-  module SingletonMethods
-    
-  end
-  
+
   module InstanceMethods
     def accessible_by?(user)
       self.list.nil? ? super : (self.list.accessible_by?(user) && super)
     end
+  
+    def no_list?
+      self.list.nil?
+    end
+    
+    def itemizable?; true; end
   end
 end

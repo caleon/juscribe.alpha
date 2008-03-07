@@ -1,4 +1,3 @@
 class Countdown < List
-  alias :old_items :items
-  def items; self.old_items.reversed end
+  set_itemizables :items, :order => 'position DESC'
 end

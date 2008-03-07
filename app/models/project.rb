@@ -1,8 +1,7 @@
 class Project < ActiveRecord::Base
-  belongs_to :user
-  belongs_to :portfolio
+  acts_as_itemizable :portfolio
+  include PluginPackage
   
-  alias :list :portfolio
-  alias :list= :portfolio=
+  belongs_to :user
   
 end

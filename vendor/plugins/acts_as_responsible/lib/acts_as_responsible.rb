@@ -10,7 +10,7 @@ module ActiveRecord
         def acts_as_responsible(options={})
           write_inheritable_attribute(:acts_as_responsible_options, {
             :responsible_type => ActiveRecord::Base.send(:class_name_of_active_record_descendant, self).to_s,
-            :from => options[:from],
+            # TODO: hook destroy callback to remove associated.
             :destroy => options[:destroy]
           })
           

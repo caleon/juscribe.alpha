@@ -8,9 +8,7 @@ module ActiveRecord
       module ClassMethods
         def acts_as_widgetable(options={})
           write_inheritable_attribute(:acts_as_widgetable_options, {
-            :widgetable_type => ActiveRecord::Base.send(:class_name_of_active_record_descendant, self).to_s,
-            :from => options[:from],
-            :destroy => options[:destroy]
+            :widgetable_type => ActiveRecord::Base.send(:class_name_of_active_record_descendant, self).to_s
           })
           
           class_inheritable_reader :acts_as_widgetable_options

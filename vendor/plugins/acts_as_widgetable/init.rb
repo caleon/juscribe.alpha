@@ -1,5 +1,7 @@
 $:.unshift "#{File.dirname(__FILE__)}/lib"
 
+# acts_as_list should already be loaded.
+#
 #require "#{File.dirname(__FILE__)}/../acts_as_list/init"
 #ActiveRecord::Base.class_eval { include ActiveRecord::Acts::List }
 # The following is to allow new Widget clips to have a null position column value upon

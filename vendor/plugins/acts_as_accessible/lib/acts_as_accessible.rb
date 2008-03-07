@@ -9,7 +9,7 @@ module ActiveRecord
         def acts_as_accessible(options={})
           write_inheritable_attribute(:acts_as_accessible_options, {
             :accessible_type => ActiveRecord::Base.send(:class_name_of_active_record_descendant, self).to_s,
-            :from => options[:from],
+            :from => options[:from], # this might be needed to auto create rules
             :destroy => options[:destroy]
           })
           
