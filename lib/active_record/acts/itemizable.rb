@@ -1,10 +1,9 @@
-ActiveRecord::Base.class_eval do
-  def self.itemizable?; false; end
-  def itemizable?; false; end
-end
-
-module Itemizable
+module ActiveRecord::Acts::Itemizable
   def self.included(base)
+    base.class_eval <<-EOS
+      def self.itemizable?; false; end
+      def itemizable?; false; end
+    EOS
     base.extend(ClassMethods)
   end
 
@@ -40,8 +39,8 @@ module Itemizable
             :scope => :"#{acts_as_itemizable_options[:list_class_id]}" # => :list_id
       validates_presence_of :position, :unless => :no_list?
       
-      include Itemizable::InstanceMethods
-      extend Itemizable::SingletonMethods
+      include ActiveRecord::Acts::Itemizable::InstanceMethods
+      extend ActiveRecord::Acts::Itemizable::SingletonMethods
     end
   end
 

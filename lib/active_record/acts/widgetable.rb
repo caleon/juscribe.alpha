@@ -1,5 +1,5 @@
 module ActiveRecord
-  module Acts #:nodoc:
+  module Acts
     module Widgetable #:nodoc:
       def self.included(base)
         base.class_eval <<-EOS
@@ -26,8 +26,8 @@ module ActiveRecord
             end
           end
 
-          include ActiveRecord::Acts::Widgetable::InstanceMethods
-          extend ActiveRecord::Acts::Widgetable::SingletonMethods
+          include Widgetable::InstanceMethods
+          extend Widgetable::SingletonMethods
         end
       end
       
@@ -36,6 +36,12 @@ module ActiveRecord
       end
       
       module InstanceMethods
+        def picture
+          self.pictures.first
+        rescue
+          self.picture.first rescue nil
+        end
+        
         def clip_for(user)
           self.clips.find_by_user_id(user.id) rescue nil
         end

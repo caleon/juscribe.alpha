@@ -1,7 +1,10 @@
-# I think if within lib there were directories for each library with an init.rb
-# the load path will automatically require these...
-require 'plugin_package'
-require 'itemizable'
-ActiveRecord::Base.send(:include, Itemizable)
-require 'layoutable'
-require 'depictable_widget'
+# Looks like .rb files directly within /lib will load automatically. But
+# subdirectories will require naming the module/class to fit the directory
+# hierarchy... for example: module ActiveRecord::Acts::Widgetable needs to be
+# located at lib/active_record/acts/widgetable.rb. This will prevent needing
+# to require it manually.
+ActiveRecord::Base.send(:include, ActiveRecord::Acts::Accessible)
+ActiveRecord::Base.send(:include, ActiveRecord::Acts::Itemizable)
+ActiveRecord::Base.send(:include, ActiveRecord::Acts::Responsible)
+ActiveRecord::Base.send(:include, ActiveRecord::Acts::Taggable)
+ActiveRecord::Base.send(:include, ActiveRecord::Acts::Widgetable)

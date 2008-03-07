@@ -30,3 +30,13 @@ module ActiveRecord
     end
   end
 end
+
+
+### For Widgetable
+ActiveRecord::Acts::List::InstanceMethods.class_eval do
+  alias_method :orig_add_to_list_bottom, :add_to_list_bottom
+  def add_to_list_bottom
+    self[position_column] = bottom_position_in_list.to_i + 1 unless (self.new_record? && self.is_a?(Widget))
+  end
+  private :add_to_list_bottom
+end

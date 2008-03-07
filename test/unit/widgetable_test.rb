@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + "/../../../../test/test_helper"
+require File.dirname(__FILE__) + '/../test_helper'
 
 class Mixin < ActiveRecord::Base
 end
@@ -17,7 +17,7 @@ class WidgetableMixinSub2 < WidgetableMixin
 end
 
 
-class WidgetableTest < Test::Unit::TestCase
+class WidgetableTest < ActiveSupport::TestCase
 
   def setup
     @user = users(:colin)

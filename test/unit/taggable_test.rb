@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + "/../../../../test/test_helper"
+require File.dirname(__FILE__) + '/../test_helper'
 
 class Mixin < ActiveRecord::Base
   def self.table_name() "articles" end
@@ -18,7 +18,7 @@ class TaggableMixinSub2 < TaggableMixin
 end
 
 
-class TaggableTest < Test::Unit::TestCase
+class TaggableTest < ActiveSupport::TestCase
 
   def setup
     @user = users(:colin)

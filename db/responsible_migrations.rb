@@ -1,6 +1,4 @@
-Necessary migration:
-
-class CreateResponses < ActiveRecord::Migration
+class ResponsibleMigrations < ActiveRecord::Migration
   def self.up
     create_table :responses do |t|
       t.references :user, :responsible, :secondary
@@ -18,4 +16,4 @@ class CreateResponses < ActiveRecord::Migration
 end
 
 
-This uses one table and several subclasses of the main class Response, differentiated by `type`.
+# This uses one table and several subclasses of the main class Response, differentiated by `type`.

@@ -1,4 +1,4 @@
-module Layoutable # included when PluginPackage is included
+module ActiveRecord::Acts::Layoutable # included when PluginPackage is included
   # don't use this unless this module needs to add class level methods.
   # def layoutable?; true; end
   

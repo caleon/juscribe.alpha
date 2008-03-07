@@ -1,4 +1,4 @@
-class CreateWidgets < ActiveRecord::Migration
+class WidgetableMigrations < ActiveRecord::Migration
   def self.up
     create_table :widgets do |t|
       t.references :user, :widgetable

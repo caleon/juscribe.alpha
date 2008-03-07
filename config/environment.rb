@@ -29,7 +29,7 @@ Rails::Initializer.run do |config|
   # Add additional load paths for your own custom dirs
   # config.load_paths += %W( #{RAILS_ROOT}/extras )
   # TODO: There should be a programmatic way to include all dirs within models/
-  config.load_paths += %W( #{RAILS_ROOT}/app/models/list #{RAILS_ROOT}/app/models/item )
+  config.load_paths += %W( #{RAILS_ROOT}/app/models/list #{RAILS_ROOT}/app/models/item #{RAILS_ROOT}/app/models/response )
 
   # Force all environments to use the same logger level
   # (by default production uses :info, the others :debug)

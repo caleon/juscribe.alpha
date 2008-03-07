@@ -1,6 +1,7 @@
 require 'digest/sha2'
-require 'user_associations'
-require 'user_validations'
+require 'user/friendship'
+require 'user/user_associations'
+require 'user/user_validations'
 
 class User < ActiveRecord::Base
   include Friendship

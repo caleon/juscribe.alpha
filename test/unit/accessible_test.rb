@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + "/../../../../test/test_helper"
+require File.dirname(__FILE__) + '/../test_helper'
 
 class Mixin < ActiveRecord::Base
 end
@@ -18,7 +18,7 @@ class AccessibleMixinSub2 < AccessibleMixin
 end
 
 
-class AccessibleTest < Test::Unit::TestCase
+class AccessibleTest < ActiveSupport::TestCase
 
   def setup # CHANGED: these can be set to User.create(..)
     @user = users(:keira)
