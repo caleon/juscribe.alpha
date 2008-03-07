@@ -1,22 +1,5 @@
 module ActiveRecord
   class Base
-    class << self
-      alias_method :orig_create, :create
-      def create(attributes = nil, validate=false)
-        if attributes.is_a?(Array)
-          attributes.collect { |attr| create(attr) }
-        else
-          object = new(attributes)
-          validate ? object.save! : object.save
-          object
-        end
-      end
-  
-      def create!(attributes=nil)
-        create(attributes, true)
-      end
-    end
-
     # The following is to allow either a model or its ID to be supplied as
     # arguments to a method.  
     def to_id; self[:id].to_i; end
@@ -32,7 +15,7 @@ module ActiveRecord
 end
 
 
-### For Widgetable
+### acts_as_list fix For Widgetable
 ActiveRecord::Acts::List::InstanceMethods.class_eval do
   alias_method :orig_add_to_list_bottom, :add_to_list_bottom
   def add_to_list_bottom

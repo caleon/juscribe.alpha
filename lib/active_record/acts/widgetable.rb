@@ -1,41 +1,39 @@
-module ActiveRecord
-  module Acts
-    module Widgetable #:nodoc:
-      def self.included(base)
-        base.class_eval <<-EOS
-          def self.widgetable?; false; end
-          def widgetable?; false; end
-        EOS
-        base.extend(ClassMethods)
-      end
-      
-      module ClassMethods
-        def acts_as_widgetable(options={})
-          write_inheritable_attribute(:acts_as_widgetable_options, {
-            :widgetable_type => ActiveRecord::Base.send(:class_name_of_active_record_descendant, self).to_s
-          })
-          
-          class_inheritable_reader :acts_as_widgetable_options
-          
-          has_many :clips, :class_name => 'Widget', :as => :widgetable do
-            def placed
-              find(:all, :conditions => "position IS NOT NULL")
-            end
-            def unplaced
-              find(:all, :conditions => "position IS NULL")
-            end
-          end
+module ActiveRecord::Acts::Widgetable #:nodoc:
+  def self.included(base)
+    base.class_eval <<-EOS
+      def self.widgetable?; false; end
+      def widgetable?; false; end
+    EOS
+    base.extend(ClassMethods)
+  end
 
-          include Widgetable::InstanceMethods
-          extend Widgetable::SingletonMethods
+  module ClassMethods
+    def acts_as_widgetable(options={})
+      write_inheritable_attribute(:acts_as_widgetable_options, {
+        :widgetable_type => ActiveRecord::Base.send(:class_name_of_active_record_descendant, self).to_s
+      })
+    
+      class_inheritable_reader :acts_as_widgetable_options
+    
+      has_many :clips, :class_name => 'Widget', :as => :widgetable do
+        def placed
+          find(:all, :conditions => "position IS NOT NULL")
+        end
+        def unplaced
+          find(:all, :conditions => "position IS NULL")
         end
       end
-      
-      module SingletonMethods
-        def widgetable?; true; end
-      end
-      
-      module InstanceMethods
+
+      include ActiveRecord::Acts::Widgetable::InstanceMethods
+      extend ActiveRecord::Acts::Widgetable::SingletonMethods
+    end
+  end
+
+  module SingletonMethods
+    def widgetable?; true; end
+  end
+
+  module InstanceMethods
         def picture
           self.pictures.first
         rescue
@@ -66,6 +64,4 @@ module ActiveRecord
         
         def widgetable?; true; end
       end
-    end
-  end
 end
