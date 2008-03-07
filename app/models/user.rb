@@ -5,12 +5,9 @@ require 'user_validations'
 class User < ActiveRecord::Base
   include Friendship
   include PluginPackage
-  
-  #set_primary_key "nick"
-  
+    
   attr_protected :nick, :email, :password_salt, :password_hash
   attr_accessor :tos_agreement
-  # TODO: verify changed email with Notifier.
     
   def wheel?
     # TODO: For more security the wheel list should be in a file with restrictive
@@ -25,12 +22,6 @@ class User < ActiveRecord::Base
   def wants_notifications_for?(*args)
     false # TODO: stubbed :event_share
   end
-  
-  #def id; self.nick; end
-  # This is done as last resort for activeresource to properly generate urls
-  # But this makes things nasty and i woudl rather not make this change.
-  # TODO: Find the code that calls #id on the record from within
-  # ActionController::Base or ::Routing
     
   def to_param; self.nick; end #test
   
