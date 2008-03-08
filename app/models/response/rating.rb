@@ -4,9 +4,9 @@ class Rating < Response
   #after_create :send_notification
   
   private
-  def send_notification
-    if self.responsible && self.responsible[:user_id] && (user = User.find(self.responsible[:user_id])) && user.wants_notifications_for?(:rating)
-      Notifier.deliver_rating_notification(self.id)
+  def send_notification(user=nil)
+    if self.responsible && self.responsible[:user_id] && (user ||= User.find(self.responsible[:user_id])) && user.wants_notifications_for?(:rating)
+      Notifier.deliver_rating_notification(self)
     else
       raise NotifierError, "Unable to set target for rating (#{self.internal_name}) notification."
     end

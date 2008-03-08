@@ -45,19 +45,14 @@ class Group < ActiveRecord::Base
   
   def assign_rank(user, rank=nil)
     mem = self.membership_for(user)
-    unless rank >= 10
-      mem.rank = rank
-      if mem.save
-        mem
-      else
-        false
-      end
+    mem.rank = rank
+    if mem.rank >= 0 && mem.rank <= 10  && mem.save
+      mem
+    else
+      false
     end
   rescue ActiveRecord::RecordNotFound => e
     self.errors.add_to_base(e.message)
-    return false
-  rescue
-    self.errors.add_to_base("Error while updating membership rank for #{self.internal_name} and #{user.internal_name}")
     return false
   end
   
@@ -72,7 +67,8 @@ class Group < ActiveRecord::Base
     raise LimitError, "#{user.internal_name} has reached the maximum number of groups one can join (#{APP[:limits][:memberships]}). Please contact #{APP[:contact]} to resolve this issue." if user.groups.count >= APP[:limits][:memberships]
     mem = self.memberships.new(attrs)
     mem.rank = attrs[:rank] # This is a protected attribute. Needs to be set like this.
-    mem.save
+    mem.save!
+    true
   rescue ArgumentError => e
     self.errors.add_to_base(e.message)
     return false

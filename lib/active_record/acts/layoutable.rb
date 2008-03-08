@@ -11,14 +11,14 @@ module ActiveRecord::Acts::Layoutable # included when PluginPackage is included
   end
   
   def layout_path
-    "#{self.class.class_name.downcase.pluralize}/#{layout}/"
+    "#{self.class.class_name.underscore.pluralize}/#{layout}/"
   end
   
-  def layout_file
-    layout_path + layout
+  def layout_file(file=layout)
+    layout_path + file.to_s
   end
   
   def skin_file
-    "#{self.class.class_name.downcase}/" + skin
+    "#{self.class.class_name.underscore.pluralize}/" + skin
   end
 end

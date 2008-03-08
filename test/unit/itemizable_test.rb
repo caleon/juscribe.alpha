@@ -21,6 +21,11 @@ class ItemizableTest < ActiveSupport::TestCase
     assert songs(:playlist_item1).itemizable?
   end
   
+  def test_simple_values
+    assert_equal :list, Item.list_class_sym
+    assert items(:list_item1).accessible_by?(users(:colin))
+  end
+  
   def test_pseudo_alias_associations
     assert_equal pictures(:gallery_item1).gallery, pictures(:gallery_item1).list
     assert_equal projects(:portfolio_item1).portfolio, projects(:portfolio_item1).list

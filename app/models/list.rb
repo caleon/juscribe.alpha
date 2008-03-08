@@ -13,7 +13,10 @@ class List < ActiveRecord::Base
       end
       if sym != :items # Override the methods inherited from List.
         # List#items is needed for general methods performed by Widget.
-        has_many :items, options.merge(:class_name => sym.to_s.classify)
+        has_many :items, options.merge(:class_name => sym.to_s.classify) do
+          def descending; find(:all, :order => 'position DESC'); end
+          def ascending; find(:all, :order => 'position ASC'); end
+        end
       end
     end
     private :set_itemizables

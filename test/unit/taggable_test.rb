@@ -19,11 +19,24 @@ end
 
 
 class TaggableTest < ActiveSupport::TestCase
-
+  # TODO: Rewrite the Taggable library. It sucks.
   def setup
     @user = users(:colin)
     @acc = Hash.new
     (1..4).each { |counter| @acc[counter] = TaggableMixin.create }
+  end
+  
+  def test_simple_methods
+    acc1 = @acc[1]
+    acc2 = @acc[2]
+    tag1 = acc1.tag_with('monkey', :user => @user, :return => :last)
+    tag2 = acc2.tag_with('monkey', :user => @user, :return => :last)
+    tag3 = acc2.tag_with('animal', :user => @user, :return => :last)
+    assert_equal 'monkey', tag1.to_s
+    assert_equal 'monkey', tag2.to_s
+    assert_equal 'animal', tag3.to_s
+    assert tag1 == tag2, "#{tag1} is not #{tag2}"
+    assert_equal tag1, tag2
   end
   
   def test_find_tagged_with

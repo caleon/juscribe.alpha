@@ -11,7 +11,7 @@ class Widget < ActiveRecord::Base
   # A user can widget an article written by someone else.
   
   def full_name
-    (self[:name] ? "#{self[:name]}: " : "") + self.widgetable.name
+    (self[:name] ? "#{self[:name]}: " : "") + (self.widgetable.name rescue self.widgetable.title)
   end
   
   def wid_name
@@ -33,7 +33,7 @@ class Widget < ActiveRecord::Base
   end
   
   def wid_partial(base, kind=nil)
-    base + '/' + self.widgetable_type.downcase + (kind ? "_#{kind}" : '')
+    base + '/' + self.widgetable_type.underscore + (kind ? "_#{kind}" : '')
   end
   
   def placed?; self.position?; end
@@ -49,7 +49,7 @@ class Widget < ActiveRecord::Base
     without_save ? self.position = pos : self.update_attribute(:position, pos)
   end
   
-  def unplace!(pos)
+  def unplace!
     self.update_attribute(:position, nil)
   end
   

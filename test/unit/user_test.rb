@@ -13,6 +13,15 @@ class UserTest < ActiveSupport::TestCase
     assert !user2.wheel?
   end
   
+  def test_simple_values
+    assert_equal "colin p. chun", users(:colin).full_name
+    assert_equal "colin p. chun (colin)", users(:colin).name_and_nick
+    assert_equal "colin p. chun <colin@venturous.net>", users(:colin).email_address
+    assert_equal 23, users(:colin).age # This.. heh will need to be changed.
+    assert_equal 'm', users(:colin).sex
+    assert_equal 'male', users(:colin).sex(true)
+  end
+  
   def test_editable_by_check
     assert users(:megan).editable_by?(users(:megan)), "User should be able to edit herself."
     assert users(:megan).editable_by?(users(:colin)), "User should be editable by wheel."
@@ -60,6 +69,9 @@ class UserTest < ActiveSupport::TestCase
     assert user.save, "User should properly save. #{user.errors.inspect}"
     assert User.authenticate(user.nick, pass_string), 'User should properly authenticate'
     assert !User.authenticate(user.nick, 'wrong_password'), 'Wrong password should return false'
+    
+    assert user.authenticate(pass_string)
+    assert !user.authenticate('wrong)passwrd')
   end
   
   def test_invalid_password_requests
@@ -74,18 +86,19 @@ class UserTest < ActiveSupport::TestCase
   end
   
   def test_befriending_and_unfriending
+    orig_mail_count = ActionMailer::Base.deliveries.size
     assert users(:colin).friend_ids.empty?
     assert users(:colin).friends.empty?
     assert users(:colin).befriend(users(:keira)), "#{users(:colin).errors.inspect}"
-    assert_equal 1, ActionMailer::Base.deliveries.size
+    assert_equal orig_mail_count + 1, ActionMailer::Base.deliveries.size
     assert users(:colin).friends.include?(users(:keira))
     assert users(:colin).friend_ids.include?(users(:keira).id)
     assert !users(:colin).friends_with?(users(:keira))
     assert !users(:colin).befriend(users(:keira))
-    assert_equal 1, ActionMailer::Base.deliveries.size
+    assert_equal orig_mail_count + 1, ActionMailer::Base.deliveries.size
     
     assert users(:keira).befriend(users(:colin)), "#{users(:keira).errors.inspect}"
-    assert_equal 1, ActionMailer::Base.deliveries.size # Simply reciprocating request.
+    assert_equal orig_mail_count + 1, ActionMailer::Base.deliveries.size # Simply reciprocating request.
     assert users(:keira).friends.include?(users(:colin))
     assert users(:keira).friend_ids.include?(users(:colin).id)
     assert users(:colin).friends_with?(users(:keira))

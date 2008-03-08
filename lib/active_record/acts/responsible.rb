@@ -52,31 +52,33 @@ module ActiveRecord::Acts::Responsible
   
     def report(*args)
       attrs = args.extract_options!
-      if var = args.shift || :questionable
-        attrs[:variation] ||= RESPONSE_PREFS[:report][var]
-        self.reports.create(attrs)
-      else
-        false
-      end
+      var = args.shift || :questionable
+      attrs[:variation] ||= RESPONSE_PREFS[:report][var]
+      self.reports.create(attrs)
     end
           
     def favorited_by?(user_id)
+      user_id = user_id.id if user_id.is_a?(User)
       !self.favorites.find_by_user_id(user_id).blank?
     end
   
     def favorit(user_id)
-      fav = self.favorites.create(:user_id => user_id)
+      user_id = user_id.id if user_id.is_a?(User)
+      Favorite.create(:user_id => user_id, :responsible => self)
     end
   
     # Usage: track.comment_with!(1, :secondary_id => 3, :body => "Hello")
     # Secondary_id for a comment refers to what it is replying in thread
-    def comment_with(*attrs)
-      self.comments.create(attrs)
+    def comment_with(*args)
+      attrs = args.extract_options!
+      attrs[:responsible] = self
+      Comment.create(attrs)
     end
 
     def rate_with(attrs={})
       attrs[:number] = APP[:rating_increment]
-      self.ratings.create(attrs)          
+      attrs[:responsible] = self
+      Rating.create(attrs)          
     end
 
     def responsible?; true; end

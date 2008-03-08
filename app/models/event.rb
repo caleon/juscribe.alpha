@@ -13,12 +13,15 @@ class Event < ActiveRecord::Base
     if !self.begins_at.nil? && !force
       self.errors.add(:begins_at, "is already set")
       return false
-    elsif self.update_attribute(:begins_at, time)
-      self.end!(time, true) if self.ends_at < time rescue true
-      return time
     else
-      self.errors.add(:begins_at, "could not be set")
-      return false
+      self.update_attribute(:begins_at, time)
+      if !self.begins_at.nil?
+        self.end!(time, true) if self.ends_at < time rescue true
+        return time
+      else
+        self.errors.add(:begins_at, "could not be set")
+        return false
+      end
     end
   end
   
@@ -26,12 +29,15 @@ class Event < ActiveRecord::Base
     if !self.ends_at.nil? && !force
       self.errors.add(:ends_at, "is already set")
       return false
-    elsif self.update_attribute(:ends_at, time)
-      self.begin!(time, true) if self.begins_at > time rescue true
-      return time
     else
-      self.errors.add(:ends_at, "could not be set")
-      false
+      self.update_attribute(:ends_at, time)
+      if !self.ends_at.nil?
+        self.begin!(time, true) if self.begins_at > time rescue true
+        return time
+      else
+        self.errors.add(:ends_at, "could not be set")
+        false
+      end
     end
   end
   
@@ -46,12 +52,13 @@ class Event < ActiveRecord::Base
   end
   
   def share!(*users)
+    opts = users.extract_options!
     users = users.shift if users.first.is_a?(Array)
-    rule = self.create_rule if self.rule.nil?
-    self.rule.whitelist!(:user, *users) if self.user == opts[:from]
+    rule = self.rule
+    rule.whitelist!(:user, *users) if self.user == opts[:from]
     # TODO: prevent multiple duplicate mailings
     # TODO: filter out users based on wants_notifications_for? in Notifier class.
-    Notifer.deliver_event_share_notification(users, :from => opts[:from])
+    Notifier.deliver_event_share_notification(users, :from => opts[:from])
   end
     
 end

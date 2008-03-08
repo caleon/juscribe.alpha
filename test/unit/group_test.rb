@@ -12,6 +12,19 @@ class GroupTest < ActiveSupport::TestCase
     assert groups(:friends).assign_rank(users(:keira), Membership::ADMIN_RANK)
     assert groups(:friends).editable_by?(users(:keira))
   end
+  
+  def test_accessible_by_check
+    assert groups(:friends).accessible_by?(users(:colin))
+    assert groups(:friends).accessible_by?(users(:megan))
+    rule = groups(:friends).rule
+    assert rule.public?
+    rule.toggle_privacy!
+    assert rule.private?
+    assert groups(:friends).accessible_by?(users(:colin))
+    assert !groups(:friends).accessible_by?(users(:megan))
+    rule.whitelist!(:user, users(:megan))
+    assert groups(:friends).accessible_by?(users(:megan))
+  end
 
   def test_membership_for
     assert_equal memberships(:colin_friends), groups(:friends).membership_for(users(:colin))
@@ -32,6 +45,9 @@ class GroupTest < ActiveSupport::TestCase
     assert_not_equal 3, groups(:friends).rank_for(users(:keira))
     assert groups(:friends).assign_rank(users(:keira), 3)
     assert_equal 3, groups(:friends).rank_for(users(:keira))
+    assert !groups(:friends).assign_rank(users(:keira), -5)
+    assert !groups(:friends).assign_rank(users(:megan), 5)
+    assert_not_nil groups(:friends).errors
   end
   
   def test_join
@@ -39,12 +55,19 @@ class GroupTest < ActiveSupport::TestCase
     assert !groups(:friends).join(users(:megan))
     assert_equal Membership.find_by_group_id_and_user_id('friends'.hash.abs, 'megan'.hash.abs),
                  groups(:friends).membership_for(users(:megan))
-    (APP[:limits][:memberships] - users(:megan).groups.count).times do |i|
-      grp = Group.create(:name => "group#{i}")
-      grp.join(users(:megan))
+    ##########
+    mem_count = users(:colin).groups.count
+    mem_limit = APP[:limits][:memberships]
+    (mem_limit - mem_count).times do |i|
+      usr = User.new(:first_name => 'test', :last_name => 'user', :birthdate => Date.parse('1/29/1985'))
+      usr.nick, usr.email = "testuser#{i}", "testuser#{i}@venturous.net"
+      usr.save
+      grp = Group.create(:name => "testgroup#{i}", :user => usr) 
+      grp.join(users(:colin))
     end
-    group = Group.create(:name => 'groupX')
-    assert !group.join(users(:megan))
+    group = Group.create(:name => "overthelimit", :user => users(:keira))
+    assert !group.join(users(:colin))
+    assert_equal 1, group.errors.size, group.errors.inspect
   end
   
   def test_join_with_options

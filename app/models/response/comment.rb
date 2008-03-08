@@ -10,7 +10,6 @@ class Comment < Response
   #######
   
   def send_notification
-    Notifier.deliver_comment_notification(self.id)
-    Notifier.deliver_original_comment_notification(self.id, self.secondary_id) if self.secondary_id
+    Notifier.deliver_comment_notification(self)
   end
 end

@@ -34,34 +34,34 @@ module ActiveRecord::Acts::Widgetable #:nodoc:
   end
 
   module InstanceMethods
-        def picture
-          self.pictures.first
-        rescue
-          self.picture.first rescue nil
-        end
-        
-        def clip_for(user)
-          self.clips.find_by_user_id(user.id) rescue nil
-        end
-        
-        def clip_for?(user)
-          !self.clips.find_by_user_id(user.id).blank? rescue false
-        end
-        
-        def clip!(attrs={})
-          raise ArgumentError, "Hash pair for :user_id/:user must be supplied." unless attrs[:user_id] ||= (attrs[:user].id if attrs[:user].is_a?(User))
-          pos = attrs.delete(:position)
-          returning cl = self.clips.new(attrs) do
-            cl.place(pos) if pos
-            cl.save!
-          end
-        end
-        
-        def unclip!(attrs={})
-          raise ArgumentError, "Hash pair for :user_id/:user must be supplied." unless attrs[:user_id] ||= (attrs[:user].id if attrs[:user].is_a?(User))
-          self.clips.find_by_user_id(attrs[:user_id]).destroy rescue nil
-        end
-        
-        def widgetable?; true; end
-      end
+    def picture
+      self.pictures.first
+    rescue
+      super rescue nil
+    end
+    
+    def clip_for(user)
+      self.clips.find_by_user_id(user.id) rescue nil
+    end
+    
+    def clip_for?(user)
+      !self.clips.find_by_user_id(user.id).blank? rescue false
+    end
+    
+    def clip!(attrs={})
+      raise ArgumentError, "Hash pair for :user_id/:user must be supplied." unless attrs[:user_id] ||= (attrs[:user].id if attrs[:user].is_a?(User))
+      pos = attrs.delete(:position)
+      cl = self.clips.new(attrs)
+      cl.place(pos) if pos
+      cl.save!
+      cl
+    end
+    
+    def unclip!(attrs={})
+      raise ArgumentError, "Hash pair for :user_id/:user must be supplied." unless attrs[:user_id] ||= (attrs[:user].id if attrs[:user].is_a?(User))
+      self.clips.find_by_user_id(attrs[:user_id]).destroy rescue nil
+    end
+    
+    def widgetable?; true; end
+  end
 end

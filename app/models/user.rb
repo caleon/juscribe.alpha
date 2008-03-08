@@ -20,8 +20,14 @@ class User < ActiveRecord::Base
     user.wheel? || self == user
   end
   
-  def wants_notifications_for?(*args)
-    false # TODO: stubbed :event_share
+  def wants_notifications_for?(arg)
+    self[:notify] ||= {}
+    self[:notify][arg].nil? ? true : self[:notify][arg] # TODO: stubbed :event_share
+  end
+  
+  def set_notification_for(arg, bool=nil)
+    self[:notify] ||= {}
+    self[:notify][arg] = bool
   end
     
   def to_param; self.nick; end #test
@@ -29,7 +35,7 @@ class User < ActiveRecord::Base
   def to_s; self.nick; end
   
   def name_and_nick
-    self.full_name + "(#{self.nick})"
+    self.full_name + " (#{self.nick})"
   end
   
   def full_name #test
