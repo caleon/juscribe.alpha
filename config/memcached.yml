@@ -5,7 +5,7 @@ defaults:
   c_threshold: 10000
   compression: true
   debug: false
-  namespace: app
+  namespace: colinsite
   sessions: false
   session_servers: false
   fragments: false
@@ -28,6 +28,8 @@ test:
 production:
   memory: 256
   benchmarking: false
+# sessions: true
+# fragments: true
   servers:
     - 192.185.254.121:11211
     - 192.185.254.138:11211

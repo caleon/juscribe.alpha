@@ -7,3 +7,4 @@ log/*.log
 public/javascripts/all.js
 public/stylesheets/all.css
 tmp/*
+vendor/plugins/attachment_fu/test/*.log

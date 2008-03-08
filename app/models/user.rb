@@ -6,6 +6,8 @@ require 'user/user_validations'
 class User < ActiveRecord::Base
   include Friendship
   include PluginPackage
+  
+  # acts_as_cached
     
   attr_protected :nick, :email, :password_salt, :password_hash
   attr_accessor :tos_agreement

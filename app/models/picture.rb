@@ -7,7 +7,7 @@ class Picture < ActiveRecord::Base
   belongs_to :user
   belongs_to :depictable, :polymorphic => true
   #has_attachment  :content_type => :image,
-  #                :storage => :file_system,
+  #                :storage => :file_system, # or :s3 or :db_file
   #                :path_prefix => "public/images/uploads", # Setup shared directory
   #                :min_size => 100.bytes,
   #                :max_size => 2048.kilobytes,
