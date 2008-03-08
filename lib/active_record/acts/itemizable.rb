@@ -29,7 +29,7 @@ module ActiveRecord::Acts::Itemizable
       belongs_to acts_as_itemizable_options[:list_class_sym], # => :gallery
                  :foreign_key => acts_as_itemizable_options[:list_class_id]
       if acts_as_itemizable_options[:list_class_sym] != :list
-        # duplicating above association this time calling it :list. TODO: undefine instead first.
+        # duplicating above association this time calling it :list.
         belongs_to :list, :class_name => acts_as_itemizable_options[:list_class_name],
                    :foreign_key => acts_as_itemizable_options[:list_class_id]
       end
