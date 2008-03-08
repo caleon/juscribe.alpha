@@ -1,7 +1,7 @@
 <div id="header">
 	<h1><%= @page_title || APP[:name] %></h1>
-<% if logged_in? %>
+<% if logged_in? -%>
 	Logged in as <%= link_to @viewer.nick, @viewer %>
-<% end %>
+<% end -%>
 	<%= render :partial => 'shared/navigation' %>
 </div>

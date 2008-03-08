@@ -22,7 +22,7 @@ The param passed is the max zoom level for the cropping UI. -->
 <![endif]-->
 
 <div>
-	<% form_for @picture, :url => crop_picture_path(@picture) do |f| -%>
+	<% form_for @picture, :url => process_crop_picture_path(@picture) do |f| -%>
 		<div id="crop_form_fields">
 			<h4>Form fields passed to the server (you'll probably want to make these hidden fields in your app)</h4>
 			<p>These four fields are in the image's coordinate space&#8212;they project the

@@ -1,8 +1,8 @@
 <%= render :partial => 'shared/javascripts' if @config[:scripts_at_bottom] %>
 
-<% if print_scripts_block?(:bottom) %>
+<% if print_scripts_block?(:bottom) -%>
 	<script type="text/javascript">
 	<%= extra_behaviors %>
 	<%= extra_scripts(:bottom) %>
 	</script>
-<% end %>
+<% end -%>

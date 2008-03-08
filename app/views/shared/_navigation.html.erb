@@ -2,10 +2,10 @@
 	<ul class="navigationList">
 		<li class="navigationEl"><%= link_to 'Home', root_path %></li>
 		<li class="navigationEl"><%= link_to 'Mine', mine_path %>
-	<% if logged_in? %>
+	<% if logged_in? -%>
 		<li class="navigationEl last"><%= link_to 'Logout', logout_path %></li>
-	<% else %>
+	<% else -%>
 		<li class="navigationEl last"><%= link_to 'Login', login_path %></li>
-	<% end %>
+	<% end -%>
 	</ul>
 </div>

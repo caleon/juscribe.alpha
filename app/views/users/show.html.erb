@@ -4,29 +4,30 @@
 	</div>
 	<div id="msm_main_column-a">
 		<div id="msm_lead_widget">
-			<% lead_widget = @widgets.shift %>
-		<% if lead_widget.picture %>
-			<%= image_tag lead_widget.picture.file_path, :class => 'msm_lead_picture' %>
-			<strong><%= lead_widget.name %></strong>
-			<h2><%= lead_widget.wid_name %></h2>
-			<p><%= lead_widget.wid_content %></p>
-			<em>by: <%= link_to lead_widget.wid_user.nick, lead_widget.widgetable_user %></em>
-			<%= link_to 'More', lead_widget.widgetable %>
-		</div>
-		<% content_tag(:ul, :id => 'msm_lead_follow_ups') do %>
-			<% lead_widget.widgetable.find_similars(3).each do |similar| %>
-				<li><%= link_to similar.name, similar %></li>
-			<% end %>
-		<% end if !lead_widget.widgetable.tags.empty? %>
-	<% end %>
+		<% if lead_widget = @widgets.shift -%>
+			<% if lead_widget.picture -%>
+				<%= image_tag lead_widget.picture.file_path, :class => 'msm_lead_picture' %>
+				<strong><%= lead_widget.name %></strong>
+				<h2><%= lead_widget.wid_name %></h2>
+				<p><%= lead_widget.wid_content %></p>
+				<em>by: <%= link_to lead_widget.wid_user.nick, lead_widget.widgetable_user %></em>
+				<%= link_to 'More', lead_widget.widgetable %>
+			</div>
+			<% content_tag(:ul, :id => 'msm_lead_follow_ups') do -%>
+				<% lead_widget.widgetable.find_similars(3).each do |similar| -%>
+					<li><%= link_to similar.name, similar %></li>
+				<% end -%>
+			<% end if !lead_widget.widgetable.tags.empty? -%>
+		<% end -%>
+	<% end -%>
 	</div>
 	<div id="msm_main_column-b">
-		<% content_tag(:ul, :id => :other_main_widgets) do %>
-			<% @widgets.slice!(0..4).each do |wid| %>
+		<% content_tag(:ul, :id => :other_main_widgets) do -%>
+			<% @widgets.slice!(0..4).each do |wid| -%>
 				<li><%= link_to wid.wid_name, wid.widgetable %></li>
 				<%= render :partial => wid.wid_partial(@user.layout_path, :line), :object => wid.widgetable %>
-			<% end %>
-		<% end if true %>
+			<% end -%>
+		<% end if true -%>
 	</div>
 </div>
 <div id="msm_side_column">
