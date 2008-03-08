@@ -2,6 +2,7 @@
 class List < ActiveRecord::Base  
   class << self
     # Usage: set_itemizables :songs, :order => :position
+    # TODO: add method mapping through options provided to the following method.
     def set_itemizables(*args)
       opts = args.extract_options!
       sym = args.shift || :items

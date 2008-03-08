@@ -7,8 +7,6 @@ class Article < ActiveRecord::Base
   before_save :make_permalink
   
   validates_presence_of :user_id, :title, :permalink, :content
-  # The following necessary because of... of what? (permalink is a different issue)
-  # validates_format_of :title, :with => /[-_a-z0-9'"\s\/:;\(\)\&\*\%\$\#\@\!\?\.\,\+\=\~]{3,}/i
   validates_length_of :title, :in => (3..50)
   validates_uniqueness_of :permalink
   validates_format_of :permalink, :with => /[-_a-z0-9]{3,}/i,

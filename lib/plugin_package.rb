@@ -1,8 +1,8 @@
 module PluginPackage
-  def self.included(base)
+  def self.included(klass)
     ['acts_as_accessible', 'acts_as_responsible', 'acts_as_taggable',  'acts_as_widgetable'].each do |plugin|
-      base.send(plugin)
+      klass.send(plugin)
     end
-    base.send(:include, ActiveRecord::Acts::Layoutable)
+    klass.send(:include, ActiveRecord::Acts::Layoutable)
   end
 end

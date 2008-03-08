@@ -35,7 +35,6 @@ module ActiveRecord::Acts::Itemizable
       end
       acts_as_list :scope =>
       acts_as_itemizable_options[:list_table_name].singularize.intern # => :list
-      #{}"#{acts_as_itemizable_options[:list_table_name].singularize}_id = self"
 
       validates_uniqueness_of :id,
             :scope => :"#{acts_as_itemizable_options[:list_class_id]}" # => :list_id

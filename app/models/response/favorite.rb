@@ -7,6 +7,5 @@ class Favorite < Response
     end
   end
   
+  class FavoriteError < StandardError; end
 end
-
-class FavoriteError < StandardError; end

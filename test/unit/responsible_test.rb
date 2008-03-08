@@ -55,7 +55,7 @@ class ResponsibleTest < Test::Unit::TestCase
     assert !acc1.reported_with?
     assert rep = acc1.report(:user => @user)
     rep.update_attribute(:variation, 200)
-    assert_raise(NotifierError) { rep.send(:send_notification) }
+    assert_raise(Notifier::NotifierError) { rep.send(:send_notification) }
     assert_equal orig_mail_count, ActionMailer::Base.deliveries.size
   end
   
@@ -95,15 +95,15 @@ class ResponsibleTest < Test::Unit::TestCase
     assert_not_nil acc1.user
     assert_equal acc1.user, @person
     assert @person.wants_notifications_for?(:rating)
-    assert_nothing_raised(NotifierError) { rating.send(:send_notification) }
+    assert_nothing_raised(Notifier::NotifierError) { rating.send(:send_notification) }
     assert_equal 3, ActionMailer::Base.deliveries.size
     @person.set_notification_for(:rating, true)
     assert @person.wants_notifications_for?(:rating)
-    assert_nothing_raised(NotifierError) { rating.send(:send_notification, @person) }
+    assert_nothing_raised(Notifier::NotifierError) { rating.send(:send_notification, @person) }
     assert_equal 4, ActionMailer::Base.deliveries.size
     @person.set_notification_for(:rating, false)
     assert !@person.wants_notifications_for?(:rating), @person[:notify].inspect
-    assert_raise(NotifierError) { rating.send(:send_notification, @person) }
+    assert_raise(Notifier::NotifierError) { rating.send(:send_notification, @person) }
   end
 
 end

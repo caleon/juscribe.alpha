@@ -81,4 +81,6 @@ class Notifier < ActionMailer::Base
     
   end
   
+  class NotifierError < StandardError; end
+  
 end
