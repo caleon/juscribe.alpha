@@ -1,3 +1,5 @@
+FIRST ATTEMPT:
+==============
 curl -O http://www.monkey.org/~provos/libevent-1.4.1-beta.tar.gz
 ./configure --prefix=/usr/local/bin
 make
@@ -13,14 +15,15 @@ same thing
 
 sudo env ARCHFLAGS="-arch i386" gem install memcached
 
-
 following necessary?
 export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/local/lib"
 
 
+SOLUTION:
+=========
 CHRIST. Here are what worked on Leopard:
 don't add prefix options. default is /usr/local
-DID add export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/local/lib" but not sure if necessary.
+DID add `export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/local/lib"` to ~/.profile but not sure if necessary.
 libevent 1.4.1-beta
 memcached-1.2.4
 libmemcached-0.16 (0.15 or 0.17 do not work!)

@@ -1,4 +1,5 @@
 .DS_Store
+attachment_fu_plugin.sqlite3.db
 config/database.yml
 config/
 config/preferences/*
