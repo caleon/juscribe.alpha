@@ -10,3 +10,10 @@
 <%= f.text_field :last_name %>
 <%= error_message_on @user, 'last_name' %>
 <br />
+
+<% if @form_for_picture == true %>
+	<%= f.file_field :uploaded_data %>
+	<p class="note">
+		(supported file types: gif/jpeg/png. max size: 2mb, min size: 100 bytes)
+	</p>
+<% end %>

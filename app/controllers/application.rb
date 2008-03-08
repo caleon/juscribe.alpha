@@ -42,6 +42,15 @@ class ApplicationController < ActionController::Base
   private
   #######
   
+  def load_config
+    @config = SITE
+    # TODO: set up a special table where a "recheck" value can be toggled. This
+    # filter will check that value each time and if it is TRUE, it'll re-load the
+    # data from the yaml file. Perhaps use a "last_checked_at" column so that
+    # under normal conditions, the app will automatically recheck the yaml file
+    # after a certain period of time.
+  end
+  
   # Example call from PermissionRulesController:
   # display_error(:class_name => 'Permission Rule', :message => 'Kaboom!',
   #               :html => {:redirect => true, :error_path => @permission_rule})
@@ -74,13 +83,24 @@ class ApplicationController < ActionController::Base
     end
   end
   
-  def load_config
-    @config = SITE
-    # TODO: set up a special table where a "recheck" value can be toggled. This
-    # filter will check that value each time and if it is TRUE, it'll re-load the
-    # data from the yaml file. Perhaps use a "last_checked_at" column so that
-    # under normal conditions, the app will automatically recheck the yaml file
-    # after a certain period of time.
+  def save_uploaded_image_for(record)
+    raise unless image_uploaded? && !record.nil? && (record.respond_to(:pictures) || record.respond_to(:picture))
+    params[:picture].merge!({:user => @viewer})
+    picture = record.pictures.new(params[:picture]) rescue record.picture.new(params[:picture])
+    if picture.save
+      redirect_to :controller => 'picture', :action => "crop", :id => picture
+    else
+      # should distinguish between different errors here...
+      # - bad file type
+      # - bad file zize
+      # - other errors
+      flash[:warning] = "Sorry, could not save the uploaded image. Please upload another image."
+      record.errors.add(:picture, "could not be saved")
+    end
   end
   
+  def image_uploaded?
+    return false unless params[:picture] && params[:picture][:uploaded_data] && !params[:picture][:uploaded_data].blank?
+    true
+  end
 end

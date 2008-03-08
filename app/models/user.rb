@@ -30,7 +30,7 @@ class User < ActiveRecord::Base
     self[:notify][arg] = bool
   end
     
-  def to_param; self.nick; end #test
+  def to_param; self.nick; end
   
   def to_s; self.nick; end
   

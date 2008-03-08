@@ -3,7 +3,7 @@ module ApplicationHelper
   def logged_in?
     !@viewer.nil?
   end
-  
+    
   ### Refer to config/initializers/action_controller_tweaks.rb
   def responding_types
     @responding_types ||= [:html]

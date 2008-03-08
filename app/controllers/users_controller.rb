@@ -18,7 +18,7 @@ class UsersController < ApplicationController
       
   def show
     return unless setup
-    @widgets = @user.widgets.placed # TODO: including :widgetable not allowed. write sql.
+    @widgets = @user.widgets.placed # TODO: cant include:widgetable. write sql.
     @skin_file = @user.skin_file
     @layout_file = @user.layout_file
     respond_to do |format|
@@ -36,6 +36,7 @@ class UsersController < ApplicationController
     @user = User.new(params[:user])
     @user.nick, @user.email = params[:user][:nick], params[:user][:email]
     if @user.save
+      save_uploaded_image_for(@user) if image_uploaded?
       session[:user_id] = @user.id
       msg = "You are now a registered user! Welcome!"
       respond_to do |format|
@@ -59,6 +60,7 @@ class UsersController < ApplicationController
   def update
     return unless (setup && @user.editable_by?(@viewer))
     if @user.update_attributes(params[:user])
+      save_uploaded_image_for(@user) if image_uploaded?
       msg = "You have successfully edited #{@user.display_name}."
       respond_to do |format|
         format.html { flash[:notice] = msg; redirect_to @user }

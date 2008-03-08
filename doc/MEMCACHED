@@ -1,0 +1,27 @@
+curl -O http://www.monkey.org/~provos/libevent-1.4.1-beta.tar.gz
+./configure --prefix=/usr/local/bin
+make
+sudo make install
+
+curl -O http://www.danga.com/memcached/dist/memcached-1.2.5.tar.gz
+./configure --prefix=/usr/local/bin
+make
+sudo make install
+
+http://download.tangent.org/libmemcached-0.17.tar.gz
+same thing
+
+sudo env ARCHFLAGS="-arch i386" gem install memcached
+
+
+following necessary?
+export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/local/lib"
+
+
+CHRIST. Here are what worked on Leopard:
+don't add prefix options. default is /usr/local
+DID add export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/local/lib" but not sure if necessary.
+libevent 1.4.1-beta
+memcached-1.2.4
+libmemcached-0.16 (0.15 or 0.17 do not work!)
+sudo env ARCHFLAGS="-arch i386" gem install memcached

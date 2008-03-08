@@ -8,3 +8,4 @@ ActiveRecord::Base.send(:include, ActiveRecord::Acts::Itemizable)
 ActiveRecord::Base.send(:include, ActiveRecord::Acts::Responsible)
 ActiveRecord::Base.send(:include, ActiveRecord::Acts::Taggable)
 ActiveRecord::Base.send(:include, ActiveRecord::Acts::Widgetable)
+require 'image_science'

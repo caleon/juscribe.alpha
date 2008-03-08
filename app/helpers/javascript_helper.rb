@@ -1,5 +1,9 @@
 module JavascriptHelper
   
+  def add_onload(*args)
+    # TODO: Set this up.
+  end
+  
   def add_behavior(selector, behavior)
     add_inline_scripts("'#{selector}' : #{behavior}", :add_behavior)
   end

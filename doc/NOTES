@@ -1,0 +1,4 @@
+
+Try this:
+Added option to pass proc to ActionController::Base.asset_host for maximum configurability #10521 [chuyeow]. Example:
+ActionController::Base.asset_host = Proc.new { |source| if source.starts_with?(’/images’) “http://images.example.com” else “http://assets.example.com” end }
