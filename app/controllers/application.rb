@@ -6,17 +6,11 @@ class ApplicationController < ActionController::Base
   # Uncomment the :secret if you're not using the cookie session store
   protect_from_forgery # :secret => 'a241500281274090ecdf656d5074d028'
   
-  before_filter :load_config, :get_viewer, :run_initialize
+  before_filter :load_config, :get_viewer, :verify_logged_in
+  filter_parameter_logging :password
+  exempt_from_layout('js.erb') # Do we really want this?
   
 ### BEGIN TEMPLATE ###
-  #before_filter {|controller| controller.authorize(@object) if [ :new, :create, :edit, :update, :destroy ].include?(controller.action_name.intern) }
-  #before_filter :authorize
-  #before_filter :verify_logged_in, :only => [ :create, :update, :destroy ]
-  
-  #verify :method => :get, :only => [ :index, :show, :new, :edit ]
-  #verify :method => :put, :only => [ :update ]
-  #verify :method => :post, :only => [ :create ]
-  #verify :method => :delete, :only => [ :destroy ]
   
   def index
     limit, page = 20, params[:page].to_i + 1
@@ -118,7 +112,6 @@ class ApplicationController < ActionController::Base
   end
   
 ### END TEMPLATE ###
-  
                  
   def error; render :template => 'shared/warning', :layout => false; end
   
@@ -126,42 +119,121 @@ class ApplicationController < ActionController::Base
     return true unless [ :new, :create, :edit, :update, :destroy ].include?(action_name.intern)
     object && @viewer && object.editable_by?(@viewer)
   end
-
+  
+  #######
+  private
+  #######
+  def load_config
+    # TODO: set up a special table where a "recheck" value can be toggled. This
+    # filter will check that value each time and if it is TRUE, it'll re-load the
+    # data from the yaml file. Perhaps use a "last_checked_at" column so that
+    # under normal conditions, the app will automatically recheck the yaml file
+    # after a certain period of time.
+    @config = SITE
+  end
+  
+  def self.set_model_variables(*args)
+    opts = args.extract_options!
+    if args.first.is_a?(Class)
+      klass_sym = args.shift
+      write_inheritable_attribute(:klass, klass_sym.to_s.classify.constantize)
+    else
+      write_inheritable_attribute(:klass, opts[:class] || controller_name.classify.constantize)
+    end
+    write_inheritable_attribute(:instance_sym, opts[:instance_sym] ||
+                read_inheritable_attribute(:klass).class_name.underscore)
+    write_inheritable_attribute(:instance_name, opts[:instance_name] ||
+                read_inheritable_attribute(:instance_sym.to_s.gsub('_', ' ')))
+    write_inheritable_attribute(:instance_var, opts[:instance_var] ||
+                "@#{read_inheritable_attribute(:instance_sym)}")
+    write_inheritable_attribute(:plural_sym, opts[:plural_sym] ||
+                read_inheritable_attribute(:instance_sym).pluralize)
+    write_inheritable_attribute(:custom_finder, opts[:custom_finder] || :find)
+  end
+  
+  def setup(includes=nil, opts={})
+    self.class.set_model_variables unless klass = self.class.read_inheritable_attribute(:klass)
+    instance_var = self.class.read_inheritable_attribute(:instance_var)
+    custom_finder = self.class.read_inheritable_attribute(:custom_finder)
+    
+    if params[:id] && instance_variable_set("#{instance_var}", klass.send(custom_finder, params[:id], {:include => includes}))
+      @object = instance_variable_get("#{instance_var}")
+      true && authorize(@object)
+    else
+      display_error(opts)
+      false
+    end
+  end
+  
   def get_viewer
     @viewer ||= User.find(session[:user_id]) if session[:user_id]
   end
   
   def verify_logged_in
-    return true if session[:user_id]
+    return true unless (self.class.read_inheritable_attribute(:verify_login_list) || []).include?(action_name.intern)
+    return true if get_viewer
     msg = "You need to be logged in to do that."
-    orig_respond_to do |format|
+    respond_to_without_type_registration do |format|
       format.html { flash[:warning] = msg; redirect_to login_url and return false }
       format.js { flash.now[:warning] = msg; render :controller => 'users', :action => 'login' and return false }
       # Could just make both formats flash and render login...
     end
   end
   
-  #######
-  private
-  #######
+  def self.verify_login_on(*args)
+    write_inheritable_array :verify_login_list, args
+  end
   
-  def setup(includes=nil, opts={})
-    @klass ||= controller_name.classify.constantize
-    @instance_name ||= controller_name.singularize
-    @instance_str ||= controller_name.singularize.gsub(/_/, ' ')
-    @instance_var ||= "@#{controller_name.singularize}"
-    @instance_sym ||= :"#{@instance_name}"
-    @plural_sym ||= controller_name
-    @custom_finder ||= :find
-    if params[:id] && instance_variable_set(:"#{@instance_var}",
-                                              @klass.send(@custom_finder, params[:id], {:include => includes}))
-      @object = instance_variable_get(:"#{@instance_var}")
-      true
-    else
-      display_error(opts)
-      false
+  def authorize(object)
+    return true unless (self.class.read_inheritable_attribute(:authorize_list) || []).include?(action_name.intern)
+    unless object && @viewer && object.editable_by?(@viewer)
+      msg = "You are not authorized for that action."
+      respond_to_without_type_registration do |format|
+        format.html { flash[:warning] = msg; redirect_to @viewer || login_url }
+        format.js { flash.now[:warning] = msg; render :action => 'shared/unauthorized' }
+      end
+      return false
+    end
+    true
+  end
+  
+  def self.authorize_on(*args)
+    write_inheritable_array :authorize_list, args
+  end
+  
+  # Example call from PermissionRulesController:
+  # display_error(:class_name => 'Permission Rule', :message => 'Kaboom!',
+  #               :html => {:redirect => true, :error_path => @permission_rule})
+  def display_error(opts={})
+    valid_mimes = Mime::EXTENSIONS & (opts.keys.blank? ? [:html, :js, :xml] : opts.keys)
+    valid_mimes.each do |mime|
+      instance_eval %{ @#{mime}_opts = opts.delete(:#{mime}) || {} }
+    end    
+    respond_to_without_type_registration do |format|
+      valid_mimes.each do |mime|
+          instance_eval <<-EOS
+            @#{mime}_opts.merge!(opts)
+            format.#{mime} { return_error_view(:#{mime}, @#{mime}_opts) }
+          EOS
+      end
     end
   end
+  
+  def return_error_view(format, opts={})
+    klass = opts[:class]
+    klass_name = opts[:class_name] || klass.name.humanize rescue nil
+    msg = opts[:message] || "Error accessing #{klass_name || 'action'}."
+    error_path = opts[:error_path]
+    if opts[:redirect] ||= false
+      flash[:warning] = msg
+      redirect_to error_path || error_url
+    else
+      flash.now[:warning] = msg
+      render error_path || { :template => 'shared/error' }
+    end
+  end
+  
+  ### PICTURES ###
   
   def create_uploaded_picture_for(record, opts={})
     raise unless picture_uploaded? && !record.nil? && (record.respond_to?(:pictures) || record.respond_to?(:picture))
@@ -189,44 +261,4 @@ class ApplicationController < ActionController::Base
     params[:picture] && !params[:picture][:uploaded_data].blank?
   end
   
-  def load_config
-    # TODO: set up a special table where a "recheck" value can be toggled. This
-    # filter will check that value each time and if it is TRUE, it'll re-load the
-    # data from the yaml file. Perhaps use a "last_checked_at" column so that
-    # under normal conditions, the app will automatically recheck the yaml file
-    # after a certain period of time.
-    @config = SITE
-  end
-  
-  # Example call from PermissionRulesController:
-  # display_error(:class_name => 'Permission Rule', :message => 'Kaboom!',
-  #               :html => {:redirect => true, :error_path => @permission_rule})
-  def display_error(opts={})
-    valid_mimes = Mime::EXTENSIONS & (opts.keys.blank? ? [:html, :js, :xml] : opts.keys)
-    valid_mimes.each do |mime|
-      instance_eval %{ @#{mime}_opts = opts.delete(:#{mime}) || {} }
-    end    
-    orig_respond_to do |format|
-      valid_mimes.each do |mime|
-          instance_eval <<-EOS
-            @#{mime}_opts.merge!(opts)
-            format.#{mime} { return_error_view(:#{mime}, @#{mime}_opts) }
-          EOS
-      end
-    end
-  end
-  
-  def return_error_view(format, opts={})
-    klass = opts[:class]
-    klass_name = opts[:class_name] || klass.name.humanize rescue nil
-    msg = opts[:message] || "Error accessing #{klass_name || 'action'}."
-    error_path = opts[:error_path]
-    if opts[:redirect] ||= false
-      flash[:warning] = msg
-      redirect_to error_path || error_url
-    else
-      flash.now[:warning] = msg
-      render error_path || { :template => 'shared/error' }
-    end
-  end
 end

@@ -1,9 +1,17 @@
 class UsersController < ApplicationController
-  #before_filter :verify_logged_in, :except => [ :login, :new, :friends, :about ]
-
-  #verify :method => :get, :only => [ :friends, :mailbox, :about, :edit_password, :logout, :mine ]
-  #verify :method => :put, :only => [ :update_password, :unfriend, :befriend ]
+  authorize_on :edit, :update, :edit_password, :update_password, :mailbox
+  verify_login_on :new, :create, :edit, :update, :edit_password, :update_password, :mailbox, :befriend, :unfriend, :logout
+  set_model_variables :custom_finder => :find_by_nick
   
+  def initialize
+    @klass = User
+    @instance_name = 'user'
+    @instance_str = 'user'
+    @instance_var = "@user"
+    @instance_sym = :user
+    @plural_sym = "users"
+    @custom_finder = :find_by_nick
+  end
       
   def show
     super(:includes => :permission) do |marker|
@@ -31,16 +39,6 @@ class UsersController < ApplicationController
         flash.now[:warning] = "There was an issue with the registration form."
       end
     end
-  end
-  
-  # Try:
-  def method_defined(m, *args)
-    define_method(m, *args) {
-      options = *args.extract_options!
-      super(options) do |marker|
-        m.call(*args)
-      end
-    }
   end
   
   def update
@@ -74,10 +72,6 @@ class UsersController < ApplicationController
     end      
   end
   
-  def destroy
-    super
-  end
-  
   def login # login and logout actions only responds to html
     @page_title = "Login"
     if request.post?
@@ -108,13 +102,11 @@ class UsersController < ApplicationController
     flash[:notice] = "You are now logged out. See you soon!" # Needs to be set after reset_session.
   end
   
-  def mine
-    redirect_to User.find(session[:user_id])
-  end
+  def mine; redirect_to @viewer; end
   
   def friends
     return unless setup
-    @friends = @user.friends(:include => [:primary_picture, {:permission => :permission_rule}])
+    @friends = @user.friends(:include => [ :primary_picture, :permission ])
   end
   
   def befriend
@@ -175,21 +167,5 @@ class UsersController < ApplicationController
   
   def about
     return unless setup
-  end
-  
-  private
-  def run_initialize
-    @klass = User
-    @instance_name = 'user'
-    @instance_str = 'user'
-    @instance_var = "@user"
-    @instance_sym = :user
-    @plural_sym = "users"
-    @custom_finder = :find_by_nick
-  end
-  
-  def authorize(object=@user)
-    return true unless [ :edit_password,:update_password, :befriend, :unfriend ].include?(action_name.intern)
-    object && @viewer && object.editable_by?(@viewer)
   end
 end

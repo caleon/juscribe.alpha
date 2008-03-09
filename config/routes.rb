@@ -30,7 +30,8 @@ ActionController::Routing::Routes.draw do |map|
   # See how all your routes lay out with "rake routes"
   
   map.resources :users,
-                :member => { :friends => :get, :befriend => :any, :unfriend => :any, :about => :get, :edit_password => :get, :update_password => :put }
+                :member => { :friends => :get, :befriend => :put, :unfriend => :put, :about => :get, :edit_password => :get, :update_password => :put }
+                
   map.resources :messages
   
   map.resources :articles

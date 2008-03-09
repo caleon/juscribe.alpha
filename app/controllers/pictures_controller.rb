@@ -1,27 +1,10 @@
 class PicturesController < ApplicationController
-    
-  def index
-    super
-  end
-
-  def show
-    super
-  end
-  
-  def new
-    super
-  end
-  
   def create
     return if @picture = create_uploaded_picture_for(@viewer, :save => true, :respond => true)
     respond_to do |format|
       format.html { render :action => 'new' }
       format.js { render :action => 'create_error' }
     end
-  end
-  
-  def edit
-    super
   end
   
   def update
@@ -50,17 +33,11 @@ class PicturesController < ApplicationController
       end
     end
   end
-
-  def destroy
-    super
-  end
   
+  #######
   private
-  def run_initialize
-    @klass = Picture
-    @plural_sym = "pictures"
-    @instance_name = 'picture'
-    @instance_str = 'picture'
-    @instance_sym = "@picture"
+  #######
+  def authorize_needed
+    [ :edit, :update ]
   end
 end

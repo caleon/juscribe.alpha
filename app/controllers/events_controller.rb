@@ -1,29 +1,4 @@
-class EventsController < ApplicationController  
-  
-  def index
-    super
-  end
-  
-  def show
-    super
-  end
-  
-  def new
-    super
-  end
-  
-  def create
-    super
-  end
-  
-  def edit
-    super
-  end
-  
-  def update
-    super
-  end
-  
+class EventsController < ApplicationController
   def begin
     return unless setup && request.method == :put && verify_logged_in && authorize(@event)
     if @event.begin!
@@ -56,18 +31,5 @@ class EventsController < ApplicationController
         format.js { render :action => 'end_error' }
       end
     end
-  end
-  
-  def destroy
-    super
-  end
-  
-  private
-  def run_initialize
-    @klass = Event
-    @plural_sym = "events"
-    @instance_name = 'event'
-    @instance_str = 'event'
-    @instance_sym = "@event"
   end
 end
