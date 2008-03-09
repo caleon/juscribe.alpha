@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 42) do
+ActiveRecord::Schema.define(:version => 43) do
 
   create_table "articles", :force => true do |t|
     t.string   "title"
@@ -122,7 +122,7 @@ ActiveRecord::Schema.define(:version => 42) do
 
   create_table "pictures", :force => true do |t|
     t.string   "name"
-    t.string   "caption"
+    t.text     "caption"
     t.integer  "depictable_id"
     t.integer  "user_id"
     t.datetime "created_at"

@@ -35,8 +35,7 @@ ActionController::Routing::Routes.draw do |map|
   
   map.resources :articles
   
-  map.resources :pictures,
-                :member => { :crop => :get, :process_crop => :put }
+  map.resources :pictures
   
   map.resources :search
 

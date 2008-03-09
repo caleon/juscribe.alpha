@@ -15,7 +15,7 @@
 .sub.navigation li.navigationEl a { color: #000; font-weight: bold; }
 
 #canvas { padding: 1em 2em; }
-.flashBox { border: 6px solid; background: url(/images/ui/info.png) no-repeat scroll 10px center; margin: 0 auto 1em; min-height: 2.5em; padding: 1em 1em 1em 4em; }
+.flashBox { border: 6px solid; background: no-repeat scroll 10px center; margin: 0 auto 1em; min-height: 2.5em; padding: 1em 1em 1em 4em; }
 #flashWarning { border-color: #D6E365; background-color: #EFFF72; }
 #flashNotice { border-color: #D6E365; background-color: #EFFF72; }
 

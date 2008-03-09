@@ -62,8 +62,8 @@
 //
 //	Configuration
 //
-var fileLoadingImage = "images/spinner.gif"; // CHANGED
-var fileBottomNavCloseImage = "images/closelabel.gif";
+var fileLoadingImage = "/images/spinner.gif"; // CHANGED
+var fileBottomNavCloseImage = "/images/closelabel.gif";
 
 var overlayOpacity = 0.8;	// controls transparency of shadow overlay
 

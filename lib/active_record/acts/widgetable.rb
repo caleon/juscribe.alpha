@@ -40,6 +40,10 @@ module ActiveRecord::Acts::Widgetable #:nodoc:
       super rescue nil
     end
     
+    def picture_file
+      self.picture ? self.picture.file_path : "uploads/" + self.class.class_name + "/default.jpg" 
+    end
+    
     def clip_for(user)
       self.clips.find_by_user_id(user.id) rescue nil
     end

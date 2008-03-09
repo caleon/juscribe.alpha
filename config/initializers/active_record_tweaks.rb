@@ -11,6 +11,19 @@ module ActiveRecord
     def display_name(opts={})
       "#{self.to_param} (#{self.class})"
     end
+    
+    def nullify!(user=nil)
+      user.wheel? ? destroy! : (self.nullify if self.editable_by?(user) rescue nil)
+    end
+    def nullify # override this in individual models
+      self.name += " (from #{self.inspect})"
+      save unless ([:type, :depictable_type, :responsible_type, :permissible_type].select do |col|
+        respond_to?(col) && self[col] = 'Deleted' + self[col]
+      end +
+      [:user_id].select do |col|
+        respond_to?(col) && self[col] = DB[:garbage_id]
+      end).empty?
+    end
   end
 end
 

@@ -1,76 +1,63 @@
 class UsersController < ApplicationController
-  before_filter :verify_logged_in, :except => [ :index, :show, :new, :create, :login, :friends, :about ]
-  #FIXME: before_filter :only => [:edit, :update, :destroy, :mine] { authenticate(@user) }
+  #before_filter :verify_logged_in, :except => [ :login, :new, :friends, :about ]
+
+  #verify :method => :get, :only => [ :friends, :mailbox, :about, :edit_password, :logout, :mine ]
+  #verify :method => :put, :only => [ :update_password, :unfriend, :befriend ]
   
-  verify :method => :post, :only => [ :create ]
-  verify :method => :put, :only => [ :update ]
-  verify :method => :put, :only => :update_password
-  
-  def index
-    limit, page = 10, params[:page].to_i + 1
-    offset = params[:page].to_i * limit
-    @users = User.find(:all, :limit => limit, :offset => offset, :order => 'id DESC')
-    respond_to do |format|
-      format.html
-      format.xml
-    end
-  end
       
   def show
-    return unless setup
-    @widgets = @user.widgets.placed # TODO: cant include:widgetable. write sql.
-    @skin_file = @user.skin_file
-    @layout_file = @user.layout_file
-    respond_to do |format|
-      format.html
-      format.xml # Feed for user comment thread
+    super({:permission => :permission_rule}) do |marker|
+      case marker
+      when :after_setup
+        @widgets = @user.widgets.placed # TODO: cant :include :widgetable. write sql.
+        @skin_file = @user.skin_file
+        @layout_file = @user.layout_file
+      end
     end
-  end
-  
-  def new
-    @page_title = "Registration"
-    @user = User.new
   end
   
   def create
-    @user = User.new(params[:user])
-    @user.nick, @user.email = params[:user][:nick], params[:user][:email]
-    if @user.save
-      save_uploaded_image_for(@user) if image_uploaded?
-      session[:user_id] = @user.id
-      msg = "You are now a registered user! Welcome!"
-      respond_to do |format|
-        format.html { flash[:notice] = msg; redirect_to @user }
-        format.js { flash.now[:notice] = msg }
-      end
-    else
-      flash.now[:warning] = "There was an issue with the registration form."
-      respond_to do |format|
-        format.html { render :action => 'new' }
-        format.js { render :action => 'create_error' }
+    super(:without_association => true) do |marker|
+      case marker
+      when :after_instantiate
+        @user = @object
+        @user.nick, @user.email = params[:user][:nick], params[:user][:email]
+      when :after_save
+        create_uploaded_picture_for(@user) if picture_uploaded?
+        session[:user_id] = @user.id
+      when :before_response
+        msg = "You are now a registered user! Welcome!"
+      when :before_error_response
+        flash.now[:warning] = "There was an issue with the registration form."
       end
     end
   end
   
-  def edit
-    return unless (setup && @user.editable_by?(@viewer))      
-    @page_title = "#{@user.nick} - Edit"
-  end
+  #def create
+  #  @user = User.new(params[:user])
+  #  @user.nick, @user.email = params[:user][:nick], params[:user][:email]
+  #  if @user.save
+  #    create_uploaded_picture_for(@user) if picture_uploaded?
+  #    session[:user_id] = @user.id
+  #    msg = "You are now a registered user! Welcome!"
+  #    respond_to do |format|
+  #      format.html { flash[:notice] = msg; redirect_to @user }
+  #      format.js { flash.now[:notice] = msg }
+  #    end
+  #  else
+  #    flash.now[:warning] = "There was an issue with the registration form."
+  #    respond_to do |format|
+  #      format.html { render :action => 'new' }
+  #      format.js { render :action => 'create_error' }
+  #    end
+  #  end
+  #end
   
   def update
-    return unless (setup && @user.editable_by?(@viewer))
-    if @user.update_attributes(params[:user])
-      save_uploaded_image_for(@user) if image_uploaded?
-      msg = "You have successfully edited #{@user.display_name}."
-      respond_to do |format|
-        format.html { flash[:notice] = msg; redirect_to @user }
-        format.js { flash.now[:notice] = msg }
-      end
-    else
-      flash.now[:warning] = "There was an issue with the update form."
-      respond_to do |format|
-        format.html { render :action => 'edit' }
-        format.js { render :action => 'update_error' }
+    super do |marker|
+      case marker
+      when :after_setup
+        save_uploaded_picture_for(@user) if picture_uploaded?
       end
     end
   end
@@ -98,22 +85,7 @@ class UsersController < ApplicationController
   end
   
   def destroy
-    return unless setup
-    if @user.editable_by?(@viewer)
-      # Set to disabled user if !admin?
-      # Delete if admin?
-      msg = "You have deleted #{@user.display_name}."
-      respond_to do |format|
-        format.html { flash[:notice] = msg; redirect_to :back }
-        format.js { flash.now[:notice] = msg }
-      end
-    else
-      flash.now[:warning] = "You are not allowed to delete #{@user.display_name}."
-      respond_to do |format|
-        format.html { render :action => 'edit' }
-        format.js { render :action => 'destroy_error' }
-      end
-    end
+    super
   end
   
   def login # login and logout actions only responds to html
@@ -130,7 +102,7 @@ class UsersController < ApplicationController
       end
     else
       if session[:user_id]
-        user = User.find(session[:user_id])
+        user = @viewer
         flash[:notice] = "You are already logged in."
         redirect_to user
       else
@@ -140,25 +112,24 @@ class UsersController < ApplicationController
   end
   
   def logout
-    redirect_to user_url(User.find(session[:user_id]))
+    redirect_to user_url(@viewer)
     session[:user_id] = nil
     reset_session
-    flash[:notice] = "You are now logged out. See you soon!"
+    flash[:notice] = "You are now logged out. See you soon!" # Needs to be set after reset_session.
   end
   
   def mine
-    user = User.find(session[:user_id])
     redirect_to User.find(session[:user_id])
   end
   
   def friends
     return unless setup
-    @friends = @user.friends(:include => :primary_picture)
+    @friends = @user.friends(:include => [:primary_picture, {:permission => :permission_rule}])
   end
   
   def befriend
     return unless setup
-    if res = @viewer.befriend(@user) # This sends out notifier.
+    if res = @viewer.befriend(@user) # This sends out notifier in model.
       @notice = [ "You have requested friendship with #{@user}.",
                   "You are now friends with #{@user}." ][res]
       respond_to do |format|
@@ -217,12 +188,18 @@ class UsersController < ApplicationController
   end
   
   private
-  def setup(includes=nil, opts={})
-    if params[:id] && @user = User.find_by_nick(params[:id], :include => includes)
-      true
-    else
-      display_error(opts)
-      false
-    end
+  def run_initialize
+    @klass = User
+    @instance_name = 'user'
+    @instance_str = 'user'
+    @instance_var = "@user"
+    @instance_sym = :user
+    @plural_sym = "users"
+    @custom_finder = :find_by_nick
+  end
+  
+  def authorize(object=@user)
+    return true unless [ :edit_password,:update_password, :befriend, :unfriend ].include?(action_name.intern)
+    object && @viewer && object.editable_by?(@viewer)
   end
 end

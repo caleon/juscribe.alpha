@@ -1,9 +1,16 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
+  #Picture.class_eval do <<-EOB
+  #    def content_type; "image/jpeg"; end
+  #    def size; 500.kilobytes; end
+  #    def filename; "some_file_name"; end
+  #  EOB
+  #end
+
 class ItemTest < ActiveSupport::TestCase
 
   def test_initial_validity
-    (Item.find(:all) + Picture.find(:all) + Project.find(:all) + Song.find(:all)).each do |item|
+    (Item.find(:all) + Picture.find(:all, :limit => 0) + Project.find(:all) + Song.find(:all)).each do |item|
       assert item.valid?, item.errors.inspect
     end
   end

@@ -1,19 +1,15 @@
 class MessagesController < ApplicationController
-  before_filter :verify_logged_in
-  
-  verify :method => :post, :only => [ :create, :save_as_draft ]
-  
-  def index
     
+  def index
+    super
   end
   
   def show
     return unless setup([{:sender => :primary_picture}, {:recipient => :primary_picture}])
-    
   end
   
   def new
-    @message = @viewer.messages.new
+    super
   end
   
   def create
@@ -67,16 +63,15 @@ class MessagesController < ApplicationController
   end
   
   def destroy
-    
+    super
   end
   
   private
-  def setup(includes=nil, opts={})
-    if params[:id] && @message = Message.find(params[:id], :include => includes)
-      true
-    else
-      display_error(opts)
-      false
-    end
+  def run_initialize
+    @klass = Message
+    @plural_sym = "messages"
+    @instance_name = 'message'
+    @instance_str = 'message'
+    @instance_sym = "@message"
   end
 end
