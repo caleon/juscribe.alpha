@@ -12,7 +12,7 @@
 	<% if @viewer.friends_with?(@user) %>
 		<li class="navigationEl"><%= link_to 'Unfriend', unfriend_user_path(@user) %></li>
 	<% elsif @viewer != @user && !@viewer.kinda_friends_with?(@user) %>
-		<li class="navigationEl"><%= link_to 'Request Friendship', befriend_user_path(@user) %></li>
+		<li class="navigationEl"><%= link_to 'Request Friendship', befriend_user_path(@user), { :method => :put } %></li>
 	<% end %>
 <% end %>
 	</ul>

@@ -9,6 +9,7 @@ class ApplicationController < ActionController::Base
   before_filter :load_config, :get_viewer, :verify_logged_in
   filter_parameter_logging :password
   exempt_from_layout('js.erb') # Do we really want this?
+  class_inheritable_reader :shared_setup_options
   
 ### BEGIN TEMPLATE ###
   
@@ -45,31 +46,31 @@ class ApplicationController < ActionController::Base
   end
   
   def create(*args)
-    yield :before
+    yield :before if block_given?
     options = args.extract_options!
     without_association = options[:without_association]
-    yield :before_instantiate
+    yield :before_instantiate if block_given?
     @object = @klass.new(params[@instance_sym].merge(without_association ? {} : {:user => @viewer}))
-    yield :after_instantiate
-    yield :before_save
+    yield :after_instantiate if block_given?
+    yield :before_save if block_given?
     if @object.save
-      yield :after_save
+      yield :after_save if block_given?
       msg = "You have successfully created your #{@instance_str}.";
-      yield :before_response
+      yield :before_response if block_given?
       respond_to do |format|
         format.html { flash[:notice] = msg; redirect_to @object }
         format.js { flash.now[:notice] = msg }
       end
-      yield :after_response
+      yield :after_response if block_given?
     else
-      yield :after_not_save
+      yield :after_not_save if block_given?
       flash.now[:warning] = "There was an error creating your #{@instance_str}."
-      yield :before_error_response
+      yield :before_error_response if block_given?
       respond_to do |format|
         format.html { render :action => 'new' }
         format.js { render :action => 'create_error' }
       end
-      yield :after_error_response
+      yield :after_error_response if block_given?
     end
   end
   
@@ -79,19 +80,19 @@ class ApplicationController < ActionController::Base
   end
   
   def update
-    yield :before
-    yield :before_setup
+    yield :before if block_given?
+    yield :before_setup if block_given?
     return unless setup
-    yield :after_setup
+    yield :after_setup if block_given?
     if @object.update_attributes(params[:"#{@instance_name}"])
-      yield :after_save
+      yield :after_save if block_given?
       msg = "You have successfully updated #{@object.display_name}."
-      yield :before_response
+      yield :before_response if block_given?
       respond_to do |format|
         format.html { flash[:notice] = msg; redirect_to @object }
         format.js { flash.now[:notice] = msg }
       end
-      yield :after_response
+      yield :after_response if block_given?
     else
       flash.now[:warning] = "There was an error updating your #{@instance_str}."
       respond_to do |format|
@@ -136,30 +137,37 @@ class ApplicationController < ActionController::Base
     opts = args.extract_options!
     if args.first.is_a?(Class)
       klass_sym = args.shift
-      write_inheritable_attribute(:klass, klass_sym.to_s.classify.constantize)
+      klass = klass_sym.to_s.classify.constantize
     else
-      write_inheritable_attribute(:klass, opts[:class] || controller_name.classify.constantize)
+      #write_inheritable_attribute(:klass, opts[:class] || controller_name.classify.constantize)
+      klass = opts[:model_class] || controller_name.classify.constantize
     end
-    write_inheritable_attribute(:instance_sym, opts[:instance_sym] ||
-                read_inheritable_attribute(:klass).class_name.underscore)
-    write_inheritable_attribute(:instance_name, opts[:instance_name] ||
-                read_inheritable_attribute(:instance_sym.to_s.gsub('_', ' ')))
-    write_inheritable_attribute(:instance_var, opts[:instance_var] ||
-                "@#{read_inheritable_attribute(:instance_sym)}")
-    write_inheritable_attribute(:plural_sym, opts[:plural_sym] ||
-                read_inheritable_attribute(:instance_sym).pluralize)
-    write_inheritable_attribute(:custom_finder, opts[:custom_finder] || :find)
+    instance_sym = klass.class_name.underscore
+    instance_name = instance_sym.to_s.gsub('_', ' ')
+    instance_var = "@#{instance_sym}"
+    plural_sym = :"#{instance_sym.to_s.pluralize}"
+    write_inheritable_attribute(:shared_setup_options, {
+            :model_class      =>  klass,
+            :instance_sym     =>  instance_sym,
+            :instance_name    =>  instance_name,
+            :instance_var     =>  instance_var,
+            :plural_sym       =>  plural_sym,
+            :custom_finder    =>  :find
+    }.merge(opts))
+    #class_inheritable_reader :shared_setup_options
   end
   
   def setup(includes=nil, opts={})
-    self.class.set_model_variables unless klass = self.class.read_inheritable_attribute(:klass)
-    instance_var = self.class.read_inheritable_attribute(:instance_var)
+    self.class.set_model_variables unless klass = shared_setup_options[:model_class]
+    instance_var = shared_setup_options[:instance_var]
     custom_finder = self.class.read_inheritable_attribute(:custom_finder)
+    custom_finder = shared_setup_options[:custom_finder]
     
     if params[:id] && instance_variable_set("#{instance_var}", klass.send(custom_finder, params[:id], {:include => includes}))
       @object = instance_variable_get("#{instance_var}")
       true && authorize(@object)
     else
+      opts[:message] ||= "That #{klass} entry could not be found. Please check the address."    # FIXME: setting this interferes with error view processing
       display_error(opts)
       false
     end
@@ -205,15 +213,14 @@ class ApplicationController < ActionController::Base
   # display_error(:class_name => 'Permission Rule', :message => 'Kaboom!',
   #               :html => {:redirect => true, :error_path => @permission_rule})
   def display_error(opts={})
-    valid_mimes = Mime::EXTENSIONS & (opts.keys.blank? ? [:html, :js, :xml] : opts.keys)
+    valid_mimes = Mime::EXTENSIONS & [:html, :js, :xml]
     valid_mimes.each do |mime|
       instance_eval %{ @#{mime}_opts = opts.delete(:#{mime}) || {} }
     end    
     respond_to_without_type_registration do |format|
       valid_mimes.each do |mime|
           instance_eval <<-EOS
-            @#{mime}_opts.merge!(opts)
-            format.#{mime} { return_error_view(:#{mime}, @#{mime}_opts) }
+            format.#{mime} { return_error_view(:#{mime}, @#{mime}_opts.merge!(opts)) }
           EOS
       end
     end
@@ -223,13 +230,13 @@ class ApplicationController < ActionController::Base
     klass = opts[:class]
     klass_name = opts[:class_name] || klass.name.humanize rescue nil
     msg = opts[:message] || "Error accessing #{klass_name || 'action'}."
-    error_path = opts[:error_path]
+    error_pathing = opts[:error_path]
     if opts[:redirect] ||= false
       flash[:warning] = msg
-      redirect_to error_path || error_url
+      redirect_to error_pathing || error_url
     else
       flash.now[:warning] = msg
-      render error_path || { :template => 'shared/error' }
+      render error_pathing || { :template => 'shared/error' }
     end
   end
   

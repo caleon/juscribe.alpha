@@ -8,9 +8,8 @@ module ActiveRecord::Acts::Itemizable
   end
 
   module ClassMethods
-    def acts_as_itemizable(*args) 
-      options = args.extract_options!     
-      list_class_sym = args.shift || :list
+    def acts_as_itemizable(options={}) 
+      list_class_sym = options.delete(:scope) || :list
       list_class = list_class_sym.to_s.classify.constantize
       list_table_name = list_class.table_name
       
@@ -21,7 +20,7 @@ module ActiveRecord::Acts::Itemizable
         :list_class_sym => list_class.to_s.underscore.intern, # => :gallery
         :list_table_name => list_table_name, # => "lists"
         :list_class_id => list_table_name.singularize + '_id'
-      })
+      }.merge(options))
       
       class_inheritable_reader :acts_as_itemizable_options
       
@@ -41,6 +40,26 @@ module ActiveRecord::Acts::Itemizable
       
       include ActiveRecord::Acts::Itemizable::InstanceMethods
       extend ActiveRecord::Acts::Itemizable::SingletonMethods
+    end
+    
+    # Usage: set_itemizables :songs, :order => :position
+    # TODO: add method mapping through options provided to the following method.
+    def set_itemizables(*args)
+      opts = args.extract_options!
+      sym = args.shift || :items
+      options = { :order => :position,
+                  :foreign_key => 'list_id' }.merge(opts)
+      has_many sym, options do
+        def descending; find(:all, :order => 'position DESC'); end
+        def ascending; find(:all, :order => 'position ASC'); end
+      end
+      if sym != :items # Override the methods inherited from List.
+        # List#items is needed for general methods performed by Widget.
+        has_many :items, options.merge(:class_name => sym.to_s.classify) do
+          def descending; find(:all, :order => 'position DESC'); end
+          def ascending; find(:all, :order => 'position ASC'); end
+        end
+      end
     end
   end
 

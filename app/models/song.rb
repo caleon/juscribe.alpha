@@ -1,5 +1,5 @@
 class Song < ActiveRecord::Base
-  acts_as_itemizable :playlist
+  acts_as_itemizable :scope => :playlist
   include PluginPackage
 
   belongs_to :user

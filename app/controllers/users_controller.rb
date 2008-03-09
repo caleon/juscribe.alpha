@@ -102,7 +102,7 @@ class UsersController < ApplicationController
     flash[:notice] = "You are now logged out. See you soon!" # Needs to be set after reset_session.
   end
   
-  def mine; redirect_to @viewer; end
+  def mine; redirect_to @viewer || login_url; end
   
   def friends
     return unless setup

@@ -1,5 +1,5 @@
 class Picture < ActiveRecord::Base
-  acts_as_itemizable :gallery
+  acts_as_itemizable :scope => :gallery
   include PluginPackage
   
   belongs_to :user

@@ -6,7 +6,7 @@ end
 
 class ItemizableMixin < ActiveRecord::Base
   set_table_name "projects"
-  acts_as_itemizable :itemizing_list
+  acts_as_itemizable :scope => :itemizing_list
 end
 
 class ItemizableTest < ActiveSupport::TestCase
