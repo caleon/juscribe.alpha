@@ -6,7 +6,7 @@ class User < ActiveRecord::Base
   validates_exclusion_of    :nick, :in => PROHIBITED_NICKS, :on => :create
   validates_length_of       :nick, :in => 3..20
   validates_length_of       :first_name, :in => 2..20
-  validates_length_of       :middle_initial, :is => 1, :allow_nil => true
+  validates_length_of       :middle_initial, :in => 0..1, :allow_nil => true
   validates_length_of       :last_name, :in => 2..30
   validates_format_of       :nick, :with => /^[a-z][_a-z0-9]+$/i
   validates_format_of       :first_name, :with => /^[a-z][-a-z'\s]*[a-z]$/i

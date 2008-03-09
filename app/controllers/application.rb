@@ -80,7 +80,7 @@ class ApplicationController < ActionController::Base
   end
   
   def edit
-    return unless setup({:permission => :permission_rule})
+    return unless setup(:permission)
     @page_title = "#{@object.display_name} - Edit"
   end
   
@@ -154,7 +154,7 @@ class ApplicationController < ActionController::Base
     @plural_sym ||= controller_name
     @custom_finder ||= :find
     if params[:id] && instance_variable_set(:"#{@instance_var}",
-                                              @klass.send(@custom_finder, params[:id], :include => includes))
+                                              @klass.send(@custom_finder, params[:id], {:include => includes}))
       @object = instance_variable_get(:"#{@instance_var}")
       true
     else

@@ -23,4 +23,5 @@ ActionView::Helpers::RecordTagHelper.class_eval do
       options.merge({ :class => "#{dom_class(record, :item => item)} #{options[:class]}".strip, :id => dom_id(record, prefix, :item => item) })), 
       block.binding
   end
+  alias_method_chain :content_tag_for, :associations
 end

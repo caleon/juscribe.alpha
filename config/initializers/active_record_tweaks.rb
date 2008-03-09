@@ -25,13 +25,13 @@ module ActiveRecord
       end).empty?
     end
   end
-end
-
-
-## acts_as_list fix For Widgetable
-module ActiveRecord::Acts::List::InstanceMethods
-  def add_to_list_bottom
-    self[position_column] = bottom_position_in_list.to_i + 1 unless self.is_a?(Widget)
+  
+  ## acts_as_list fix For Widgetable
+  module Acts::List::InstanceMethods
+    def add_to_list_bottom_with_filter
+      self[position_column] = bottom_position_in_list.to_i + 1 unless self.is_a?(Widget)
+    end
+    alias_method_chain :add_to_list_bottom, :filter
+    private :add_to_list_bottom
   end
-  private :add_to_list_bottom
 end

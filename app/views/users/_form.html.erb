@@ -1,17 +1,21 @@
-<%= f.label :first_name %><br />
-<%= f.text_field :first_name %>
+<%= f.label :first_name %>
 <%= error_message_on @user, 'first_name' %>
+<%= f.text_field :first_name %>
 <br />
-<%= f.label :middle_initial %><br />
-<%= f.text_field :middle_initial, :size => 2, :maxlength => 1 %>
+<%= f.label :middle_initial %>
 <%= error_message_on @user, 'middle_initial '%>
+<%= f.text_field :middle_initial, :size => 2, :maxlength => 1 %>
 <br />
-<%= f.label :last_name %><br />
-<%= f.text_field :last_name %>
+<%= f.label :last_name %>
 <%= error_message_on @user, 'last_name' %>
+<%= f.text_field :last_name %>
 <br />
-
+<%= f.label :birthdate %>
+<%= error_message_on @user, 'birthdate' %>
+<%= date_select :user, :birthdate, :start_year => 8.years.ago.year, :end_year => 70.years.ago.year, :default => 13.years.ago %>
+<br />
 <%= file_field :picture, :uploaded_data %>
+<%= error_message_on :picture, :uploaded_data %>
 <p class="note">
 	(supported file types: gif/jpeg/png. max size: 2mb, min size: 100 bytes)
 </p>

@@ -6,7 +6,7 @@ class UsersController < ApplicationController
   
       
   def show
-    super({:permission => :permission_rule}) do |marker|
+    super(:includes => :permission) do |marker|
       case marker
       when :after_setup
         @widgets = @user.widgets.placed # TODO: cant :include :widgetable. write sql.
@@ -33,25 +33,15 @@ class UsersController < ApplicationController
     end
   end
   
-  #def create
-  #  @user = User.new(params[:user])
-  #  @user.nick, @user.email = params[:user][:nick], params[:user][:email]
-  #  if @user.save
-  #    create_uploaded_picture_for(@user) if picture_uploaded?
-  #    session[:user_id] = @user.id
-  #    msg = "You are now a registered user! Welcome!"
-  #    respond_to do |format|
-  #      format.html { flash[:notice] = msg; redirect_to @user }
-  #      format.js { flash.now[:notice] = msg }
-  #    end
-  #  else
-  #    flash.now[:warning] = "There was an issue with the registration form."
-  #    respond_to do |format|
-  #      format.html { render :action => 'new' }
-  #      format.js { render :action => 'create_error' }
-  #    end
-  #  end
-  #end
+  # Try:
+  def method_defined(m, *args)
+    define_method(m, *args) {
+      options = *args.extract_options!
+      super(options) do |marker|
+        m.call(*args)
+      end
+    }
+  end
   
   def update
     super do |marker|

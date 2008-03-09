@@ -1,10 +1,10 @@
-<%= f.label :nick %><br />
-<%= f.text_field :nick %>
+<%= f.label :nick %>
 <%= error_message_on @user, 'nick' %>
+<%= f.text_field :nick %>
 <br />
 <%= render :partial => 'password_form', :locals => { :f => f } %>
-<%= f.label :email %><br />
-<%= f.text_field :email %>
+<%= f.label :email %>
 <%= error_message_on @user, 'email' %>
+<%= f.text_field :email %>
 <br />
 <%= yield %>

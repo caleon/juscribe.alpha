@@ -11,6 +11,8 @@ class User < ActiveRecord::Base
     
   attr_protected :nick, :email, :password_salt, :password_hash
   attr_accessor :tos_agreement
+  
+  def users; self; end
     
   def wheel?
     # TODO: For more security the wheel list should be in a file with restrictive
