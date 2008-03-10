@@ -36,46 +36,49 @@ class ApplicationController < ActionController::Base
   def index
     limit, page = 20, params[:page].to_i + 1
     offset = params[:page].to_i * limit
-    @object = @klass.find(:all, :limit => limit, :offset => offset, :order => 'id DESC')
+    @objects = shared_setup_options[:model_class].find(:all, :limit => limit, :offset => offset, :order => 'id DESC')
+    set_model_instance(@objects)
     respond_to do |format|
       format.html
       format.xml
     end
   end
   
-  def show(*args)
-    yield :before
+  def show(*args, &block)
+    yield :before if block_given?
     options = args.extract_options!
     includes = options[:include]
     error_opts = options[:error_opts]
-    yield :before_setup
-    return unless setup(includes, error_opts);
-    yield :after_setup
-    yield :before_response
+    yield :before_setup if block_given?
+    return unless setup(includes, error_opts)
+    yield :after_setup if block_given?
+    yield :before_response if block_given?
     respond_to do |format|
       format.html
       format.js
       format.xml
     end
-    yield :after_response
+    yield :after_response if block_given?
   end
   
   def new
-    @page_title = "Create #{@instance_str}"
-    @object = @klass.new
+    @page_title = "Create #{shared_setup_options[:instance_name]}"
+    @object = shared_setup_options[:model_class].new
+    set_model_instance(@object)
   end
   
-  def create(*args)
+  def create(*args, &block)
     yield :before if block_given?
     options = args.extract_options!
     without_association = options[:without_association]
     yield :before_instantiate if block_given?
-    @object = @klass.new(params[@instance_sym].merge(without_association ? {} : {:user => @viewer}))
+    @object = @klass.new(params[shared_setup_options[:instance_sym]].merge(without_association ? {} : {:user => @viewer}))
+    set_model_instance(@object)
     yield :after_instantiate if block_given?
     yield :before_save if block_given?
     if @object.save
       yield :after_save if block_given?
-      msg = "You have successfully created your #{@instance_str}.";
+      msg = "You have successfully created your #{shared_setup_options[:instance_name]}."
       yield :before_response if block_given?
       respond_to do |format|
         format.html { flash[:notice] = msg; redirect_to @object }
@@ -84,7 +87,7 @@ class ApplicationController < ActionController::Base
       yield :after_response if block_given?
     else
       yield :after_not_save if block_given?
-      flash.now[:warning] = "There was an error creating your #{@instance_str}."
+      flash.now[:warning] = "There was an error creating your #{shared_setup_options[:instance_name]}."
       yield :before_error_response if block_given?
       respond_to do |format|
         format.html { render :action => 'new' }
@@ -99,12 +102,12 @@ class ApplicationController < ActionController::Base
     @page_title = "#{@object.display_name} - Edit"
   end
   
-  def update
+  def update(*args, &block)
     yield :before if block_given?
     yield :before_setup if block_given?
     return unless setup
     yield :after_setup if block_given?
-    if @object.update_attributes(params[:"#{@instance_name}"])
+    if @object.update_attributes(params[shared_setup_options[:instance_sym]])
       yield :after_save if block_given?
       msg = "You have successfully updated #{@object.display_name}."
       yield :before_response if block_given?
@@ -114,7 +117,7 @@ class ApplicationController < ActionController::Base
       end
       yield :after_response if block_given?
     else
-      flash.now[:warning] = "There was an error updating your #{@instance_str}."
+      flash.now[:warning] = "There was an error updating your #{shared_setup_options[:instance_name]}."
       respond_to do |format|
         format.html { render :action => 'edit' }
         format.js { render :action => 'update_error' }
@@ -134,10 +137,10 @@ class ApplicationController < ActionController::Base
   
   def clip
     return unless setup
-    @article.clip!(:user => @viewer)
-    msg = "You have clipped #{@article.display_name}"
+    @object.clip!(:user => @viewer)
+    msg = "You have clipped #{@object.display_name}."
     respond_to do |format|
-      format.html { flash[:notice] = msg; redirect_to @article }
+      format.html { flash[:notice] = msg; redirect_to @object }
       format.js { flash.now[:notice] = msg; render :action => 'shared/clip' }
     end
   rescue
@@ -166,12 +169,12 @@ class ApplicationController < ActionController::Base
     custom_finder = self.class.read_inheritable_attribute(:custom_finder)
     custom_finder = shared_setup_options[:custom_finder]
     
-    if params[:id] && instance_variable_set("#{instance_var}", klass.send(custom_finder, params[:id], {:include => includes}))
-      @object = instance_variable_get("#{instance_var}")
+    if params[:id] && @object = klass.send(custom_finder, params[:id], {:include => includes})
+      set_model_instance(@object)
       true && authorize(@object)
     else
       opts[:message] ||= "That #{klass} entry could not be found. Please check the address."    # FIXME: setting this interferes with error view processing
-      display_error(opts)
+      display_error(opts) # Error will only have access to @object from the setup method.
       false
     end
   end
@@ -196,6 +199,10 @@ class ApplicationController < ActionController::Base
             :plural_sym       =>  plural_sym,
             :custom_finder    =>  :find
     }.merge(opts))
+  end
+  
+  def set_model_instance(object)
+    instance_eval %{ #{object.is_a?(Array) ? shared_setup_options[:plural_sym] : shared_setup_options[:instance_var]} = object }
   end
     
   def self.verify_login_on(*args)
