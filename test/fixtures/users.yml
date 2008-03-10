@@ -1,5 +1,12 @@
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
-
+wheel:
+  first_name: $LABEL
+  middle_initial: ~
+  last_name: guevera
+  nick: wheel
+  email: wheel@venturous.net
+  birthdate: 1985-01-29
+  sex: 1
 colin:
   first_name: $LABEL
   middle_initial: p

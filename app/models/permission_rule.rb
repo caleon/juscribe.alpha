@@ -27,7 +27,7 @@ class PermissionRule < ActiveRecord::Base
   
   def accessible_by?(user)
     user = User.find(user) if user.is_a?(Fixnum)
-    if self.public? || user.wheel?
+    if self.public? || user.admin?
       true
     elsif self.protected?
       user && !self.denied[:user].include?(user.id) &&

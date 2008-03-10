@@ -42,7 +42,7 @@ module ActiveRecord::Acts::Accessible #:nodoc:
     end
 
     def editable_by?(user)
-      self.user == user rescue false
+      user.is_a?(User::Admin) || self.user == user rescue false
     end
   
     def rule

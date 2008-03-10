@@ -1,8 +1,8 @@
 class UsersController < ApplicationController
   set_model_variables :custom_finder => :find_by_nick
 
-  verify_login_on :new, :create, :edit, :update, :edit_password, :update_password, :mailbox, :befriend, :unfriend, :logout
-  authorize_on :edit, :update, :edit_password, :update_password, :mailbox
+  verify_login_on :new, :create, :edit, :update, :edit_password, :update_password, :befriend, :unfriend, :logout
+  authorize_on :edit, :update, :edit_password, :update_password
       
   def show
     super(:include => :permission) do |marker|
@@ -42,12 +42,12 @@ class UsersController < ApplicationController
   end
   
   def edit_password
-    return unless (setup && @user.editable_by?(@viewer))
+    return unless setup
     @page_title = "#{@user.nick} - Edit Password"
   end
   
   def update_password
-    return unless (setup && @user.editable_by?(@viewer))
+    return unless setup
     if @user.update_attributes(params[:user])
       msg = "You have successfully changed your password."
       respond_to do |format|
@@ -144,16 +144,6 @@ class UsersController < ApplicationController
         format.js { render :action => 'unfriend_error'}
       end
     end
-  end
-  
-  def mailbox
-    # FIXME: The following includes array makes it draw ALL associated messages.
-    return unless setup([{ :messages => { :sender => :primary_picture } },
-                         { :sent_messages => { :recipient => :primary_picture } },
-                         { :drafts => {:recipient => :primary_picture } }])
-    @messages = @viewer.messages.find(:all, :include => {:sender => :primary_picture}, :limit => 20)
-    @sent_messages = @viewer.sent_messages.find(:all, :include => {:recipient => :primary_picture}, :limit => 20)
-    @drafts = @viewer.drafts.find(:all, :include => {:recipient => :primary_picture}, :limit => 20)
   end
   
   def about

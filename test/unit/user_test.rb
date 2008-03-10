@@ -7,9 +7,9 @@ class UserTest < ActiveSupport::TestCase
   end
   
   def test_wheel_check
-    user1 = User.find(:first, :conditions => ["nick = ?", 'colin'])
+    user1 = User.find(:first, :conditions => ["nick = ?", 'wheel'])
     assert user1.wheel?
-    user2 = User.find(:first, :conditions => ["nick != ? ", 'colin'])
+    user2 = User.find(:first, :conditions => ["nick != ? ", 'wheel'])
     assert !user2.wheel?
   end
   
@@ -24,11 +24,11 @@ class UserTest < ActiveSupport::TestCase
   
   def test_editable_by_check
     assert users(:megan).editable_by?(users(:megan)), "User should be able to edit herself."
-    assert users(:megan).editable_by?(users(:colin)), "User should be editable by wheel."
+    assert users(:megan).editable_by?(users(:wheel)), "User should be editable by wheel."
     assert users(:keira).editable_by?(users(:keira)), "User should be able to edit herself."
     assert !users(:keira).editable_by?(users(:alessandra)), "User should not be editable for another user."
-    assert users(:keira).editable_by?(users(:colin)), "User should be editable by wheel."
-    assert users(:colin).editable_by?(users(:colin)), "Wheel should be editable by wheel."
+    assert users(:keira).editable_by?(users(:wheel)), "User should be editable by wheel."
+    assert users(:wheel).editable_by?(users(:wheel)), "Wheel should be editable by wheel."
   end
   
   def test_wants_notifications_for_check
@@ -75,7 +75,7 @@ class UserTest < ActiveSupport::TestCase
   end
   
   def test_invalid_password_requests
-    assert_raise(AbuseError) {users(:colin).password = 'whatever'}
+    assert_raise(AbuseError) {users(:wheel).password = 'whatever'}
   end
   
   ### Friendship

@@ -24,6 +24,7 @@ class AccessibleTest < ActiveSupport::TestCase
     @user = users(:keira)
     @stranger = users(:megan)
     @colin = users(:colin)
+    @wheel = users(:wheel)
   end
     
   def test_rule_generation
@@ -52,7 +53,7 @@ class AccessibleTest < ActiveSupport::TestCase
     assert !acc1.editable_by?(@user)
     acc1.user = @user
     acc1.save
-    assert acc1.editable_by?(@user)
+    assert acc1.editable_by?(@user), "Is @user a User::Admin? #{@user.is_a?(User::Admin)}"
     assert !acc1.editable_by?(@stranger)
   end
   
@@ -113,7 +114,7 @@ class AccessibleTest < ActiveSupport::TestCase
     assert acc1.private?
     assert acc1.accessible_by?(@user)
     assert !acc1.accessible_by?(@stranger)
-    assert acc1.accessible_by?(@colin)
+    assert acc1.accessible_by?(@wheel)
     rule1.allow!(:user, @stranger)
     assert_equal [@stranger.id], rule1.allowed[:user]
     assert acc1.accessible_by?(@stranger)

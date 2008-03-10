@@ -9,19 +9,25 @@ class User < ActiveRecord::Base
   
   # TODO: acts_as_cached
     
-  attr_protected :nick, :email, :password_salt, :password_hash
+  attr_protected :nick, :email, :password_salt, :password_hash, :type
   attr_accessor :tos_agreement
+  
+  def self.primary_find(*args)
+    find_by_nick(*args)
+  end
   
   def users; self; end
     
   def wheel?
-    # TODO: For more security the wheel list should be in a file with restrictive
-    # write privileges.
-    ['colin'].include?(self.nick)
+    self.id == DB[:wheel_id]
+  end
+  
+  def admin?
+    self.wheel? || self.is_a?(User::Admin)
   end
   
   def editable_by?(user)
-    user.wheel? || self == user
+    user.admin? || self == user
   end
   
   def wants_notifications_for?(arg)

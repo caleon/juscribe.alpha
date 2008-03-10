@@ -1,5 +1,9 @@
 module ActiveRecord
   class Base
+    def self.primary_find(*args)
+      find(*args)
+    end
+    
     # The following is to allow either a model or its ID to be supplied as
     # arguments to a method.  
     def to_id; self[:id].to_i; end
@@ -14,6 +18,7 @@ module ActiveRecord
     
     def nullify!(user=nil)
       user.wheel? ? destroy! : (self.nullify if self.editable_by?(user) rescue nil)
+      # Wheel can destroy. Admins cannot.
     end
     def nullify # override this in individual models
       self.name += " (from #{self.inspect})"

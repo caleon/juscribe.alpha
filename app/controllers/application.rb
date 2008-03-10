@@ -34,9 +34,7 @@ class ApplicationController < ActionController::Base
   ######################################################################
   
   def index
-    limit, page = 20, params[:page].to_i + 1
-    offset = params[:page].to_i * limit
-    @objects = shared_setup_options[:model_class].find(:all, :limit => limit, :offset => offset, :order => 'id DESC')
+    @objects = shared_setup_options[:model_class].find(:all, get_find_opts(:order => 'id DESC'))
     set_model_instance(@objects)
     respond_to do |format|
       format.html
@@ -72,7 +70,7 @@ class ApplicationController < ActionController::Base
     options = args.extract_options!
     without_association = options[:without_association]
     yield :before_instantiate if block_given?
-    @object = @klass.new(params[shared_setup_options[:instance_sym]].merge(without_association ? {} : {:user => @viewer}))
+    @object = @klass.new(params[shared_setup_options[:instance_sym]].merge(without_association ? {} : {:user => get_viewer}))
     set_model_instance(@object)
     yield :after_instantiate if block_given?
     yield :before_save if block_given?
@@ -127,7 +125,7 @@ class ApplicationController < ActionController::Base
   
   def destroy
     return unless setup
-    @object.nullify!(@viewer)
+    @object.nullify!(get_viewer)
     msg = "You have deleted #{@object.display_name}."
     respond_to do |format|
       format.html { flash[:notice] = msg; redirect_to :back }
@@ -135,52 +133,10 @@ class ApplicationController < ActionController::Base
     end
   end
   
-  def clip
-    return unless setup
-    if @object.clip!(:user => @viewer)
-      msg = "You have clipped #{@object.display_name}."
-      respond_to do |format|
-        format.html { flash[:notice] = msg; redirect_to @object }
-        format.js { flash.now[:notice] = msg; render :action => 'shared/clip' }
-      end
-    else
-      flash.now[:warning] = "There was an error clipping #{@object.display_name}."
-      respond_to do |format|
-        format.html { render :action => 'show' }
-        format.js { render :action => 'shared/clip_error' }
-      end
-    end
-  end
-  
-  def unclip
-    return unless setup
-    if @object.clip_for?(@viewer)
-      if @object.unclip!(:user => @viewer)
-        msg = "You have unclipped #{@object.display_name}."
-        respond_to do |format|
-          format.html { flash[:notice] = msg; redirect_to @object }
-          format.js { flash.now[:notice] = msg; render :action => 'shared/unclip' }
-        end
-      else
-        flash.now[:warning] = "There was an error unclipping #{@object.display_name}."
-        respond_to do |format|
-          format.html { render :action => 'show' }
-          format.js { render :action => 'shared/unclip_error' }
-        end
-      end
-    else
-      flash.now[:warning] = "You don't have a clip of #{@object.display_name} to unclip."
-      respond_to do |format|
-        format.html { render :action => 'show' }
-        format.js { render :action => 'shared/unclip_error' }
-      end
-    end
-  end
-  
   
   ######################################################################
   ##                                                                  ##
-  ##    A C T I O N    S E T U P                                      ##
+  ##    A C T I O N    S E T U P     (private)                        ##
   ##                                                                  ##
   ######################################################################
   
@@ -189,25 +145,33 @@ class ApplicationController < ActionController::Base
     @viewer ||= User.find(session[:user_id]) if session[:user_id]
   end
   
-  def setup(includes=nil, opts={})
+  def get_find_opts(hash={})
+    params[:page] ||= 1
+    limit, page = 20, params[:page].to_i
+    offset = (page -1) * limit
+    return { :limit => limit, :offset => offset }.merge(hash)
+  end
+  
+  def setup(includes=nil, error_opts={})
     self.class.set_model_variables unless klass = shared_setup_options[:model_class]
     instance_var = shared_setup_options[:instance_var]
     custom_finder = shared_setup_options[:custom_finder]
     
-    if params[:id] && @object = klass.send(custom_finder, params[:id], {:include => includes})
-      set_model_instance(@object)
-      true && authorize(@object)
-    else
-      # FIXME: setting this interferes with error view processing
-      opts[:message] ||= "That #{klass} entry could not be found. Please check the address."
-      display_error(opts) # Error will only have access to @object from the setup method.
-      false
-    end
+    # could have used #primary_find but then :custom_finder is useless.
+    @object = klass.send(custom_finder, params[:id], {:include => includes})
+    set_model_instance(@object)
+    true && authorize(@object)
+  rescue ActiveRecord::RecordNotFound
+    # FIXME: setting this interferes with error view processing
+    error_opts[:message] ||= "That #{klass} entry could not be found. Please check the address."
+    display_error(error_opts) # Error will only have access to @object from the setup method.
+    false
   end
   
   def self.set_model_variables(*args)
+    return if controller_name == 'application'
     opts = args.extract_options!
-    if args.first.is_a?(Class)
+    if args.first.is_a?(Symbol)
       klass_sym = args.shift
       klass = klass_sym.to_s.classify.constantize
     else
@@ -226,7 +190,8 @@ class ApplicationController < ActionController::Base
             :custom_finder    =>  :find
     }.merge(opts))
   end
-  
+  set_model_variables
+    
   def set_model_instance(object)
     instance_eval %{ #{object.is_a?(Array) ? shared_setup_options[:plural_sym] : shared_setup_options[:instance_var]} = object }
   end
@@ -256,10 +221,10 @@ class ApplicationController < ActionController::Base
   # authorize(@object) is called within setup.
   def authorize(object)
     return true unless (self.class.read_inheritable_attribute(:authorize_list) || []).include?(action_name.intern)
-    unless object && @viewer && object.editable_by?(@viewer)
+    unless object && get_viewer && object.editable_by?(get_viewer)
       msg = "You are not authorized for that action."
       respond_to_without_type_registration do |format|
-        format.html { flash[:warning] = msg; redirect_to @viewer || login_url }
+        format.html { flash[:warning] = msg; redirect_to get_viewer || login_url }
         format.js { flash.now[:warning] = msg; render :action => 'shared/unauthorized' }
       end
       return false
@@ -276,7 +241,7 @@ class ApplicationController < ActionController::Base
   
   def create_uploaded_picture_for(record, opts={})
     raise unless picture_uploaded? && !record.nil? && (record.respond_to?(:pictures) || record.respond_to?(:picture))
-    params[:picture].merge!(:user => @viewer)
+    params[:picture].merge!(:user => get_viewer)
     picture = record.pictures.new(params[:picture]) rescue record.picture.new(params[:picture])
     return picture if !opts[:save]
     if opts[:respond]
@@ -299,8 +264,8 @@ class ApplicationController < ActionController::Base
   def picture_uploaded?
     params[:picture] && !params[:picture][:uploaded_data].blank?
   end
-  
-  
+
+
   ######################################################################
   ##                                                                  ##
   ##    E R R O R    H A N D L I N G                                  ##

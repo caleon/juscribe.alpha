@@ -1,28 +1,61 @@
 # TODO: setup controller-level check for #accessible_by?
 class MessagesController < ApplicationController  
-  verify_login_on :show, :new, :create, :send, :edit, :update, :destroy
-  authorize_on :show, :send, :edit, :update, :destroy
+  verify_login_on :index, :show, :new, :create, :edit, :update, :destroy, :send
+  # Following allows #setup to check editable_by? with get_viewer
+  authorize_on :show, :edit, :update, :destroy, :send
+  
+  def index
+    raise ArgumentError unless (params[:show].nil? || ['draft', 'sent'].include?(params[:show]))
+    find_opts = get_find_opts(:order => 'id DESC')
+    method_part = params.delete(:show).to_s.gsub!(/(draft|sent)/, '\1_')
+    @messages = get_viewer.send(:"some_#{method_part}messages").find(:all, find_opts)
+    respond_to do |format|
+      format.html
+      format.js
+    end
+  rescue ArgumentError, NoMethodError
+    display_error(:message => 'Invalid option for mailbox view. Please check your URL.')
+  end
   
   def show
-    super(:include => [ { :sender => :primary_picture },
-                        { :recipient => :primary_picture } ])
+    super(:include => [ :sender, :recipient ]) do |marker|
+      case marker
+      when :before_response
+        @sender, @recipient = @message.sender, @message.recipient
+        @message.read_it! if @recipient = get_viewer
+      end
+    end
   end
   
   def create
     super do |marker|
       case marker
       when :before_response
-        msg = "Your message has been " + params[:message][:send] ? "sent." : "saved."
+        msg = "Your message has been " + params[:message][:transmit] ? "sent." : "saved."
+        # HMMM. Will this look for Message#transmit= method?
       when :before_error_response
         flash.now[:warning] = "Your message could not be " +
-                              params[:message][:send] ? "sent." : "saved."
+                              params[:message][:transmit] ? "sent." : "saved."
+      end
+    end
+  end
+  
+  def edit
+    super(:include => [ :sender, :recipient ])
+  end
+  
+  def update
+    super do |marker|
+      case marker
+      when :before_response
+        msg = "Your message has been " + (params[:message][:transmit] ? "sent." : "saved.")
       end
     end
   end
   
   def send
     return unless setup
-    if @message.send
+    if @message.transmit
       msg = "Your message has been sent."
       respond_to do |format|
         format.html { flash[:notice] = msg; redirect_to @message }
@@ -32,20 +65,6 @@ class MessagesController < ApplicationController
       flash.now[:warning]  = "Your message could not be sent."
       respond_to do |format|
         render :action => 'show'
-      end
-    end
-  end
-  
-  def edit
-    super(:include => [ { :sender => :primary_picture },
-                        { :recipient => :primary_picture } ])
-  end
-  
-  def update
-    super do |marker|
-      case marker
-      when :before_response
-        msg = "Your message has been " + (params[:message][:sent] ? "sent." : "saved.")
       end
     end
   end

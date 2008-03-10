@@ -1,29 +1,35 @@
 ActionController::Routing::Routes.draw do |map|
   map.root :controller => 'users'
 
-  map.resources :articles, :member => { :clip => :put, :unclip => :put }
-  
-  map.resources :events, :member => { :begin_event => :put, :end_event => :put, :clip => :put, :unclip => :put }
+  map.resources :articles do |article|
+    article.resources :clips
+  end
+  #map.resources :widgets, :controller => 'clips'
+  map.resources :events, :member => { :begin_event => :put, :end_event => :put } do |event|
+    event.resources :clips
+  end
 
-  map.resources :messages, :member => { :send => :put, :clip => :put, :unclip => :put }
+  map.resources :messages, :member => { :send => :put } # Check that model is clippable
   
-  map.resources :pictures, :member => { :clip => :put, :unclip => :put}
+  map.resources :pictures do |picture|
+    picture.resources :clips
+  end
 
   map.resources :users,
                 :member => { :friends => :get, :befriend => :put, :unfriend => :put, :about => :get,
-                             :edit_password => :get, :update_password => :put, :clip => :put, :unclip => :put } do |user|
-    user.resources :widgets
+                             :edit_password => :get, :update_password => :put } do |user|
+    user.resources :widgets, :member => { :place => :put, :unplace => :put }
+    user.resources :clips
   end
     
   map.login 'login', :controller => 'users', :action => 'login'
   map.logout 'logout', :controller => 'users', :action => 'logout'
   map.mine 'mine', :controller => 'users', :action => 'mine'
-  map.mailbox 'mailbox', :controller => 'users', :action => 'mailbox'
   map.contents 'contents/:topic', :controller => 'main', :action => 'contents', :topic => nil
   map.help 'help/:topic', :controller => 'main', :action => 'help', :topic => nil
   map.copyright 'copyright', :controller => 'main', :action => 'copyright'
 
   # Install the default routes as the lowest priority.
-  map.connect ':controller/:action/:id'
-  map.connect ':controller/:action/:id.:format'
+  # map.connect ':controller/:action/:id'
+  # map.connect ':controller/:action/:id.:format'
 end
