@@ -137,17 +137,43 @@ class ApplicationController < ActionController::Base
   
   def clip
     return unless setup
-    @object.clip!(:user => @viewer)
-    msg = "You have clipped #{@object.display_name}."
-    respond_to do |format|
-      format.html { flash[:notice] = msg; redirect_to @object }
-      format.js { flash.now[:notice] = msg; render :action => 'shared/clip' }
+    if @object.clip!(:user => @viewer)
+      msg = "You have clipped #{@object.display_name}."
+      respond_to do |format|
+        format.html { flash[:notice] = msg; redirect_to @object }
+        format.js { flash.now[:notice] = msg; render :action => 'shared/clip' }
+      end
+    else
+      flash.now[:warning] = "There was an error clipping #{@object.display_name}."
+      respond_to do |format|
+        format.html { render :action => 'show' }
+        format.js { render :action => 'shared/clip_error' }
+      end
     end
-  rescue
-    flash.now[:warning] = msg
-    respond_to do |format|
-      format.html { render :action => 'show' }
-      format.js { render :action => 'shared/clip_error' }
+  end
+  
+  def unclip
+    return unless setup
+    if @object.clip_for?(@viewer)
+      if @object.unclip!(:user => @viewer)
+        msg = "You have unclipped #{@object.display_name}."
+        respond_to do |format|
+          format.html { flash[:notice] = msg; redirect_to @object }
+          format.js { flash.now[:notice] = msg; render :action => 'shared/unclip' }
+        end
+      else
+        flash.now[:warning] = "There was an error unclipping #{@object.display_name}."
+        respond_to do |format|
+          format.html { render :action => 'show' }
+          format.js { render :action => 'shared/unclip_error' }
+        end
+      end
+    else
+      flash.now[:warning] = "You don't have a clip of #{@object.display_name} to unclip."
+      respond_to do |format|
+        format.html { render :action => 'show' }
+        format.js { render :action => 'shared/unclip_error' }
+      end
     end
   end
   
@@ -166,14 +192,14 @@ class ApplicationController < ActionController::Base
   def setup(includes=nil, opts={})
     self.class.set_model_variables unless klass = shared_setup_options[:model_class]
     instance_var = shared_setup_options[:instance_var]
-    custom_finder = self.class.read_inheritable_attribute(:custom_finder)
     custom_finder = shared_setup_options[:custom_finder]
     
     if params[:id] && @object = klass.send(custom_finder, params[:id], {:include => includes})
       set_model_instance(@object)
       true && authorize(@object)
     else
-      opts[:message] ||= "That #{klass} entry could not be found. Please check the address."    # FIXME: setting this interferes with error view processing
+      # FIXME: setting this interferes with error view processing
+      opts[:message] ||= "That #{klass} entry could not be found. Please check the address."
       display_error(opts) # Error will only have access to @object from the setup method.
       false
     end

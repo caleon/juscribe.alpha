@@ -48,7 +48,7 @@ class WidgetableTest < ActiveSupport::TestCase
     assert_equal [clip], acc1.clips
     assert_equal [clip], @user.widgets
     assert !clip.placed?
-    assert_raise(ActiveRecord::RecordInvalid) { acc1.clip!(:user => @user) }
+    assert !acc1.clip!(:user => @user)
     assert !acc1.clips.placed.include?(clip)
     assert acc1.clips.unplaced.include?(clip)
     
