@@ -20,7 +20,7 @@ class ClipsController < ApplicationController
   
   def create
     return unless setup
-    if @object.clip!(:user => @viewer)
+    if @object.clip!(:user => get_viewer)
       msg = "You have clipped #{@object.display_name}."
       respond_to do |format|
         format.html { flash[:notice] = msg; redirect_to @object }
@@ -37,8 +37,8 @@ class ClipsController < ApplicationController
   
   def destroy
     return unless setup
-    if @object.clip_for?(@viewer)
-      if @object.unclip!(:user => @viewer)
+    if @object.clip_for?(get_viewer)
+      if @object.unclip!(:user => get_viewer)
         msg = "You have unclipped #{@object.display_name}."
         respond_to do |format|
           format.html { flash[:notice] = msg; redirect_to @object }

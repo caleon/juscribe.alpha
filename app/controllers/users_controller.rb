@@ -77,7 +77,7 @@ class UsersController < ApplicationController
       end
     else
       if session[:user_id]
-        user = @viewer
+        user = get_viewer
         flash[:notice] = "You are already logged in."
         redirect_to user
       else
@@ -87,13 +87,13 @@ class UsersController < ApplicationController
   end
   
   def logout
-    redirect_to user_url(@viewer)
+    redirect_to user_url(get_viewer)
     session[:user_id] = nil
     reset_session
     flash[:notice] = "You are now logged out. See you soon!" # Needs to be set after reset_session.
   end
   
-  def mine; redirect_to @viewer || login_url; end
+  def mine; redirect_to get_viewer || login_url; end
   
   def friends
     return unless setup
@@ -102,7 +102,7 @@ class UsersController < ApplicationController
   
   def befriend
     return unless setup
-    if res = @viewer.befriend(@user) # This sends out notifier in model.
+    if res = get_viewer.befriend(@user) # This sends out notifier in model.
       @notice = [ "You have requested friendship with #{@user}.",
                   "You are now friends with #{@user}." ][res]
       respond_to do |format|
@@ -116,7 +116,7 @@ class UsersController < ApplicationController
       flash.now[:warning] = "There wasn an error friending #{@user.display_name}."
       respond_to do |format|
         format.html do
-          params[:id] = @viewer.nick
+          params[:id] = get_viewer.nick
           show
           render :action => 'show'
         end
@@ -127,17 +127,17 @@ class UsersController < ApplicationController
   
   def unfriend
     return unless setup
-    if @viewer.kinda_friends_with?(@user) && @viewer.unfriend(@user)
+    if get_viewer.kinda_friends_with?(@user) && get_viewer.unfriend(@user)
       msg = "You are no longer friends with #{@user.display_name}."
       respond_to do |format|
-        format.html { flash[:notice] = msg; redirect_to @viewer }
+        format.html { flash[:notice] = msg; redirect_to get_viewer }
         format.js { flash.now[:notice] = msg; }
       end
     else
       flash.now[:warning] = "You cannot unfriend #{@user.display_name}."
       respond_to do |format|
         format.html do
-          params[:id] = @viewer.friends_with?(@user) ? @user.nick : @viewer.nick
+          params[:id] = get_viewer.friends_with?(@user) ? @user.nick : get_viewer.nick
           show
           render :action => 'show'
         end

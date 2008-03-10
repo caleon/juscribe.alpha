@@ -1,7 +1,7 @@
 class PicturesController < ApplicationController
   
   def create
-    return if @picture = create_uploaded_picture_for(@viewer, :save => true, :respond => true)
+    return if @picture = create_uploaded_picture_for(get_viewer, :save => true, :respond => true)
     respond_to do |format|
       format.html { render :action => 'new' }
       format.js { render :action => 'create_error' }
