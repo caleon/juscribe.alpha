@@ -3,58 +3,52 @@ class Article < ActiveRecord::Base
   
   belongs_to :user
   has_many :pictures, :as => :depictable
-  
-  before_save :make_permalink
-  
+    
   validates_presence_of :user_id, :title, :permalink, :content
   validates_length_of :title, :in => (3..50)
-  validates_uniqueness_of :permalink
+  validates_uniqueness_of :permalink, :scope => :user_id
   validates_format_of :permalink, :with => /[-_a-z0-9]{3,}/i,
                       :message => "is already taken: please edit your title"
   validates_format_of :title, :with => /^[^\s].+[^\s]$/i
   validates_format_of :content, :with => /^[^\s].+[^\s]$/i
   
   def name; self.title; end
-  def to_param; self.permalink; end # This should mean the permalink becomes param[:id]
+  def to_param; self.permalink; end
+  def to_s; self.title; end
   
-  def publish!; self.published = true; self.save!; end
-  def unpublish!; self.published = false; self.save!; end
+  def draft?; !self.published_time?; end
+  def published?; self.published_time?; end
+  def publish!
+    time = Time.now
+    self.published_date, self.published_time = [ time, time ]
+    self.save!
+  end
+  def unpublish!
+    self.published_date, self.published_time = [ nil, nil ]
+    self.save!
+  end
+  def published_at
+    self.published_date.to_formatted_s(:rfc822) + ', ' + self.published_time.to_s(:time)
+  end
   
   def title=(str)
     self[:title] = str
     make_permalink
   end
   
-  ############ CLASS METHODS ###
-  class << self    
-    def find_by_permalink(year, month, day, perm)
-      month, day = month.to_i, day.to_i
-      from, to = time_delta(year, month, day)
-      find(:first, :conditions => ['created_at BETWEEN ? AND ? AND ' +
-                                   'permalink = ?',
-                                   from, to, perm])
-    end
+  def self.find_with_url(user_id, year, month, day, permalink, opts={})
+    date = Date.parse("#{year}/#{month}/#{day}")
+    find(:all, { :conditions => [ "articles.user_id = ? AND published_date = ? AND permalink = ?",
+                                  user_id, date.to_formatted_s(:db), permalink ] }.merge(opts)).first
+  end
 
-    def find_by_date(year, month, day)
-      from, to = time_delta(year, month, day)
-      find(:all, :conditions => ['created_at BETWEEN ? and ?', from, to])
-    end
-
-    protected
-    def time_delta(year, month = nil, day = nil)
-      from = Time.mktime(year, month || 1, day || 1)
-      to = from.next_year
-      to = from.next_month unless month.blank?
-      to = from + 1.day unless day.blank?
-      to -= 1 # pull off 1 second so we don't overlap onto the next day
-      return [from, to]
-    end
+  def self.find_by_date(year, month, day)
+    date = Date.parse("#{month}/#{day}/#{year}")
+    find(:all, :conditions => [ 'published_date = ?', date ])
   end
   
     
-  #######
   private
-  #######
   def make_permalink(opts={})
     str = (opts[:title] || self.title).gsub(/['"]+/i, '').gsub(/[^a-z0-9]+/i, '-')
     str.chop! if str.last == "-"

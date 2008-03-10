@@ -66,5 +66,9 @@ class UsersControllerTest < ActionController::TestCase
   
   def test_create
     # Fuck functional tests. Goddamn. get :create is a headache??
+    #post :create, :nick => 'Bam_bam', :first_name => 'bam', :last_name => 'bam', :password => 'bambam', :password_confirmation => 'bambam', :birthdate => Date.parse('1/29/1985'), :sex => "1"
+    #assert_template "show"
+    #assert_equal "You are now a registered user! Welcome!", flash[:notice]
+    # Ok so now, it can't even read class_variable_readers in the controller. fuck this.
   end
 end

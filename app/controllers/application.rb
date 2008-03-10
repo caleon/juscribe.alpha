@@ -75,8 +75,7 @@ class ApplicationController < ActionController::Base
     options = args.extract_options!
     without_association = options[:without_association]
     yield :before_instantiate if block_given?
-    debugger ######################
-    @object = @klass.new(params[shared_setup_options[:instance_sym]].merge(without_association ? {} : {:user => get_viewer}))
+    @object = shared_setup_options[:model_class].new(params[shared_setup_options[:instance_sym]].merge(without_association ? {} : {:user => get_viewer}))
     set_model_instance(@object)
     yield :after_instantiate if block_given?
     if @object.save

@@ -1,9 +1,11 @@
 ActionController::Routing::Routes.draw do |map|
   map.root :controller => 'main'
 
-  map.resources :articles do |article|
-    article.resources :clips
-  end
+  map.show_article 'users/:user_id/:year/:month/:date/:id/:action', :controller => 'articles', :action => 'show',
+                        :requirements => { :user_id => /[a-z][_a-z0-9]+/, :year => /\d{4}/, :month => /\d{2}/, :day => /\d{2}/ }
+  #map.resources :articles do |article|
+  #  article.resources :clips
+  #end
   #map.resources :widgets, :controller => 'clips'
   map.resources :events, :member => { :begin_event => :put, :end_event => :put } do |event|
     event.resources :clips

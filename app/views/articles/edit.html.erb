@@ -1,0 +1,7 @@
+<% form_for @article, :url => edit_article_path(@article), :html => { :method => :post, :class => 'articleForm' } do |f| %>
+	<%= f.label :article, :title %>
+	<%= f.text_field :title %>
+	<br />
+	<%= f.label :article, :content %>
+	<%= f.text_area :content %>
+<% end %>

@@ -1,4 +1,8 @@
 class MainController < ApplicationController
+  def index
+    
+  end
+  
   def contents
     
   end

@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 44) do
+ActiveRecord::Schema.define(:version => 46) do
 
   create_table "articles", :force => true do |t|
     t.string   "title"
@@ -20,7 +20,8 @@ ActiveRecord::Schema.define(:version => 44) do
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "published",      :default => false
+    t.date     "published_date"
+    t.time     "published_time"
   end
 
   create_table "entries", :force => true do |t|
