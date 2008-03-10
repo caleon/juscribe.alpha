@@ -202,7 +202,7 @@ class ApplicationController < ActionController::Base
   set_model_variables
     
   def set_model_instance(object)
-    instance_eval %{ #{object.is_a?(Array) ? shared_setup_options[:plural_sym] : shared_setup_options[:instance_var]} = object }
+    instance_eval %{ @#{object.is_a?(Array) ? shared_setup_options[:plural_sym] : shared_setup_options[:instance_var]} = object }
   end
     
   def self.verify_login_on(*args)
