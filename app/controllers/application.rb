@@ -47,7 +47,7 @@ class ApplicationController < ActionController::Base
     yield :before if block_given?
     options = args.extract_options!
     includes = options[:include]
-    error_opts = options[:error_opts]
+    error_opts = options[:error_opts] || {}
     yield :before_setup if block_given?
     return unless setup(includes, error_opts)
     yield :after_setup if block_given?
@@ -75,10 +75,10 @@ class ApplicationController < ActionController::Base
     options = args.extract_options!
     without_association = options[:without_association]
     yield :before_instantiate if block_given?
+    debugger ######################
     @object = @klass.new(params[shared_setup_options[:instance_sym]].merge(without_association ? {} : {:user => get_viewer}))
     set_model_instance(@object)
     yield :after_instantiate if block_given?
-    yield :before_save if block_given?
     if @object.save
       yield :after_save if block_given?
       msg = "You have successfully created your #{shared_setup_options[:instance_name]}."
@@ -165,16 +165,16 @@ class ApplicationController < ActionController::Base
     self.class.set_model_variables unless klass = shared_setup_options[:model_class]
     instance_var = shared_setup_options[:instance_var]
     custom_finder = shared_setup_options[:custom_finder]
-    
     # could have used #primary_find but then :custom_finder is useless.
-    @object = klass.send(custom_finder, params[:id], {:include => includes})
-    set_model_instance(@object)
-    true && authorize(@object)
-  rescue ActiveRecord::RecordNotFound
-    # FIXME: setting this interferes with error view processing
-    error_opts[:message] ||= "That #{klass} entry could not be found. Please check the address."
-    display_error(error_opts) # Error will only have access to @object from the setup method.
-    false
+    if @object = klass.send(custom_finder, params[:id], {:include => includes})
+      set_model_instance(@object)
+      true && authorize(@object)
+    else
+      # FIXME: setting this interferes with error view processing
+      error_opts[:message] ||= "That #{klass} entry could not be found. Please check the address."
+      display_error(error_opts) # Error will only have access to @object from the setup method.
+      false
+    end
   end
   
   def self.set_model_variables(*args)
@@ -202,11 +202,11 @@ class ApplicationController < ActionController::Base
   set_model_variables
     
   def set_model_instance(object)
-    instance_eval %{ @#{object.is_a?(Array) ? shared_setup_options[:plural_sym] : shared_setup_options[:instance_var]} = object }
+    instance_eval %{ @#{object.is_a?(Array) ? shared_setup_options[:plural_sym] : shared_setup_options[:instance_sym]} = object }
   end
     
   def self.verify_login_on(*args)
-    write_inheritable_array :verify_login_list, args
+    write_inheritable_attribute :verify_login_list, args
   end
   verify_login_on :new, :create, :edit, :update, :destroy # DEFAULTS
 
@@ -223,7 +223,7 @@ class ApplicationController < ActionController::Base
   end
 
   def self.authorize_on(*args)
-    write_inheritable_array :authorize_list, args
+    write_inheritable_attribute :authorize_list, args
   end
   authorize_on :edit, :update, :destroy # DEFAULTS
   

@@ -23,7 +23,7 @@ class User < ActiveRecord::Base
   end
   
   def admin?
-    self.wheel? || self.is_a?(User::Admin)
+    self.wheel? || self[:admin]
   end
   
   def editable_by?(user)

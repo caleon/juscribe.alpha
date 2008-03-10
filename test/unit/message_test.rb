@@ -53,14 +53,12 @@ class MessageTest < ActiveSupport::TestCase
     assert msg2.accessible_by?(users(:nana))
     assert msg2.accessible_by?(users(:keira))
     assert msg2.accessible_by?(users(:wheel))
-    assert msg2.accessible_by?(users(:colin))
   end
   
   def test_editable_by_check
     msg = Message.create(:body => 'boajsdlfajdsf', :subject => 'asdfkjadsf', :sender => users(:keira), :recipient => users(:megan))
     assert msg.valid?
     assert msg.editable_by?(users(:wheel))
-    assert msg.editable_by?(users(:colin))
     assert msg.editable_by?(users(:keira))
     assert !msg.editable_by?(users(:megan))
     msg.read_it!

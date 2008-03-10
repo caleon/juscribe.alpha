@@ -1,27 +1,52 @@
 class UsersController < ApplicationController
   set_model_variables :custom_finder => :find_by_nick
 
-  verify_login_on :new, :create, :edit, :update, :edit_password, :update_password, :befriend, :unfriend, :logout
+  verify_login_on :edit, :update, :edit_password, :update_password, :befriend, :unfriend, :logout
   authorize_on :edit, :update, :edit_password, :update_password
       
       
   # TODO: Should #index respond to xml/js?
+  #def show
+  #  return unless setup(:permission)
+  #  @widgets = @user.widgets.placed # TODO: cant :include :widgetable. write sql.
+  #  @skin_file = @user.skin_file
+  #  @layout_file = @user.layout_file        
+  #  respond_to do |format|
+  #    format.html
+  #    format.js
+  #    format.xml
+  #  end
+  #end
   def show
     super(:include => :permission) do |marker|
       case marker
       when :after_setup
-        @widgets = @user.widgets.placed # TODO: cant :include :widgetable. write sql.
+        @widgets = @user.widgets.placed # TODO: write custom sql for widgetable
         @skin_file = @user.skin_file
         @layout_file = @user.layout_file
       end
     end
   end
   
+  #def create
+  #  if @user = User.create(params[:user])
+  #    msg = "Congratulations! You're now registered!"
+  #    respond_to do |format|
+  #      format.html { flash[:notice] = msg; redirect_to @user }
+  #      format.js { flash.now[:notice] = msg }
+  #    end
+  #  else
+  #    flash.now[:warning] = "There was an error creating your account."
+  #    respond_to do |format|
+  #      format.html { render :action => 'new' }
+  #      format.js { render :action => 'create_error' }
+  #    end
+  #  end
+  #end
   def create
     super(:without_association => true) do |marker|
       case marker
       when :after_instantiate
-        @user = @object
         @user.nick, @user.email = params[:user][:nick], params[:user][:email]
       when :after_save
         create_uploaded_picture_for(@user) if picture_uploaded?
@@ -103,7 +128,7 @@ class UsersController < ApplicationController
     reset_session
     msg = "You are now logged out. See you soon!" # Needs to be set after reset_session.
     respond_to do |format|
-      format.html { flash[:notice] = msg; redirect_to get_viewer }
+      format.html { flash[:notice] = msg; redirect_to @viewer }
       format.js { flash.now[:notice] = msg }
     end
     @viewer = nil
