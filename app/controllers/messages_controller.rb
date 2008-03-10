@@ -12,6 +12,7 @@ class MessagesController < ApplicationController
     respond_to do |format|
       format.html
       format.js
+      format.xml
     end
   rescue ArgumentError, NoMethodError
     display_error(:message => 'Invalid option for mailbox view. Please check your URL.')
@@ -64,7 +65,8 @@ class MessagesController < ApplicationController
     else
       flash.now[:warning]  = "Your message could not be sent."
       respond_to do |format|
-        render :action => 'show'
+        format.html { render :action => 'show' }
+        format.js { render :action => 'send_error' }
       end
     end
   end

@@ -37,7 +37,7 @@ module ActiveRecord::Acts::Widgetable #:nodoc:
     def picture
       self.pictures.first
     rescue
-      super rescue nil
+      super rescue nil # FIXME: super goes to class? looks fishy.
     end
     
     def picture_file

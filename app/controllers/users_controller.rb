@@ -4,6 +4,8 @@ class UsersController < ApplicationController
   verify_login_on :new, :create, :edit, :update, :edit_password, :update_password, :befriend, :unfriend, :logout
   authorize_on :edit, :update, :edit_password, :update_password
       
+      
+  # TODO: Should #index respond to xml/js?
   def show
     super(:include => :permission) do |marker|
       case marker
@@ -63,23 +65,33 @@ class UsersController < ApplicationController
     end      
   end
   
-  def login # login and logout actions only responds to html
+  def login
     @page_title = "Login"
     if request.post?
       if (@user = User.find_by_nick(params[:user][:nick])) && @user.authenticate(params[:user][:password])
         session[:user_id] = @user.id
-        flash[:notice] = "You are now logged in."
-        redirect_to @user
+        msg = "You are now logged in."
+        respond_to do |format|
+          format.html { flash[:notice] = msg; redirect_to @user }
+          format.js { flash.now[:notice] = msg; render :action => 'login_success' }
+        end
       else
         flash.now[:warning] = "There was an error logging you in."
         @user ||= User.new
         @user.errors.add(:nick, "is not a user in our database.") unless @user.nick
+        respond_to do |format|
+          format.html
+          format.js { render :action => 'login_error' }
+        end
       end
     else
       if session[:user_id]
-        user = get_viewer
-        flash[:notice] = "You are already logged in."
-        redirect_to user
+        @user = get_viewer
+        msg = "You are already logged in."
+        respond_to do |format|
+          format.html { redirect_to @user }
+          format.js { render :action => 'login_already' }
+        end
       else
         @user = User.new
       end
@@ -87,10 +99,14 @@ class UsersController < ApplicationController
   end
   
   def logout
-    redirect_to user_url(get_viewer)
     session[:user_id] = nil
     reset_session
-    flash[:notice] = "You are now logged out. See you soon!" # Needs to be set after reset_session.
+    msg = "You are now logged out. See you soon!" # Needs to be set after reset_session.
+    respond_to do |format|
+      format.html { flash[:notice] = msg; redirect_to get_viewer }
+      format.js { flash.now[:notice] = msg }
+    end
+    @viewer = nil
   end
   
   def mine; redirect_to get_viewer || login_url; end

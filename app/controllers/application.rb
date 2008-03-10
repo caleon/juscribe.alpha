@@ -38,6 +38,7 @@ class ApplicationController < ActionController::Base
     set_model_instance(@objects)
     respond_to do |format|
       format.html
+      format.js
       format.xml
     end
   end
@@ -63,6 +64,10 @@ class ApplicationController < ActionController::Base
     @page_title = "Create #{shared_setup_options[:instance_name]}"
     @object = shared_setup_options[:model_class].new
     set_model_instance(@object)
+    respond_to do |format|
+      format.html
+      format.js
+    end
   end
   
   def create(*args, &block)
@@ -98,6 +103,10 @@ class ApplicationController < ActionController::Base
   def edit
     return unless setup(:permission)
     @page_title = "#{@object.display_name} - Edit"
+    respond_to do |format|
+      format.html
+      format.js
+    end
   end
   
   def update(*args, &block)

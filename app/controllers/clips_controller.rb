@@ -4,7 +4,7 @@ class ClipsController < ApplicationController
   set_model_variables :widget
   
   def index
-    return unless get_widgetable
+    return unless get_widgetable(:message => "Unable to find the object specified. Please check the address.")
     find_opts = get_find_opts(:order => 'id DESC')
     @objects = @widgetable.clips.find(:all, find_opts)
     set_model_instance(@objects)
@@ -15,7 +15,8 @@ class ClipsController < ApplicationController
   end
   
   def new
-    # TODO: finish me.
+    return unless get_widgetable(:message => "Unable to find object to clip. Please check the address.")
+    super
   end
   
   def create
@@ -24,39 +25,25 @@ class ClipsController < ApplicationController
       msg = "You have clipped #{@object.display_name}."
       respond_to do |format|
         format.html { flash[:notice] = msg; redirect_to @object }
-        format.js { flash.now[:notice] = msg; render :action => 'shared/clip' }
+        format.js { flash.now[:notice] = msg }
       end
     else
       flash.now[:warning] = "There was an error clipping #{@object.display_name}."
       respond_to do |format|
         format.html { render :action => 'show' }
-        format.js { render :action => 'shared/clip_error' }
+        format.js { render :action => 'create_error' }
       end
     end
   end
   
+  # TODO: Can the owner of @widgetable unclip it if desired?
   def destroy
     return unless setup
-    if @object.clip_for?(get_viewer)
-      if @object.unclip!(:user => get_viewer)
-        msg = "You have unclipped #{@object.display_name}."
-        respond_to do |format|
-          format.html { flash[:notice] = msg; redirect_to @object }
-          format.js { flash.now[:notice] = msg; render :action => 'shared/unclip' }
-        end
-      else
-        flash.now[:warning] = "There was an error unclipping #{@object.display_name}."
-        respond_to do |format|
-          format.html { render :action => 'show' }
-          format.js { render :action => 'shared/unclip_error' }
-        end
-      end
-    else
-      flash.now[:warning] = "You don't have a clip of #{@object.display_name} to unclip."
-      respond_to do |format|
-        format.html { render :action => 'show' }
-        format.js { render :action => 'shared/unclip_error' }
-      end
+    @object.unclip!(:user => get_viewer)
+    msg = "You have unclipped #{@object.display_name}."
+    respond_to do |format|
+      format.html { flash[:notice] = msg; redirect_to @object }
+      format.js { flash.now[:notice] = msg }
     end
   end
   
@@ -74,11 +61,12 @@ class ClipsController < ApplicationController
   end
   
   # Method sets @widgetable based on param keys, or if not found, displays error.
-  def get_widgetable
+  def get_widgetable(opts={})
     return unless widgetable_id_key = params.keys.detect{|key| key.to_s.match(/_id$/)}
     widgetable_class = widgetable_id_key.to_s.gsub(/_id$/, '').classify.constantize
     @widgetable = widgetable_class.primary_find(params[widgetable_id_key])
   rescue ActiveRecord::RecordNotFound
-    display_error(:message => "That #{widgetable_class} does not have the clip you requested.")
+    display_error(:message => opts[:message] || "That #{widgetable_class} does not have the clip you requested.")
+    false
   end
 end
