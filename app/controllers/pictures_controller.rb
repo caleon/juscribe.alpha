@@ -1,4 +1,5 @@
 class PicturesController < ApplicationController
+  
   def create
     return if @picture = create_uploaded_picture_for(@viewer, :save => true, :respond => true)
     respond_to do |format|
@@ -34,10 +35,4 @@ class PicturesController < ApplicationController
     end
   end
   
-  #######
-  private
-  #######
-  def authorize_needed
-    [ :edit, :update ]
-  end
 end

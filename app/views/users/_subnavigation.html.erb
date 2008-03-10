@@ -7,7 +7,9 @@
 		<li class="navigationEl"><%= link_to 'Change Password', edit_password_user_path(@user) %></li>
 	<% end %>
 <% end %>
+	<% if @user && !@user.new_record? %>
 		<li class="navigationEl"><%= link_to 'Friends', friends_user_path(@user) %></li>
+	<% end %>
 <% if logged_in? && @user %>
 	<% if @viewer.friends_with?(@user) %>
 		<li class="navigationEl"><%= link_to 'Unfriend', unfriend_user_path(@user) %></li>

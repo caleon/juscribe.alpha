@@ -1,5 +1,8 @@
 class EventsController < ApplicationController
-  def begin
+  verify_login_on :new, :create, :edit, :update, :destroy, :begin_event, :end_event
+  authorize_on :edit, :update, :destroy, :begin_event, :end_event
+  
+  def begin_event
     return unless setup && request.method == :put && verify_logged_in && authorize(@event)
     if @event.begin!
       msg = "Your event #{@event.display_name} has officially begun!"
@@ -11,12 +14,12 @@ class EventsController < ApplicationController
       flash.now[:warning] = "There was an error commencing your event #{@event.display_name}."
       respond_to do |format|
         format.html { render :action => 'edit' }
-        format.js { render :action => 'begin_error' }
+        format.js { render :action => 'begin_event_error' }
       end
     end
   end
   
-  def end
+  def end_event
     return unless setup && request.method == :put && verify_logged_in && authorize(@event)
     if @event.end!
       msg = "Your event #{@event.display_name} has officially ended!"
@@ -28,7 +31,7 @@ class EventsController < ApplicationController
       flash.now[:warning] = "There was an error ending your event #{@event.display_name}."
       respond_to do |format|
         format.html { render :action => 'edit' }
-        format.js { render :action => 'end_error' }
+        format.js { render :action => 'end_event_error' }
       end
     end
   end

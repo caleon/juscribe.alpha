@@ -1,20 +1,11 @@
 class UsersController < ApplicationController
-  authorize_on :edit, :update, :edit_password, :update_password, :mailbox
-  verify_login_on :new, :create, :edit, :update, :edit_password, :update_password, :mailbox, :befriend, :unfriend, :logout
   set_model_variables :custom_finder => :find_by_nick
-  
-  def initialize
-    @klass = User
-    @instance_name = 'user'
-    @instance_str = 'user'
-    @instance_var = "@user"
-    @instance_sym = :user
-    @plural_sym = "users"
-    @custom_finder = :find_by_nick
-  end
+
+  verify_login_on :new, :create, :edit, :update, :edit_password, :update_password, :mailbox, :befriend, :unfriend, :logout
+  authorize_on :edit, :update, :edit_password, :update_password, :mailbox
       
   def show
-    super(:includes => :permission) do |marker|
+    super(:include => :permission) do |marker|
       case marker
       when :after_setup
         @widgets = @user.widgets.placed # TODO: cant :include :widgetable. write sql.

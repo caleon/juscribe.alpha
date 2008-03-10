@@ -1,17 +1,37 @@
 class ApplicationController < ActionController::Base
-  helper :all
-  layout 'standard'
+  
+  ######################################################################
+  ##                                                                  ##
+  ##    A P P L I C A T I O N    S E T U P                            ##
+  ##                                                                  ##
+  ######################################################################
   
   # See ActionController::RequestForgeryProtection for details
   # Uncomment the :secret if you're not using the cookie session store
   protect_from_forgery # :secret => 'a241500281274090ecdf656d5074d028'
-  
-  before_filter :load_config, :get_viewer, :verify_logged_in
-  filter_parameter_logging :password
+  filter_parameter_logging :password, :password_confirmation
   exempt_from_layout('js.erb') # Do we really want this?
   class_inheritable_reader :shared_setup_options
+  before_filter :load_config, :get_viewer, :verify_logged_in
+  helper :all  
+  layout 'standard'
   
-### BEGIN TEMPLATE ###
+  def load_config
+    # TODO: set up a special table where a "recheck" value can be toggled. This
+    # filter will check that value each time and if it is TRUE, it'll re-load the
+    # data from the yaml file. Perhaps use a "last_checked_at" column so that
+    # under normal conditions, the app will automatically recheck the yaml file
+    # after a certain period of time.
+    @config = SITE
+  end
+  private :load_config
+  
+  
+  ######################################################################
+  ##                                                                  ##
+  ##    C O M M O N    A C T I O N S                                  ##
+  ##                                                                  ##
+  ######################################################################
   
   def index
     limit, page = 20, params[:page].to_i + 1
@@ -26,7 +46,7 @@ class ApplicationController < ActionController::Base
   def show(*args)
     yield :before
     options = args.extract_options!
-    includes = options[:includes]
+    includes = options[:include]
     error_opts = options[:error_opts]
     yield :before_setup
     return unless setup(includes, error_opts);
@@ -112,49 +132,32 @@ class ApplicationController < ActionController::Base
     end
   end
   
-### END TEMPLATE ###
-                 
-  def error; render :template => 'shared/warning', :layout => false; end
-  
-  def authorize(object=@object)
-    return true unless [ :new, :create, :edit, :update, :destroy ].include?(action_name.intern)
-    object && @viewer && object.editable_by?(@viewer)
-  end
-  
-  #######
-  private
-  #######
-  def load_config
-    # TODO: set up a special table where a "recheck" value can be toggled. This
-    # filter will check that value each time and if it is TRUE, it'll re-load the
-    # data from the yaml file. Perhaps use a "last_checked_at" column so that
-    # under normal conditions, the app will automatically recheck the yaml file
-    # after a certain period of time.
-    @config = SITE
-  end
-  
-  def self.set_model_variables(*args)
-    opts = args.extract_options!
-    if args.first.is_a?(Class)
-      klass_sym = args.shift
-      klass = klass_sym.to_s.classify.constantize
-    else
-      #write_inheritable_attribute(:klass, opts[:class] || controller_name.classify.constantize)
-      klass = opts[:model_class] || controller_name.classify.constantize
+  def clip
+    return unless setup
+    @article.clip!(:user => @viewer)
+    msg = "You have clipped #{@article.display_name}"
+    respond_to do |format|
+      format.html { flash[:notice] = msg; redirect_to @article }
+      format.js { flash.now[:notice] = msg; render :action => 'shared/clip' }
     end
-    instance_sym = klass.class_name.underscore
-    instance_name = instance_sym.to_s.gsub('_', ' ')
-    instance_var = "@#{instance_sym}"
-    plural_sym = :"#{instance_sym.to_s.pluralize}"
-    write_inheritable_attribute(:shared_setup_options, {
-            :model_class      =>  klass,
-            :instance_sym     =>  instance_sym,
-            :instance_name    =>  instance_name,
-            :instance_var     =>  instance_var,
-            :plural_sym       =>  plural_sym,
-            :custom_finder    =>  :find
-    }.merge(opts))
-    #class_inheritable_reader :shared_setup_options
+  rescue
+    flash.now[:warning] = msg
+    respond_to do |format|
+      format.html { render :action => 'show' }
+      format.js { render :action => 'shared/clip_error' }
+    end
+  end
+  
+  
+  ######################################################################
+  ##                                                                  ##
+  ##    A C T I O N    S E T U P                                      ##
+  ##                                                                  ##
+  ######################################################################
+  
+  private
+  def get_viewer
+    @viewer ||= User.find(session[:user_id]) if session[:user_id]
   end
   
   def setup(includes=nil, opts={})
@@ -173,10 +176,34 @@ class ApplicationController < ActionController::Base
     end
   end
   
-  def get_viewer
-    @viewer ||= User.find(session[:user_id]) if session[:user_id]
+  def self.set_model_variables(*args)
+    opts = args.extract_options!
+    if args.first.is_a?(Class)
+      klass_sym = args.shift
+      klass = klass_sym.to_s.classify.constantize
+    else
+      klass = opts[:model_class] || controller_name.classify.constantize
+    end
+    instance_sym = klass.class_name.underscore
+    instance_name = instance_sym.to_s.gsub('_', ' ')
+    instance_var = "@#{instance_sym}"
+    plural_sym = :"#{instance_sym.to_s.pluralize}"
+    write_inheritable_attribute(:shared_setup_options, {
+            :model_class      =>  klass,
+            :instance_sym     =>  instance_sym,
+            :instance_name    =>  instance_name,
+            :instance_var     =>  instance_var,
+            :plural_sym       =>  plural_sym,
+            :custom_finder    =>  :find
+    }.merge(opts))
   end
-  
+    
+  def self.verify_login_on(*args)
+    write_inheritable_array :verify_login_list, args
+  end
+  verify_login_on :new, :create, :edit, :update, :destroy # DEFAULTS
+
+  # verify_logged_in is called from before_filter
   def verify_logged_in
     return true unless (self.class.read_inheritable_attribute(:verify_login_list) || []).include?(action_name.intern)
     return true if get_viewer
@@ -187,11 +214,13 @@ class ApplicationController < ActionController::Base
       # Could just make both formats flash and render login...
     end
   end
-  
-  def self.verify_login_on(*args)
-    write_inheritable_array :verify_login_list, args
+
+  def self.authorize_on(*args)
+    write_inheritable_array :authorize_list, args
   end
+  authorize_on :edit, :update, :destroy # DEFAULTS
   
+  # authorize(@object) is called within setup.
   def authorize(object)
     return true unless (self.class.read_inheritable_attribute(:authorize_list) || []).include?(action_name.intern)
     unless object && @viewer && object.editable_by?(@viewer)
@@ -205,42 +234,12 @@ class ApplicationController < ActionController::Base
     true
   end
   
-  def self.authorize_on(*args)
-    write_inheritable_array :authorize_list, args
-  end
   
-  # Example call from PermissionRulesController:
-  # display_error(:class_name => 'Permission Rule', :message => 'Kaboom!',
-  #               :html => {:redirect => true, :error_path => @permission_rule})
-  def display_error(opts={})
-    valid_mimes = Mime::EXTENSIONS & [:html, :js, :xml]
-    valid_mimes.each do |mime|
-      instance_eval %{ @#{mime}_opts = opts.delete(:#{mime}) || {} }
-    end    
-    respond_to_without_type_registration do |format|
-      valid_mimes.each do |mime|
-          instance_eval <<-EOS
-            format.#{mime} { return_error_view(:#{mime}, @#{mime}_opts.merge!(opts)) }
-          EOS
-      end
-    end
-  end
-  
-  def return_error_view(format, opts={})
-    klass = opts[:class]
-    klass_name = opts[:class_name] || klass.name.humanize rescue nil
-    msg = opts[:message] || "Error accessing #{klass_name || 'action'}."
-    error_pathing = opts[:error_path]
-    if opts[:redirect] ||= false
-      flash[:warning] = msg
-      redirect_to error_pathing || error_url
-    else
-      flash.now[:warning] = msg
-      render error_pathing || { :template => 'shared/error' }
-    end
-  end
-  
-  ### PICTURES ###
+  ######################################################################
+  ##                                                                  ##
+  ##    P I C T U R E    H A N D L I N G                              ##
+  ##                                                                  ##
+  ######################################################################
   
   def create_uploaded_picture_for(record, opts={})
     raise unless picture_uploaded? && !record.nil? && (record.respond_to?(:pictures) || record.respond_to?(:picture))
@@ -268,4 +267,41 @@ class ApplicationController < ActionController::Base
     params[:picture] && !params[:picture][:uploaded_data].blank?
   end
   
+  
+  ######################################################################
+  ##                                                                  ##
+  ##    E R R O R    H A N D L I N G                                  ##
+  ##                                                                  ##
+  ######################################################################
+  
+  def error; render :template => 'shared/warning', :layout => false; end
+  
+  # Example call from PermissionRulesController:
+  # display_error(:class_name => 'Permission Rule', :message => 'Kaboom!',
+  #               :html => {:redirect => true, :error_path => @permission_rule})
+  def display_error(opts={})
+    valid_mimes = Mime::EXTENSIONS & [:html, :js, :xml]
+    valid_mimes.each do |mime|
+      instance_eval %{ @#{mime}_opts = opts.delete(:#{mime}) || {} }
+    end    
+    respond_to_without_type_registration do |format|
+      valid_mimes.each do |mime|
+        instance_eval %{ format.#{mime} { return_error_view(:#{mime}, @#{mime}_opts.merge!(opts)) } }
+      end
+    end
+  end
+  
+  def return_error_view(format, opts={})
+    klass = opts[:class]
+    klass_name = opts[:class_name] || klass.class_name.humanize rescue nil
+    msg = opts[:message] || "Error accessing #{klass_name || 'action'}."
+    error_pathing = opts[:error_path]
+    if opts[:redirect] ||= false
+      flash[:warning] = msg
+      redirect_to error_pathing || error_url
+    else
+      flash.now[:warning] = msg
+      render error_pathing || { :template => 'shared/error' }
+    end
+  end
 end

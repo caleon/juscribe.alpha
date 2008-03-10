@@ -28,18 +28,19 @@ ActionController::Routing::Routes.draw do |map|
   # map.root :controller => "welcome"
   map.root :controller => 'users'
   # See how all your routes lay out with "rake routes"
-  
-  map.resources :users,
-                :member => { :friends => :get, :befriend => :put, :unfriend => :put, :about => :get, :edit_password => :get, :update_password => :put }
-                
-  map.resources :messages
-  
   map.resources :articles
   
-  map.resources :pictures
-  
-  map.resources :search
+  map.resources :events,
+                :member => { :begin_event => :put, :end_event => :put }
 
+  map.resources :messages,
+                :member => { :send => :put }
+  
+  map.resources :pictures
+
+  map.resources :users,
+                :member => { :friends => :get, :befriend => :put, :unfriend => :put, :about => :get, :edit_password => :get, :update_password => :put }
+    
   map.login 'login', :controller => 'users', :action => 'login'
   map.logout 'logout', :controller => 'users', :action => 'logout'
   map.mine 'mine', :controller => 'users', :action => 'mine'

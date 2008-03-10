@@ -1,4 +1,8 @@
+# TODO: setup controller-level check for #accessible_by?
 class MessagesController < ApplicationController  
+  verify_login_on :show, :new, :create, :send, :edit, :update, :destroy
+  authorize_on :show, :send, :edit, :update, :destroy
+  
   def show
     super(:include => [ { :sender => :primary_picture },
                         { :recipient => :primary_picture } ])
