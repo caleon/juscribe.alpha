@@ -54,9 +54,11 @@ class ResponsibleTest < Test::Unit::TestCase
     acc1 = @acc[1]
     assert !acc1.reported_with?
     assert rep = acc1.report(:user => @user)
+    assert_nothing_raised(Notifier::NotifierError) { rep.send(:send_notification) }
+    assert_equal orig_mail_count + 1, ActionMailer::Base.deliveries.size
     rep.update_attribute(:variation, 200)
     assert_raise(Notifier::NotifierError) { rep.send(:send_notification) }
-    assert_equal orig_mail_count, ActionMailer::Base.deliveries.size
+    assert_equal orig_mail_count + 1, ActionMailer::Base.deliveries.size
   end
   
   def test_favorite

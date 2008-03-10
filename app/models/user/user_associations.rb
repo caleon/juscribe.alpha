@@ -30,8 +30,7 @@ class User < ActiveRecord::Base
   has_many :owned_taggings, :class_name => 'Tagging', :dependent => :nullify
   has_many :owned_pictures, :class_name => 'Picture', :dependent => :nullify
   has_many :pictures, :as => :depictable, :order => :position, :dependent => :nullify
-  has_one :primary_picture, :class_name => 'Picture', :foreign_key => 'depictable_id',
-          :conditions => ["depictable_type = ?", 'User']
+  has_one :primary_picture, :class_name => 'Picture', :as => :depictable # Hm. Apparently this works.
   has_many :memberships, :dependent => :destroy
   has_many :groups, :through => :memberships
   has_many :owned_groups, :class_name => 'Group', :dependent => :nullify

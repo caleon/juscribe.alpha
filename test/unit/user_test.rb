@@ -2,8 +2,10 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class UserTest < ActiveSupport::TestCase
 
-  def setup
-    
+  def test_primary_find
+    assert_nothing_raised { User.primary_find('colin') }
+    assert_equal User.find_by_nick('colin'), User.primary_find('colin')
+    assert_equal users(:colin), User.primary_find('colin')
   end
   
   def test_wheel_check
@@ -50,6 +52,8 @@ class UserTest < ActiveSupport::TestCase
       assert grp.errors.empty?
     end
     assert !users(:colin).found(:name => "groupX")
+    assert !users(:colin).found
+    assert !users(:colin).found(:name => 'mythers')
   end
 
   def test_creation_and_authentication
@@ -88,17 +92,19 @@ class UserTest < ActiveSupport::TestCase
   def test_befriending_and_unfriending
     orig_mail_count = ActionMailer::Base.deliveries.size
     assert users(:colin).friend_ids.empty?
+    assert !users(:colin).kinda_friends_with?(users(:keira))
     assert users(:colin).friends.empty?
     assert users(:colin).befriend(users(:keira)), "#{users(:colin).errors.inspect}"
-    assert_equal orig_mail_count + 1, ActionMailer::Base.deliveries.size
     assert users(:colin).friends.include?(users(:keira))
     assert users(:colin).friend_ids.include?(users(:keira).id)
     assert !users(:colin).friends_with?(users(:keira))
+    assert users(:colin).kinda_friends_with?(users(:keira))
     assert !users(:colin).befriend(users(:keira))
     assert_equal orig_mail_count + 1, ActionMailer::Base.deliveries.size
     
-    assert users(:keira).befriend(users(:colin)), "#{users(:keira).errors.inspect}"
-    assert_equal orig_mail_count + 1, ActionMailer::Base.deliveries.size # Simply reciprocating request.
+    assert_equal 1, users(:keira).befriend(users(:colin)), "#{users(:keira).errors.inspect}"
+    assert users(:keira).friends_with?(users(:colin))
+    assert_equal orig_mail_count + 1, ActionMailer::Base.deliveries.size, users(:colin).friend_ids.inspect
     assert users(:keira).friends.include?(users(:colin))
     assert users(:keira).friend_ids.include?(users(:colin).id)
     assert users(:colin).friends_with?(users(:keira))
@@ -114,4 +120,29 @@ class UserTest < ActiveSupport::TestCase
     assert !users(:keira).friends_with?(users(:colin))
   end
   
+  def test_befriending_without_save_and_for_errors
+    assert users(:colin).friends.empty?
+    assert !users(:colin).kinda_friends_with?(users(:keira))
+    assert users(:colin).befriend(users(:keira), :without_save => true)
+    assert users(:colin).kinda_friends_with?(users(:keira))
+    assert !users(:colin).reload.kinda_friends_with?(users(:keira))
+  end
+  
+  def test_common_friends_with
+    assert users(:colin).friends.empty?
+    assert users(:colin).befriend(users(:keira))
+    assert users(:keira).befriend(users(:colin))
+    assert users(:nana).befriend(users(:keira))
+    assert users(:keira).befriend(users(:nana))
+    assert users(:colin).common_friends_with(users(:nana)).include?(users(:keira))
+  end
+
+  def test_primary_picture_path
+    pic = users(:colin).pictures.create(:user => users(:colin))
+    assert_equal users(:colin), pic.depictable
+    assert users(:colin).owned_pictures.include?(pic)
+    prim_pic = users(:colin).primary_picture
+    assert_equal "uploads/User/#{prim_pic.id}.jpg", users(:colin).primary_picture_path
+    assert_nil users(:nana).primary_picture_path
+  end
 end

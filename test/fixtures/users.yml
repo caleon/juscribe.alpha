@@ -15,6 +15,7 @@ colin:
   email: colin@venturous.net
   birthdate: 1985-01-29
   sex: 1
+  type: Admin
 nana:
   first_name: $LABEL
   middle_initial: n

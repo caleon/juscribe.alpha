@@ -34,6 +34,8 @@ class WidgetableTest < ActiveSupport::TestCase
     clip.name = 'Headliner'
     assert_equal "Headliner: untitled", clip.full_name
     assert_equal acc1.content, clip.wid_content
+    WidgetableMixin.class_eval %{ undef :content }
+    assert_nil clip.wid_content
     assert_equal acc1.user, clip.wid_user
     assert_equal "/mixin", clip.wid_partial(''), clip.widgetable_type
     assert_equal "/mixin_default", clip.wid_partial('', 'default')
@@ -71,6 +73,7 @@ class WidgetableTest < ActiveSupport::TestCase
     assert acc1.clip_for?(@user)
     assert clip = acc1.clip_for(@user)
     assert !clip.placed?
+    assert @user.widgets.placed.empty?
     assert_raise(ArgumentError) { acc1.unclip! }
     assert acc1.unclip!(:user => @user)
     assert !acc1.clip_for?(@user)
@@ -80,10 +83,14 @@ class WidgetableTest < ActiveSupport::TestCase
   def test_displacement
     acc1 = @acc[1]
     acc2 = @acc[2]
-    assert clip = acc1.clip!(:user => @user)
+    assert clip = acc1.clip!(:user => @user, :position => 5)
+    assert clip.valid?
     position = clip.position
+    assert_equal 5, clip.position
+    assert @user.widgets.placed.include?(clip)
     assert clip2 = acc2.clip!(:user => @user, :position => position)
     assert_nil clip.reload.position
+    assert @user.widgets.unplaced.include?(clip)
     assert_equal position, clip2.position
   end
 

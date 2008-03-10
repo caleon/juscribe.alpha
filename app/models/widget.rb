@@ -5,6 +5,7 @@ class Widget < ActiveRecord::Base
   acts_as_list :scope => :user_id
   
   validates_uniqueness_of :widgetable_id, :scope => [:user_id, :widgetable_type]
+  validates_presence_of :user_id, :widgetable_id, :widgetable_type
   
   # Widgetable things include models like Article, Comment, Event, etc.
   # Widgets are basically box elements that show up on a user's page.

@@ -79,11 +79,18 @@ class GroupTest < ActiveSupport::TestCase
     assert_equal 'the Girlfriend', mem.title
   end
   
+  def test_join_for_errors
+    assert !groups(:friends).join
+    assert_equal 1, groups(:friends).errors.size
+  end
+  
   def test_kick
     assert groups(:friends).has_member?(users(:keira))
     assert groups(:friends).kick(users(:keira))
-    assert !groups(:friends).has_member?(users(:keira))
+    assert !groups(:friends).has_member?(users(:keira)) # Error 1
     assert !ActionMailer::Base.deliveries.empty?
+    assert !groups(:friends).kick(users(:keira)) # Errors 2 and 3
+    assert_equal 1, groups(:friends).errors.size, groups(:friends).errors.inspect
   end
   
   def test_disband

@@ -28,13 +28,11 @@ class Message < ActiveRecord::Base
     end
   end
   
-  def accessible_by?(user)
-    return true if super
-    [ self.sender, self.recipient ].include?(user)
+  def accessible_by?(user) # This class does not acts_as_accessible. These are totally custom.
+    user.admin? || [ self.sender, self.recipient ].include?(user)
   end
   
   def editable_by?(user)
-    return true if super
-    !self.read? && !self.sent? && self.sender == user
+    user.admin? || (self.sender == user && !self.sent? && !self.read?)
   end
 end
