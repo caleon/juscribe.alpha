@@ -3,7 +3,7 @@ class Project < ActiveRecord::Base
   include PluginPackage
   
   validates_presence_of :name, :user_id
-  validates_format_of :name, :with => /^[^\s].+[^\s]$/i
+  validates_with_regexp :name
   belongs_to :user
   
 end

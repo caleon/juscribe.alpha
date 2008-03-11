@@ -28,6 +28,7 @@ module ActionView::Helpers
     end
     alias_method_chain :error_messages_for, :format
   end
+  
   module JavaScriptHelper
     def javascript_tag_with_flip_flop(content, html_options={})
       if @config[:scripts_at_bottom]

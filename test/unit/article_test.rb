@@ -4,6 +4,9 @@ class ArticleTest < ActiveSupport::TestCase
   # Replace this with your real tests.
   def setup
     @sample_article = Article.create(:title => 'Testing post a6^% 8j4$9)1&!2@ lala[]', :content => 'hi hi hi 2ja z; 39fr; a893; 23;fjkdkja"]3zcv8 "', :user => users(:colin))
+    Article.find(:all, :conditions => "permalink IS NULL").each do |article|
+      article.send(:make_permalink, :with_save => true)
+    end
   end
   
   def test_publish_and_unpublish
@@ -13,6 +16,12 @@ class ArticleTest < ActiveSupport::TestCase
     @sample_article.unpublish!
     assert !@sample_article.published?
     assert @sample_article.draft?
+  end
+  
+  def test_fixture_validity
+    Article.find(:all).each do |article|
+      assert article.valid?, article.errors.inspect
+    end
   end
   
   def test_making_permalink
@@ -25,6 +34,21 @@ class ArticleTest < ActiveSupport::TestCase
     assert_not_nil art.permalink
     assert art.new_record?
     assert art.save
+    
+    string_with_weird_characters = '3421#$951asjdfeaj 343 41#4  asdf#'
+    assert art = Article.create(:content => 'blah blah', :user => users(:colin), :title => string_with_weird_characters)
+    assert_equal '3421-951asjdfeaj-343-41-4-asdf', art.permalink
+    
+    string_with_symbols_in_front_and_back = '!!! This is the weirdest shit I\'ve seen!'
+    assert art = Article.create(:content => 'blah blah', :user => users(:colin), :title => string_with_symbols_in_front_and_back)
+    assert_equal 'This-is-the-weirdest-shit-Ive-seen', art.permalink
+    orig_permalink = art.permalink
+    art.title = 'New title'
+    assert_not_equal orig_permalink, art.permalink
+    assert_equal orig_permalink, Article.find(art.id).permalink
+    assert_not_equal Article.find(art.id).permalink, art.permalink
+    art.save
+    assert_equal Article.find(art.id).permalink, art.permalink
   end
   
   def test_hash_for_path
@@ -91,5 +115,20 @@ class ArticleTest < ActiveSupport::TestCase
     assert_nothing_raised(ActiveRecord::RecordNotFound) { Article.find_by_date(*args) }
     assert_not_nil Article.find_by_date(*args)
     assert Article.find_by_date(*args).is_a?(Array)
+  end
+  
+  def test_find_by_permalink_and_nick
+    args = ['testing-search', 'colin']
+    assert_nothing_raised(ArgumentError) { Article.find_by_permalink_and_nick(*args) }
+    assert_nothing_raised(ActiveRecord::RecordNotFound) { Article.find_by_permalink_and_nick(*args) }
+    assert_nil Article.find_by_permalink_and_nick(*args)
+  end
+  
+  def test_find_all_by_permalink_and_nick
+    args = ['testing-search', 'colin']
+    assert_nothing_raised(ArgumentError) { Article.find_all_by_permalink_and_nick(*args) }
+    assert_nothing_raised(ActiveRecord::RecordNotFound) { Article.find_all_by_permalink_and_nick(*args) }
+    assert_not_nil Article.find_all_by_permalink_and_nick(*args)
+    assert Article.find_all_by_permalink_and_nick(*args).empty?
   end
 end

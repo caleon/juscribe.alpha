@@ -1,3 +1,5 @@
+require File.join(RAILS_ROOT,  'lib/active_record/validations/constants') unless Object.const_defined?(:REGEXP)
+
 ActionController::Routing::Routes.draw do |map|
   map.root :controller => 'main'
   
@@ -10,7 +12,7 @@ ActionController::Routing::Routes.draw do |map|
                     :conditions => { :method => :post }
     article.update_article ':year/:month/:day/:permalink/by/:nick/update', :action => 'update',
                     :requirements => { :year => /\d{4}/, :month => /\d{2}/, :day => /\d{2}/,
-                                       :permalink => /[-a-z0-9]{3,}/i,
+                                       :permalink => REGEX[:permalink],
                                        :nick => /[-_a-z0-9]{3,}/i },
                     :conditions => { :method => :put }
     article.update_article 'drafts/:permalink/by/:nick/update', :action => 'update',
@@ -18,11 +20,21 @@ ActionController::Routing::Routes.draw do |map|
     article.article ':year/:month/:day/:permalink/by/:nick/:action', :action => 'show',
                     :requirements => { :action => /(show|edit)?/, :year => /\d{4}/,
                                        :month => /\d{2}/, :day => /\d{2}/,
-                                       :permalink => /[-a-z0-9]{3,}/i,
+                                       :permalink => REGEX[:permalink],
                                        :nick => /[-_a-z0-9]{3,}/i },
                     :conditions => { :method => :get }
-    article.article 'drafts/:permalink/by/:nick/:action', :action => 'show',
-                    :requirements => { :permalink => /[-a-z0-9]{3,}/i, :nick => /[-_a-z0-9]{3,}/i },
+    article.article 'articles/:permalink/by/:nick', :action => 'show',
+                    :requirements => { :permalink => REGEX[:permalink],
+                                       :nick => /[-_a-z0-9]{3,}/i },
+                    :conditions => { :method => :get }
+    article.article 'articles/:permalink', :action => 'show',
+                    :requirements => { :permalink => REGEX[:permalink] },
+                    :conditions => { :method => :get }
+    article.update_draft 'drafts/:permalink/by/:nick/update', :action => 'update_draft',
+                    :requiremetns => { :permalink => REGEX[:permalink] },
+                    :conditions => { :method => :put }
+    article.draft 'drafts/:permalink/by/:nick/:action', :action => 'show_draft',
+                    :requirements => { :permalink => REGEX[:permalink], :nick => /[-_a-z0-9]{3,}/i },
                     :conditions => { :method => :get }
   end
 

@@ -32,7 +32,7 @@ module MetaTagHelper
 
   def meta_tags; tagarize_meta(*metas.values); end
   
-  private
+
   def metas
     @meta_hash ||= {}
   end
@@ -47,6 +47,5 @@ module MetaTagHelper
   
   def tagarize_meta(*meta_abstracts)
     meta_abstracts.compact.select(&:has_content?).map {|ma| content_tag(:meta, ma.content, ma.options) }.join("\r\n")
-  end
-    
+  end   
 end

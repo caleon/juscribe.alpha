@@ -1,3 +1,6 @@
+# required automatically by load path but not being included right now.
+# dont want this functionality overlapping with ApplicationController until
+# I can decide which one to use.
 module ActionController::TemplateMethods
     def self.included(base)
       base.extend(ClassMethods)

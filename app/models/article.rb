@@ -5,12 +5,12 @@ class Article < ActiveRecord::Base
   has_many :pictures, :as => :depictable
     
   validates_presence_of :user_id, :title, :permalink, :content
-  validates_length_of :title, :in => (3..50)
+  validates_length_of :title, :in => (3..100)
   validates_uniqueness_of :permalink, :scope => :published_date
-  validates_format_of :permalink, :with => /[-_a-z0-9]{3,}/i,
-                      :message => "is already taken: please edit your title"
-  validates_format_of :title, :with => /^[^\s].+[^\s]$/i
-  validates_format_of :content, :with => /^[^\s].+[^\s]$/i
+  
+  validates_with_regexp :permalink, :message => "uses an incorrect format: please edit your title"
+  validates_with_regexp :title
+  validates_with_regexp :content
   
   def to_s; self.title; end
   def name; self.title; end
@@ -50,7 +50,7 @@ class Article < ActiveRecord::Base
   def self.find_by_nick_and_path(nick, path, opts={})
     year, month, day, permalink = path.split('/')
     date = Date.new(year.to_i, month.to_i, day.to_i)
-    user = User.primary_find(nick)
+    user = User.find_by_nick(nick)
     find(:first, { :conditions => [ "articles.user_id = ? AND published_date = ? AND permalink = ?",
                                   user.id, date.to_formatted_s(:db), permalink ] })
   end
@@ -58,7 +58,7 @@ class Article < ActiveRecord::Base
   def self.find_by_path(path, opts={})
     year, month, day, permalink, filler, nick = path.split('/')
     date = Date.new(year.to_i, month.to_i, day.to_i)
-    user = User.primary_find(nick)
+    user = User.find_by_nick(nick)
     find(:first, :conditions => [ "articles.user_id = ? AND published_date = ? AND permalink = ?",
                                   user.id, date.to_formatted_s(:db), permalink ])
   end
@@ -66,7 +66,7 @@ class Article < ActiveRecord::Base
   def self.find_by_params(params, opts={})
     params.symbolize_keys!
     date = Date.new(params[:year].to_i, params[:month].to_i, params[:day].to_i)
-    user = User.primary_find(params[:nick])
+    user = User.find_by_nick(params[:nick])
     find(:first, { :conditions => [ "articles.user_id = ? AND published_date = ? AND permalink = ?", user.id, date.to_formatted_s(:db), params[:permalink]] })
   end
   
@@ -81,11 +81,32 @@ class Article < ActiveRecord::Base
     find(:all, :conditions => [ 'published_date = ?', date ])
   end
   
+  def self.find_by_permalink_and_nick(permalink, nick)
+    if user = User.find_by_nick(nick)
+      find_by_permalink_and_user_id(permalink, user.id, :conditions => "published_date IS NOT NULL")
+    end
+  end
+    
+  def self.find_all_by_permalink_and_nick(permalink, nick)
+    if user = User.find_by_nick(nick)
+      find_all_by_permalink_and_user_id(permalink, user.id, :conditions => "published_date IS NOT NULL")
+    else
+      []
+    end
+  end
+  
+  # Gets rid of quotation marks, replaces all non-alphanumeric characters
+  # with dashes, removes multiple adjacent dashes, strips dashes from
+  # beginning and end.
+  def self.permalink_for(title)
+    str = title.gsub(/['"]+/i, '').gsub(/[^a-z0-9]+/i, '-').gsub(/-{2,}/, '-').gsub(/^-/, '').gsub(/-$/, '')
+    str.chop! if str.last == '-'
+    str
+  end
     
   private
   def make_permalink(opts={})
-    str = (opts[:title] || self.title).gsub(/['"]+/i, '').gsub(/[^a-z0-9]+/i, '-')
-    str.chop! if str.last == "-"
+    str = Article.permalink_for(opts[:title] || self.title)
     self.permalink = str
     self.save if opts[:with_save]
   end

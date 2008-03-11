@@ -8,12 +8,9 @@ class User < ActiveRecord::Base
   validates_length_of       :first_name, :in => 2..20
   validates_length_of       :middle_initial, :in => 0..1, :allow_nil => true
   validates_length_of       :last_name, :in => 2..30
-  validates_format_of       :nick, :with => /^[a-z][_a-z0-9]+$/i
-  validates_format_of       :first_name, :with => /^[a-z][-a-z'\s]*[a-z]$/i
-  validates_format_of       :middle_initial, :with => /^[a-z]*$/i, :allow_nil => true
-  validates_format_of       :last_name, :with => /^[a-z][-a-z'\s]*[a-z]$/i
-  validates_format_of       :email, :on => :save, :if => :email_changed?,
-                            :with => /^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i
+
+  validates_with_regexp     :nick, :first_name, :middle_initial, :last_name, :email
+  
   validates_acceptance_of   :tos_agreement, :on => :create
   
   if RAILS_ENV != 'test'

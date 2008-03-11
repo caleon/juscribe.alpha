@@ -62,9 +62,7 @@ module JavascriptHelper
     end
   end
   
-  #######
-  private
-  #######
+
   def add_by_type(content, kind=nil, inline=false)
     case kind
     when :add_behavior

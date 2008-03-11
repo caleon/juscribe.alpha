@@ -9,8 +9,8 @@ class Entry < ActiveRecord::Base
   validates_presence_of :user_id
   validates_presence_of :content, :if => :location_empty?
   validates_presence_of :location, :if => :content_empty?
-  validates_format_of :content, :with => /^([^\s].+[^\s])?$/i
-  validates_format_of :location, :with => /^([^\s].+[^\s])?$/i
+  validates_with_regexp :content
+  validates_with_regexp :location
   
   def location_empty?; self.location.blank?; end
   def content_empty?; self.content.blank?; end

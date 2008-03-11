@@ -84,7 +84,7 @@ class ApplicationController < ActionController::Base
       respond_to do |format|
         format.html do
           flash[:notice] = msg
-          redirect_to instance_variable_get("#{shared_setup_options[:instance_var]}")
+          redirect_to instance_variable_get("#{shared_setup_options[:instance_var]}"), :status => 201
         end
         format.js { flash.now[:notice] = msg }
       end
@@ -304,7 +304,7 @@ class ApplicationController < ActionController::Base
     error_pathing = opts[:error_path]
     if opts[:redirect] ||= false
       flash[:warning] = msg
-      redirect_to error_pathing || error_url
+      redirect_to error_pathing || error_url, :status => 404
     else
       flash.now[:warning] = msg
       render error_pathing || { :template => 'shared/error' }

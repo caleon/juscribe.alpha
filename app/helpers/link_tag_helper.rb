@@ -51,7 +51,7 @@ module LinkTagHelper
   
   def link_tags; tagarize_link(*links.values); end
   
-  private
+
   def links
     @link_hash ||= {}
   end

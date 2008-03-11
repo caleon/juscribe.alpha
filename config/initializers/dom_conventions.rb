@@ -1,4 +1,4 @@
-ActionController::RecordIdentifier.class_eval do
+ActionController::RecordIdentifier.module_eval do
   def dom_class(record_or_class, *args)
     opts = args.last.is_a?(Hash) ? args.pop : {}
     item = opts.delete(:item)
@@ -13,7 +13,7 @@ ActionController::RecordIdentifier.class_eval do
   end
 end
 
-ActionView::Helpers::RecordTagHelper.class_eval do
+ActionView::Helpers::RecordTagHelper.module_eval do
   def content_tag_for_with_associations(tag_name, record, *args, &block)
     prefix  = args.first.is_a?(Hash) ? nil : args.shift
     options = args.first.is_a?(Hash) ? args.shift : {}

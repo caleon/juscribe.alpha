@@ -20,6 +20,7 @@ module ActiveRecord
       user.wheel? ? destroy! : (self.nullify if self.editable_by?(user) rescue nil)
       # Wheel can destroy. Admins cannot.
     end
+    
     def nullify # override this in individual models
       self.name += " (from #{self.inspect})"
       save unless ([:type, :depictable_type, :responsible_type, :permissible_type].select do |col|
