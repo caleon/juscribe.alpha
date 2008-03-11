@@ -1,4 +1,5 @@
-require File.join(RAILS_ROOT,  'lib/active_record/validations/constants') unless Object.const_defined?(:REGEXP)
+#require File.join(RAILS_ROOT,  'lib/active_record/validations/constants') unless Object.const_defined?(:REGEXP)
+include ActiveRecord::Validations::RoutingHelper
 
 ActionController::Routing::Routes.draw do |map|
   map.root :controller => 'main'
@@ -10,31 +11,33 @@ ActionController::Routing::Routes.draw do |map|
                     :conditions => { :method => :get }
     article.create_article 'articles/by/:nick', :action => 'create',
                     :conditions => { :method => :post }
-    article.update_article ':year/:month/:day/:permalink/by/:nick/update', :action => 'update',
+    article.update_article ':year/:month/:day/:permalink/by/:nick/update',
+                    :action => 'update',
                     :requirements => { :year => /\d{4}/, :month => /\d{2}/, :day => /\d{2}/,
-                                       :permalink => REGEX[:permalink],
-                                       :nick => /[-_a-z0-9]{3,}/i },
+                                       :permalink => regex_for(:article, :permalink),
+                                       :nick => regex_for(:user, :nick) },
                     :conditions => { :method => :put }
     article.update_article 'drafts/:permalink/by/:nick/update', :action => 'update',
                     :conditions => { :method => :put }
     article.article ':year/:month/:day/:permalink/by/:nick/:action', :action => 'show',
                     :requirements => { :action => /(show|edit)?/, :year => /\d{4}/,
                                        :month => /\d{2}/, :day => /\d{2}/,
-                                       :permalink => REGEX[:permalink],
-                                       :nick => /[-_a-z0-9]{3,}/i },
+                                       :permalink => regex_for(:article, :permalink),
+                                       :nick => regex_for(:user, :nick) },
                     :conditions => { :method => :get }
     article.article 'articles/:permalink/by/:nick', :action => 'show',
-                    :requirements => { :permalink => REGEX[:permalink],
-                                       :nick => /[-_a-z0-9]{3,}/i },
+                    :requirements => { :permalink => regex_for(:article, :permalink),
+                                       :nick => regex_for(:user, :nick) },
                     :conditions => { :method => :get }
     article.article 'articles/:permalink', :action => 'show',
-                    :requirements => { :permalink => REGEX[:permalink] },
+                    :requirements => { :permalink => regex_for(:article, :permalink) },
                     :conditions => { :method => :get }
     article.update_draft 'drafts/:permalink/by/:nick/update', :action => 'update_draft',
-                    :requiremetns => { :permalink => REGEX[:permalink] },
+                    :requirements => { :permalink => regex_for(:article, :permalink) },
                     :conditions => { :method => :put }
     article.draft 'drafts/:permalink/by/:nick/:action', :action => 'show_draft',
-                    :requirements => { :permalink => REGEX[:permalink], :nick => /[-_a-z0-9]{3,}/i },
+                    :requirements => { :permalink => regex_for(:article, :permalink),
+                                       :nick => regex_for(:user, :nick) },
                     :conditions => { :method => :get }
   end
 
@@ -49,8 +52,10 @@ ActionController::Routing::Routes.draw do |map|
   end
 
   map.resources :users,
-                :member => { :friends => :get, :befriend => :put, :unfriend => :put, :about => :get,
-                             :edit_password => :get, :update_password => :put } do |user|
+                :member => { :friends => :get, :befriend => :put, :unfriend => :put,
+                             :about => :get, :edit_password => :get,
+                             :update_password => :put },
+                :requirements => { :id => regex_for(:user, :nick) } do |user|
     user.resources :widgets, :member => { :place => :put, :unplace => :put }
     user.resources :clips
   end
