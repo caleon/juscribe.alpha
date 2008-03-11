@@ -5,17 +5,19 @@ class User < ActiveRecord::Base
   validates_uniqueness_of   :nick, :email
   validates_exclusion_of    :nick, :in => PROHIBITED_NICKS, :on => :create
   validates_length_of       :nick, :in => 3..20
-  validates_length_of       :first_name, :in => 2..20
+  validates_length_of       :first_name, :in => 2..30
   validates_length_of       :middle_initial, :in => 0..1, :allow_nil => true
   validates_length_of       :last_name, :in => 2..30
 
+  validates_numericality_of :sex, :allow_nil => true
+  validates_inclusion_of    :sex, :in => %w( m f ), :allow_nil => true
   validates_with_regexp     :nick, :first_name, :middle_initial, :last_name, :email
   
   validates_acceptance_of   :tos_agreement, :on => :create
   
   if RAILS_ENV != 'test'
     validates_presence_of     :password, :if => :password_changed?
-    validates_length_of       :password, :in => 6..20, :if => :password_changed?
+    validates_length_of       :password, :in => 6..30, :if => :password_changed?
     validates_confirmation_of :password, :if => :password_changed?
     validates_presence_of     :password_confirmation, :if => :password_changed?
     validates_presence_of     :password_hash, :password_salt

@@ -42,7 +42,7 @@ class MessageTest < ActiveSupport::TestCase
   
   def test_accessible_by_check
     msg = Message.create(:body => 'La la la la la', :subject => 'Hello world', :sender => users(:colin), :recipient => users(:nana))
-    assert msg.valid?
+    assert msg.valid?, msg.sender.errors.inspect
     assert msg.accessible_by?(users(:colin))
     assert msg.accessible_by?(users(:nana))
     assert !msg.accessible_by?(users(:keira))
