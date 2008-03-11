@@ -8,6 +8,7 @@
 	<% end %>
 <% end %>
 	<% if @user && !@user.new_record? %>
+		<li class="navigationEl"><%= link_to 'Articles', articles_path(@user) %></li>
 		<li class="navigationEl"><%= link_to 'Friends', friends_user_path(@user) %></li>
 	<% end %>
 <% if logged_in? && @user %>

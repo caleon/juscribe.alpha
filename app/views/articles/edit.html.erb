@@ -1,7 +1,8 @@
-<% form_for @article, :url => edit_article_path(@article), :html => { :method => :post, :class => 'articleForm' } do |f| %>
-	<%= f.label :article, :title %>
+<% form_for :article, @article, :url => update_article_path(@article.to_hash), :html => { :class => 'articleForm', :method => :put } do |f| %>
+	<%= f.label :title %>
 	<%= f.text_field :title %>
 	<br />
-	<%= f.label :article, :content %>
+	<%= f.label :content %>
 	<%= f.text_area :content %>
+	<%= submit_tag 'Edit' %>
 <% end %>

@@ -118,7 +118,7 @@ class ApplicationController < ActionController::Base
       msg = "You have successfully updated #{@object.display_name}."
       yield :before_response if block_given?
       respond_to do |format|
-        format.html { flash[:notice] = msg; redirect_to @object }
+        format.html { flash[:notice] = msg; redirect_to(@object) }
         format.js { flash.now[:notice] = msg }
       end
       yield :after_response if block_given?
@@ -163,7 +163,7 @@ class ApplicationController < ActionController::Base
   def setup(includes=nil, error_opts={})
     self.class.set_model_variables unless klass = shared_setup_options[:model_class]
     instance_var = shared_setup_options[:instance_var]
-    custom_finder = shared_setup_options[:custom_finder]
+    custom_finder = shared_setup_options[:custom_finder] || nil # FIXME: get symbol of method from model
     # could have used #primary_find but then :custom_finder is useless.
     if @object = klass.send(custom_finder, params[:id], {:include => includes})
       set_model_instance(@object)
@@ -222,7 +222,7 @@ class ApplicationController < ActionController::Base
   end
 
   def self.authorize_on(*args)
-    write_inheritable_attribute :authorize_list, args
+    write_inheritable_attribute :authorize_list, args # write_inheritable_array appends args into array instead of overwrite.
   end
   authorize_on :edit, :update, :destroy # DEFAULTS
   

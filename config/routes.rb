@@ -1,12 +1,25 @@
 ActionController::Routing::Routes.draw do |map|
   map.root :controller => 'main'
+  
+  map.with_options :controller => 'articles' do |article|
+    article.articles 'articles/by/:nick', :action => 'index',
+                    :conditions => { :method => :get }
+    article.new_article 'articles/by/:nick/new', :action => 'new',
+                    :conditions => { :method => :get }
+    article.create_article 'articles/by/:nick', :action => 'create',
+                    :conditions => { :method => :post }
+    article.article ':year/:month/:day/:permalink/by/:nick/:action', :action => 'show',
+                    :requirements => { :action => /(show|edit)?/, :year => /\d{4}/,
+                                       :month => /\d{2}/, :day => /\d{2}/,
+                                       :nick => /[-_a-z0-9]{3,}/i },
+                    :conditions => { :method => :get }
+    article.update_article ':year/:month/:day/:permalink/by/:nick/update', :action => 'update',
+                    :requirements => { :action => /(show|edit)?/, :year => /\d{4}/,
+                                       :month => /\d{2}/, :day => /\d{2}/,
+                                       :nick => /[-_a-z0-9]{3,}/i },
+                    :conditions => { :method => :put }
+  end
 
-  map.show_article 'users/:user_id/:year/:month/:date/:id/:action', :controller => 'articles', :action => 'show',
-                        :requirements => { :user_id => /[a-z][_a-z0-9]+/, :year => /\d{4}/, :month => /\d{2}/, :day => /\d{2}/ }
-  #map.resources :articles do |article|
-  #  article.resources :clips
-  #end
-  #map.resources :widgets, :controller => 'clips'
   map.resources :events, :member => { :begin_event => :put, :end_event => :put } do |event|
     event.resources :clips
   end
@@ -23,6 +36,8 @@ ActionController::Routing::Routes.draw do |map|
     user.resources :widgets, :member => { :place => :put, :unplace => :put }
     user.resources :clips
   end
+  
+  map.posts 'user_posts *path', :controller => 'articles', :action => 'view'
     
   map.login 'login', :controller => 'users', :action => 'login'
   map.logout 'logout', :controller => 'users', :action => 'logout'

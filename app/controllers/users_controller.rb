@@ -4,19 +4,7 @@ class UsersController < ApplicationController
   verify_login_on :edit, :update, :edit_password, :update_password, :befriend, :unfriend, :logout
   authorize_on :edit, :update, :edit_password, :update_password
       
-      
-  # TODO: Should #index respond to xml/js?
-  #def show
-  #  return unless setup(:permission)
-  #  @widgets = @user.widgets.placed # TODO: cant :include :widgetable. write sql.
-  #  @skin_file = @user.skin_file
-  #  @layout_file = @user.layout_file        
-  #  respond_to do |format|
-  #    format.html
-  #    format.js
-  #    format.xml
-  #  end
-  #end
+
   def show
     super(:include => :permission) do |marker|
       case marker
@@ -28,21 +16,6 @@ class UsersController < ApplicationController
     end
   end
   
-  #def create
-  #  if @user = User.create(params[:user])
-  #    msg = "Congratulations! You're now registered!"
-  #    respond_to do |format|
-  #      format.html { flash[:notice] = msg; redirect_to @user }
-  #      format.js { flash.now[:notice] = msg }
-  #    end
-  #  else
-  #    flash.now[:warning] = "There was an error creating your account."
-  #    respond_to do |format|
-  #      format.html { render :action => 'new' }
-  #      format.js { render :action => 'create_error' }
-  #    end
-  #  end
-  #end
   def create
     super(:without_association => true) do |marker|
       case marker
