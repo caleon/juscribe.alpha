@@ -14,6 +14,7 @@ class User < ActiveRecord::Base
   validates_with_regexp     :nick, :first_name, :middle_initial, :last_name, :email
   
   validates_acceptance_of   :tos_agreement, :on => :create
+  # worked with '1' as value. not true (of TrueClass)
   
   if RAILS_ENV != 'test'
     validates_presence_of     :password, :if => :password_changed?

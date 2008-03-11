@@ -1,7 +1,7 @@
 <div class="navigation">
 	<ul class="navigationList">
 		<li class="navigationEl"><%= link_to 'Home', root_path %></li>
-		<li class="navigationEl"><%= link_to 'Mine', mine_path %>
+		<li class="navigationEl"><%= link_to 'Mine', mine_path %></li>
 	<% if logged_in? -%>
 		<li class="navigationEl last"><%= link_to 'Logout', logout_path %></li>
 	<% else -%>

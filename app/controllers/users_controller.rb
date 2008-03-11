@@ -17,17 +17,25 @@ class UsersController < ApplicationController
   end
   
   def create
-    super(:without_association => true) do |marker|
-      case marker
-      when :after_instantiate
-        @user.nick, @user.email = params[:user][:nick], params[:user][:email]
-      when :after_save
-        create_uploaded_picture_for(@user) if picture_uploaded?
-        session[:user_id] = @user.id
-      when :before_response
-        msg = "You are now a registered user! Welcome!"
-      when :before_error_response
-        flash.now[:warning] = "There was an issue with the registration form."
+    @user = User.new(params[:user])
+    @user.nick, @user.email = params[:user][:nick], params[:user][:email]
+    if @user.save
+      create_uploaded_picture_for(@user) if picture_uploaded?
+      session[:user_id] = @user.id
+      get_viewer
+      msg = "You are now a registered user! Welcome!"
+      respond_to do |format|
+        format.html do
+          flash[:notice] = msg
+          redirect_to @user
+        end
+        format.js { flash.now[:notice] = msg }
+      end
+    else
+      flash.now[:warning] = "There was an issue with the registration form."
+      respond_to do |format|
+        format.html { render :action => 'new' }
+        format.js { render :action => 'create_error' }
       end
     end
   end

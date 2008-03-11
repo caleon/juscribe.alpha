@@ -84,7 +84,7 @@ class ApplicationController < ActionController::Base
       respond_to do |format|
         format.html do
           flash[:notice] = msg
-          redirect_to instance_variable_get("#{shared_setup_options[:instance_var]}"), :status => 201
+          redirect_to instance_variable_get("#{shared_setup_options[:instance_var]}")
         end
         format.js { flash.now[:notice] = msg }
       end
@@ -155,7 +155,7 @@ class ApplicationController < ActionController::Base
   
   private
   def get_viewer
-    @viewer ||= User.find(session[:user_id]) if session[:user_id]
+    @viewer ||= (User.find(session[:user_id]) rescue nil) if session[:user_id]
   end
   
   def get_find_opts(hash={})
@@ -215,7 +215,7 @@ class ApplicationController < ActionController::Base
     return true if get_viewer
     msg = "You need to be logged in to do that."
     respond_to_without_type_registration do |format|
-      format.html { flash[:warning] = msg; redirect_to login_url and return false }
+      format.html { flash[:warning] = msg; redirect_to(login_url, :status => 401) and return false }
       format.js { flash.now[:warning] = msg; render :controller => 'users', :action => 'login' and return false }
       # Could just make both formats flash and render login...
     end
@@ -232,7 +232,7 @@ class ApplicationController < ActionController::Base
     unless object && get_viewer && object.editable_by?(get_viewer)
       msg = "You are not authorized for that action."
       respond_to_without_type_registration do |format|
-        format.html { flash[:warning] = msg; redirect_to get_viewer || login_url }
+        format.html { flash[:warning] = msg; redirect_to(get_viewer || login_url, :status => 401) }
         format.js { flash.now[:warning] = msg; render :action => 'shared/unauthorized' }
       end
       return false

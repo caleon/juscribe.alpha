@@ -6,7 +6,7 @@ class Article < ActiveRecord::Base
     
   validates_presence_of :user_id, :title, :permalink, :content
   validates_length_of :title, :in => (3..100)
-  validates_uniqueness_of :permalink, :scope => :published_date
+  validates_uniqueness_of :permalink, :scope => :user_id # Hm this, or published_date?
   
   validates_with_regexp :permalink, :message => "uses an incorrect format: please edit your title"
   validates_with_regexp :title
