@@ -8,16 +8,22 @@ ActionController::Routing::Routes.draw do |map|
                     :conditions => { :method => :get }
     article.create_article 'articles/by/:nick', :action => 'create',
                     :conditions => { :method => :post }
+    article.update_article ':year/:month/:day/:permalink/by/:nick/update', :action => 'update',
+                    :requirements => { :year => /\d{4}/, :month => /\d{2}/, :day => /\d{2}/,
+                                       :permalink => /[-a-z0-9]{3,}/i,
+                                       :nick => /[-_a-z0-9]{3,}/i },
+                    :conditions => { :method => :put }
+    article.update_article 'drafts/:permalink/by/:nick/update', :action => 'update',
+                    :conditions => { :method => :put }
     article.article ':year/:month/:day/:permalink/by/:nick/:action', :action => 'show',
                     :requirements => { :action => /(show|edit)?/, :year => /\d{4}/,
                                        :month => /\d{2}/, :day => /\d{2}/,
+                                       :permalink => /[-a-z0-9]{3,}/i,
                                        :nick => /[-_a-z0-9]{3,}/i },
                     :conditions => { :method => :get }
-    article.update_article ':year/:month/:day/:permalink/by/:nick/update', :action => 'update',
-                    :requirements => { :action => /(show|edit)?/, :year => /\d{4}/,
-                                       :month => /\d{2}/, :day => /\d{2}/,
-                                       :nick => /[-_a-z0-9]{3,}/i },
-                    :conditions => { :method => :put }
+    article.article 'drafts/:permalink/by/:nick/:action', :action => 'show',
+                    :requirements => { :permalink => /[-a-z0-9]{3,}/i, :nick => /[-_a-z0-9]{3,}/i },
+                    :conditions => { :method => :get }
   end
 
   map.resources :events, :member => { :begin_event => :put, :end_event => :put } do |event|

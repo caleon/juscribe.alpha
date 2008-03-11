@@ -11,18 +11,15 @@ class UsersControllerTest < ActionController::TestCase
     get :index
     assert_nil assigns(:viewer)
     assert_response :success
-    assert_not_nil assigns(:objects)
     assert_not_nil assigns(:users)
     assert_template 'index'
     xhr :get, :index
     assert_nil assigns(:viewer)
     assert_response :success
-    assert_not_nil assigns(:objects)
     assert_not_nil assigns(:users)
     assert_template 'index'
     get :index, :format => 'xml'
     assert_response :success
-    assert_not_nil assigns(:objects)
     assert_not_nil assigns(:users)
     assert_template 'index'
   end
@@ -30,25 +27,19 @@ class UsersControllerTest < ActionController::TestCase
   def test_show
     get :show, { :id => 'colin' }
     assert_response :success
-    assert_not_nil assigns(:object)
     assert_not_nil assigns(:user)
-    assert_equal assigns(:object), assigns(:user)
     assert_not_nil assigns(:widgets)
     assert_not_nil assigns(:skin_file)
     assert_not_nil assigns(:layout_file)
     xhr :get, :show, { :id => 'colin' }
     assert_response :success
-    assert_not_nil assigns(:object)
     assert_not_nil assigns(:user)
-    assert_equal assigns(:object), assigns(:user)
     assert_not_nil assigns(:widgets)
     assert_not_nil assigns(:skin_file)
     assert_not_nil assigns(:layout_file)
     get :show, { :id => 'colin', :format => 'xml' }
     assert_response :success
-    assert_not_nil assigns(:object)
     assert_not_nil assigns(:user)
-    assert_equal assigns(:object), assigns(:user)
     assert_not_nil assigns(:widgets)
   end
   
@@ -56,12 +47,10 @@ class UsersControllerTest < ActionController::TestCase
     get :new
     assert_response :success
     assert_equal 'Create user', assigns(:page_title)
-    assert_not_nil assigns(:object)
     assert_not_nil assigns(:user)
     xhr :get, :new
     assert_response :success
     assert_equal 'Create user', assigns(:page_title)
-    assert_equal assigns(:object), assigns(:user)
   end
   
   def test_create

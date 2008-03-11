@@ -1,6 +1,6 @@
 module ActiveRecord::Acts::Widgetable #:nodoc:
   def self.included(base)
-    base.class_eval <<-EOS
+    base.module_eval <<-EOS
       def self.widgetable?; false; end
       def widgetable?; false; end
     EOS

@@ -1,6 +1,6 @@
 module ActiveRecord::Acts::Itemizable
   def self.included(base)
-    base.class_eval <<-EOS
+    base.module_eval <<-EOS
       def self.itemizable?; false; end
       def itemizable?; false; end
     EOS

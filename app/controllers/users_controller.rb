@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  set_model_variables :custom_finder => :find_by_nick
+  use_shared_options :custom_finder => :find_by_nick
 
   verify_login_on :edit, :update, :edit_password, :update_password, :befriend, :unfriend, :logout
   authorize_on :edit, :update, :edit_password, :update_password

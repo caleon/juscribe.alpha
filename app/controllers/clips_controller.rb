@@ -1,13 +1,12 @@
 # This controller is only accessible within the scope of a widgetable model's
 # controller. See routes.rb.
 class ClipsController < ApplicationController
-  set_model_variables :widget
+  use_shared_options :widget
   
   def index
     return unless get_widgetable(:message => "Unable to find the object specified. Please check the address.")
     find_opts = get_find_opts(:order => 'id DESC')
-    @objects = @widgetable.clips.find(:all, find_opts)
-    set_model_instance(@objects)
+    @widget = @widgetable.clips.find(:all, find_opts)
     respond_to do |format|
       format.html
       format.xml
@@ -20,15 +19,15 @@ class ClipsController < ApplicationController
   end
   
   def create
-    return unless setup
-    if @object.clip!(:user => get_viewer)
-      msg = "You have clipped #{@object.display_name}."
+    return unless get_widgetable(:message => "Unable to find object to clip. Please check the address.")
+    if @widgetable.clip!(:user => get_viewer)
+      msg = "You have clipped #{@widgetable.display_name}."
       respond_to do |format|
-        format.html { flash[:notice] = msg; redirect_to @object }
+        format.html { flash[:notice] = msg; redirect_to @widgetable }
         format.js { flash.now[:notice] = msg }
       end
     else
-      flash.now[:warning] = "There was an error clipping #{@object.display_name}."
+      flash.now[:warning] = "There was an error clipping #{@widgetable.display_name}."
       respond_to do |format|
         format.html { render :action => 'show' }
         format.js { render :action => 'create_error' }
@@ -39,10 +38,10 @@ class ClipsController < ApplicationController
   # TODO: Can the owner of @widgetable unclip it if desired?
   def destroy
     return unless setup
-    @object.unclip!(:user => get_viewer)
-    msg = "You have unclipped #{@object.display_name}."
+    @widgetable.unclip!(:user => get_viewer)
+    msg = "You have unclipped #{@widgetable.display_name}."
     respond_to do |format|
-      format.html { flash[:notice] = msg; redirect_to @object }
+      format.html { flash[:notice] = msg; redirect_to @widgetable }
       format.js { flash.now[:notice] = msg }
     end
   end
@@ -51,9 +50,8 @@ class ClipsController < ApplicationController
   # Overriding default setup method in ApplicationController
   def setup(includes=nil, error_opts={})
     return unless get_widgetable
-    @object = @widgetable.clips.find(params[:id], :include => includes)
-    set_model_instance(@object)
-    true && authorize(@object)
+    @widget = @widgetable.clips.find(params[:id], :include => includes)
+    true && authorize(@widget)
   rescue ActiveRecord::RecordNotFound
     error_opts[:message] ||= "That Clip could not be found. Please check the address."
     display_error(error_opts) # Error will only have access to @object from the setup method.

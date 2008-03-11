@@ -34,8 +34,7 @@ class ApplicationController < ActionController::Base
   ######################################################################
   
   def index
-    @objects = shared_setup_options[:model_class].find(:all, get_find_opts(:order => 'id DESC'))
-    set_model_instance(@objects)
+    instance_variable_set("@#{shared_setup_options[:plural_sym]}", shared_setup_options[:model_class].find(:all, get_find_opts(:order => 'id DESC')) )
     respond_to do |format|
       format.html
       format.js
@@ -62,8 +61,7 @@ class ApplicationController < ActionController::Base
   
   def new
     @page_title = "Create #{shared_setup_options[:instance_name]}"
-    @object = shared_setup_options[:model_class].new
-    set_model_instance(@object)
+    instance_variable_set("#{shared_setup_options[:instance_var]}", shared_setup_options[:model_class].new)
     respond_to do |format|
       format.html
       format.js
@@ -75,15 +73,19 @@ class ApplicationController < ActionController::Base
     options = args.extract_options!
     without_association = options[:without_association]
     yield :before_instantiate if block_given?
-    @object = shared_setup_options[:model_class].new(params[shared_setup_options[:instance_sym]].merge(without_association ? {} : {:user => get_viewer}))
-    set_model_instance(@object)
+    instance_variable_set("#{shared_setup_options[:instance_var]}",
+        shared_setup_options[:model_class].new(params[shared_setup_options[:instance_sym]].merge(without_association ? {} : { :user => get_viewer }) ) )
+
     yield :after_instantiate if block_given?
-    if @object.save
+    if instance_variable_get("#{shared_setup_options[:instance_var]}").save
       yield :after_save if block_given?
       msg = "You have successfully created your #{shared_setup_options[:instance_name]}."
       yield :before_response if block_given?
       respond_to do |format|
-        format.html { flash[:notice] = msg; redirect_to @object }
+        format.html do
+          flash[:notice] = msg
+          redirect_to instance_variable_get("#{shared_setup_options[:instance_var]}")
+        end
         format.js { flash.now[:notice] = msg }
       end
       yield :after_response if block_given?
@@ -101,7 +103,7 @@ class ApplicationController < ActionController::Base
   
   def edit
     return unless setup(:permission)
-    @page_title = "#{@object.display_name} - Edit"
+    @page_title = "#{instance_variable_get("#{shared_setup_options[:instance_var]}").display_name} - Edit"
     respond_to do |format|
       format.html
       format.js
@@ -115,10 +117,13 @@ class ApplicationController < ActionController::Base
     yield :after_setup if block_given?
     if @object.update_attributes(params[shared_setup_options[:instance_sym]])
       yield :after_save if block_given?
-      msg = "You have successfully updated #{@object.display_name}."
+      msg = "You have successfully updated #{instance_variable_get("#{shared_setup_options[:instance_var]}").display_name}."
       yield :before_response if block_given?
       respond_to do |format|
-        format.html { flash[:notice] = msg; redirect_to(@object) }
+        format.html do
+          flash[:notice] = msg
+          redirect_to instance_variable_get("#{shared_setup_options[:instance_var]}")
+        end
         format.js { flash.now[:notice] = msg }
       end
       yield :after_response if block_given?
@@ -134,7 +139,7 @@ class ApplicationController < ActionController::Base
   def destroy
     return unless setup
     @object.nullify!(get_viewer)
-    msg = "You have deleted #{@object.display_name}."
+    msg = "You have deleted #{instance_variable_get("#{shared_setup_options[:instance_var]}").display_name}."
     respond_to do |format|
       format.html { flash[:notice] = msg; redirect_to :back }
       format.js { flash.now[:notice] = msg }
@@ -163,20 +168,20 @@ class ApplicationController < ActionController::Base
   def setup(includes=nil, error_opts={})
     self.class.set_model_variables unless klass = shared_setup_options[:model_class]
     instance_var = shared_setup_options[:instance_var]
-    custom_finder = shared_setup_options[:custom_finder] || nil # FIXME: get symbol of method from model
+    custom_finder = shared_setup_options[:custom_finder] || nil
+    # FIXME: get symbol of method from model
     # could have used #primary_find but then :custom_finder is useless.
-    if @object = klass.send(custom_finder, params[:id], {:include => includes})
-      set_model_instance(@object)
-      true && authorize(@object)
+    if instance_variable_set(instance_var, klass.send(custom_finder, params[:id], {:include => includes}) )
+      true && authorize(instance_variable_get(instance_var))
     else
       # FIXME: setting this interferes with error view processing
       error_opts[:message] ||= "That #{klass} entry could not be found. Please check the address."
-      display_error(error_opts) # Error will only have access to @object from the setup method.
+      display_error(error_opts)
       false
     end
   end
   
-  def self.set_model_variables(*args)
+  def self.use_shared_options(*args)
     return if controller_name == 'application'
     opts = args.extract_options!
     if args.first.is_a?(Symbol)
@@ -197,11 +202,6 @@ class ApplicationController < ActionController::Base
             :plural_sym       =>  plural_sym,
             :custom_finder    =>  :find
     }.merge(opts))
-  end
-  set_model_variables
-    
-  def set_model_instance(object)
-    instance_eval %{ @#{object.is_a?(Array) ? shared_setup_options[:plural_sym] : shared_setup_options[:instance_sym]} = object }
   end
     
   def self.verify_login_on(*args)

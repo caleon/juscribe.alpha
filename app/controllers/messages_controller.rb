@@ -1,5 +1,7 @@
 # TODO: setup controller-level check for #accessible_by?
 class MessagesController < ApplicationController  
+  use_shared_options
+  
   verify_login_on :index, :show, :new, :create, :edit, :update, :destroy, :send
   # Following allows #setup to check editable_by? with get_viewer
   authorize_on :show, :edit, :update, :destroy, :send

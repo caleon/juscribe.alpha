@@ -1,7 +1,7 @@
 # TODO: Need to finish hooking in mailer actions
 module ActiveRecord::Acts::Responsible
   def self.included(base)
-    base.class_eval <<-EOS
+    base.module_eval <<-EOS
       def self.responsible?; false; end
       def responsible?; false; end
     EOS

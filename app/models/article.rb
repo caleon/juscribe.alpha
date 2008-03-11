@@ -14,13 +14,16 @@ class Article < ActiveRecord::Base
   
   def to_s; self.title; end
   def name; self.title; end
-  def date; self.published_date; end
   def to_param; self.permalink; end
   
-  def to_hash
-    date = self.date
-    { :year => date.year, :month => sprintf("%02d", date.month), :day => sprintf("%02d", date.day),
-      :nick => self.user.to_param, :permalink => self.to_param }
+  def hash_for_path
+    if self.draft?
+      { :permalink => self.to_param, :nick => self.user.to_param }
+    else
+      date = self.published_date
+      { :year => date.year, :month => sprintf("%02d", date.month), :day => sprintf("%02d", date.day),
+        :nick => self.user.to_param, :permalink => self.to_param }
+    end
   end
   
   def draft?; !self.published_time?; end
@@ -43,20 +46,28 @@ class Article < ActiveRecord::Base
     make_permalink
   end
   
-  def self.primary_find(path, opts={}); find_by_path(path, opts); end
-  def self.find_by_user_id_and_path(user_id, path, opts={})
-    year, month, day, permalink = path
+  def self.primary_find(*args); find_by_params(*args); end
+  def self.find_by_nick_and_path(nick, path, opts={})
+    year, month, day, permalink = path.split('/')
     date = Date.new(year.to_i, month.to_i, day.to_i)
-    user = User.primary_find(user_id)
+    user = User.primary_find(nick)
     find(:first, { :conditions => [ "articles.user_id = ? AND published_date = ? AND permalink = ?",
                                   user.id, date.to_formatted_s(:db), permalink ] })
   end
+  
   def self.find_by_path(path, opts={})
-    year, month, day, permalink, filler, user_id = path.split('/')
+    year, month, day, permalink, filler, nick = path.split('/')
     date = Date.new(year.to_i, month.to_i, day.to_i)
-    user = User.primary_find(user_id)
+    user = User.primary_find(nick)
     find(:first, :conditions => [ "articles.user_id = ? AND published_date = ? AND permalink = ?",
                                   user.id, date.to_formatted_s(:db), permalink ])
+  end
+  
+  def self.find_by_params(params, opts={})
+    params.symbolize_keys!
+    date = Date.new(params[:year].to_i, params[:month].to_i, params[:day].to_i)
+    user = User.primary_find(params[:nick])
+    find(:first, { :conditions => [ "articles.user_id = ? AND published_date = ? AND permalink = ?", user.id, date.to_formatted_s(:db), params[:permalink]] })
   end
   
   def self.find_with_url(user_id, year, month, day, permalink, opts={})

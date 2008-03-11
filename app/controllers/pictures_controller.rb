@@ -1,4 +1,5 @@
 class PicturesController < ApplicationController
+  use_shared_options
   
   def create
     return if @picture = create_uploaded_picture_for(get_viewer, :save => true, :respond => true)

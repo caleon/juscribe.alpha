@@ -1,12 +1,13 @@
 class CommentsController < ApplicationController
-
+  use_shared_options
+  
   private
   # Overriding default setup method in ApplicationController
   def setup(includes=nil, error_opts={})
     return unless get_commentable
-    @object = @commentable.comments.find(params[:id], :include => includes)
-    set_model_instance(@object)
-    true && authorize(@object)
+    @comment = @commentable.comments.find(params[:id], :include => includes)
+    set_model_instance(@comment)
+    true && authorize(@comment)
   rescue ActiveRecord::RecordNotFound
     error_opts[:message] ||= "That Comment could not be found. Please check the address."
     display_error(error_opts) # Error will only have access to @object from the setup method.

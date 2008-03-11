@@ -1,4 +1,5 @@
 class EventsController < ApplicationController
+  use_shared_options
   verify_login_on :new, :create, :edit, :update, :destroy, :begin_event, :end_event
   authorize_on :edit, :update, :destroy, :begin_event, :end_event
   

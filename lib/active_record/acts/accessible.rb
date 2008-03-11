@@ -1,6 +1,6 @@
 module ActiveRecord::Acts::Accessible #:nodoc:
   def self.included(base)
-    base.class_eval <<-EOS
+    base.module_eval <<-EOS
       def self.accessible?; false; end
       def accessible?; false; end
     EOS
