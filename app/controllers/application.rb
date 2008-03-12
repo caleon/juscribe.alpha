@@ -116,7 +116,7 @@ class ApplicationController < ActionController::Base
     yield :before_setup if block_given?
     return unless setup
     yield :after_setup if block_given?
-    if @object.update_attributes(params[shared_setup_options[:instance_sym]])
+    if instance_variable_get("#{shared_setup_options[:instance_var]}").update_attributes(params[shared_setup_options[:instance_sym]])
       yield :after_save if block_given?
       msg = "You have successfully updated #{instance_variable_get("#{shared_setup_options[:instance_var]}").display_name}."
       yield :before_response if block_given?

@@ -1,7 +1,7 @@
 class ArticlesController < ApplicationController
   use_shared_options :custom_finder => :find_by_path
   
-  verify_login_on :new, :create, :edit, :update, :publish, :unpublish
+  verify_login_on :new, :create, :edit, :update, :destroy, :publish, :unpublish
   
   def index
     unless @user = User.primary_find(params[:nick])
@@ -46,6 +46,31 @@ class ArticlesController < ApplicationController
         format.js { render :action => 'created_error' }
       end
     end
+  end
+  
+  def update
+    return unless setup
+    if @article.update_attributes(params[:article])
+      msg = "You have successfully updated #{@article.display_name}."
+      respond_to do |format|
+        format.html { flash[:notice] = msg; redirect_to @article.hash_for_path }
+        format.js { flash.now[:notice] = msg }
+      end
+    else
+      flash.now[:warning] = "There was an error updating your article."
+      respond_to do |format|
+        format.html { render :action => 'edit' }
+        format.js { render :action => 'update_error' }
+      end
+    end
+  end
+  
+  def publish
+    
+  end
+  
+  def unpublish
+    
   end
   
   private
