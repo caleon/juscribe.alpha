@@ -8,26 +8,30 @@ ActionController::Routing::Routes.draw do |map|
     article.articles 'articles/by/:nick', :action => 'index',
                     :conditions => { :method => :get },
                     :requirements => { :nick => regex_for(:user, :nick) }
+    article.connect 'articles', :action => 'create',
+                    :conditions => { :method => :post }
     article.new_article 'articles/by/:nick/new', :action => 'new',
                     :conditions => { :method => :get },
                     :requirements => { :nick => regex_for(:user, :nick) }
-    article.create_article 'articles/by/:nick', :action => 'create',
-                    :conditions => { :method => :post },
-                    :requirements => { :nick => regex_for(:user, :nick) }
-    article.update_article ':year/:month/:day/:permalink/by/:nick/update',
+    article.connect ':year/:month/:day/:permalink/by/:nick',
                     :action => 'update',
                     :requirements => { :year => /\d{4}/, :month => /\d{1,2}/, :day => /\d{1,2}/,
                                        :permalink => regex_for(:article, :permalink),
                                        :nick => regex_for(:user, :nick) },
                     :conditions => { :method => :put }
-    article.update_article 'drafts/:permalink/by/:nick/update', :action => 'update',
+    article.connect 'drafts/:permalink/by/:nick', :action => 'update',
                     :conditions => { :method => :put }
     article.article ':year/:month/:day/:permalink/by/:nick', :action => 'show',
-                    :requirements => { :action => /(show|edit|)/, :year => /\d{4}/,
+                    :requirements => { :year => /\d{4}/,
                                        :month => /\d{1,2}/, :day => /\d{1,2}/,
                                        :permalink => regex_for(:article, :permalink),
                                        :nick => regex_for(:user, :nick) },
                     :conditions => { :method => :get }
+    article.edit_article ':year/:month/:day/:permalink/by/:nick/edit', :action => 'edit',
+                    :requirements => { :year => /\d{4}/, :month => /\d{1,2}/,
+                                       :day => /\d{1,2}/,
+                                       :permalink => regex_for(:article, :permalink),
+                                       :nick => regex_for(:user, :nick) }
     article.particle 'articles/:permalink/by/:nick', :action => 'show',
                     :requirements => { :permalink => regex_for(:article, :permalink),
                                        :nick => regex_for(:user, :nick) },
@@ -35,7 +39,7 @@ ActionController::Routing::Routes.draw do |map|
     article.particle 'articles/:permalink', :action => 'show',
                     :requirements => { :permalink => regex_for(:article, :permalink) },
                     :conditions => { :method => :get }
-    article.update_draft 'drafts/:permalink/by/:nick/update', :action => 'update_draft',
+    article.update_draft 'drafts/:permalink/by/:nick', :action => 'update_draft',
                     :requirements => { :permalink => regex_for(:article, :permalink) },
                     :conditions => { :method => :put }
     article.draft 'drafts/:permalink/by/:nick/:action', :action => 'show_draft',

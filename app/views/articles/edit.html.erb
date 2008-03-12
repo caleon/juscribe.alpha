@@ -1,4 +1,4 @@
-<% form_for :article, @article, :url => update_article_path(@article.to_hash), :html => { :class => 'articleForm', :method => :put } do |f| %>
+<% form_for :article, @article, :url => article_path(@article.hash_for_path), :html => { :class => 'articleForm', :method => :put } do |f| %>
 	<%= f.label :title %>
 	<%= f.text_field :title %>
 	<br />

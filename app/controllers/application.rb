@@ -78,13 +78,14 @@ class ApplicationController < ActionController::Base
 
     yield :after_instantiate if block_given?
     if instance_variable_get("#{shared_setup_options[:instance_var]}").save
+      create_uploaded_picture_for(instance_variable_get("#{shared_setup_options[:instance_var]}")) if picture_uploaded?
       yield :after_save if block_given?
       msg = "You have successfully created your #{shared_setup_options[:instance_name]}."
       yield :before_response if block_given?
       respond_to do |format|
         format.html do
           flash[:notice] = msg
-          redirect_to instance_variable_get("#{shared_setup_options[:instance_var]}")
+          redirect_to instance_variable_get("#{shared_setup_options[:instance_var]}") rescue instance_variable_get("#{shared_setup_options[:instance_var]}").hash_for_path
         end
         format.js { flash.now[:notice] = msg }
       end

@@ -20,6 +20,34 @@ class ArticlesController < ApplicationController
     super(:include => [ :user, :comments ])
   end
   
+  def new
+    if !(@user = User.primary_find(params[:nick]))
+      display_error(:message => "That User could not be found. Please check your address.")
+      return
+    elsif @user != get_viewer
+      redirect_to new_article_url(get_viewer)
+    end
+    @article = Article.new
+  end
+  
+  def create
+    @article = get_viewer.articles.new(params[:article])
+    if @article.save
+      create_uploaded_picture_for(@article) if picture_uploaded?
+      msg = "You have successfully created your article."
+      respond_to do |format|
+        format.html { flash[:notice] = msg; redirect_to @article.hash_for_path }
+        format.js { flash.now[:notice] = msg }
+      end
+    else
+      flash.now[:warning] = "There was an error creating your article."
+      respond_to do |format|
+        format.html { render :action => 'new' }
+        format.js { render :action => 'created_error' }
+      end
+    end
+  end
+  
   private
   def setup(includes=nil, error_opts={})
     @user = User.primary_find(params[:nick]) if params[:nick]
@@ -60,4 +88,5 @@ class ArticlesController < ApplicationController
   def only_permalink_provided?
     params[:permalink] && !(params[:year] && params[:month] && params[:day] && params[:nick])
   end
+  
 end

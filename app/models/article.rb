@@ -71,7 +71,7 @@ class Article < ActiveRecord::Base
   def self.find_by_params(params, opts={})
     params.symbolize_keys!
     date = Date.new(params[:year].to_i, params[:month].to_i, params[:day].to_i)
-    user = User.find_by_nick(params[:nick])
+    return nil unless user = User.find_by_nick(params[:nick])
     find(:first, { :conditions => [ "articles.user_id = ? AND published_date = ? AND permalink = ?", user.id, date.to_formatted_s(:db), params[:permalink]] })
   end
   
@@ -81,20 +81,20 @@ class Article < ActiveRecord::Base
                                   user_id, date.to_formatted_s(:db), permalink ] }.merge(opts)).first
   end
   
-  def self.find_by_date(year, month, day)
+  def self.find_by_date(year, month, day, opts={})
     date = Date.parse("#{month}/#{day}/#{year}")
-    find(:all, :conditions => [ 'published_date = ?', date ])
+    find(:all, { :conditions => [ 'published_date = ?', date ] }.merge(opts))
   end
   
-  def self.find_by_permalink_and_nick(permalink, nick)
+  def self.find_by_permalink_and_nick(permalink, nick, opts={})
     if user = User.find_by_nick(nick)
-      find_by_permalink_and_user_id(permalink, user.id, :conditions => "published_date IS NOT NULL")
+      find_by_permalink_and_user_id(permalink, user.id, { :conditions => "published_date IS NOT NULL" }.merge(opts))
     end
   end
     
-  def self.find_all_by_permalink_and_nick(permalink, nick)
+  def self.find_all_by_permalink_and_nick(permalink, nick, opts={})
     if user = User.find_by_nick(nick)
-      find_all_by_permalink_and_user_id(permalink, user.id, :conditions => "published_date IS NOT NULL")
+      find_all_by_permalink_and_user_id(permalink, user.id, { :conditions => "published_date IS NOT NULL" }.merge(opts))
     else
       []
     end
