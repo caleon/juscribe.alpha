@@ -29,8 +29,8 @@ class Article < ActiveRecord::Base
     end
   end
   
-  def draft?; !self.published_time?; end
-  def published?; self.published_time?; end
+  def draft?; !self.published_time? && !self.published_date?; end
+  def published?; self.published_time? && self.published_date?; end
   def publish!
     unless self.published?
       time = Time.now
@@ -45,6 +45,7 @@ class Article < ActiveRecord::Base
     end
   end
   def published_at
+    return nil unless self.published?
     self.published_date.to_formatted_s(:rfc822) + ', ' + self.published_time.to_s(:time)
   end
   def publish=(val) # This is for automatically setting published fields from form data.

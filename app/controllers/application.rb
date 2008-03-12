@@ -139,8 +139,8 @@ class ApplicationController < ActionController::Base
   
   def destroy
     return unless setup
-    instance_variable_get("#{shared_setup_options[:instance_var]}").nullify!(get_viewer)
     msg = "You have deleted #{instance_variable_get("#{shared_setup_options[:instance_var]}").display_name}."
+    instance_variable_get("#{shared_setup_options[:instance_var]}").nullify!(get_viewer)
     respond_to do |format|
       format.html { flash[:notice] = msg; redirect_to :back }
       format.js { flash.now[:notice] = msg }
@@ -228,8 +228,8 @@ class ApplicationController < ActionController::Base
   authorize_on :edit, :update, :destroy # DEFAULTS
   
   # authorize(@object) is called within setup.
-  def authorize(object)
-    return true unless (self.class.read_inheritable_attribute(:authorize_list) || []).include?(action_name.intern)
+  def authorize(object, opts={})
+    return true if !opts[:manual] && !(self.class.read_inheritable_attribute(:authorize_list) || []).include?(action_name.intern)
     unless object && get_viewer && object.editable_by?(get_viewer)
       msg = "You are not authorized for that action."
       respond_to_without_type_registration do |format|

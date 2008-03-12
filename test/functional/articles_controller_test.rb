@@ -262,19 +262,236 @@ class ArticlesControllerTest < ActionController::TestCase
     assert_template 'edit', articles(:blog).hash_for_path.inspect
   end
   
- # def test_draft_show
- #   
- # end
- # 
- # def test_draft_update
- #   
- # end
- # 
- # def test_draft_publish
- #   
- # end
- # 
- # def test_draft_destroy
- #   
- # end
+  def test_draft_edit_with_wrong_permalink
+    articles(:blog).send(:make_permalink, :with_save => true)
+    assert articles(:blog).draft?
+    get :edit, articles(:blog).hash_for_path.update(:permalink => articles(:blog).permalink.chop), { :user_id => users(:colin).id }
+    assert_template 'error'
+    assert_flash_equal 'That article could not be found. Please check the address.', :warning
+  end
+  
+  def test_draft_edit_with_wrong_nick
+    articles(:blog).send(:make_permalink, :with_save => true)
+    assert articles(:blog).draft?
+    get :edit, articles(:blog).hash_for_path.update(:nick => articles(:blog).user.nick.chop), { :user_id => users(:colin).id }
+    assert_template 'error'
+    assert_flash_equal 'That article could not be found. Please check the address.', :warning
+  end
+  
+  def test_draft_edit_without_login
+    articles(:blog).send(:make_permalink, :with_save => true)
+    assert articles(:blog).draft?
+    get :edit, articles(:blog).hash_for_path
+    assert_redirected_to login_url
+    assert_equal "You need to be logged in to do that.", flash[:warning]
+  end
+  
+  def test_draft_edit_with_wrong_user
+    articles(:blog).send(:make_permalink, :with_save => true)
+    assert articles(:blog).draft?
+    get :edit, articles(:blog).hash_for_path, { :user_id => users(:nana).id }
+    assert_redirected_to user_url(users(:nana))
+    assert_equal "You are not authorized for that action.", flash[:warning]
+  end
+  
+  def test_draft_edit_with_non_user
+    articles(:blog).send(:make_permalink, :with_save => true)
+    assert articles(:blog).draft?
+    get :edit, articles(:blog).hash_for_path, { :user_id => 12345567 }
+    assert_redirected_to login_url
+    assert_equal "You need to be logged in to do that.", flash[:warning]
+  end
+  
+  def test_draft_show
+    articles(:blog).send(:make_permalink, :with_save => true)
+    assert articles(:blog).draft?
+    get :show, articles(:blog).hash_for_path, { :user_id => users(:colin).id }
+    assert_response :success
+    assert_template 'show', articles(:blog).hash_for_path.inspect
+  end
+  
+  def test_draft_show_with_wrong_permalink # TODO: draft show action need to be authorized
+    articles(:blog).send(:make_permalink, :with_save => true)
+    assert articles(:blog).draft?
+    get :show, articles(:blog).hash_for_path.update(:permalink => articles(:blog).permalink.chop), { :user_id => users(:colin).id }
+    assert_template 'error'
+    assert_flash_equal 'That article could not be found. Please check the address.', :warning
+  end
+  
+  def test_draft_show_with_wrong_nick
+    articles(:blog).send(:make_permalink, :with_save => true)
+    assert articles(:blog).draft?
+    get :show, articles(:blog).hash_for_path.update(:nick => articles(:blog).user.nick.chop), { :user_id => users(:colin).id }
+    assert_template 'error'
+    assert_flash_equal 'That article could not be found. Please check the address.', :warning
+  end
+  
+  def test_draft_show_without_login
+    articles(:blog).send(:make_permalink, :with_save => true)
+    assert articles(:blog).draft?
+    get :show, articles(:blog).hash_for_path
+    assert_redirected_to login_url
+    assert_equal "You are not authorized for that action.", flash[:warning]
+  end
+  
+  def test_draft_show_with_wrong_user
+    articles(:blog).send(:make_permalink, :with_save => true)
+    assert articles(:blog).draft?
+    get :show, articles(:blog).hash_for_path, { :user_id => users(:nana).id }
+    assert_redirected_to user_url(users(:nana))
+    assert_equal "You are not authorized for that action.", flash[:warning]
+  end
+  
+  def test_draft_show_with_non_user
+    articles(:blog).send(:make_permalink, :with_save => true)
+    assert articles(:blog).draft?
+    get :show, articles(:blog).hash_for_path, { :user_id => 123456677 }
+    assert_redirected_to login_url
+    assert_equal "You are not authorized for that action.", flash[:warning]
+  end
+  
+  def test_draft_update
+    articles(:blog).send(:make_permalink, :with_save => true)
+    assert articles(:blog).draft?
+    put :update, articles(:blog).hash_for_path.merge(:article => { :content => "la dee la" }), { :user_id => users(:colin).id }
+    assert_redirected_to draft_url(articles(:blog).hash_for_path)
+    assert_equal "You have successfully updated #{articles(:blog).display_name}.", flash[:notice]
+  end
+  
+  def test_draft_update_with_title_change
+    new_title = "This is a new title."
+    articles(:blog).send(:make_permalink, :with_save => true)
+    assert articles(:blog).draft?
+    put :update, articles(:blog).hash_for_path.merge(:article => { :title => new_title }), { :user_id => users(:colin).id }
+    assert_redirected_to draft_url(articles(:blog).hash_for_path)
+    assert_equal "You have successfully updated #{articles(:blog).display_name}.", flash[:notice]
+    assert_not_equal new_title, articles(:blog).reload.title
+  end
+  
+  def test_draft_update_with_wrong_permalink
+    articles(:blog).send(:make_permalink, :with_save => true)
+    assert articles(:blog).draft?
+    put :update, articles(:blog).hash_for_path.merge(:article => { :content => "la dee la" }, :permalink => articles(:blog).permalink.chop), { :user_id => users(:colin).id }
+    assert_template 'error'
+    assert_flash_equal 'That article could not be found. Please check the address.', :warning
+  end
+  
+  def test_draft_update_with_wrong_nick
+    articles(:blog).send(:make_permalink, :with_save => true)
+    assert articles(:blog).draft?
+    put :update, articles(:blog).hash_for_path.merge(:article => { :content => 'la dee la' }, :nick => articles(:blog).user.nick.chop), { :user_id => users(:colin).id }
+    assert_template 'error'
+    assert_flash_equal 'That article could not be found. Please check the address.', :warning
+  end
+  
+  def test_draft_update_without_login
+    articles(:blog).send(:make_permalink, :with_save => true)
+    assert articles(:blog).draft?
+    put :update, articles(:blog).hash_for_path.merge(:article => { :content => "la dee la" })
+    assert_redirected_to login_url
+    assert_equal "You need to be logged in to do that.", flash[:warning]
+  end
+  
+  def test_draft_update_with_wrong_user # TODO: test the attr protected stuff. Make sure title uneditab.
+    articles(:blog).send(:make_permalink, :with_save => true)
+    assert articles(:blog).draft?
+    put :update, articles(:blog).hash_for_path.merge(:article => { :content => "la dee la" }), { :user_id => users(:nana).id }
+    assert_redirected_to user_url(users(:nana))
+    assert_equal "You are not authorized for that action.", flash[:warning]
+  end
+  
+  def test_draft_update_with_non_user
+    articles(:blog).send(:make_permalink, :with_save => true)
+    assert articles(:blog).draft?
+    put :update, articles(:blog).hash_for_path.merge(:article => { :content => "la dee la" }), { :user_id => 1234556677 }
+    assert_redirected_to login_url
+    assert_equal "You need to be logged in to do that.", flash[:warning]
+  end
+  
+  def test_draft_publish
+    articles(:blog).send(:make_permalink, :with_save => true)
+    assert articles(:blog).draft?
+    assert articles(:blog).hash_for_path.keys.size == 2 # nick and permalink
+    put :publish, articles(:blog).hash_for_path, { :user_id => users(:colin).id }
+    assert_redirected_to article_url(articles(:blog).reload.hash_for_path)
+    assert_equal "You have published #{articles(:blog).display_name}.", flash[:notice]
+  end
+  
+  def test_draft_publish_with_wrong_permalink
+    articles(:blog).send(:make_permalink, :with_save => true)
+    assert articles(:blog).draft?
+    put :publish, articles(:blog).hash_for_path.merge(:permalink => articles(:blog).permalink.chop), { :user_id => users(:colin).id }
+    assert_template 'error'
+    assert_flash_equal "That article could not be found. Please check the address.", :warning
+  end
+  
+  def test_draft_publish_with_wrong_nick
+    articles(:blog).send(:make_permalink, :with_save => true)
+    assert articles(:blog).draft?
+    put :publish, articles(:blog).hash_for_path.merge(:nick => articles(:blog).user.nick.chop), { :user_id => users(:colin).id }
+    assert_template 'error'
+    assert_flash_equal "That article could not be found. Please check the address.", :warning
+  end
+  
+  def test_draft_publish_without_login
+    articles(:blog).send(:make_permalink, :with_save => true)
+    assert articles(:blog).draft?
+    put :publish, articles(:blog).hash_for_path
+    assert_redirected_to login_url
+    assert_equal "You need to be logged in to do that.", flash[:warning]
+  end
+  
+  def test_draft_publish_with_wrong_user
+    articles(:blog).send(:make_permalink, :with_save => true)
+    assert articles(:blog).draft?
+    assert_not_nil articles(:blog)[:permalink]
+    put :publish, articles(:blog).hash_for_path, { :user_id => users(:nana).id }
+    assert_redirected_to user_url(users(:nana)), articles(:blog).hash_for_path.inspect
+    assert_equal "You are not authorized for that action.", flash[:warning]
+  end
+  
+  def test_draft_publish_with_non_user
+    articles(:blog).send(:make_permalink, :with_save => true)
+    assert articles(:blog).draft?
+    put :publish, articles(:blog).hash_for_path, { :user_id => 1234566 }
+    assert_redirected_to login_url
+    assert_equal "You need to be logged in to do that.", flash[:warning]
+  end
+  
+  def test_draft_destroy
+    @request.env["HTTP_REFERER"] = "http://www.cnn.com/"
+    articles(:blog).send(:make_permalink, :with_save => true)
+    assert articles(:blog).draft?
+    delete :destroy, articles(:blog).hash_for_path, { :user_id => users(:colin).id }
+    assert_response :redirect
+    assert_equal "You have deleted #{articles(:blog).display_name}.", flash[:notice]
+    assert_redirected_to 'http://www.cnn.com'
+  end
+  
+  def test_draft_destroy_without_login
+    @request.env["HTTP_REFERER"] = "http://www.cnn.com/"
+    articles(:blog).send(:make_permalink, :with_save => true)
+    assert articles(:blog).draft?
+    delete :destroy, articles(:blog).hash_for_path
+    assert_redirected_to login_url
+    assert_equal "You need to be logged in to do that.", flash[:warning]
+  end
+  
+  def test_draft_destroy_with_wrong_user
+    @request.env["HTTP_REFERER"] = "http://www.cnn.com/"
+    articles(:blog).send(:make_permalink, :with_save => true)
+    assert articles(:blog).draft?
+    delete :destroy, articles(:blog).hash_for_path, { :user_id => users(:nana).id }
+    assert_redirected_to user_url(users(:nana))
+    assert_equal "You are not authorized for that action.", flash[:warning]
+  end
+  
+  def test_draft_destroy_with_non_user
+    @request.env["HTTP_REFERER"] = "http://www.cnn.com/"
+    articles(:blog).send(:make_permalink, :with_save => true)
+    assert articles(:blog).draft?
+    delete :destroy, articles(:blog).hash_for_path, { :user_id => 12344556 }
+    assert_redirected_to login_url
+    assert_equal "You need to be logged in to do that.", flash[:warning]
+  end
 end

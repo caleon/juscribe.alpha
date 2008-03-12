@@ -2,6 +2,7 @@ class ArticlesController < ApplicationController
   use_shared_options :custom_finder => :find_by_path
   # setup will handle authorization. as well as defaults from application.rb
   verify_login_on :new, :create, :edit, :update, :destroy, :publish, :unpublish
+  authorize_on :edit, :update, :publish, :unpublish, :destroy
   
   def index
     unless @user = User.primary_find(params[:nick])
@@ -14,6 +15,18 @@ class ArticlesController < ApplicationController
   
   def list(*articles)
     @articles = articles
+  end
+  
+  def show
+    return unless setup
+    if @article.draft?
+      return unless authorize(@article, :manual => true)
+    end
+    respond_to do |format|
+      format.html
+      format.js
+      format.xml
+    end
   end
   
   def new
@@ -108,7 +121,8 @@ class ArticlesController < ApplicationController
       if @article = arts.detect {|art| art.draft? }
         true && authorize(@article)
       elsif (pub_arts = arts.select {|art| art.published? }).size == 1
-        redirect_to article_url(pub_arts.first.hash_for_path), :status => 303 and return false
+        @article = pub_arts.first
+        redirect_to article_url(@article.hash_for_path), :status => 303 and return false
       else
         error_opts[:message] ||= "That article could not be found. Please check the address."
         display_error(error_opts) and return false
