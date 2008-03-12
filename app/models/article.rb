@@ -11,7 +11,9 @@ class Article < ActiveRecord::Base
   validates_with_regexp :permalink, :title, :message => "uses an incorrect format: please edit your title"
   validates_with_regexp :content
   
-  attr_protected :permalink
+  attr_protected :permalink, :published_date, :published_time
+  
+  before_save :verify_non_empty_permalink
   
   def to_s; self.title; end
   def name; self.title; end
@@ -30,16 +32,23 @@ class Article < ActiveRecord::Base
   def draft?; !self.published_time?; end
   def published?; self.published_time?; end
   def publish!
-    time = Time.now
-    self.published_date, self.published_time = [ time, time ]
-    self.save!
+    unless self.published?
+      time = Time.now
+      self.published_date, self.published_time = [ time, time ]
+      self.save!
+    end
   end
   def unpublish!
-    self.published_date, self.published_time = [ nil, nil ]
-    self.save!
+    unless self.draft?
+      self.published_date, self.published_time = [ nil, nil ]
+      self.save!
+    end
   end
   def published_at
     self.published_date.to_formatted_s(:rfc822) + ', ' + self.published_time.to_s(:time)
+  end
+  def publish=(val) # This is for automatically setting published fields from form data.
+    self.publish! if [ "Publish", "yes", "Yes", "y", "Y", "1", 1, "true", true].include?(val)
   end
   
   def title=(str)
@@ -48,25 +57,10 @@ class Article < ActiveRecord::Base
   end
   
   def permalink
-    self[:permalink] || make_permalink
+    self[:permalink] ||= make_permalink
   end
   
   def self.primary_find(*args); find_by_params(*args); end
-  def self.find_by_nick_and_path(nick, path, opts={})
-    year, month, day, permalink = path.split('/')
-    date = Date.new(year.to_i, month.to_i, day.to_i)
-    user = User.find_by_nick(nick)
-    find(:first, { :conditions => [ "articles.user_id = ? AND published_date = ? AND permalink = ?",
-                                  user.id, date.to_formatted_s(:db), permalink ] })
-  end
-  
-  def self.find_by_path(path, opts={})
-    year, month, day, permalink, filler, nick = path.split('/')
-    date = Date.new(year.to_i, month.to_i, day.to_i)
-    user = User.find_by_nick(nick)
-    find(:first, :conditions => [ "articles.user_id = ? AND published_date = ? AND permalink = ?",
-                                  user.id, date.to_formatted_s(:db), permalink ])
-  end
   
   def self.find_by_params(params, opts={})
     params.symbolize_keys!
@@ -75,26 +69,9 @@ class Article < ActiveRecord::Base
     find(:first, { :conditions => [ "articles.user_id = ? AND published_date = ? AND permalink = ?", user.id, date.to_formatted_s(:db), params[:permalink]] })
   end
   
-  def self.find_with_url(user_id, year, month, day, permalink, opts={})
-    date = Date.parse("#{year}/#{month}/#{day}")
-    find(:all, { :conditions => [ "articles.user_id = ? AND published_date = ? AND permalink = ?",
-                                  user_id, date.to_formatted_s(:db), permalink ] }.merge(opts)).first
-  end
-  
-  def self.find_by_date(year, month, day, opts={})
-    date = Date.parse("#{month}/#{day}/#{year}")
-    find(:all, { :conditions => [ 'published_date = ?', date ] }.merge(opts))
-  end
-  
-  def self.find_by_permalink_and_nick(permalink, nick, opts={})
+  def self.find_any_by_permalink_and_nick(permalink, nick, opts={})
     if user = User.find_by_nick(nick)
-      find_by_permalink_and_user_id(permalink, user.id, { :conditions => "published_date IS NOT NULL" }.merge(opts))
-    end
-  end
-    
-  def self.find_all_by_permalink_and_nick(permalink, nick, opts={})
-    if user = User.find_by_nick(nick)
-      find_all_by_permalink_and_user_id(permalink, user.id, { :conditions => "published_date IS NOT NULL" }.merge(opts))
+      find_all_by_permalink_and_user_id(permalink, user.id, opts)
     else
       []
     end
@@ -115,6 +92,10 @@ class Article < ActiveRecord::Base
     self.permalink = str
     self.save if opts[:with_save]
     str
+  end
+  
+  def verify_non_empty_permalink
+    make_permalink if self[:permalink].blank?
   end
      
 end

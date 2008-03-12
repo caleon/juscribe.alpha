@@ -253,20 +253,21 @@ class ApplicationController < ActionController::Base
     params[:picture].merge!(:user => get_viewer)
     picture = record.pictures.new(params[:picture]) rescue record.picture.new(params[:picture])
     return picture if !opts[:save]
-    if opts[:respond]
-      if picture.save
-        msg = "Your picture has been uploaded."
-        respond_to do |format|
-          format.html { flash[:notice] = msg; redirect_to opts[:redirect_to] || edit_picture_url(picture) }
-          format.js { flash.now[:notice] = msg }
-        end # Now go to end of method to return picture back to original controller.
-        # The above may not work because the respond_to is not setup like display_error with its instance_eval.
-      else
-        flash.now[:warning] = "Sorry, could not save the uploaded picture. Please upload another picture."
-        record.errors.add(:picture, "could not be saved because " + picture.errors.full_messages.join(', '))
-        return false
-      end
+
+    if picture.save
+      msg = "Your picture has been uploaded."
+      respond_to do |format|
+        format.html { flash[:notice] = msg; redirect_to opts[:redirect_to] || edit_picture_url(picture) }
+        format.js { flash.now[:notice] = msg }
+      end if opts[:respond]
+      # Now go to end of method to return picture back to original controller.
+      # The above may not work because the respond_to is not setup like display_error with its instance_eval.
+    else
+      flash.now[:warning] = "Sorry, could not save the uploaded picture. Please upload another picture."
+      record.errors.add(:picture, "could not be saved because " + picture.errors.full_messages.join(', '))
+      return false
     end
+
     return picture # needs to be saved elsewhere then.
   end
   

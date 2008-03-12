@@ -80,8 +80,8 @@ class ArticlesControllerTest < ActionController::TestCase
     art2.publish!
     
     get :show, { :permalink => articles(:blog).permalink }
-    assert :success
-    assert_flash_equal "Multiple articles were found with that address.", :warning
+    assert_template 'error'
+    assert_flash_equal "That article could not be found. Please check the address.", :warning
   end
   
   def test_new_without_nick
@@ -111,10 +111,10 @@ class ArticlesControllerTest < ActionController::TestCase
   end
   
   def test_create
-    post :create, { :article => { :title => "Blah blahdy la la la", :content => "dum dum dum dum dum" }, :nick => 'colin' }, { :user_id => users(:colin).id }
+    post :create, { :article => { :title => "Blah blahdy la la la", :content => "dum dum dum dum dum", :publish => "1" }, :nick => 'colin' }, { :user_id => users(:colin).id }
     article = Article.find(:first, :order => 'id DESC', :conditions => ["title = ?", "Blah blahdy la la la"])
     assert article.valid?
-    assert_redirected_to article.hash_for_path
+    assert_redirected_to article_url(article.hash_for_path)
     assert_equal "You have successfully created your article.", flash[:notice]
   end
   
@@ -132,11 +132,11 @@ class ArticlesControllerTest < ActionController::TestCase
   end
   
   def test_create_with_picture
-    post :create, { :article => { :title => "this is a picture post", :content => "dum dum dum dum dum dum dum"}, :picture => { :uploaded_data => fixture_file_upload("yuri.jpg", "image/jpg") }, :nick => 'colin' }, { :user_id => users(:colin).id }
+    post :create, { :article => { :title => "this is a picture post", :content => "dum dum dum dum dum dum dum", :publish => "1" }, :picture => { :uploaded_data => fixture_file_upload("yuri.jpg", "image/jpg") }, :nick => 'colin' }, { :user_id => users(:colin).id }
     article = Article.find_by_title('this is a picture post')
     assert_not_nil article[:permalink]
     assert article.valid?
-    assert_redirected_to article.hash_for_path
+    assert_redirected_to article_url(article.hash_for_path)
     assert_equal "You have successfully created your article.", flash[:notice]
   end
   
@@ -215,17 +215,21 @@ class ArticlesControllerTest < ActionController::TestCase
     articles(:blog).send(:make_permalink)
     articles(:blog).publish!
     date = articles(:blog).published_date
-    put :update, { :year => date.year.to_s, :month => sprintf("%02d", date.month), :day => sprintf("%02d", date.day), :permalink => articles(:blog).permalink, :nick => articles(:blog).user.nick, :article => { :title => 'y' } }, { :user_id => users(:colin).id }
+    put :update, { :year => date.year.to_s, :month => sprintf("%02d", date.month), :day => sprintf("%02d", date.day), :permalink => articles(:blog).permalink, :nick => articles(:blog).user.nick, :article => { :content => ' ' } }, { :user_id => users(:colin).id }
     assert_template 'edit'
     assert_flash_equal 'There was an error updating your article.', :warning
   end
   
-  def test_publish
-    
+  def test_unpublish
+    articles(:blog).send(:make_permalink)
+    articles(:blog).publish!
+    put :unpublish, articles(:blog).hash_for_path, { :user_id => users(:colin).id }
+    assert_redirected_to draft_url(articles(:blog).reload.hash_for_path)
+    assert_equal "You have unpublished #{articles(:blog).display_name}.", flash[:notice]
   end
   
-  def test_unpublish
-    
+  def test_unpublish_unpublished
+    assert_raise(ActionController::RoutingError) { put :unpublish, articles(:blog).hash_for_path, { :user_id => users(:colin).id } }
   end
   
   def test_destroy
@@ -247,4 +251,30 @@ class ArticlesControllerTest < ActionController::TestCase
     assert_redirected_to login_url
     assert_equal "You need to be logged in to do that.", flash[:warning]
   end
+  
+  ### DRAFTS
+  
+  def test_draft_edit
+    articles(:blog).send(:make_permalink, :with_save => true)
+    assert articles(:blog).draft?
+    get :edit, articles(:blog).hash_for_path, { :user_id => users(:colin).id }
+    assert_response :success
+    assert_template 'edit', articles(:blog).hash_for_path.inspect
+  end
+  
+ # def test_draft_show
+ #   
+ # end
+ # 
+ # def test_draft_update
+ #   
+ # end
+ # 
+ # def test_draft_publish
+ #   
+ # end
+ # 
+ # def test_draft_destroy
+ #   
+ # end
 end

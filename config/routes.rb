@@ -19,6 +19,13 @@ ActionController::Routing::Routes.draw do |map|
                                                      :day => /\d{1,2}/,
                                                      :permalink => regex_for(:article, :permalink),
                                                      :nick      => regex_for(:user, :nick) }
+    ar.unpublish_article ':year/:month/:day/:permalink/by/:nick/unpublish',:action => 'unpublish',
+                                  :conditions =>   { :method => :put },
+                                  :requirements => { :year => /\d{4}/,
+                                                     :month => /\d{1,2}/,
+                                                     :day => /\d{1,2}/,
+                                                     :permalink => regex_for(:article, :permalink),
+                                                     :nick      => regex_for(:user, :nick) }
     ar.article        ':year/:month/:day/:permalink/by/:nick',          :action => 'show',
                                   :conditions =>   { :method => :get },
                                   :requirements => { :year => /\d{4}/,
@@ -47,7 +54,7 @@ ActionController::Routing::Routes.draw do |map|
     ar.particle       'articles/:permalink',                            :action => 'show',
                                   :conditions =>   { :method => :get },
                                   :requirements => { :permalink => regex_for(:article, :permalink) }                    
-    ar.draft          'draft/:permalink/by/:nick/edit',                 :action => 'edit',
+    ar.edit_draft     'draft/:permalink/by/:nick/edit',                 :action => 'edit',
                                   :conditions =>   { :method => :get },
                                   :requirements => { :permalink => regex_for(:article, :permalink),
                                                      :nick      => regex_for(:user, :nick) }
@@ -55,11 +62,15 @@ ActionController::Routing::Routes.draw do |map|
                                   :conditions =>   { :method => :get },
                                   :requirements => { :permalink => regex_for(:article, :permalink),
                                                      :nick      => regex_for(:user, :nick) }
-    ar.draft          'draft/:permalink/by/:nick',                      :action => 'update',
+    ar.connect        'draft/:permalink/by/:nick',                      :action => 'update',
                                   :conditions =>   { :method => :put },
                                   :requirements => { :permalink => regex_for(:article, :permalink),
                                                      :nick      => regex_for(:user, :nick) }
-    ar.draft          'draft/:permalink/by/:nick',                      :action => 'destroy',
+    ar.publish_draft  'draft/:permalink/by/:nick',                      :action => 'publish',
+                                  :conditions =>   { :method => :put },
+                                  :requirements => { :permalink => regex_for(:article, :permalink),
+                                                     :nick      => regex_for(:user, :nick) }
+    ar.connect        'draft/:permalink/by/:nick',                      :action => 'destroy',
                                   :conditions =>   { :method => :delete },
                                   :requirements => { :permalink => regex_for(:article, :permalink),
                                                      :nick      => regex_for(:user, :nick) }
