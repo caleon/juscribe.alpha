@@ -65,25 +65,6 @@ class ArticleTest < ActiveSupport::TestCase
     assert_equal 5, (art.hash_for_path.keys & [:year, :month, :day, :nick, :permalink]).size
   end
   
-  def test_find_by_nick_and_path
-    path = '2008/03/10/testing-search'
-    assert_nothing_raised(ArgumentError) { Article.find_by_nick_and_path('colin', path)}
-    assert_nothing_raised(ActiveRecord::RecordNotFound) { Article.find_by_nick_and_path('colin', path)}
-    assert_nil Article.find_by_nick_and_path('colin', path)
-  end
-  
-  def test_find_by_path
-    path = '2008/03/10/testing-search/by/colin'
-    assert_nothing_raised(ArgumentError) { Article.find_by_path(path) }
-    assert_nothing_raised(ActiveRecord::RecordNotFound) { Article.find_by_path(path) }
-    assert_nil Article.find_by_path(path)
-    
-    path = '2008/03/10/testing-search/hoagie/colin'
-    assert_nothing_raised(ArgumentError) { Article.find_by_path(path) }
-    assert_nothing_raised(ActiveRecord::RecordNotFound) { Article.find_by_path(path) }
-    assert_nil Article.find_by_path(path)
-  end
-  
   def test_find_by_params
     params = {'year' => '2008', 'month' => '03', 'day' => '10', 'permalink' => 'testing-search', 'nick' => 'colin'}
     assert_nothing_raised(ArgumentError) { Article.find_by_params(params) }
@@ -95,40 +76,11 @@ class ArticleTest < ActiveSupport::TestCase
     assert_nil Article.find_by_params(params)
   end
   
-  def test_find_with_url
-    user_id, year, month, day, permalink = 'colin'.hash.abs, 2008, 3, 10, 'testing-search'
-    args = [user_id, year, month, day, permalink]
-    assert_nothing_raised(ArgumentError) { Article.find_with_url(*args) }
-    assert_nothing_raised(ActiveRecord::RecordNotFound) { Article.find_with_url(*args) }
-    assert_nil Article.find_with_url(*args)
-  end
-  
-  def test_find_by_date
-    args = [2008, 3, 10]
-    assert_nothing_raised(ArgumentError) { Article.find_by_date(*args) }
-    assert_nothing_raised(ActiveRecord::RecordNotFound) { Article.find_by_date(*args) }
-    assert_not_nil Article.find_by_date(*args)
-    assert Article.find_by_date(*args).empty?
-    
-    args = ['2008', '03', '10']
-    assert_nothing_raised(ArgumentError) { Article.find_by_date(*args) }
-    assert_nothing_raised(ActiveRecord::RecordNotFound) { Article.find_by_date(*args) }
-    assert_not_nil Article.find_by_date(*args)
-    assert Article.find_by_date(*args).is_a?(Array)
-  end
-  
-  def test_find_by_permalink_and_nick
+  def test_find_any_by_permalink_and_nick
     args = ['testing-search', 'colin']
-    assert_nothing_raised(ArgumentError) { Article.find_by_permalink_and_nick(*args) }
-    assert_nothing_raised(ActiveRecord::RecordNotFound) { Article.find_by_permalink_and_nick(*args) }
-    assert_nil Article.find_by_permalink_and_nick(*args)
-  end
-  
-  def test_find_all_by_permalink_and_nick
-    args = ['testing-search', 'colin']
-    assert_nothing_raised(ArgumentError) { Article.find_all_by_permalink_and_nick(*args) }
-    assert_nothing_raised(ActiveRecord::RecordNotFound) { Article.find_all_by_permalink_and_nick(*args) }
-    assert_not_nil Article.find_all_by_permalink_and_nick(*args)
-    assert Article.find_all_by_permalink_and_nick(*args).empty?
+    assert_nothing_raised(ArgumentError) { Article.find_any_by_permalink_and_nick(*args) }
+    assert_nothing_raised(ActiveRecord::RecordNotFound) { Article.find_any_by_permalink_and_nick(*args) }
+    assert_not_nil Article.find_any_by_permalink_and_nick(*args)
+    assert Article.find_any_by_permalink_and_nick(*args).empty?
   end
 end
