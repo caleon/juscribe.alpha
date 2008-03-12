@@ -138,7 +138,7 @@ class ApplicationController < ActionController::Base
   
   def destroy
     return unless setup
-    @object.nullify!(get_viewer)
+    instance_variable_get("#{shared_setup_options[:instance_var]}").nullify!(get_viewer)
     msg = "You have deleted #{instance_variable_get("#{shared_setup_options[:instance_var]}").display_name}."
     respond_to do |format|
       format.html { flash[:notice] = msg; redirect_to :back }
@@ -215,7 +215,7 @@ class ApplicationController < ActionController::Base
     return true if get_viewer
     msg = "You need to be logged in to do that."
     respond_to_without_type_registration do |format|
-      format.html { flash[:warning] = msg; redirect_to(login_url, :status => 401) and return false }
+      format.html { flash[:warning] = msg; redirect_to login_url and return false }
       format.js { flash.now[:warning] = msg; render :controller => 'users', :action => 'login' and return false }
       # Could just make both formats flash and render login...
     end
@@ -232,7 +232,7 @@ class ApplicationController < ActionController::Base
     unless object && get_viewer && object.editable_by?(get_viewer)
       msg = "You are not authorized for that action."
       respond_to_without_type_registration do |format|
-        format.html { flash[:warning] = msg; redirect_to(get_viewer || login_url, :status => 401) }
+        format.html { flash[:warning] = msg; redirect_to get_viewer || login_url }
         format.js { flash.now[:warning] = msg; render :action => 'shared/unauthorized' }
       end
       return false

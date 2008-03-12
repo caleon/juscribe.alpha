@@ -4,8 +4,11 @@ class ArticlesController < ApplicationController
   verify_login_on :new, :create, :edit, :update, :publish, :unpublish
   
   def index
+    unless @user = User.primary_find(params[:nick])
+      display_error(:message => 'That user could not be found.')
+      return
+    end
     find_opts = get_find_opts(:order => 'id DESC')
-    @user = User.primary_find(params[:nick])
     @articles = @user.articles.find(:all, find_opts)
   end
   
@@ -24,6 +27,7 @@ class ArticlesController < ApplicationController
   
   private
   def setup(includes=nil, error_opts={})
+    @user = User.primary_find(params[:nick]) if params[:nick]
     if only_permalink_provided? && (arts = Article.find_all_by_permalink(params[:permalink], :include => includes)).size > 0
       if arts.size == 1
         redirect_to arts.first.hash_for_path, :status => 301

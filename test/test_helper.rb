@@ -38,7 +38,11 @@ class Test::Unit::TestCase
   # Add more helper methods to be used by all tests here...
   
   def assert_flash_equal(expects, type)
-    assert_tag(:tag => 'div', :attributes => { :id => "flash#{type.to_s.capitalize}" },
-                              :content => expects)
+    assert_tag :tag => 'div', :attributes => { :id => "flash#{type.to_s.capitalize}" },
+                              :content => expects
+  end
+  
+  def assert_flash_exists(type)
+    assert_tag :tag => 'div', :attributes => { :id => "flash#{type.to_s.capitalize}" }
   end
 end

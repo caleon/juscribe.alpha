@@ -6,11 +6,14 @@ ActionController::Routing::Routes.draw do |map|
   
   map.with_options :controller => 'articles' do |article|
     article.articles 'articles/by/:nick', :action => 'index',
-                    :conditions => { :method => :get }
+                    :conditions => { :method => :get },
+                    :requirements => { :nick => regex_for(:user, :nick) }
     article.new_article 'articles/by/:nick/new', :action => 'new',
-                    :conditions => { :method => :get }
+                    :conditions => { :method => :get },
+                    :requirements => { :nick => regex_for(:user, :nick) }
     article.create_article 'articles/by/:nick', :action => 'create',
-                    :conditions => { :method => :post }
+                    :conditions => { :method => :post },
+                    :requirements => { :nick => regex_for(:user, :nick) }
     article.update_article ':year/:month/:day/:permalink/by/:nick/update',
                     :action => 'update',
                     :requirements => { :year => /\d{4}/, :month => /\d{2}/, :day => /\d{2}/,

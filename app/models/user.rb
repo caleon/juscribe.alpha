@@ -101,9 +101,9 @@ class User < ActiveRecord::Base
     return self
   end
 
-  def self.authenticate(nick, password)
+  def self.authenticate(nick, pass)
     user = User.find(:first, :conditions => ['nick = ?', nick])
-    if user.blank? || Digest::SHA256.hexdigest(password + user.password_salt) != user.password_hash
+    if user.blank? || Digest::SHA256.hexdigest(pass + user.password_salt) != user.password_hash
       return false
     end
     user
@@ -115,6 +115,12 @@ class User < ActiveRecord::Base
       return false
     end
     return true
+  end
+  
+  private
+  def self.generate_password_salt_and_hash_for(pass)
+    salt = [Array.new(6){rand(256).chr}.join].pack('m').chomp
+    [salt, Digest::SHA256.hexdigest(pass + salt)]
   end
   
 end

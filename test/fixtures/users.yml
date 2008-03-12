@@ -15,6 +15,8 @@ colin:
   email: colin@venturous.net
   birthdate: 1985-01-29
   sex: 1
+  password_salt: mrzpmnSx
+  password_hash: d411f59854ee28b0df2f833b81ebeafb4f16856f82aca367beeb83b0d2c0d5ca
 nana:
   first_name: $LABEL
   middle_initial: n

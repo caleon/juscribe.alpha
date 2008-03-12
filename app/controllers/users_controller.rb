@@ -40,11 +40,20 @@ class UsersController < ApplicationController
     end
   end
   
-  def update
-    super do |marker|
-      case marker
-      when :after_setup
-        save_uploaded_picture_for(@user) if picture_uploaded?
+  def update    
+    return unless setup
+    if @user.update_attributes(params[:user])
+      save_uploaded_picture_for(@user) if picture_uploaded?
+      msg = "You have successfully updated your profile."
+      respond_to do |format|
+        format.html { flash[:notice] = msg; redirect_to @user }
+        format.js { flash.now[:notice] = msg }
+      end
+    else
+      flash.now[:warning] = "There was an error updating your profile."
+      respond_to do |format|
+        format.html { render :action => 'edit' }
+        format.js { render :action => 'update_error' }
       end
     end
   end
@@ -95,8 +104,8 @@ class UsersController < ApplicationController
         @user = get_viewer
         msg = "You are already logged in."
         respond_to do |format|
-          format.html { redirect_to @user }
-          format.js { render :action => 'login_already' }
+          format.html { flash[:notice] = msg; redirect_to @user }
+          format.js { flash.now[:notice] = msg; render :action => 'login_already' }
         end
       else
         @user = User.new
@@ -125,8 +134,8 @@ class UsersController < ApplicationController
   def befriend
     return unless setup
     if res = get_viewer.befriend(@user) # This sends out notifier in model.
-      @notice = [ "You have requested friendship with #{@user}.",
-                  "You are now friends with #{@user}." ][res]
+      @notice = [ "You have requested friendship with #{@user.display_name}.",
+                  "You are now friends with #{@user.display_name}." ][res]
       respond_to do |format|
         format.html do
           flash[:notice] = @notice
@@ -135,12 +144,12 @@ class UsersController < ApplicationController
         format.js          
       end
     else
-      flash.now[:warning] = "There wasn an error friending #{@user.display_name}."
+      flash.now[:warning] = "There was an error friending #{@user.display_name}."
       respond_to do |format|
         format.html do
           params[:id] = get_viewer.nick
           show
-          render :action => 'show'
+          #render :action => 'show' FIXME: results in double render error.
         end
         format.js { render :action => 'befriend_error' }
       end
@@ -161,7 +170,7 @@ class UsersController < ApplicationController
         format.html do
           params[:id] = get_viewer.friends_with?(@user) ? @user.nick : get_viewer.nick
           show
-          render :action => 'show'
+          #render :action => 'show'
         end
         format.js { render :action => 'unfriend_error'}
       end
