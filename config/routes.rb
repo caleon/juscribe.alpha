@@ -16,23 +16,23 @@ ActionController::Routing::Routes.draw do |map|
                     :requirements => { :nick => regex_for(:user, :nick) }
     article.update_article ':year/:month/:day/:permalink/by/:nick/update',
                     :action => 'update',
-                    :requirements => { :year => /\d{4}/, :month => /\d{2}/, :day => /\d{2}/,
+                    :requirements => { :year => /\d{4}/, :month => /\d{1,2}/, :day => /\d{1,2}/,
                                        :permalink => regex_for(:article, :permalink),
                                        :nick => regex_for(:user, :nick) },
                     :conditions => { :method => :put }
     article.update_article 'drafts/:permalink/by/:nick/update', :action => 'update',
                     :conditions => { :method => :put }
-    article.article ':year/:month/:day/:permalink/by/:nick/:action', :action => 'show',
-                    :requirements => { :action => /(show|edit)?/, :year => /\d{4}/,
-                                       :month => /\d{2}/, :day => /\d{2}/,
+    article.article ':year/:month/:day/:permalink/by/:nick', :action => 'show',
+                    :requirements => { :action => /(show|edit|)/, :year => /\d{4}/,
+                                       :month => /\d{1,2}/, :day => /\d{1,2}/,
                                        :permalink => regex_for(:article, :permalink),
                                        :nick => regex_for(:user, :nick) },
                     :conditions => { :method => :get }
-    article.article 'articles/:permalink/by/:nick', :action => 'show',
+    article.particle 'articles/:permalink/by/:nick', :action => 'show',
                     :requirements => { :permalink => regex_for(:article, :permalink),
                                        :nick => regex_for(:user, :nick) },
                     :conditions => { :method => :get }
-    article.article 'articles/:permalink', :action => 'show',
+    article.particle 'articles/:permalink', :action => 'show',
                     :requirements => { :permalink => regex_for(:article, :permalink) },
                     :conditions => { :method => :get }
     article.update_draft 'drafts/:permalink/by/:nick/update', :action => 'update_draft',

@@ -8,9 +8,10 @@ class Article < ActiveRecord::Base
   validates_length_of :title, :in => (3..100)
   validates_uniqueness_of :permalink, :scope => :user_id # Hm this, or published_date?
   
-  validates_with_regexp :permalink, :message => "uses an incorrect format: please edit your title"
-  validates_with_regexp :title
+  validates_with_regexp :permalink, :title, :message => "uses an incorrect format: please edit your title"
   validates_with_regexp :content
+  
+  attr_protected :permalink
   
   def to_s; self.title; end
   def name; self.title; end
@@ -21,7 +22,7 @@ class Article < ActiveRecord::Base
       { :permalink => self.to_param, :nick => self.user.to_param }
     else
       date = self.published_date
-      { :year => date.year, :month => sprintf("%02d", date.month), :day => sprintf("%02d", date.day),
+      { :year => date.year.to_s, :month => sprintf("%02d", date.month), :day => sprintf("%02d", date.day),
         :nick => self.user.to_param, :permalink => self.to_param }
     end
   end
@@ -44,6 +45,10 @@ class Article < ActiveRecord::Base
   def title=(str)
     self[:title] = str
     make_permalink
+  end
+  
+  def permalink
+    self[:permalink] || make_permalink
   end
   
   def self.primary_find(*args); find_by_params(*args); end
@@ -109,6 +114,7 @@ class Article < ActiveRecord::Base
     str = Article.permalink_for(opts[:title] || self.title)
     self.permalink = str
     self.save if opts[:with_save]
+    str
   end
      
 end

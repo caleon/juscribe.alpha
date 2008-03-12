@@ -20,32 +20,22 @@ class ArticlesController < ApplicationController
     super(:include => [ :user, :comments ])
   end
   
-  def view
-    return unless setup(:include => [ :user, :comments ])
-    render :action => 'show'
-  end
-  
   private
   def setup(includes=nil, error_opts={})
     @user = User.primary_find(params[:nick]) if params[:nick]
     if only_permalink_provided? && (arts = Article.find_all_by_permalink(params[:permalink], :include => includes)).size > 0
       if arts.size == 1
-        redirect_to arts.first.hash_for_path, :status => 301
+        redirect_to arts.first.hash_for_path, :status => 303 and return false
       else
+        flash.now[:warning] = "Multiple articles were found with that address."
         list(*arts)
         render :action => 'list' and return false
       end
     elsif only_permalink_and_nick_provided? && (arts = Article.find_all_by_permalink_and_nick(params[:permalink], params[:nick], :include => includes)).size > 0
-      if arts.size == 1
-        redirect_to arts.first.hash_for_path, :status => 301
-      else
-        list(*arts)
-        render :action => 'list' and return false
-      end
+      redirect_to arts.first.hash_for_path, :status => 303 and return false
     elsif params_valid? && @article = Article.primary_find(valid_params, :include => includes)
-      # TODO: Set permanently moved response status code.
       if params[:month] !~ /\d\d/ || params[:day] !~ /\d\d/
-        redirect_to @article.hash_for_path, :status => 301
+        redirect_to @article.hash_for_path, :status => 301 and return false
       else
         true && authorize(@article)
       end
