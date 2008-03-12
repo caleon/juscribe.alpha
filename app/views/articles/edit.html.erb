@@ -1,4 +1,4 @@
-<% form_for :article, @article, :url => @article.hash_for_path.merge(:action => 'update'), :html => { :class => 'articleForm', :method => :put } do |f| %>
+<% form_for :article, @article, :html => { :class => 'articleForm', :method => :put } do |f| %>
 <%# form_for @article, :html => { :class => 'articleForm', :method => :put } do |f| %>
 <%= @article.hash_for_path.inspect %>
 	<%= f.label :title %>
