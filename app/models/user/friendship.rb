@@ -1,6 +1,6 @@
 module Friendship
   def self.included(klass)
-    klass.class_eval(%{serialize :friend_ids})
+    klass.serialize :friend_ids
   end
   
   def friends_with?(user)

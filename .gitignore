@@ -9,6 +9,8 @@ coverage/*
 log/*.log
 public/images/uploads/*
 public/javascripts/all.js
+public/javascripts/base.js
 public/stylesheets/all.css
+public/stylesheets/base.css
 tmp/*
 vendor/plugins/attachment_fu/test/*.log

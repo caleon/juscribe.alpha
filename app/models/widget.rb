@@ -16,9 +16,7 @@ class Widget < ActiveRecord::Base
   end
   
   def wid_name
-    self.widgetable.name
-  rescue
-    self.widgetable.title rescue nil
+    self.widgetable.name rescue nil
   end
   
   def wid_content

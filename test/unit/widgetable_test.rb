@@ -1,14 +1,12 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
-class Mixin < ActiveRecord::Base
+class WidgetableMixin < ActiveRecord::Base
   set_table_name 'articles'
-end
-
-class WidgetableMixin < Mixin
   acts_as_widgetable
   belongs_to :user
 
   def title; self[:title] || "untitled"; end
+  def name; self.title; end
 end
 
 class WidgetableMixinSub1 < WidgetableMixin
@@ -29,6 +27,11 @@ class WidgetableTest < ActiveSupport::TestCase
   def test_simple_values
     acc1 = @acc[1]
     assert clip = acc1.clip!(:user => @user)
+    assert acc1.title == 'untitled'
+    assert acc1.name == 'untitled'
+    assert_equal clip.widgetable_id, acc1.id
+    assert_equal clip.widgetable_type, 'WidgetableMixin'
+    assert clip.reload.widgetable == acc1
     assert_equal acc1.title, clip.wid_name
     assert_equal clip.wid_name, clip.full_name
     clip.name = 'Headliner'
@@ -37,8 +40,8 @@ class WidgetableTest < ActiveSupport::TestCase
     WidgetableMixin.class_eval %{ undef :content }
     assert_nil clip.wid_content
     assert_equal acc1.user, clip.wid_user
-    assert_equal "/mixin", clip.wid_partial(''), clip.widgetable_type
-    assert_equal "/mixin_default", clip.wid_partial('', 'default')
+    assert_equal "/widgetable_mixin", clip.wid_partial(''), clip.widgetable_type
+    assert_equal "/widgetable_mixin_default", clip.wid_partial('', 'default')
   end
   
   def test_clip

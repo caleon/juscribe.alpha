@@ -310,6 +310,14 @@ class ArticlesControllerTest < ActionController::TestCase
     assert_template 'show', articles(:blog).hash_for_path.inspect
   end
   
+  def test_draft_show_with_only_permalink
+    articles(:blog).send(:make_permalink, :with_save => true)
+    assert articles(:blog).draft?
+    get :show, { :permalink => articles(:blog).permalink }, { :user_id => users(:colin).id }
+    assert_response 303
+    assert_redirected_to draft_url(articles(:blog).hash_for_path)
+  end
+  
   def test_draft_show_with_wrong_permalink # TODO: draft show action need to be authorized
     articles(:blog).send(:make_permalink, :with_save => true)
     assert articles(:blog).draft?

@@ -164,7 +164,7 @@ class UsersControllerTest < ActionController::TestCase
 # This test does not work because under TEST environment, the password validation
 # does not occur.
   end
-  
+    
   def test_update_password_by_wrong_user
     put :update_password, { :id => 'colin', :user => { :password => 'blah', :password_confirmation => 'blah' }}, { :user_id => users(:keira).id }
     assert_redirected_to user_url(users(:keira))
