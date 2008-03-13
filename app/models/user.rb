@@ -44,6 +44,10 @@ class User < ActiveRecord::Base
   
   def to_s; self.nick; end
   
+  def hash_for_path
+    { :id => self.to_param }
+  end
+  
   def name_and_nick
     self.full_name + " (#{self.nick})"
   end

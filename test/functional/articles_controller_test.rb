@@ -178,7 +178,7 @@ class ArticlesControllerTest < ActionController::TestCase
     articles(:blog).send(:make_permalink)
     articles(:blog).publish!
     date = articles(:blog).published_date
-    put :update, { :year => date.year.to_s, :month => sprintf("%02d", date.month), :day => sprintf("%02d", date.day), :permalink => articles(:blog).permalink, :user_id => articles(:blog).user.nick, :article => { :title => 'yo yo yo' } }, { :id => users(:colin).id }
+    put :update, articles(:blog).hash_for_path.update(:article => { :title => 'yo yo yo' }), { :id => users(:colin).id }
     assert_redirected_to articles(:blog).reload.hash_for_path
     assert_equal "You have successfully updated #{articles(:blog).display_name}.", flash[:notice]
     assert_equal articles(:blog), assigns(:article)
@@ -188,7 +188,7 @@ class ArticlesControllerTest < ActionController::TestCase
     articles(:blog).send(:make_permalink)
     articles(:blog).publish!
     date = articles(:blog).published_date
-    put :update, { :year => date.year.to_s, :month => sprintf("%02d", date.month), :day => sprintf("%02d", date.day), :permalink => articles(:blog).permalink, :user_id => articles(:blog).user.nick, :article => { :title => 'yo yo yo' } }
+    put :update, articles(:blog).hash_for_path.update(:article => { :title => 'yo yo yo' })
     assert_redirected_to login_url
     assert_equal "You need to be logged in to do that.", flash[:warning]
   end
@@ -197,7 +197,7 @@ class ArticlesControllerTest < ActionController::TestCase
     articles(:blog).send(:make_permalink)
     articles(:blog).publish!
     date = articles(:blog).published_date
-    put :update, { :year => date.year.to_s, :month => sprintf("%02d", date.month), :day => sprintf("%02d", date.day), :permalink => articles(:blog).permalink, :user_id => articles(:blog).user.nick, :article => { :title => 'yo yo yo' } }, { :id => users(:nana).id }
+    put :update, articles(:blog).hash_for_path.update(:article => { :title => 'yo yo yo' }), { :id => users(:nana).id }
     assert_redirected_to user_url(users(:nana))
     assert_equal "You are not authorized for that action.", flash[:warning]
   end
@@ -206,7 +206,7 @@ class ArticlesControllerTest < ActionController::TestCase
     articles(:blog).send(:make_permalink)
     articles(:blog).publish!
     date = articles(:blog).published_date
-    put :update, { :year => date.year.to_s, :month => sprintf("%02d", date.month), :day => sprintf("%02d", date.day), :permalink => articles(:blog).permalink, :user_id => articles(:blog).user.nick, :article => { :title => 'yo yo yo' } }, { :id => 234234 }
+    put :update, articles(:blog).hash_for_path.update(:article => { :title => 'yo yo yo' }), { :id => 234234 }
     assert_redirected_to login_url
     assert_equal "You need to be logged in to do that.", flash[:warning]
   end
@@ -215,7 +215,7 @@ class ArticlesControllerTest < ActionController::TestCase
     articles(:blog).send(:make_permalink)
     articles(:blog).publish!
     date = articles(:blog).published_date
-    put :update, { :year => date.year.to_s, :month => sprintf("%02d", date.month), :day => sprintf("%02d", date.day), :permalink => articles(:blog).permalink, :user_id => articles(:blog).user.nick, :article => { :content => ' ' } }, { :id => users(:colin).id }
+    put :update, articles(:blog).hash_for_path.update(:article => { :content => ' ' }), { :id => users(:colin).id }
     assert_template 'edit'
     assert_flash_equal 'There was an error updating your article.', :warning
   end
@@ -236,8 +236,7 @@ class ArticlesControllerTest < ActionController::TestCase
     @request.env["HTTP_REFERER"] = "http://www.cnn.com/"
     articles(:blog).send(:make_permalink)
     articles(:blog).publish!
-    date = articles(:blog).published_date
-    delete :destroy, { :year => date.year.to_s, :month => sprintf("%02d", date.month), :day => sprintf("%02d", date.day), :permalink => articles(:blog).permalink, :user_id => articles(:blog).user.nick }, { :id => users(:colin).id }
+    delete :destroy, articles(:blog).hash_for_path, { :id => users(:colin).id }
     assert_response :redirect
     assert_redirected_to 'http://www.cnn.com'
     assert_equal "You have deleted #{articles(:blog).display_name}.", flash[:notice]
@@ -247,7 +246,7 @@ class ArticlesControllerTest < ActionController::TestCase
     articles(:blog).send(:make_permalink)
     articles(:blog).publish!
     date = articles(:blog).published_date
-    delete :destroy, { :year => date.year.to_s, :month => sprintf("%02d", date.month), :day => sprintf("%02d", date.day), :permalink => articles(:blog).permalink, :user_id => articles(:blog).user.nick }
+    delete :destroy, articles(:blog).hash_for_path
     assert_redirected_to login_url
     assert_equal "You need to be logged in to do that.", flash[:warning]
   end
