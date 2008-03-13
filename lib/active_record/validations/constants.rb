@@ -7,7 +7,7 @@ REGEXP_STR = { # Defaults
                :body           => "[^\\s].+[^\\s]",
                # Model specific:
                :article   => { :permalink => "[a-zA-Z0-9][-a-zA-Z0-9]+[a-zA-Z0-9]" },
-               :entry     => { :location => "[^\\s].+[^\\s]" },
+               :entry     => { :location => "([^\\s].+[^\\s])?" },
                :message   => { :subject => "[^\\s].+[^\\s]" },
                :permission_rule => { :name => "([^\\s].+[^\\s])?" },
                :picture   => {},

@@ -13,7 +13,11 @@ class Entry < ActiveRecord::Base
   validates_with_regexp :location
   
   def to_path
-    { :user_id => self.user.to_param, :id => self.to_param }
+    if self.user.nil?
+      { :id => self.to_param }
+    else
+      { :user_id => self.user.to_param, :id => self.to_param }
+    end
   end
   
   def location_empty?; self.location.blank?; end

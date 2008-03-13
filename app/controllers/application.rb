@@ -69,36 +69,27 @@ class ApplicationController < ActionController::Base
   end
   
   def create(*args, &block)
-    yield :before if block_given?
     options = args.extract_options!
     without_association = options[:without_association]
-    yield :before_instantiate if block_given?
     instance_variable_set("#{shared_setup_options[:instance_var]}",
         shared_setup_options[:model_class].new(params[shared_setup_options[:instance_sym]].merge(without_association ? {} : { :user => get_viewer }) ) )
 
-    yield :after_instantiate if block_given?
     if instance_variable_get("#{shared_setup_options[:instance_var]}").save
       create_uploaded_picture_for(instance_variable_get("#{shared_setup_options[:instance_var]}")) if picture_uploaded?
-      yield :after_save if block_given?
       msg = "You have successfully created your #{shared_setup_options[:instance_name]}."
-      yield :before_response if block_given?
       respond_to do |format|
         format.html do
           flash[:notice] = msg
-          redirect_to instance_variable_get("#{shared_setup_options[:instance_var]}") rescue instance_variable_get("#{shared_setup_options[:instance_var]}").to_path
+          redirect_to instance_variable_get("#{shared_setup_options[:instance_var]}")
         end
         format.js { flash.now[:notice] = msg }
       end
-      yield :after_response if block_given?
     else
-      yield :after_not_save if block_given?
       flash.now[:warning] = "There was an error creating your #{shared_setup_options[:instance_name]}."
-      yield :before_error_response if block_given?
       respond_to do |format|
         format.html { render :action => 'new' }
         format.js { render :action => 'create_error' }
       end
-      yield :after_error_response if block_given?
     end
   end
   

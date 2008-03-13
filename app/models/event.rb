@@ -14,10 +14,10 @@ class Event < ActiveRecord::Base
   end
   
   def to_path
-    if self.user
-      { :user_id => self.user.nick, :id => self.to_param }
+    if self.user.nil?
+      { :id => self.to_param }      
     else
-      { :id => self.to_param }
+      { :user_id => self.user.to_param, :id => self.to_param }
     end
   end
   

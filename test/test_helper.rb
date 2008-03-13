@@ -45,4 +45,19 @@ class Test::Unit::TestCase
   def assert_flash_exists(type)
     assert_tag :tag => 'div', :attributes => { :id => "flash#{type.to_s.capitalize}" }
   end
+  
+  def as(*args)
+    opts = args.extract_options!
+    hash = { :id => nil }
+    case arg = args.shift
+    when Symbol
+      hash[:id] = users(arg).id
+    when Fixnum
+      hash[:id] = arg
+    else
+      nil
+    end
+    hash.merge(opts)
+    hash
+  end
 end

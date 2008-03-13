@@ -3,3 +3,10 @@
 class Fixnum
   def to_id; self; end;
 end
+
+class PathHash < Hash
+  def with(opts)
+    opts.each {|key, val| self[key] = val }
+    self
+  end
+end

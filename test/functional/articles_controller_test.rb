@@ -95,23 +95,23 @@ class ArticlesControllerTest < ActionController::TestCase
   end
  
   def test_new_with_login
-    get :new, { :user_id => 'colin' }, { :id => users(:colin).id }
+    get :new, { :user_id => 'colin' }, as(:colin)
     assert_response :success
   end
   
   def test_new_for_someone_else
-    get :new, { :user_id => 'nana' }, { :id => users(:colin).id }
+    get :new, { :user_id => 'nana' }, as(:colin)
     assert_redirected_to new_article_url(users(:colin))
   end
   
   def test_new_with_wrong_nick
-    get :new, { :user_id => 'colina' }, { :id => users(:colin).id }
+    get :new, { :user_id => 'colina' }, as(:colin)
     assert_template 'error'
     assert_flash_equal "That User could not be found. Please check your address.", :warning
   end
   
   def test_create
-    post :create, { :article => { :title => "Blah blahdy la la la", :content => "dum dum dum dum dum", :publish => "1" }, :user_id => 'colin' }, { :id => users(:colin).id }
+    post :create, { :article => { :title => "Blah blahdy la la la", :content => "dum dum dum dum dum", :publish => "1" }, :user_id => 'colin' }, as(:colin)
     article = Article.find(:first, :order => 'id DESC', :conditions => ["title = ?", "Blah blahdy la la la"])
     assert article.valid?
     assert_redirected_to article_url(article.to_path)
@@ -125,14 +125,14 @@ class ArticlesControllerTest < ActionController::TestCase
   end
   
   def test_create_with_error
-    post :create, { :article => { :title => "", :content => "dum dum dum"}, :user_id => 'colin' }, { :id => users(:colin).id }
+    post :create, { :article => { :title => "", :content => "dum dum dum"}, :user_id => 'colin' }, as(:colin)
     assert_not_nil assigns(:article)
     assert !assigns(:article).valid?
     assert_flash_equal "There was an error creating your article.", :warning
   end
   
   def test_create_with_picture
-    post :create, { :article => { :title => "this is a picture post", :content => "dum dum dum dum dum dum dum", :publish => "1" }, :picture => { :uploaded_data => fixture_file_upload("yuri.jpg", "image/jpg") }, :user_id => 'colin' }, { :id => users(:colin).id }
+    post :create, { :article => { :title => "this is a picture post", :content => "dum dum dum dum dum dum dum", :publish => "1" }, :picture => { :uploaded_data => fixture_file_upload("yuri.jpg", "image/jpg") }, :user_id => 'colin' }, as(:colin)
     article = Article.find_by_title('this is a picture post')
     assert_not_nil article[:permalink]
     assert article.valid?
@@ -143,7 +143,7 @@ class ArticlesControllerTest < ActionController::TestCase
   def test_edit
     articles(:blog).send(:make_permalink)
     articles(:blog).publish!
-    get :edit, articles(:blog).to_path, { :id => users(:colin).id }
+    get :edit, articles(:blog).to_path, as(:colin)
     assert_response :success
     assert_equal users(:colin), articles(:blog).user
     assert_template 'edit'
@@ -161,7 +161,7 @@ class ArticlesControllerTest < ActionController::TestCase
   def test_edit_without_ownership
     articles(:blog).send(:make_permalink)
     articles(:blog).publish!
-    get :edit, articles(:blog).to_path, { :id => users(:nana).id }
+    get :edit, articles(:blog).to_path, as(:nana)
     assert_redirected_to user_url(users(:nana))
     assert_equal "You are not authorized for that action.", flash[:warning]
   end
@@ -170,7 +170,7 @@ class ArticlesControllerTest < ActionController::TestCase
     articles(:blog).send(:make_permalink)
     articles(:blog).publish!
     date = articles(:blog).published_date
-    get :edit, { :permalink => articles(:blog).permalink.chop, :user_id => articles(:blog).user.nick, :year => date.year.to_s, :month => sprintf("%02d", date.month), :day => sprintf("%02d", date.day) }, { :id => users(:colin).id }
+    get :edit, { :permalink => articles(:blog).permalink.chop, :user_id => articles(:blog).user.nick, :year => date.year.to_s, :month => sprintf("%02d", date.month), :day => sprintf("%02d", date.day) }, as(:colin)
     assert_flash_equal 'That article could not be found. Please check the address.', :warning
   end
   
@@ -178,7 +178,7 @@ class ArticlesControllerTest < ActionController::TestCase
     articles(:blog).send(:make_permalink)
     articles(:blog).publish!
     date = articles(:blog).published_date
-    put :update, articles(:blog).to_path.update(:article => { :title => 'yo yo yo' }), { :id => users(:colin).id }
+    put :update, articles(:blog).to_path.update(:article => { :title => 'yo yo yo' }), as(:colin)
     assert_redirected_to articles(:blog).reload.to_path
     assert_equal "You have successfully updated #{articles(:blog).display_name}.", flash[:notice]
     assert_equal articles(:blog), assigns(:article)
@@ -197,7 +197,7 @@ class ArticlesControllerTest < ActionController::TestCase
     articles(:blog).send(:make_permalink)
     articles(:blog).publish!
     date = articles(:blog).published_date
-    put :update, articles(:blog).to_path.update(:article => { :title => 'yo yo yo' }), { :id => users(:nana).id }
+    put :update, articles(:blog).to_path.update(:article => { :title => 'yo yo yo' }), as(:nana)
     assert_redirected_to user_url(users(:nana))
     assert_equal "You are not authorized for that action.", flash[:warning]
   end
@@ -215,7 +215,7 @@ class ArticlesControllerTest < ActionController::TestCase
     articles(:blog).send(:make_permalink)
     articles(:blog).publish!
     date = articles(:blog).published_date
-    put :update, articles(:blog).to_path.update(:article => { :content => ' ' }), { :id => users(:colin).id }
+    put :update, articles(:blog).to_path.update(:article => { :content => ' ' }), as(:colin)
     assert_template 'edit'
     assert_flash_equal 'There was an error updating your article.', :warning
   end
@@ -223,20 +223,20 @@ class ArticlesControllerTest < ActionController::TestCase
   def test_unpublish
     articles(:blog).send(:make_permalink)
     articles(:blog).publish!
-    put :unpublish, articles(:blog).to_path, { :id => users(:colin).id }
+    put :unpublish, articles(:blog).to_path, as(:colin)
     assert_redirected_to draft_url(articles(:blog).reload.to_path)
     assert_equal "You have unpublished #{articles(:blog).display_name}.", flash[:notice]
   end
   
   def test_unpublish_unpublished
-    assert_raise(ActionController::RoutingError) { put :unpublish, articles(:blog).to_path, { :id => users(:colin).id } }
+    assert_raise(ActionController::RoutingError) { put :unpublish, articles(:blog).to_path, as(:colin) }
   end
   
   def test_destroy
     @request.env["HTTP_REFERER"] = "http://www.cnn.com/"
     articles(:blog).send(:make_permalink)
     articles(:blog).publish!
-    delete :destroy, articles(:blog).to_path, { :id => users(:colin).id }
+    delete :destroy, articles(:blog).to_path, as(:colin)
     assert_response :redirect
     assert_redirected_to 'http://www.cnn.com'
     assert_equal "You have deleted #{articles(:blog).display_name}.", flash[:notice]
@@ -256,7 +256,7 @@ class ArticlesControllerTest < ActionController::TestCase
   def test_draft_edit
     articles(:blog).send(:make_permalink, :with_save => true)
     assert articles(:blog).draft?
-    get :edit, articles(:blog).to_path, { :id => users(:colin).id }
+    get :edit, articles(:blog).to_path, as(:colin)
     assert_response :success
     assert_template 'edit', articles(:blog).to_path.inspect
   end
@@ -264,7 +264,7 @@ class ArticlesControllerTest < ActionController::TestCase
   def test_draft_edit_with_wrong_permalink
     articles(:blog).send(:make_permalink, :with_save => true)
     assert articles(:blog).draft?
-    get :edit, articles(:blog).to_path.update(:permalink => articles(:blog).permalink.chop), { :id => users(:colin).id }
+    get :edit, articles(:blog).to_path.update(:permalink => articles(:blog).permalink.chop), as(:colin)
     assert_template 'error'
     assert_flash_equal 'That article could not be found. Please check the address.', :warning
   end
@@ -272,7 +272,7 @@ class ArticlesControllerTest < ActionController::TestCase
   def test_draft_edit_with_wrong_nick
     articles(:blog).send(:make_permalink, :with_save => true)
     assert articles(:blog).draft?
-    get :edit, articles(:blog).to_path.update(:user_id => articles(:blog).user.nick.chop), { :id => users(:colin).id }
+    get :edit, articles(:blog).to_path.update(:user_id => articles(:blog).user.nick.chop), as(:colin)
     assert_template 'error'
     assert_flash_equal 'That article could not be found. Please check the address.', :warning
   end
@@ -288,7 +288,7 @@ class ArticlesControllerTest < ActionController::TestCase
   def test_draft_edit_with_wrong_user
     articles(:blog).send(:make_permalink, :with_save => true)
     assert articles(:blog).draft?
-    get :edit, articles(:blog).to_path, { :id => users(:nana).id }
+    get :edit, articles(:blog).to_path, as(:nana)
     assert_redirected_to user_url(users(:nana))
     assert_equal "You are not authorized for that action.", flash[:warning]
   end
@@ -304,7 +304,7 @@ class ArticlesControllerTest < ActionController::TestCase
   def test_draft_show
     articles(:blog).send(:make_permalink, :with_save => true)
     assert articles(:blog).draft?
-    get :show, articles(:blog).to_path, { :id => users(:colin).id }
+    get :show, articles(:blog).to_path, as(:colin)
     assert_response :success
     assert_template 'show', articles(:blog).to_path.inspect
   end
@@ -312,7 +312,7 @@ class ArticlesControllerTest < ActionController::TestCase
   def test_draft_show_with_only_permalink
     articles(:blog).send(:make_permalink, :with_save => true)
     assert articles(:blog).draft?
-    get :show, { :permalink => articles(:blog).permalink }, { :id => users(:colin).id }
+    get :show, { :permalink => articles(:blog).permalink }, as(:colin)
     assert_response 303
     assert_redirected_to draft_url(articles(:blog).to_path)
   end
@@ -320,7 +320,7 @@ class ArticlesControllerTest < ActionController::TestCase
   def test_draft_show_with_wrong_permalink # TODO: draft show action need to be authorized
     articles(:blog).send(:make_permalink, :with_save => true)
     assert articles(:blog).draft?
-    get :show, articles(:blog).to_path.update(:permalink => articles(:blog).permalink.chop), { :id => users(:colin).id }
+    get :show, articles(:blog).to_path.update(:permalink => articles(:blog).permalink.chop), as(:colin)
     assert_template 'error'
     assert_flash_equal 'That article could not be found. Please check the address.', :warning
   end
@@ -328,7 +328,7 @@ class ArticlesControllerTest < ActionController::TestCase
   def test_draft_show_with_wrong_nick
     articles(:blog).send(:make_permalink, :with_save => true)
     assert articles(:blog).draft?
-    get :show, articles(:blog).to_path.update(:user_id => articles(:blog).user.nick.chop), { :id => users(:colin).id }
+    get :show, articles(:blog).to_path.update(:user_id => articles(:blog).user.nick.chop), as(:colin)
     assert_template 'error'
     assert_flash_equal 'That article could not be found. Please check the address.', :warning
   end
@@ -344,7 +344,7 @@ class ArticlesControllerTest < ActionController::TestCase
   def test_draft_show_with_wrong_user
     articles(:blog).send(:make_permalink, :with_save => true)
     assert articles(:blog).draft?
-    get :show, articles(:blog).to_path, { :id => users(:nana).id }
+    get :show, articles(:blog).to_path, as(:nana)
     assert_redirected_to user_url(users(:nana))
     assert_equal "You are not authorized for that action.", flash[:warning]
   end
@@ -360,7 +360,7 @@ class ArticlesControllerTest < ActionController::TestCase
   def test_draft_update
     articles(:blog).send(:make_permalink, :with_save => true)
     assert articles(:blog).draft?
-    put :update, articles(:blog).to_path.merge(:article => { :content => "la dee la" }), { :id => users(:colin).id }
+    put :update, articles(:blog).to_path.merge(:article => { :content => "la dee la" }), as(:colin)
     assert_redirected_to draft_url(articles(:blog).to_path)
     assert_equal "You have successfully updated #{articles(:blog).display_name}.", flash[:notice]
   end
@@ -369,7 +369,7 @@ class ArticlesControllerTest < ActionController::TestCase
     new_title = "This is a new title."
     articles(:blog).send(:make_permalink, :with_save => true)
     assert articles(:blog).draft?
-    put :update, articles(:blog).to_path.merge(:article => { :title => new_title }), { :id => users(:colin).id }
+    put :update, articles(:blog).to_path.merge(:article => { :title => new_title }), as(:colin)
     assert_redirected_to draft_url(articles(:blog).to_path)
     assert_equal "You have successfully updated #{articles(:blog).display_name}.", flash[:notice]
     assert_not_equal new_title, articles(:blog).reload.title
@@ -378,7 +378,7 @@ class ArticlesControllerTest < ActionController::TestCase
   def test_draft_update_with_wrong_permalink
     articles(:blog).send(:make_permalink, :with_save => true)
     assert articles(:blog).draft?
-    put :update, articles(:blog).to_path.merge(:article => { :content => "la dee la" }, :permalink => articles(:blog).permalink.chop), { :id => users(:colin).id }
+    put :update, articles(:blog).to_path.merge(:article => { :content => "la dee la" }, :permalink => articles(:blog).permalink.chop), as(:colin)
     assert_template 'error'
     assert_flash_equal 'That article could not be found. Please check the address.', :warning
   end
@@ -386,7 +386,7 @@ class ArticlesControllerTest < ActionController::TestCase
   def test_draft_update_with_wrong_nick
     articles(:blog).send(:make_permalink, :with_save => true)
     assert articles(:blog).draft?
-    put :update, articles(:blog).to_path.merge(:article => { :content => 'la dee la' }, :user_id => articles(:blog).user.nick.chop), { :id => users(:colin).id }
+    put :update, articles(:blog).to_path.merge(:article => { :content => 'la dee la' }, :user_id => articles(:blog).user.nick.chop), as(:colin)
     assert_template 'error'
     assert_flash_equal 'That article could not be found. Please check the address.', :warning
   end
@@ -402,7 +402,7 @@ class ArticlesControllerTest < ActionController::TestCase
   def test_draft_update_with_wrong_user # TODO: test the attr protected stuff. Make sure title uneditab.
     articles(:blog).send(:make_permalink, :with_save => true)
     assert articles(:blog).draft?
-    put :update, articles(:blog).to_path.merge(:article => { :content => "la dee la" }), { :id => users(:nana).id }
+    put :update, articles(:blog).to_path.merge(:article => { :content => "la dee la" }), as(:nana)
     assert_redirected_to user_url(users(:nana))
     assert_equal "You are not authorized for that action.", flash[:warning]
   end
@@ -419,7 +419,7 @@ class ArticlesControllerTest < ActionController::TestCase
     articles(:blog).send(:make_permalink, :with_save => true)
     assert articles(:blog).draft?
     assert articles(:blog).to_path.keys.size == 2 # nick and permalink
-    put :publish, articles(:blog).to_path, { :id => users(:colin).id }
+    put :publish, articles(:blog).to_path, as(:colin)
     assert_redirected_to article_url(articles(:blog).reload.to_path)
     assert_equal "You have published #{articles(:blog).display_name}.", flash[:notice]
   end
@@ -427,7 +427,7 @@ class ArticlesControllerTest < ActionController::TestCase
   def test_draft_publish_with_wrong_permalink
     articles(:blog).send(:make_permalink, :with_save => true)
     assert articles(:blog).draft?
-    put :publish, articles(:blog).to_path.merge(:permalink => articles(:blog).permalink.chop), { :id => users(:colin).id }
+    put :publish, articles(:blog).to_path.merge(:permalink => articles(:blog).permalink.chop), as(:colin)
     assert_template 'error'
     assert_flash_equal "That article could not be found. Please check the address.", :warning
   end
@@ -435,7 +435,7 @@ class ArticlesControllerTest < ActionController::TestCase
   def test_draft_publish_with_wrong_nick
     articles(:blog).send(:make_permalink, :with_save => true)
     assert articles(:blog).draft?
-    put :publish, articles(:blog).to_path.merge(:user_id => articles(:blog).user.nick.chop), { :id => users(:colin).id }
+    put :publish, articles(:blog).to_path.merge(:user_id => articles(:blog).user.nick.chop), as(:colin)
     assert_template 'error'
     assert_flash_equal "That article could not be found. Please check the address.", :warning
   end
@@ -452,7 +452,7 @@ class ArticlesControllerTest < ActionController::TestCase
     articles(:blog).send(:make_permalink, :with_save => true)
     assert articles(:blog).draft?
     assert_not_nil articles(:blog)[:permalink]
-    put :publish, articles(:blog).to_path, { :id => users(:nana).id }
+    put :publish, articles(:blog).to_path, as(:nana)
     assert_redirected_to user_url(users(:nana)), articles(:blog).to_path.inspect
     assert_equal "You are not authorized for that action.", flash[:warning]
   end
@@ -469,7 +469,7 @@ class ArticlesControllerTest < ActionController::TestCase
     @request.env["HTTP_REFERER"] = "http://www.cnn.com/"
     articles(:blog).send(:make_permalink, :with_save => true)
     assert articles(:blog).draft?
-    delete :destroy, articles(:blog).to_path, { :id => users(:colin).id }
+    delete :destroy, articles(:blog).to_path, as(:colin)
     assert_response :redirect
     assert_equal "You have deleted #{articles(:blog).display_name}.", flash[:notice]
     assert_redirected_to 'http://www.cnn.com'
@@ -488,7 +488,7 @@ class ArticlesControllerTest < ActionController::TestCase
     @request.env["HTTP_REFERER"] = "http://www.cnn.com/"
     articles(:blog).send(:make_permalink, :with_save => true)
     assert articles(:blog).draft?
-    delete :destroy, articles(:blog).to_path, { :id => users(:nana).id }
+    delete :destroy, articles(:blog).to_path, as(:nana)
     assert_redirected_to user_url(users(:nana))
     assert_equal "You are not authorized for that action.", flash[:warning]
   end
