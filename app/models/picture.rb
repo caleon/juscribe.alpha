@@ -33,6 +33,7 @@ class Picture < ActiveRecord::Base
     def initialize(attrs={}); @attrs = attrs; end
     def [](key); @attrs[key]; end
     def set(key, val); @attrs[key] = val; end
+    def get(key); @attrs[key]; end
     def valid_with?(width, height)
       self[:crop_width] > 0 && self[:crop_height] > 0 && self[:crop_left] + self[:crop_width] > 0 &&
       self[:crop_top] + self[:crop_height] > 0 && self[:crop_left] < width && self[:crop_top] < height
@@ -46,7 +47,7 @@ class Picture < ActiveRecord::Base
   def crop_params; @crop_params ||= CropParams.new; end
   def set_crop_params(attrs); @crop_params = CropParams.new(attrs); end; private :set_crop_params
   [ :crop_left, :crop_top, :crop_width, :crop_height, :stencil_width, :stencil_height, :resize_to_stencil ].each do |key|
-    class_eval %{ def #{key}=(val); crop_params.set(:#{key}, val.to_i); end }
+    class_eval %{ def #{key}=(val); crop_params.set(:#{key}, val.to_i); end; def #{key}; crop_params.get(:#{key}); end }
   end # :resize_to_stencil will have to be set to 1 or "1" to be true
   
   def file_path(size=nil) # TODO: symlink uploads directory in images to shared one.
@@ -70,8 +71,8 @@ class Picture < ActiveRecord::Base
       img.with_crop(*par.reveal) do |cropped_img|
         if par[:resize_to_stencil]
           cropped_img.resize(par[:stencil_width], par[:stencil_height]) do |crop_resized_img|
-            cropped_resized_img.save temp_path
-            callback_with_args :after_resize, cropped_resize_img
+            crop_resized_img.save temp_path
+            callback_with_args :after_resize, crop_resized_img
           end
         else
           cropped_img.save temp_path

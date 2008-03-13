@@ -20,9 +20,9 @@ class UsersController < ApplicationController
     @user = User.new(params[:user])
     @user.nick, @user.email = params[:user][:nick], params[:user][:email]
     if @user.save
-      create_uploaded_picture_for(@user) if picture_uploaded?
       session[:user_id] = @user.id
       get_viewer
+      create_uploaded_picture_for(@user, :save => true) if picture_uploaded?
       msg = "You are now a registered user! Welcome!"
       respond_to do |format|
         format.html do

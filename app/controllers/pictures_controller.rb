@@ -1,6 +1,11 @@
 class PicturesController < ApplicationController
   use_shared_options
   
+  def edit
+    return unless setup
+    @use_kropper = true
+  end
+  
   def create
     return if @picture = create_uploaded_picture_for(get_viewer, :save => true, :respond => true)
     respond_to do |format|

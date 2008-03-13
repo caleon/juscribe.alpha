@@ -247,11 +247,13 @@ class ApplicationController < ActionController::Base
   
   def create_uploaded_picture_for(record, opts={})
     raise unless picture_uploaded? && !record.nil? && (record.respond_to?(:pictures) || record.respond_to?(:picture))
-    params[:picture].merge!(:user => get_viewer)
-    picture = record.pictures.new(params[:picture]) rescue record.picture.new(params[:picture])
-    return picture if !opts[:save]
-
-    if picture.save
+    params[:picture].merge!(:user => get_viewer || opts[:user])
+    if !opts[:save]
+      picture = record.pictures.new(params[:picture]) rescue record.picture.new(params[:picture])
+      return picture
+    end
+    debugger
+    if record.pictures.create(params[:picture])
       msg = "Your picture has been uploaded."
       respond_to do |format|
         format.html { flash[:notice] = msg; redirect_to opts[:redirect_to] || edit_picture_url(picture) }

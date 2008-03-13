@@ -1,7 +1,7 @@
 module JavascriptHelper
   
-  def add_onload(*args)
-    # TODO: Set this up.
+  def add_onload(arg)
+    (@onloads ||= []) << arg
   end
   
   def add_behavior(selector, behavior)
