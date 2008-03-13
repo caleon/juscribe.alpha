@@ -1,0 +1,6 @@
+<div class="sub navigation">
+	<ul class="navigationList">
+		<%= navi_el "Inbox", user_messages_path(viewer) %>
+		<%= navi_el "Sent", user_messages_path(viewer, :show => 'sent') %>
+	</ul>
+</div>

@@ -4,29 +4,10 @@ class User < ActiveRecord::Base
   has_many :songs, :dependent => :nullify
   has_many :events, :dependent => :nullify
   has_many :projects, :dependent => :nullify
-  has_many :messages, :foreign_key => 'recipient_id', :conditions => "sent IS TRUE",
-           :order => 'messages.id DESC', :dependent => :nullify, :include => :sender
-  has_many :some_messages, :class_name => 'Message', :foreign_key => 'recipient_id',
-           :conditions => "sent IS TRUE", :order => 'messages.id DESC', :dependent => :nullify,
-           :include => { :sender => :primary_picture }, :limit => 20 do
-             def after(offset); find(:all, :offset => offset); end
-           end
+  has_many :messages, :foreign_key => 'recipient_id', :dependent => :nullify,
+           :order => 'messages.id DESC'
   has_many :sent_messages, :class_name => 'Message', :foreign_key => 'sender_id',
-           :conditions => "sent IS TRUE", :order => 'messages.id DESC', :dependent => :nullify,
-           :include => :recipient
-  has_many :some_sent_messages, :class_name => 'Message', :foreign_key => 'sender_id',
-           :conditions => "sent IS TRUE", :order => 'messages.id DESC', :dependent => :nullify,
-           :include => { :recipient => :primary_picture }, :limit => 20 do
-             def after(offset); find(:all, :offset => offset); end
-           end
-  has_many :draft_messages, :class_name => 'Message', :foreign_key => 'sender_id',
-           :conditions => "sent IS FALSE", :order => 'messages.id DESC', :dependent => :nullify,
-           :include => :recipient
-  has_many :some_draft_messages, :class_name => 'Message', :foreign_key => 'sender_id',
-           :conditions => "sent IS FALSE", :order => 'messages.id DESC', :dependent => :nullify,
-           :include => { :recipient => :primary_picture }, :limit => 20 do
-             def after(offset); find(:all, :offset => offset); end
-           end
+           :order => 'messages.id DESC'
   has_many :owned_taggings, :class_name => 'Tagging', :dependent => :nullify
   has_many :owned_pictures, :class_name => 'Picture', :dependent => :nullify
   has_many :pictures, :as => :depictable, :order => :position, :dependent => :nullify

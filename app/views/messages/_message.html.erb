@@ -1,0 +1,7 @@
+<%=h message.subject %><br />
+<%=h message.body %>
+<br /><br />
+from: <%= link_to message.sender.nick, message.sender %>
+<br />
+to: <%= link_to message.recipient.nick, message.recipient %>
+<br /><br />

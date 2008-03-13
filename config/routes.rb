@@ -77,7 +77,7 @@ ActionController::Routing::Routes.draw do |map|
                                                     
   end
 
-  map.resources :messages, :member => { :send => :put } # Check that model is clippable
+  map.resources :messages, :member => { :transmit => :put } # Check that model is clippable
   
   map.resources(:pictures) {|picture| picture.resources :clips }
 

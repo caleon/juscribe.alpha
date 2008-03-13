@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 47) do
+ActiveRecord::Schema.define(:version => 48) do
 
   create_table "articles", :force => true do |t|
     t.string   "title"
@@ -87,7 +87,6 @@ ActiveRecord::Schema.define(:version => 47) do
     t.integer  "sender_id"
     t.string   "subject"
     t.text     "body"
-    t.boolean  "sent",         :default => false
     t.boolean  "read",         :default => false
     t.datetime "created_at"
     t.datetime "updated_at"

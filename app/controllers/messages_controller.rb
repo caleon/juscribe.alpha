@@ -1,16 +1,18 @@
 # TODO: setup controller-level check for #accessible_by?
 class MessagesController < ApplicationController  
   use_shared_options
-  
   verify_login_on :index, :show, :new, :create, :edit, :update, :destroy, :send
-  # Following allows #setup to check editable_by? with get_viewer
   authorize_on :show, :edit, :update, :destroy, :send
   
+  # Following allows #setup to check editable_by? with get_viewer
+  
   def index
-    raise ArgumentError unless (params[:show].nil? || ['draft', 'sent'].include?(params[:show]))
-    find_opts = get_find_opts(:order => 'id DESC')
-    method_part = params.delete(:show).to_s.gsub!(/(draft|sent)/, '\1_')
-    @messages = get_viewer.send(:"some_#{method_part}messages").find(:all, find_opts)
+    find_opts = get_find_opts(:order => 'messages.id DESC')
+    if params[:show] == 'sent'
+      @messages = Message.find(:all, find_opts.merge(:conditions => ["sender_id = ?", get_viewer.id]))
+    else
+      @messages = Message.find(:all, find_opts.merge(:conditions => ["recipient_id = ?", get_viewer.id]))
+    end
     respond_to do |format|
       format.html
       format.js
@@ -43,33 +45,4 @@ class MessagesController < ApplicationController
     end
   end
   
-  def edit
-    super(:include => [ :sender, :recipient ])
-  end
-  
-  def update
-    super do |marker|
-      case marker
-      when :before_response
-        msg = "Your message has been " + (params[:message][:transmit] ? "sent." : "saved.")
-      end
-    end
-  end
-  
-  def send
-    return unless setup
-    if @message.transmit
-      msg = "Your message has been sent."
-      respond_to do |format|
-        format.html { flash[:notice] = msg; redirect_to @message }
-        format.js { flash.now[:notice] = msg }
-      end
-    else
-      flash.now[:warning]  = "Your message could not be sent."
-      respond_to do |format|
-        format.html { render :action => 'show' }
-        format.js { render :action => 'send_error' }
-      end
-    end
-  end
 end

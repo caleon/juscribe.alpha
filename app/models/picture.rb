@@ -13,7 +13,7 @@ class Picture < ActiveRecord::Base
                   :thumbnails => { :thumb => '100x100' },
                   :processor => 'ImageScience'
   
-  validates_as_attachment  unless RAILS_ENV == 'test'
+  validates_as_attachment
   # ...does the following:  validates_presence_of :size, :content_type, :filename
   #                         validate :attachment_attributes_valid?
   validates_presence_of :depictable_type, :depictable_id, :user_id
@@ -44,6 +44,7 @@ class Picture < ActiveRecord::Base
     end
   end
   
+  # Make this method grab values from existing column values in DB table
   def crop_params; @crop_params ||= CropParams.new; end
   def set_crop_params(attrs); @crop_params = CropParams.new(attrs); end; private :set_crop_params
   [ :crop_left, :crop_top, :crop_width, :crop_height, :stencil_width, :stencil_height, :resize_to_stencil ].each do |key|
@@ -51,7 +52,7 @@ class Picture < ActiveRecord::Base
   end # :resize_to_stencil will have to be set to 1 or "1" to be true
   
   def file_path(size=nil) # TODO: symlink uploads directory in images to shared one.
-    "uploads/" + self.depictable_type + '/' + self.id.to_s + ".jpg" # I guess jpg is the output of the image processing.
+    public_filename
   end
   
   # set_crop_params only for internal use. Use built-in attribute-setter
