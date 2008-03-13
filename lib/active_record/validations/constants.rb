@@ -12,7 +12,7 @@ REGEXP_STR = { # Defaults
                :permission_rule => { :name => "([^\\s].+[^\\s])?" },
                :picture   => {},
                :project   => {},
-               :song      => { :artist => "[^\\s].+[^\\s]"},
+               :song      => { :artist => "[^\\s].+[^\\s]" },
                :tag       => {},
                :user      => { :nick => "[a-zA-Z][_a-zA-Z0-9]+",
                                :first_name => "[a-zA-Z][-a-zA-Z'\\s]*[a-zA-Z]",

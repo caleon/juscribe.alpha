@@ -55,6 +55,15 @@ class Picture < ActiveRecord::Base
     public_filename
   end
   
+  def hash_for_path
+    if self.depictable.nil?
+      { :id => self.to_param }
+    else
+      depictable_sym = "#{self.depictable_type.downcase}_id".intern
+      { depictable_sym => self.depictable.to_param, :id => self.to_param }      
+    end
+  end
+  
   # set_crop_params only for internal use. Use built-in attribute-setter
   # from controller, i.e. Picture.new(params) which will automatically
   # instantiate and set a CropParams object.

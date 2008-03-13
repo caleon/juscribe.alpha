@@ -7,6 +7,10 @@ module ActiveRecord
     # The following is to allow either a model or its ID to be supplied as
     # arguments to a method.  
     def to_id; self[:id].to_i; end
+    
+    def hash_for_path
+      self.to_param
+    end
   
     def internal_name(opts={})
       "#{self.to_param} (#{self.class}-#{self[:id]})"

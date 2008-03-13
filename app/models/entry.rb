@@ -12,6 +12,10 @@ class Entry < ActiveRecord::Base
   validates_with_regexp :content
   validates_with_regexp :location
   
+  def hash_for_path
+    { :user_id => self.user.nick, :id => self.id }
+  end
+  
   def location_empty?; self.location.blank?; end
   def content_empty?; self.content.blank?; end
   

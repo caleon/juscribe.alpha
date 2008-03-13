@@ -18,6 +18,14 @@ class Article < ActiveRecord::Base
   def to_s; self.title; end
   def name; self.title; end
   def to_param; self.permalink; end
+  def permalink
+    self[:permalink] ||= make_permalink
+  end
+  
+  def title=(str)
+    self[:title] = str
+    make_permalink
+  end
   
   def hash_for_path
     if self.draft?
@@ -52,15 +60,6 @@ class Article < ActiveRecord::Base
     self.publish! if [ "Publish", "yes", "Yes", "y", "Y", "1", 1, "true", true].include?(val)
   end
   
-  def title=(str)
-    self[:title] = str
-    make_permalink
-  end
-  
-  def permalink
-    self[:permalink] ||= make_permalink
-  end
-  
   def self.primary_find(*args); find_by_params(*args); end
   
   def self.find_by_params(params, opts={})
@@ -78,23 +77,20 @@ class Article < ActiveRecord::Base
     end
   end
   
-  # Gets rid of quotation marks, replaces all non-alphanumeric characters
-  # with dashes, removes multiple adjacent dashes, strips dashes from
-  # beginning and end.
-  def self.permalink_for(title)
-    str = title.gsub(/['"]+/i, '').gsub(/[^a-z0-9]+/i, '-').gsub(/-{2,}/, '-').gsub(/^-/, '').gsub(/-$/, '')
+  def self.permalink_for(name)
+    str = name.gsub(/['"]+/i, '').gsub(/[^a-z0-9]+/i, '-').gsub(/-{2,}/, '-').gsub(/^-/, '').gsub(/-$/, '')
     str.chop! if str.last == '-'
     str
   end
-    
+  
   private
   def make_permalink(opts={})
-    str = Article.permalink_for(opts[:title] || self.title)
+    str = Article.permalink_for(self[:title] || self.name)
     self.permalink = str
     self.save if opts[:with_save]
     str
   end
-  
+    
   def verify_non_empty_permalink
     make_permalink if self[:permalink].blank?
   end

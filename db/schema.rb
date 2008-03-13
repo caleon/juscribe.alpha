@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 48) do
+ActiveRecord::Schema.define(:version => 49) do
 
   create_table "articles", :force => true do |t|
     t.string   "title"
@@ -71,6 +71,7 @@ ActiveRecord::Schema.define(:version => 48) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "style"
+    t.string   "permalink"
   end
 
   create_table "memberships", :force => true do |t|
@@ -172,6 +173,7 @@ ActiveRecord::Schema.define(:version => 48) do
     t.datetime "updated_at"
     t.integer  "list_id"
     t.integer  "position"
+    t.string   "permalink"
   end
 
   create_table "taggings", :force => true do |t|

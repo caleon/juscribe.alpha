@@ -11,12 +11,11 @@ class Group < ActiveRecord::Base
   has_many :pictures, :as => :depictable
   
   validates_presence_of :name, :user_id
-  validates_uniqueness_of :name
   validates_length_of :name, :in => (3..20)
   validates_with_regexp :name
   
   attr_protected :rank
-    
+      
   def editable_by?(user)
     self.users.admin.include?(user)
   end
