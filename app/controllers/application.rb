@@ -85,7 +85,7 @@ class ApplicationController < ActionController::Base
       respond_to do |format|
         format.html do
           flash[:notice] = msg
-          redirect_to instance_variable_get("#{shared_setup_options[:instance_var]}") rescue instance_variable_get("#{shared_setup_options[:instance_var]}").hash_for_path
+          redirect_to instance_variable_get("#{shared_setup_options[:instance_var]}") rescue instance_variable_get("#{shared_setup_options[:instance_var]}").to_path
         end
         format.js { flash.now[:notice] = msg }
       end

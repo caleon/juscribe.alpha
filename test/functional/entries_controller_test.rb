@@ -3,11 +3,11 @@ require File.dirname(__FILE__) + '/../test_helper'
 class EntriesControllerTest < ActionController::TestCase
 
   def test_index
-    get :index, entries(:happenings).hash_for_path
+    get :index, entries(:happenings).to_path
   end
   
   def test_show
-    get :show, entries(:happenings).hash_for_path
+    get :show, entries(:happenings).to_path
   end
   
   def test_new

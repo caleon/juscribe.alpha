@@ -23,7 +23,7 @@ class List < ActiveRecord::Base
     self[:permalink] ||= make_permalink
   end
   
-  def hash_for_path
+  def to_path
     { :user_id => self.user.to_param, :id => self.to_param }
   end
   

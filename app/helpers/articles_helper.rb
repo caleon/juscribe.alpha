@@ -1,9 +1,9 @@
 module ArticlesHelper
   def article_path_for(article)
     if article.published?
-      article_path(article.hash_for_path)
+      article_path(article.to_path)
     else
-      draft_path(article.hash_for_path)      
+      draft_path(article.to_path)      
     end
   end
 end

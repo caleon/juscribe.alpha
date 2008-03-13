@@ -42,7 +42,7 @@ class ArticlesController < ApplicationController
       create_uploaded_picture_for(@article, :save => true) if picture_uploaded?
       msg = "You have successfully created your article."
       respond_to do |format|
-        format.html { flash[:notice] = msg; redirect_to article_url(@article.hash_for_path) }
+        format.html { flash[:notice] = msg; redirect_to article_url(@article.to_path) }
         format.js { flash.now[:notice] = msg }
       end
     else
@@ -71,7 +71,7 @@ class ArticlesController < ApplicationController
       respond_to do |format|
         format.html do
           flash[:notice] = msg
-          redirect_to @article.published? ? article_url(@article.hash_for_path) : draft_url(@article.hash_for_path)
+          redirect_to @article.published? ? article_url(@article.to_path) : draft_url(@article.to_path)
         end
         format.js { flash.now[:notice] = msg }
       end
@@ -89,7 +89,7 @@ class ArticlesController < ApplicationController
     @article.publish!
     msg = "You have published #{@article.display_name}."
     respond_to do |format|
-      format.html { flash[:notice] = msg; redirect_to article_url(@article.hash_for_path) }
+      format.html { flash[:notice] = msg; redirect_to article_url(@article.to_path) }
       format.js { flash.now[:notice] = msg }
     end
   end
@@ -99,7 +99,7 @@ class ArticlesController < ApplicationController
     @article.unpublish!
     msg = "You have unpublished #{@article.display_name}."
     respond_to do |format|
-      format.html { flash[:notice] = msg; redirect_to draft_url(@article.hash_for_path) }
+      format.html { flash[:notice] = msg; redirect_to draft_url(@article.to_path) }
       format.js { flash.now[:notice] = msg }
     end
   end
@@ -110,23 +110,23 @@ class ArticlesController < ApplicationController
     if only_permalink_provided? && (arts = Article.find_all_by_permalink(params[:permalink], :include => includes)).size == 1
       @article = arts.first
       if @article.published?
-        redirect_to article_url(@article.hash_for_path), :status => 303 and return false        
+        redirect_to article_url(@article.to_path), :status => 303 and return false        
       else
-        redirect_to draft_url(@article.hash_for_path), :status => 303 and return false
+        redirect_to draft_url(@article.to_path), :status => 303 and return false
       end
     elsif only_permalink_and_nick_provided? && (arts = Article.find_any_by_permalink_and_nick(params[:permalink], params[:user_id]))
       if @article = arts.detect {|art| art.draft? }
         true && authorize(@article)
       elsif (pub_arts = arts.select {|art| art.published? }).size == 1
         @article = pub_arts.first
-        redirect_to article_url(@article.hash_for_path), :status => 303 and return false
+        redirect_to article_url(@article.to_path), :status => 303 and return false
       else
         error_opts[:message] ||= "That article could not be found. Please check the address."
         display_error(error_opts) and return false
       end
     elsif params_valid? && @article = Article.primary_find(valid_params, :include => includes)
       if params[:month] !~ /\d\d/ || params[:day] !~ /\d\d/
-        redirect_to article_url(@article.hash_for_path), :status => 301 and return false
+        redirect_to article_url(@article.to_path), :status => 301 and return false
       else
         true && authorize(@article)
       end

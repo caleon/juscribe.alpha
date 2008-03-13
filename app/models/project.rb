@@ -6,7 +6,7 @@ class Project < ActiveRecord::Base
   validates_with_regexp :name
   belongs_to :user
   
-  def hash_for_path
+  def to_path
     { :user_id => self.user.to_param, :id => self.to_param }
   end
     

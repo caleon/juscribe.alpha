@@ -55,7 +55,7 @@ class Picture < ActiveRecord::Base
     public_filename
   end
   
-  def hash_for_path
+  def to_path
     if self.depictable.nil?
       { :id => self.to_param }
     else

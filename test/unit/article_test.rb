@@ -51,18 +51,18 @@ class ArticleTest < ActiveSupport::TestCase
     assert_equal Article.find(art.id).permalink, art.permalink
   end
   
-  def test_hash_for_path
+  def test_to_path
     art = Article.create(:user => users(:colin), :title => 'Welcome to Maryland', :content => 'blah blah blah')
     assert art.valid? && !art.new_record?
     assert_equal 'Welcome-to-Maryland', art.permalink
-    assert_equal 2, art.hash_for_path.keys.size
-    assert art.hash_for_path.keys.include?(:permalink)
-    assert art.hash_for_path.keys.include?(:user_id)
+    assert_equal 2, art.to_path.keys.size
+    assert art.to_path.keys.include?(:permalink)
+    assert art.to_path.keys.include?(:user_id)
     
     art.publish!
     assert art.published? && !art.draft?
-    assert_equal 5, art.hash_for_path.keys.size
-    assert_equal 5, (art.hash_for_path.keys & [:year, :month, :day, :user_id, :permalink]).size
+    assert_equal 5, art.to_path.keys.size
+    assert_equal 5, (art.to_path.keys & [:year, :month, :day, :user_id, :permalink]).size
   end
   
   def test_find_by_params

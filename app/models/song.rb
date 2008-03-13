@@ -25,7 +25,7 @@ class Song < ActiveRecord::Base
     make_permalink
   end
   
-  def hash_for_path
+  def to_path
     { :playlist_id => self.playlist.to_param, :id => self.to_param }
   end
   

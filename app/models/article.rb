@@ -27,7 +27,7 @@ class Article < ActiveRecord::Base
     make_permalink
   end
   
-  def hash_for_path
+  def to_path
     if self.draft?
       { :permalink => self.to_param, :user_id => self.user.to_param }
     else

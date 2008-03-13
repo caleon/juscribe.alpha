@@ -13,7 +13,7 @@ class Event < ActiveRecord::Base
     self.name
   end
   
-  def hash_for_path
+  def to_path
     if self.user
       { :user_id => self.user.nick, :id => self.to_param }
     else

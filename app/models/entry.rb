@@ -12,7 +12,7 @@ class Entry < ActiveRecord::Base
   validates_with_regexp :content
   validates_with_regexp :location
   
-  def hash_for_path
+  def to_path
     { :user_id => self.user.to_param, :id => self.to_param }
   end
   

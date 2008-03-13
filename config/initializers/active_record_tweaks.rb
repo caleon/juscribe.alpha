@@ -8,7 +8,7 @@ module ActiveRecord
     # arguments to a method.  
     def to_id; self[:id].to_i; end
     
-    def hash_for_path
+    def to_path
       self.to_param
     end
   
