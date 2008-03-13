@@ -13,6 +13,14 @@ class Event < ActiveRecord::Base
     self.name
   end
   
+  def hash_for_path
+    if self.user
+      { :user_id => self.user.nick, :id => self.to_param }
+    else
+      { :id => self.to_param }
+    end
+  end
+  
   def begin!(time=Time.now, force=false)
     if !self.begins_at.nil? && !force
       self.errors.add(:begins_at, "is already set")

@@ -4,8 +4,9 @@ class EventsController < ApplicationController
   authorize_on :show, :edit, :update, :destroy, :begin_event, :end_event
   
   def index
+    find_opts = get_find_opts(:order => 'id DESC')
     if @user = User.primary_find(params[:user_id])
-      @events = @user.events
+      @events = Event.find(:all, find_opts.merge(:conditions => ["user_id = ?", @user.id]))
     else
       display_error(:message => "That User entry could not be found. Please check the address.")
     end

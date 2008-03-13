@@ -1,0 +1,7 @@
+<% form_for :event, @event, :url => edit_user_event_path(@event.user, @event), :html => { :class => "eventForm", :method => "put" } do |f| %>
+	<fieldset>
+		<legend>Edit Event</legend>
+		<%= render :partial => 'form', :locals => { :f => f } %>
+		<%= submit_tag "Update" %>
+	</fieldset>
+<% end %>
