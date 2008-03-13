@@ -13,6 +13,13 @@ class Message < ActiveRecord::Base
     self[:subject] || "(no subject)"
   end
   
+  def recipient=(user_or_nick)
+    user = user_or_nick.is_a?(User) ? user_or_nick : User.find_by_nick(user_or_nick)
+    self.recipient_id = user.id
+  rescue
+    raise ArgumentError, "Expected User or nick: got #{user_or_nick.class} instead."
+  end
+  
   def read_it!; self.update_attribute(:read, true) unless self.read?; end
   def unread_it!; self.update_attribute(:read, false) unless !self.read?; end
     
@@ -21,7 +28,7 @@ class Message < ActiveRecord::Base
   end
   
   def editable_by?(user)
-    user.admin? || (self.sender == user && !self.sent? && !self.read?)
+    user.admin? || (self.sender == user && !self.read?)
   end
   
   private

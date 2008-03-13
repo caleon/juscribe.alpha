@@ -77,7 +77,7 @@ ActionController::Routing::Routes.draw do |map|
                                                     
   end
 
-  map.resources :messages, :member => { :transmit => :put } # Check that model is clippable
+  map.resources :messages
   
   map.resources(:pictures) {|picture| picture.resources :clips }
 
@@ -89,7 +89,6 @@ ActionController::Routing::Routes.draw do |map|
     user.resources :widgets, :member => { :place => :put, :unplace => :put }
     user.resources :clips
     user.resources(:events) {|event| event.resources :clips }
-    user.resources :messages
     user.resources(:pictures) {|picture| picture.resources :clips }
   end
       

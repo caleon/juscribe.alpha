@@ -26,18 +26,7 @@ class MessageTest < ActiveSupport::TestCase
     msg.sender = users(:colin)
     assert msg.valid?
     msg.sender = User.create(:nick => 'moy')
-    assert !msg.valid?
-  end
-  
-  def test_transmit
-    orig_mail_count = ActionMailer::Base.deliveries.size
-    assert msg = Message.create(:body => 'testing transmission', :sender => users(:colin), :recipient => users(:keira))
-    assert msg.transmit
-    assert_equal true, msg.sent
-    assert_equal orig_mail_count + 1, ActionMailer::Base.deliveries.size
-    
-    assert !msg.transmit
-    assert_equal 1, msg.errors.size
+    assert msg.valid?, msg.errors.inspect # No longer validates associated users
   end
   
   def test_accessible_by_check
@@ -65,8 +54,6 @@ class MessageTest < ActiveSupport::TestCase
     assert !msg.editable_by?(users(:keira))
     msg.unread_it!
     assert msg.editable_by?(users(:keira))
-    assert msg.transmit
-    assert !msg.editable_by?(users(:keira))
   end
 
 end

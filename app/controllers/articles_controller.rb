@@ -49,7 +49,7 @@ class ArticlesController < ApplicationController
       flash.now[:warning] = "There was an error creating your article."
       respond_to do |format|
         format.html { render :action => 'new' }
-        format.js { render :action => 'created_error' }
+        format.js { render :action => 'create_error' }
       end
     end
   end

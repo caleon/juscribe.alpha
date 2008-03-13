@@ -4,8 +4,10 @@ class MessagesController < ApplicationController
   verify_login_on :index, :show, :new, :create, :edit, :update, :destroy, :send
   authorize_on :show, :edit, :update, :destroy, :send
   
-  # Following allows #setup to check editable_by? with get_viewer
-  
+  undef_method :edit
+  undef_method :update
+  undef_method :destroy
+    
   def index
     find_opts = get_find_opts(:order => 'messages.id DESC')
     if params[:show] == 'sent'
@@ -19,30 +21,50 @@ class MessagesController < ApplicationController
       format.xml
     end
   rescue ArgumentError, NoMethodError
-    display_error(:message => 'Invalid option for mailbox view. Please check your URL.')
+    display_error(:message => 'Invalid option for mailbox view. Please check the address.')
   end
   
-  def show
-    super(:include => [ :sender, :recipient ]) do |marker|
-      case marker
-      when :before_response
-        @sender, @recipient = @message.sender, @message.recipient
-        @message.read_it! if @recipient = get_viewer
-      end
+  def show    
+    return unless setup#([ :sender, :recipient ])
+    @message.read_it! if @recipient == get_viewer
+    respond_to do |format|
+      format.html
+      format.js
+      format.xml
     end
   end
-  
+    
   def create
-    super do |marker|
-      case marker
-      when :before_response
-        msg = "Your message has been " + params[:message][:transmit] ? "sent." : "saved."
-        # HMMM. Will this look for Message#transmit= method?
-      when :before_error_response
-        flash.now[:warning] = "Your message could not be " +
-                              params[:message][:transmit] ? "sent." : "saved."
+    @message = Message.new(params[:message].merge(:sender => get_viewer))
+    if @message.save
+      msg = "You have sent your message to #{params[:message][:recipient]}."
+      respond_to do |format|
+        format.html { flash[:notice] = msg; redirect_to message_url(@message) }
+        format.js { flash.now[:message] = msg }
+      end
+    else
+      flash.now[:warning] = "There was an error creating your message."
+      respond_to do |format|
+        format.html { render :action => "new" }
+        format.js { render :action => 'create_error' }
       end
     end
+  rescue
+    display_error(:message => "There was an error creating your message.")
+  end
+  
+  private
+  def authorize(object, opts={})
+    return true if !(self.class.read_inheritable_attribute(:authorize_list) || []).include?(action_name.intern)
+    unless object && get_viewer && object.accessible_by?(get_viewer)
+      msg = "You are not authorized for that action."
+      respond_to_without_type_registration do |format|
+        format.html { flash[:warning] = msg; redirect_to get_viewer || login_url }
+        format.js { flash.now[:warning] = msg; render :action => 'shared/unauthorized' }
+      end
+      return false
+    end
+    true
   end
   
 end
