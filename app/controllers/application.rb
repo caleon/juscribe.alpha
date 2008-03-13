@@ -167,7 +167,7 @@ class ApplicationController < ActionController::Base
   end
   
   def setup(includes=nil, error_opts={})
-    self.class.set_model_variables unless klass = shared_setup_options[:model_class]
+    klass = shared_setup_options[:model_class]
     instance_var = shared_setup_options[:instance_var]
     custom_finder = shared_setup_options[:custom_finder] || nil
     if instance_variable_set(instance_var, klass.send(custom_finder, params[:id], {:include => includes}) )
@@ -227,7 +227,7 @@ class ApplicationController < ActionController::Base
   # authorize(@object) is called within setup.
   def authorize(object, opts={})
     return true if !opts[:manual] && !(self.class.read_inheritable_attribute(:authorize_list) || []).include?(action_name.intern)
-    unless object && get_viewer && object.editable_by?(get_viewer)
+    unless object && object.editable_by?(get_viewer)
       msg = "You are not authorized for that action."
       respond_to_without_type_registration do |format|
         format.html { flash[:warning] = msg; redirect_to get_viewer || login_url }

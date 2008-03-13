@@ -25,7 +25,7 @@ class PermissionRule < ActiveRecord::Base
     self.toggle!(:private)
   end
   
-  def accessible_by?(user)
+  def accessible_by?(user=nil)
     user = User.find(user) if user.is_a?(Fixnum)
     if self.public? || user.admin?
       true

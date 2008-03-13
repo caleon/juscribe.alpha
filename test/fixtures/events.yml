@@ -1,7 +1,5 @@
-# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+birthday:
+  name: $LABEL
+  user: colin
+  content: Happy birthday to me!
 
-# one:
-#   column: value
-#
-# two:
-#   column: value

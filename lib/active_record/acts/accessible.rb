@@ -35,7 +35,7 @@ module ActiveRecord::Acts::Accessible #:nodoc:
     def protected?; self.rule.protected?; end
   
     # override this in models with a 'super'
-    def accessible_by?(user)
+    def accessible_by?(user=nil)
       # The rescue is in case this module is attached to a
       # model which does not have a #user method.
       (self.user == user rescue NoMethodError true) || self.rule.accessible_by?(user)

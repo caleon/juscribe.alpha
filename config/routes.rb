@@ -88,7 +88,9 @@ ActionController::Routing::Routes.draw do |map|
                 :requirements => { :id => regex_for(:user, :nick) } do |user|
     user.resources :widgets, :member => { :place => :put, :unplace => :put }
     user.resources :clips
-    user.resources(:events) {|event| event.resources :clips }
+    user.resources :events, :member => { :begin_event => :put, :end_event => :put } do |event|
+      event.resources :clips
+    end
     user.resources(:pictures) {|picture| picture.resources :clips }
   end
       

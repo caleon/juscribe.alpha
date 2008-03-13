@@ -9,6 +9,10 @@ class Event < ActiveRecord::Base
   validates_length_of :name, :in => (3..20)
   validates_with_regexp :name
   
+  def to_s
+    self.name
+  end
+  
   def begin!(time=Time.now, force=false)
     if !self.begins_at.nil? && !force
       self.errors.add(:begins_at, "is already set")
