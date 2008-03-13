@@ -3,6 +3,10 @@ class EventsController < ApplicationController
   verify_login_on :new, :create, :edit, :update, :destroy, :begin_event, :end_event
   authorize_on :edit, :update, :destroy, :begin_event, :end_event
   
+  def index
+    @user = User.primary_find(params[:user_id])
+  end
+  
   def begin_event
     return unless setup && request.method == :put && verify_logged_in && authorize(@event)
     if @event.begin!

@@ -170,12 +170,9 @@ class ApplicationController < ActionController::Base
     self.class.set_model_variables unless klass = shared_setup_options[:model_class]
     instance_var = shared_setup_options[:instance_var]
     custom_finder = shared_setup_options[:custom_finder] || nil
-    # FIXME: get symbol of method from model
-    # could have used #primary_find but then :custom_finder is useless.
     if instance_variable_set(instance_var, klass.send(custom_finder, params[:id], {:include => includes}) )
       true && authorize(instance_variable_get(instance_var))
     else
-      # FIXME: setting this interferes with error view processing
       error_opts[:message] ||= "That #{klass} entry could not be found. Please check the address."
       display_error(error_opts)
       false

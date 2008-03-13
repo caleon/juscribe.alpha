@@ -5,6 +5,7 @@ class ArticlesController < ApplicationController
   authorize_on :edit, :update, :publish, :unpublish, :destroy
   
   def index
+    # don't show drafts unless viewer == user
     unless @user = User.primary_find(params[:nick])
       display_error(:message => 'That user could not be found.')
       return

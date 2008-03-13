@@ -1,3 +1,8 @@
 <h2><%= @article.title %></h2>
 <p><%= @article.content %></p>
 <em>Published at <%= @article.published_at %></em>
+
+<br /><br />
+<%= render :partial => 'comments/comment', :layout => 'comment', :collection => @article.comments %>
+<br />
+<%= render :partial => 'comment_form' %>

@@ -1,11 +1,15 @@
 <% form_for :user, @user do |f| %>
-	<%= f.label :nick %><br />
-	<%= f.text_field :nick %>
-	<%= error_message_on @user, 'nick' %>
-	<br />
-	<%= f.label :password %><br />
-	<%= f.password_field :password %>
-	<%= error_message_on @user, 'password' %>
-	<br />
-	<%= submit_tag 'Login', :disable_with => 'Please wait...' %>
+	<fieldset>
+		<legend>Login</legend>
+		
+		<%= f.label :nick %><br />
+		<%= f.text_field :nick %>
+		<%= error_message_on @user, 'nick' %>
+		<br />
+		<%= f.label :password %><br />
+		<%= f.password_field :password %>
+		<%= error_message_on @user, 'password' %>
+		<br />
+		<%= submit_tag 'Login', :disable_with => 'Please wait...' %>
+	</fieldset>
 <% end %>

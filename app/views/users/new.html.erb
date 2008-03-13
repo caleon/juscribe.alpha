@@ -1,5 +1,9 @@
 <% form_for :user, @user, :url => users_path, :html => { :method => :post, :multipart => true, :class => 'userForm' } do |f| %>
 	<%= error_messages_for :user %>
-	<%= render :partial => 'form', :layout => 'new_form', :locals => { :f => f } %>
-	<%= submit_tag "Register", :disable_with => "Please wait..." %>
+	<fieldset>
+		<legend>Register</legend>
+		
+		<%= render :partial => 'form', :layout => 'new_form', :locals => { :f => f } %>
+		<%= submit_tag "Register", :disable_with => "Please wait..." %>
+	</fieldset>
 <% end %>

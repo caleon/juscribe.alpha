@@ -1,0 +1,11 @@
+<%= f.label :content %>
+<%= f.text_area :content %>
+<br />
+<%= render :partial => 'pictures/form' %>
+<br />
+
+<% if @article.new_record? || @article.draft? %>
+<input type="submit" name="publish" value="Publish" />
+<% end %>
+
+<input type="submit" name="publish" value="Save as Draft" />

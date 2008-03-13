@@ -11,6 +11,10 @@ class MainController < ApplicationController
     
   end
   
+  def about
+    
+  end
+  
   def copyright
     
   end

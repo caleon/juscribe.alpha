@@ -1,9 +1,5 @@
 <% form_for :article, @article, :html => { :class => 'articleForm', :method => :put } do |f| %>
-<%= @article.hash_for_path.inspect %>
-	<%= f.label :title %>
-	<%= f.text_field :title %>
-	<br />
-	<%= f.label :content %>
-	<%= f.text_area :content %>
-	<%= submit_tag 'Edit' %>
+	<fieldset>
+		<%= render :partial => 'form', :locals => { :f => f } %>
+	</fieldset>
 <% end %>

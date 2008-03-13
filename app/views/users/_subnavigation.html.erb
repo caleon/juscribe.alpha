@@ -1,21 +1,28 @@
 <div class="sub navigation">
 	<ul class="navigationList">
-<% if logged_in? && @user %>
-		<li class="navigationEl"><%= link_to @user.nick, @user %></li>
-	<% if @user.editable_by?(@viewer) %>
-		<li class="navigationEl"><%= link_to 'Edit', edit_user_path(@user) %></li>
-		<li class="navigationEl"><%= link_to 'Change Password', edit_password_user_path(@user) %></li>
+	<% if logged_in? && @user && !@user.new_record? %>
+		<%= navi_el(@user.nick, @user) %>
 	<% end %>
-<% end %>
 	<% if @user && !@user.new_record? %>
-		<li class="navigationEl"><%= link_to 'Articles', articles_path(@user) %></li>
-		<li class="navigationEl"><%= link_to 'Friends', friends_user_path(@user) %></li>
+		<%= navi_el "Friends", friends_user_path(@user) %>
+		<%= navi_el "Articles", articles_path(@user) %>
+		<%= navi_el "Events", user_events_path(@user) %>
+		<%= navi_el "Pictures", user_pictures_path(@user) %>
 	<% end %>
-<% if logged_in? && @user %>
-	<% if @viewer.friends_with?(@user) %>
-		<li class="navigationEl"><%= link_to 'Unfriend', unfriend_user_path(@user), { :method => :put } %></li>
+<% if logged_in? && @user && !@user.new_record? %>
+	<% if !this_is_viewer? %>
+		<%= navi_el "Message", new_user_message_path(@user) %>
+	<% else %>
+		<%= navi_el "Inbox", user_messages_path(viewer) %>
+	<% end %>
+	<% if viewer.friends_with?(@user) %>
+		<%= navi_el "Unfriend", unfriend_user_path(@user), { :method => :put } %>
 	<% elsif @viewer != @user && !@viewer.kinda_friends_with?(@user) %>
-		<li class="navigationEl"><%= link_to 'Request Friendship', befriend_user_path(@user), { :method => :put } %></li>
+		<%= navi_el "Request Friendship", befriend_user_path(@user), { :method => :put } %>
+	<% end %>
+	<% if @user.editable_by?(viewer) %>
+		<%= navi_el 'Preferences', edit_user_path(@user) %>
+		<%= navi_el "Account", edit_password_user_path(@user) %>
 	<% end %>
 <% end %>
 	</ul>

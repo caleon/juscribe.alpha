@@ -149,7 +149,6 @@ class UsersController < ApplicationController
         format.html do
           params[:id] = get_viewer.nick
           show
-          #render :action => 'show' FIXME: results in double render error.
         end
         format.js { render :action => 'befriend_error' }
       end
@@ -170,7 +169,6 @@ class UsersController < ApplicationController
         format.html do
           params[:id] = get_viewer.friends_with?(@user) ? @user.nick : get_viewer.nick
           show
-          #render :action => 'show'
         end
         format.js { render :action => 'unfriend_error'}
       end

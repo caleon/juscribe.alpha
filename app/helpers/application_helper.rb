@@ -2,6 +2,7 @@
 module ApplicationHelper
   def viewer; @viewer; end
   def logged_in?; !viewer.nil?; end
+  def this_is_viewer?; @user && !@user.new_record? && logged_in? && @user == viewer; end
     
   ### Refer to config/initializers/action_controller_tweaks.rb
   def responding_types; @responding_types ||= [:html]; end
@@ -25,6 +26,11 @@ module ApplicationHelper
   
   def notice_field
     content_tag(:div, flash[:notice], :id => 'flashNotice', :class => 'flashBox') if flash[:notice]
+  end
+  
+  def navi_el(text, path, opts={})
+    conditions = opts[:conditions].nil? ? true : opts.delete(:conditions)
+    content_tag(:li, link_to(text, path, opts), :class => 'navigationEl') if conditions
   end
   
 end

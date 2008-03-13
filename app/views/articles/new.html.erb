@@ -1,0 +1,8 @@
+<% form_for :article, @article, :html => { :class => 'articleForm', :method => :post } do |f| %>
+	<fieldset>
+		<%= f.label :title %>
+		<%= f.text_field :title %>
+		<br />
+		<%= render :partial => 'form', :locals => { :f => f } %>
+	</fieldset>
+<% end %>
