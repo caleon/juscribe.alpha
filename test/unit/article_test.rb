@@ -57,20 +57,20 @@ class ArticleTest < ActiveSupport::TestCase
     assert_equal 'Welcome-to-Maryland', art.permalink
     assert_equal 2, art.hash_for_path.keys.size
     assert art.hash_for_path.keys.include?(:permalink)
-    assert art.hash_for_path.keys.include?(:nick)
+    assert art.hash_for_path.keys.include?(:user_id)
     
     art.publish!
     assert art.published? && !art.draft?
     assert_equal 5, art.hash_for_path.keys.size
-    assert_equal 5, (art.hash_for_path.keys & [:year, :month, :day, :nick, :permalink]).size
+    assert_equal 5, (art.hash_for_path.keys & [:year, :month, :day, :user_id, :permalink]).size
   end
   
   def test_find_by_params
-    params = {'year' => '2008', 'month' => '03', 'day' => '10', 'permalink' => 'testing-search', 'nick' => 'colin'}
+    params = {'year' => '2008', 'month' => '03', 'day' => '10', 'permalink' => 'testing-search', 'user_id' => 'colin'}
     assert_nothing_raised(ArgumentError) { Article.find_by_params(params) }
     assert_nothing_raised(ActiveRecord::RecordNotFound) { Article.find_by_params(params) }
     assert_nil Article.find_by_params(params)
-    params = {'year' => 2008, 'month' => 03, 'day' => '10', 'permalink' => 'testing-search', 'nick' => 'colin'}
+    params = {'year' => 2008, 'month' => 03, 'day' => '10', 'permalink' => 'testing-search', 'user_id' => 'colin'}
     assert_nothing_raised(ArgumentError) { Article.find_by_params(params) }
     assert_nothing_raised(ActiveRecord::RecordNotFound) { Article.find_by_params(params) }
     assert_nil Article.find_by_params(params)

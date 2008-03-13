@@ -29,11 +29,11 @@ class Article < ActiveRecord::Base
   
   def hash_for_path
     if self.draft?
-      { :permalink => self.to_param, :nick => self.user.to_param }
+      { :permalink => self.to_param, :user_id => self.user.to_param }
     else
       date = self.published_date
       { :year => date.year.to_s, :month => sprintf("%02d", date.month), :day => sprintf("%02d", date.day),
-        :nick => self.user.to_param, :permalink => self.to_param }
+        :user_id => self.user.to_param, :permalink => self.to_param }
     end
   end
   
@@ -65,7 +65,7 @@ class Article < ActiveRecord::Base
   def self.find_by_params(params, opts={})
     params.symbolize_keys!
     date = Date.new(params[:year].to_i, params[:month].to_i, params[:day].to_i)
-    return nil unless user = User.find_by_nick(params[:nick])
+    return nil unless user = User.find_by_nick(params[:user_id])
     find(:first, { :conditions => [ "articles.user_id = ? AND published_date = ? AND permalink = ?", user.id, date.to_formatted_s(:db), params[:permalink]] })
   end
   

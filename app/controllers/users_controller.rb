@@ -20,7 +20,7 @@ class UsersController < ApplicationController
     @user = User.new(params[:user])
     @user.nick, @user.email = params[:user][:nick], params[:user][:email]
     if @user.save
-      session[:user_id] = @user.id
+      session[:id] = @user.id
       get_viewer
       create_uploaded_picture_for(@user, :save => true) if picture_uploaded?
       msg = "You are now a registered user! Welcome!"
@@ -84,7 +84,7 @@ class UsersController < ApplicationController
     @page_title = "Login"
     if request.post?
       if (@user = User.find_by_nick(params[:user][:nick])) && @user.authenticate(params[:user][:password])
-        session[:user_id] = @user.id
+        session[:id] = @user.id
         msg = "You are now logged in."
         respond_to do |format|
           format.html { flash[:notice] = msg; redirect_to @user }
@@ -100,7 +100,7 @@ class UsersController < ApplicationController
         end
       end
     else
-      if session[:user_id]
+      if session[:id]
         @user = get_viewer
         msg = "You are already logged in."
         respond_to do |format|
@@ -114,7 +114,7 @@ class UsersController < ApplicationController
   end
   
   def logout
-    session[:user_id] = nil
+    session[:id] = nil
     reset_session
     msg = "You are now logged out. See you soon!" # Needs to be set after reset_session.
     respond_to do |format|

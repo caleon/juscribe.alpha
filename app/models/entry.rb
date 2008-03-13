@@ -13,7 +13,7 @@ class Entry < ActiveRecord::Base
   validates_with_regexp :location
   
   def hash_for_path
-    { :user_id => self.user.nick, :id => self.id }
+    { :user_id => self.user.to_param, :id => self.to_param }
   end
   
   def location_empty?; self.location.blank?; end

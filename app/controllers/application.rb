@@ -156,7 +156,7 @@ class ApplicationController < ActionController::Base
   
   private
   def get_viewer
-    @viewer ||= (User.find(session[:user_id]) rescue nil) if session[:user_id]
+    @viewer ||= (User.find(session[:id]) rescue nil) if session[:id]
   end
   
   def get_find_opts(hash={})

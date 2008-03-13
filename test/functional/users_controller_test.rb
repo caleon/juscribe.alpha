@@ -85,13 +85,13 @@ class UsersControllerTest < ActionController::TestCase
   end
   
   def test_edit_with_wrong_user
-    get :edit, { :id => 'colin' }, { :user_id => 'keira'.hash.abs }
+    get :edit, { :id => 'colin' }, { :id => 'keira'.hash.abs }
     assert_redirected_to :action => 'show', :id => users(:keira).nick
     assert_equal 'You are not authorized for that action.', flash[:warning]
   end
   
   def test_edit_with_same_user
-    get :edit, { :id => 'colin' }, { :user_id => 'colin'.hash.abs }
+    get :edit, { :id => 'colin' }, { :id => 'colin'.hash.abs }
     assert_equal users(:colin), assigns(:viewer)
     assert_response :success
     assert_template 'edit'
@@ -105,26 +105,26 @@ class UsersControllerTest < ActionController::TestCase
   end
   
   def test_update_with_wrong_user
-    put :update, { :id => 'colin', :user => { :first_name => 'caleon' } }, { :user_id => users(:keira).id }
+    put :update, { :id => 'colin', :user => { :first_name => 'caleon' } }, { :id => users(:keira).id }
     assert_redirected_to :action => 'show', :id => users(:keira).nick
     assert_equal 'You are not authorized for that action.', flash[:warning]
   end
   
   def test_update_with_correct_user
-    put :update, { :id => 'colin', :user => { :first_name => 'caleon' } }, { :user_id => users(:colin).id }
+    put :update, { :id => 'colin', :user => { :first_name => 'caleon' } }, { :id => users(:colin).id }
     assert_redirected_to :action => 'show', :id => users(:colin).nick
     assert_equal "You have successfully updated your profile.", flash[:notice]
   end
   
   def test_update_invalid_entries
-    put :update, { :id => 'colin', :user => { :first_name => 'c' } }, { :user_id => users(:colin).id }
+    put :update, { :id => 'colin', :user => { :first_name => 'c' } }, { :id => users(:colin).id }
     assert_template 'edit'
     assert_equal users(:colin), assigns(:user)
     assert_flash_equal "There was an error updating your profile.", :warning
   end
   
   def test_edit_password_correct
-    get :edit_password, { :id => 'colin' }, { :user_id => users(:colin).id }
+    get :edit_password, { :id => 'colin' }, { :id => users(:colin).id }
     assert_response :success
     assert_equal 'colin - Edit Password', assigns(:page_title)
   end
@@ -140,25 +140,25 @@ class UsersControllerTest < ActionController::TestCase
   end
   
   def test_edit_password_for_someone_else
-    get :edit_password, { :id => 'colin' }, { :user_id => users(:nana).id }
+    get :edit_password, { :id => 'colin' }, { :id => users(:nana).id }
     assert_redirected_to :action => 'show', :id => users(:nana).nick
     assert_equal 'You are not authorized for that action.', flash[:warning]
   end
   
   def test_edit_password_for_non_user
-    get :edit_password, { :id => 'keira' }, { :user_id => users(:nana).id }
+    get :edit_password, { :id => 'keira' }, { :id => users(:nana).id }
     assert_template 'error'
     assert_flash_equal 'That User entry could not be found. Please check the address.', :warning
   end
   
   def test_update_password
-    put :update_password, { :id => 'colin', :user => { :password => 'new_password', :password_confirmation => 'new_password' }}, { :user_id => users(:colin).id }
+    put :update_password, { :id => 'colin', :user => { :password => 'new_password', :password_confirmation => 'new_password' }}, { :id => users(:colin).id }
     assert_redirected_to user_url(users(:colin))
     assert_equal "You have successfully changed your password.", flash[:notice]
   end
   
   def test_update_password_with_non_matchin_confirmation
-    put :update_password, { :id => 'colin', :user => { :password => 'new_password', :password_confirmation => 'new_password' }}, { :user_id => users(:colin).id }
+    put :update_password, { :id => 'colin', :user => { :password => 'new_password', :password_confirmation => 'new_password' }}, { :id => users(:colin).id }
 #    assert_template 'edit_password'
 #    assert_equal "You have successfully changed your password.", flash[:notice]
 # This test does not work because under TEST environment, the password validation
@@ -166,19 +166,19 @@ class UsersControllerTest < ActionController::TestCase
   end
     
   def test_update_password_by_wrong_user
-    put :update_password, { :id => 'colin', :user => { :password => 'blah', :password_confirmation => 'blah' }}, { :user_id => users(:keira).id }
+    put :update_password, { :id => 'colin', :user => { :password => 'blah', :password_confirmation => 'blah' }}, { :id => users(:keira).id }
     assert_redirected_to user_url(users(:keira))
     assert_equal 'You are not authorized for that action.', flash[:warning]
   end
   
   def test_update_password_by_non_user
-    put :update_password, { :id => 'colin', :user => { :password => 'blah', :password_confirmation => 'blah' }}, { :user_id => 12312313 }
+    put :update_password, { :id => 'colin', :user => { :password => 'blah', :password_confirmation => 'blah' }}, { :id => 12312313 }
     assert_redirected_to login_url
     assert_equal 'You need to be logged in to do that.', flash[:warning]
   end
   
   def test_update_password_for_non_user
-    put :update_password, { :id => 'colina', :user => { :pasword => 'boo', :password_confirmation => 'boo' }}, { :user_id => users(:colin).id }
+    put :update_password, { :id => 'colina', :user => { :pasword => 'boo', :password_confirmation => 'boo' }}, { :id => users(:colin).id }
     assert_template 'error'
     assert_flash_equal 'That User entry could not be found. Please check the address.', :warning
   end
@@ -191,7 +191,7 @@ class UsersControllerTest < ActionController::TestCase
   end
   
   def test_login_when_already_logged_in
-    get :login, {}, { :user_id => users(:colin).id }
+    get :login, {}, { :id => users(:colin).id }
     assert_redirected_to user_url(users(:colin))
     assert_equal "You are already logged in.", flash[:notice]
   end
@@ -215,15 +215,15 @@ class UsersControllerTest < ActionController::TestCase
   end
   
   def test_logout
-    get :logout, {}, { :user_id => users(:colin).id }
+    get :logout, {}, { :id => users(:colin).id }
     assert_redirected_to user_url(users(:colin))
     assert_equal 'You are now logged out. See you soon!', flash[:notice]
-    assert_nil session[:user_id]
+    assert_nil session[:id]
     assert_nil assigns(:viewer)
   end
   
   def test_mine
-    get :mine, {}, { :user_id => users(:keira).id }
+    get :mine, {}, { :id => users(:keira).id }
     assert_redirected_to user_url(users(:keira))
   end
   
@@ -244,7 +244,7 @@ class UsersControllerTest < ActionController::TestCase
   end
   
   def test_befriend
-    put :befriend, { :id => users(:keira).nick }, { :user_id => users(:colin).id }
+    put :befriend, { :id => users(:keira).nick }, { :id => users(:colin).id }
     assert_redirected_to user_url(users(:keira))
     assert_equal "You have requested friendship with #{users(:keira).display_name}.", flash[:notice]
   end
@@ -254,28 +254,28 @@ class UsersControllerTest < ActionController::TestCase
   end
   
   def test_befriend_twice
-    put :befriend, { :id => users(:keira).nick }, { :user_id => users(:colin).id }
+    put :befriend, { :id => users(:keira).nick }, { :id => users(:colin).id }
     assert_redirected_to user_url(users(:keira))
-    put :befriend, { :id => users(:keira).nick }, { :user_id => users(:colin).id }
+    put :befriend, { :id => users(:keira).nick }, { :id => users(:colin).id }
     assert_flash_equal "There was an error friending #{users(:keira).display_name}.", :warning
   end
   
   def test_mutual_friending
     users(:keira).befriend(users(:colin))
-    put :befriend, { :id => users(:keira).nick }, { :user_id => users(:colin).id }
+    put :befriend, { :id => users(:keira).nick }, { :id => users(:colin).id }
     assert_redirected_to user_url(users(:keira))
     assert_equal "You are now friends with #{users(:keira).display_name}.", flash[:notice]
   end
   
   def test_unfriend
     users(:colin).befriend(users(:keira))
-    put :unfriend, { :id => users(:keira).nick }, { :user_id => users(:colin).id }
+    put :unfriend, { :id => users(:keira).nick }, { :id => users(:colin).id }
     assert_redirected_to user_url(users(:colin))
     assert_equal "You are no longer friends with #{users(:keira).display_name}.", flash[:notice]
   end
   
   def test_unfriend_non_friend
-    put :unfriend, { :id => users(:keira).nick }, { :user_id => users(:colin).id }
+    put :unfriend, { :id => users(:keira).nick }, { :id => users(:colin).id }
     assert_flash_equal "You cannot unfriend #{users(:keira).display_name}.", :warning
   end
   
@@ -296,7 +296,7 @@ class UsersControllerTest < ActionController::TestCase
   
   def test_destroy
     @request.env["HTTP_REFERER"] = "http://www.cnn.com/"
-    delete :destroy, { :id => users(:alessandra).nick }, { :user_id => users(:colin).id }
+    delete :destroy, { :id => users(:alessandra).nick }, { :id => users(:colin).id }
     assert_response :redirect
     assert_redirected_to "http://www.cnn.com/"
     assert_equal "You have deleted #{users(:alessandra).display_name}.", flash[:notice]

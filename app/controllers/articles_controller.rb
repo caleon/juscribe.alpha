@@ -6,7 +6,7 @@ class ArticlesController < ApplicationController
   
   def index
     # don't show drafts unless viewer == user
-    unless @user = User.primary_find(params[:nick])
+    unless @user = User.primary_find(params[:user_id])
       display_error(:message => 'That user could not be found.')
       return
     end
@@ -27,7 +27,7 @@ class ArticlesController < ApplicationController
   end
   
   def new
-    if !(@user = User.primary_find(params[:nick]))
+    if !(@user = User.primary_find(params[:user_id]))
       display_error(:message => "That User could not be found. Please check your address.")
       return
     elsif @user != get_viewer
@@ -106,7 +106,7 @@ class ArticlesController < ApplicationController
   
   private
   def setup(includes=nil, error_opts={})
-    @user = User.primary_find(params[:nick]) if params[:nick]
+    @user = User.primary_find(params[:user_id]) if params[:user_id]
     if only_permalink_provided? && (arts = Article.find_all_by_permalink(params[:permalink], :include => includes)).size == 1
       @article = arts.first
       if @article.published?
@@ -114,7 +114,7 @@ class ArticlesController < ApplicationController
       else
         redirect_to draft_url(@article.hash_for_path), :status => 303 and return false
       end
-    elsif only_permalink_and_nick_provided? && (arts = Article.find_any_by_permalink_and_nick(params[:permalink], params[:nick]))
+    elsif only_permalink_and_nick_provided? && (arts = Article.find_any_by_permalink_and_nick(params[:permalink], params[:user_id]))
       if @article = arts.detect {|art| art.draft? }
         true && authorize(@article)
       elsif (pub_arts = arts.select {|art| art.published? }).size == 1
@@ -137,19 +137,20 @@ class ArticlesController < ApplicationController
   end
   
   def params_valid?
-    params[:year] && params[:month] && params[:day] && params[:permalink] && params[:nick]
+    params[:year] && params[:month] && params[:day] && params[:permalink] && params[:user_id]
   end
   
   def valid_params
-    { :year => params[:year], :month => params[:month], :day => params[:day], :permalink => params[:permalink], :nick => params[:nick] }
+    { :year => params[:year], :month => params[:month], :day => params[:day], :permalink => params[:permalink], :user_id => params[:user_id] }
   end
   
   def only_permalink_and_nick_provided?
-    params[:permalink] && params[:nick] && !(params[:year] || params[:month] || params[:day])
+    params[:permalink] && params[:user_id] && !(params[:year] || params[:month] || params[:day])
   end
   
   def only_permalink_provided?
-    params[:permalink] && !(params[:year] || params[:month] || params[:day] || params[:nick])
+    params[:permalink] && !(params[:year] || params[:month] || params[:day] || params[:user_id
+      ])
   end
   
 end
