@@ -12,6 +12,10 @@ class Entry < ActiveRecord::Base
   validates_with_regexp :content
   validates_with_regexp :location
   
+  def to_s
+    self.content[0, 10]
+  end
+  
   def to_path
     if self.user.nil?
       { :id => self.to_param }

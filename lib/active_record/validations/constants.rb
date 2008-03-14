@@ -1,4 +1,4 @@
-# Needs to have backslashes escaped.
+# NOTE: Needs to have backslashes escaped.
 REGEXP_STR = { # Defaults
                :permalink      => "[a-zA-Z0-9][-a-zA-Z0-9]+[a-zA-Z0-9]",
                :title          => "[^\\s].+[^\\s]",
@@ -7,7 +7,8 @@ REGEXP_STR = { # Defaults
                :body           => "[^\\s].+[^\\s]",
                # Model specific:
                :article   => { :permalink => "[a-zA-Z0-9][-a-zA-Z0-9]+[a-zA-Z0-9]" },
-               :entry     => { :location => "([^\\s].+[^\\s])?" },
+               :entry     => { :location => "([^\\s].+[^\\s])?",
+                               :content => "([^\\s].+[^\\s])?" },
                :message   => { :subject => "[^\\s].+[^\\s]" },
                :permission_rule => { :name => "([^\\s].+[^\\s])?" },
                :picture   => {},
@@ -21,7 +22,6 @@ REGEXP_STR = { # Defaults
                                :email => "([^@\\s]+)@((?:[-a-zA-Z0-9]+\\.)+[a-zA-Z]{2,})" }
               }
 
-#REGEX = Hash[*REGEXP_STR.to_a.map{|arr| [ arr[0], /#{arr[1]}/ ]}.flatten]
 REGEX = Hash[*REGEXP_STR.to_a.map do |arr|
   [ arr[0], 
     if arr[1].is_a?(Hash)
@@ -31,7 +31,6 @@ REGEX = Hash[*REGEXP_STR.to_a.map do |arr|
     end ]
 end.flatten]
 
-#REGEXP = Hash[*REGEXP_STR.to_a.map{|arr| [ arr[0], /^#{arr[1]}$/ ]}.flatten]
 REGEXP = Hash[*REGEXP_STR.to_a.map do |arr|
   [ arr[0],
     if arr[1].is_a?(Hash)

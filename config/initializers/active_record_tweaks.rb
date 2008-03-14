@@ -8,8 +8,14 @@ module ActiveRecord
     # arguments to a method.  
     def to_id; self[:id].to_i; end
     
+    def to_s
+      self.name rescue self.title
+    rescue
+      nil
+    end
+    
     def to_path
-      self.to_param
+      { :id => self.to_param }
     end
   
     def internal_name(opts={})

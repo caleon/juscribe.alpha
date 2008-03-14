@@ -6,7 +6,7 @@ class ArticlesControllerTest < ActionController::TestCase
     Article.find(:all).each do |art|
       art.send(:make_permalink, :with_save => true)
     end
-    get :index, { :user_id => 'colin' }
+    get :index, users(:colin).to_path(true)
     assert_response :success
     assert_equal users(:colin), assigns(:user)
     assert_equal users(:colin).articles.find(:all, :order => 'id DESC'), assigns(:articles)
@@ -89,18 +89,18 @@ class ArticlesControllerTest < ActionController::TestCase
   end
   
   def test_new_without_login
-    get :new, { :user_id => 'colin' }
+    get :new, users(:colin).to_path(true)
     assert_redirected_to login_url
     assert_equal 'You need to be logged in to do that.', flash[:warning]
   end
  
   def test_new_with_login
-    get :new, { :user_id => 'colin' }, as(:colin)
+    get :new, users(:colin).to_path(true), as(:colin)
     assert_response :success
   end
   
   def test_new_for_someone_else
-    get :new, { :user_id => 'nana' }, as(:colin)
+    get :new, users(:nana).to_path(true), as(:colin)
     assert_redirected_to new_article_url(users(:colin))
   end
   
@@ -206,7 +206,7 @@ class ArticlesControllerTest < ActionController::TestCase
     articles(:blog).send(:make_permalink)
     articles(:blog).publish!
     date = articles(:blog).published_date
-    put :update, articles(:blog).to_path.update(:article => { :title => 'yo yo yo' }), { :id => 234234 }
+    put :update, articles(:blog).to_path.update(:article => { :title => 'yo yo yo' }), as(234234)
     assert_redirected_to login_url
     assert_equal "You need to be logged in to do that.", flash[:warning]
   end
@@ -296,7 +296,7 @@ class ArticlesControllerTest < ActionController::TestCase
   def test_draft_edit_with_non_user
     articles(:blog).send(:make_permalink, :with_save => true)
     assert articles(:blog).draft?
-    get :edit, articles(:blog).to_path, { :id => 12345567 }
+    get :edit, articles(:blog).to_path, as(12345567)
     assert_redirected_to login_url
     assert_equal "You need to be logged in to do that.", flash[:warning]
   end
@@ -352,7 +352,7 @@ class ArticlesControllerTest < ActionController::TestCase
   def test_draft_show_with_non_user
     articles(:blog).send(:make_permalink, :with_save => true)
     assert articles(:blog).draft?
-    get :show, articles(:blog).to_path, { :id => 123456677 }
+    get :show, articles(:blog).to_path, as(123456677)
     assert_redirected_to login_url
     assert_equal "You are not authorized for that action.", flash[:warning]
   end
@@ -410,7 +410,7 @@ class ArticlesControllerTest < ActionController::TestCase
   def test_draft_update_with_non_user
     articles(:blog).send(:make_permalink, :with_save => true)
     assert articles(:blog).draft?
-    put :update, articles(:blog).to_path.merge(:article => { :content => "la dee la" }), { :id => 1234556677 }
+    put :update, articles(:blog).to_path.merge(:article => { :content => "la dee la" }), as(1234556677)
     assert_redirected_to login_url
     assert_equal "You need to be logged in to do that.", flash[:warning]
   end
@@ -460,7 +460,7 @@ class ArticlesControllerTest < ActionController::TestCase
   def test_draft_publish_with_non_user
     articles(:blog).send(:make_permalink, :with_save => true)
     assert articles(:blog).draft?
-    put :publish, articles(:blog).to_path, { :id => 1234566 }
+    put :publish, articles(:blog).to_path, as(1234566)
     assert_redirected_to login_url
     assert_equal "You need to be logged in to do that.", flash[:warning]
   end
@@ -497,7 +497,7 @@ class ArticlesControllerTest < ActionController::TestCase
     @request.env["HTTP_REFERER"] = "http://www.cnn.com/"
     articles(:blog).send(:make_permalink, :with_save => true)
     assert articles(:blog).draft?
-    delete :destroy, articles(:blog).to_path, { :id => 12344556 }
+    delete :destroy, articles(:blog).to_path, as(12344556)
     assert_redirected_to login_url
     assert_equal "You need to be logged in to do that.", flash[:warning]
   end

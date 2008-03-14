@@ -75,7 +75,7 @@ class UsersControllerTest < ActionController::TestCase
   end
   
   def test_create_with_picture
-    # fixture_file_upload("screen.png", "image/png")
+    # TODO fixture_file_upload("screen.png", "image/png")
   end
   
   def test_edit_with_no_user

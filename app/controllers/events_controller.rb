@@ -13,7 +13,7 @@ class EventsController < ApplicationController
   end
   
   def new # TODO: extend ActiveRecord's association collection to be able to do user.events.accessible_by?
-    if @user = User.find_by_nick(params[:user_id])
+    if @user = User.primary_find(params[:user_id])
       if @user == get_viewer
         @event = Event.new
       else 
@@ -52,7 +52,7 @@ class EventsController < ApplicationController
   end
   
   def update
-    return unless (setup && authorize(@event, :editable => true))
+    return unless setup(:permission) && authorize(@event, :editable => true)
     if @event.update_attributes(params[:event])
       msg = "You have successfully updated #{@event.display_name}."
       respond_to do |format|

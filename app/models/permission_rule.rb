@@ -26,16 +26,19 @@ class PermissionRule < ActiveRecord::Base
   end
   
   def accessible_by?(user=nil)
-    user = User.find(user) if user.is_a?(Fixnum)
-    if self.public? || user.admin?
-      true
+    if user.is_a?(Fixnum)
+      user = User.find(user)
+    end
+    if self.public? || (user && user.admin?)
+      return true
     elsif self.protected?
-      user && !self.denied[:user].include?(user.id) &&
+      return user && !self.denied[:user].include?(user.id) &&
       (self.denied[:group] & user.group_ids).empty?
     elsif self.private?
-      user && !(self.allowed[:group] & user.group_ids).empty? ||
-      self.allowed[:user].include?(user.id)
+      return user && !(self.allowed[:group] & user.group_ids).empty? ||
+      (user && self.allowed[:user].include?(user.id))
     end
+    false
   end
   
   def name; self[:name] || "Untitled"; end

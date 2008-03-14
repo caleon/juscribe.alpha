@@ -54,6 +54,8 @@ class Test::Unit::TestCase
       hash[:id] = users(arg).id
     when Fixnum
       hash[:id] = arg
+    when User
+      hash[:id] = arg.id
     else
       nil
     end

@@ -3,6 +3,27 @@ class EntriesController < ApplicationController
   verify_login_on :new, :create, :edit, :update, :destroy
   authorize_on :show, :edit, :update, :destroy
   
+  def index
+    find_opts = get_find_opts(:order => 'id DESC')
+    if @user = User.primary_find(params[:user_id])
+      @entries = Entry.find(:all, find_opts.merge(:conditions => ["user_id = ?", @user.id]))
+    else
+      display_error(:message => "That User entry could not be found. Please check the address.")
+    end
+  end
+  
+  def new
+    if @user = User.primary_find(params[:user_id])
+      if @user == get_viewer
+        @entry = Entry.new
+      else
+        redirect_to new_user_entry_url(get_viewer) and return
+      end
+    else
+      display_error(:message => "That User entry could not be found. Please check the address.")
+    end
+  end
+  
   def create
     @entry = Entry.new(params[:entry].merge(:user => get_viewer))
     if @entry.save
@@ -43,6 +64,15 @@ class EntriesController < ApplicationController
         format.html { render :action => 'edit' }
         format.js { render :action => 'update_error' }
       end
+    end
+  end
+  
+  def destroy
+    return unless setup && authorize(@entry, :editable => true)
+    msg = "You have deleted #{@entry.display_name}."
+    respond_to do |format|
+      format.html { flash[:notice] = msg; redirect_to :back }
+      format.js { flash.now[:notice] = msg }
     end
   end
   

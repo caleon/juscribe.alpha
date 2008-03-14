@@ -3,7 +3,7 @@ require File.dirname(__FILE__) + '/../test_helper'
 class EventsControllerTest < ActionController::TestCase
 
   def test_index
-    get :index, { :user_id => users(:colin).nick }
+    get :index, users(:colin).to_path(true)
     assert_response :success
     assert_not_nil assigns(:user)
     assert_not_nil assigns(:events)
@@ -32,6 +32,10 @@ class EventsControllerTest < ActionController::TestCase
   
   def test_show_without_login
     get :show, events(:birthday).to_path
+    assert events(:birthday).public?
+    assert events(:birthday).rule.public?
+    assert events(:birthday).rule.accessible_by?(nil) # returns false
+    assert events(:birthday).accessible_by?(nil) # returns false
     assert_response :success
   end
   
@@ -43,7 +47,7 @@ class EventsControllerTest < ActionController::TestCase
   end
   
   def test_new
-    get :new, { :user_id => users(:colin).nick }, as(:colin)
+    get :new, users(:colin).to_path(true), as(:colin)
     assert_response :success
     assert_not_nil assigns(:event)
   end

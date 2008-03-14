@@ -44,8 +44,12 @@ class User < ActiveRecord::Base
   
   def to_s; self.nick; end
   
-  def to_path
-    { :id => self.to_param }
+  def to_path(for_associated=false)
+    if for_associated
+      { :user_id => self.to_param }
+    else
+      { :id => self.to_param }
+    end
   end
   
   def name_and_nick

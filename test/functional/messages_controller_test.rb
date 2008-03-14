@@ -39,21 +39,21 @@ class MessagesControllerTest < ActionController::TestCase
   end
   
   def test_show
-    get :show, { :id => messages(:colin_to_nana).id }, as(:colin)
+    get :show, messages(:colin_to_nana).to_path, as(:colin)
     assert_response :success
     assert_template 'show'
     assert_equal messages(:colin_to_nana), assigns(:message)
   end
   
   def test_show_for_recipient
-    get :show, { :id => messages(:colin_to_nana).id }, as(:nana)
+    get :show, messages(:colin_to_nana).to_path, as(:nana)
     assert_response :success
     assert_template 'show'
     assert_equal messages(:colin_to_nana), assigns(:message)
   end
   
   def test_show_for_non_participant
-    get :show, { :id => messages(:colin_to_nana).id }, as(:keira)
+    get :show, messages(:colin_to_nana).to_path, as(:keira)
     assert_redirected_to user_url(users(:keira))
     assert_equal "You are not authorized for that action.", flash[:warning]
   end
