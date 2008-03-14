@@ -11,7 +11,7 @@
 	<% end %>
 <% if logged_in? && @user && !@user.new_record? %>
 	<% if !this_is_viewer? %>
-		<%= navi_el "Message", new_message_path(@user) %>
+		<%= navi_el "Message", new_message_path %>
 	<% else %>
 		<%= navi_el "Inbox", messages_path %>
 	<% end %>
