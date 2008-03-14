@@ -1,5 +1,5 @@
 class Entry < ActiveRecord::Base
-  include PluginPackage
+  include_custom_plugins  
 
   belongs_to :user
   belongs_to :event

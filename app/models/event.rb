@@ -1,5 +1,5 @@
 class Event < ActiveRecord::Base
-  include PluginPackage
+  include_custom_plugins  
   
   belongs_to :user
   has_many :picture, :as => :depictable

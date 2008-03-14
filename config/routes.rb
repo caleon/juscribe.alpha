@@ -78,6 +78,7 @@ ActionController::Routing::Routes.draw do |map|
                                                     
   end
   
+  # Notice that in the following, there aren't paths to Draft clips. That's because Drafts aren't public. Intentionally done.
   map.with_options :controller => 'clips', :requirements => { :year => /\d{4}/, :month => /\d{1,2}/, :day => /\d{1,2}/,
                                                               :article_id => regex_for(:article, :permalink),
                                                               :user_id => regex_for(:user, :nick) } do |cl|
@@ -101,7 +102,7 @@ ActionController::Routing::Routes.draw do |map|
                              :update_password => :put },
                 :requirements => { :id => regex_for(:user, :nick) } do |user|
     user.resources :widgets, :member => { :place => :put, :unplace => :put }
-    user.resources :clips
+    user.resources :clips, :requirements => { :id => /\d+/ }
     user.resources :entries
     user.resources :events, :member => { :begin_event => :put, :end_event => :put } do |event|
       event.resources :clips

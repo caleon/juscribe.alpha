@@ -1,6 +1,6 @@
 class Project < ActiveRecord::Base
   acts_as_itemizable :scope => :portfolio
-  include PluginPackage
+  include_custom_plugins  
   
   validates_presence_of :name, :user_id
   validates_with_regexp :name

@@ -1,8 +1,6 @@
 module ActiveRecord
   class Base
-    def self.primary_find(*args)
-      find(*args)
-    end
+    def self.primary_find(*args); find(*args); end
     
     # The following is to allow either a model or its ID to be supplied as
     # arguments to a method.  
@@ -14,17 +12,13 @@ module ActiveRecord
       nil
     end
     
-    def to_path
-      { :id => self.to_param }
+    def to_path(for_associated=false)
+      { :"#{for_associated ? "#{self.class.to_s.underscore.singularize}_id" : 'id'}" => self.to_param }
     end
   
-    def internal_name(opts={})
-      "#{self.to_param} (#{self.class}-#{self[:id]})"
-    end
+    def internal_name(opts={}); "#{self.to_param} (#{self.class}-#{self[:id]})"; end
     
-    def display_name(opts={})
-      "#{self.to_param} (#{self.class})"
-    end
+    def display_name(opts={}); "#{self.to_param} (#{self.class})"; end
     
     def nullify!(user=nil)
       user.wheel? ? destroy! : (self.nullify if self.editable_by?(user) rescue nil)

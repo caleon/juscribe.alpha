@@ -35,13 +35,18 @@ class AccessibleTest < ActiveSupport::TestCase
     assert_equal 1, PermissionRule.count
     assert_not_nil p = acc1.permission
     assert rule1 = p.permission_rule
+    assert_equal 1, PermissionRule.count
     assert !acc1.private?
     assert !acc1.protected?
     assert_equal rule1, acc1.rule
+    assert_equal 1, PermissionRule.count
     
     assert rule2 = acc1.create_rule(:user_id => @user.id)
-    assert_not_nil acc1.rule
-    assert_equal rule2, acc1.rule
+    assert_equal 2, PermissionRule.count
+   # assert_not_nil acc1.rule
+    assert_equal 2, PermissionRule.count
+    assert_equal rule2, acc1.rule, "#{acc1.permission.inspect} VERSUS #{rule2.permissions.inspect}"
+    assert_equal 2, PermissionRule.count
     assert_not_equal rule1, acc1.rule
     assert acc1.rule = rule1
     assert_equal rule1, acc1.rule

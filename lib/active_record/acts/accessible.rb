@@ -17,7 +17,7 @@ module ActiveRecord::Acts::Accessible #:nodoc:
     
       class_inheritable_reader :acts_as_accessible_options
     
-      has_one :permission, :as => :permissible, :include => :permission_rule
+      has_one :permission, :as => :permissible
 
       include ActiveRecord::Acts::Accessible::InstanceMethods
       extend ActiveRecord::Acts::Accessible::SingletonMethods
@@ -46,11 +46,11 @@ module ActiveRecord::Acts::Accessible #:nodoc:
     end
   
     def rule
-      self.permission.permission_rule || self.create_rule
+      self.permission.permission_rule
     rescue NoMethodError, ActiveRecord::RecordNotFound
       self.create_rule
     end
-  
+      
     def create_rule(attrs={})
       attrs[:user_id] = self[:user_id] || attrs[:user_id] || (attrs.delete(:user).id if attrs[:user]) rescue nil
       raise ArgumentError, 'Need to supply a user or user_id.' unless attrs[:user_id]
@@ -61,9 +61,11 @@ module ActiveRecord::Acts::Accessible #:nodoc:
       if p = Permission.find(:first, :conditions => ["permissible_type = ? AND permissible_id = ?", self.class.to_s, self.id])
         p.update_attribute(:permission_rule_id, permission_rule.id)
       else
-        p = self.create_permission(:permission_rule_id => permission_rule.id)
+        p = Permission.create
+        self.permission = p
+        p.save
       end
-      self.reload
+      permission_rule.permissions << p
       permission_rule
     end
   

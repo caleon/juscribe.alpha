@@ -5,7 +5,7 @@ require 'user/user_validations'
 
 class User < ActiveRecord::Base
   include Friendship
-  include PluginPackage
+  include_custom_plugins  
   
   # TODO: acts_as_cached
     

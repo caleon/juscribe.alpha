@@ -1,6 +1,8 @@
 # This controller is only accessible within the scope of a widgetable model's
 # controller. See routes.rb.
 class ClipsController < ApplicationController
+  unloadable
+  
   use_shared_options :widget
   verify_login_on :new, :create, :edit, :update, :destroy
   authorize_on :index, :show, :new, :create, :edit, :update, :destroy
@@ -11,6 +13,15 @@ class ClipsController < ApplicationController
     @clips = Widget.find(:all, find_opts.merge(:conditions => ["widgetable_type = ? AND widgetable_id = ?", @widgetable.class.to_s, @widgetable.id]))
     respond_to do |format|
       format.html
+      format.xml
+    end
+  end
+  
+  def show
+    return unless setup
+    respond_to do |format|
+      format.html
+      format.js
       format.xml
     end
   end

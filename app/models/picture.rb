@@ -1,6 +1,6 @@
 class Picture < ActiveRecord::Base
   acts_as_itemizable :scope => :gallery
-  include PluginPackage
+  include_custom_plugins  
   
   belongs_to :user
   belongs_to :depictable, :polymorphic => true

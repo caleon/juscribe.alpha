@@ -1,7 +1,7 @@
 # Submodels are included via the environment.rb file's config.load_paths.
 class List < ActiveRecord::Base      
   set_itemizables
-  include PluginPackage
+  include_custom_plugins  
 
   belongs_to :user
   

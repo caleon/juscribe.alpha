@@ -1,6 +1,6 @@
 class Item < ActiveRecord::Base
   acts_as_itemizable
-  include PluginPackage
+  include_custom_plugins  
 
   belongs_to :user
   
