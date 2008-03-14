@@ -56,13 +56,13 @@ class ArticleTest < ActiveSupport::TestCase
     assert art.valid? && !art.new_record?
     assert_equal 'Welcome-to-Maryland', art.permalink
     assert_equal 2, art.to_path.keys.size
-    assert art.to_path.keys.include?(:permalink)
+    assert art.to_path.keys.include?(:id)
     assert art.to_path.keys.include?(:user_id)
     
     art.publish!
     assert art.published? && !art.draft?
     assert_equal 5, art.to_path.keys.size
-    assert_equal 5, (art.to_path.keys & [:year, :month, :day, :user_id, :permalink]).size
+    assert_equal 5, (art.to_path.keys & [:year, :month, :day, :user_id, :id]).size
   end
   
   def test_find_by_params

@@ -51,7 +51,7 @@ class WidgetableTest < ActiveSupport::TestCase
     assert clip.is_a?(Widget)
     assert_equal @user, clip.user
     assert_equal [clip], acc1.clips
-    assert_equal [clip], @user.widgets
+    assert @user.widgets.include?(clip)
     assert !clip.placed?
     assert !acc1.clip!(:user => @user)
     assert !acc1.clips.placed.include?(clip)

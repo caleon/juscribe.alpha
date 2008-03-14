@@ -45,11 +45,7 @@ class User < ActiveRecord::Base
   def to_s; self.nick; end
   
   def to_path(for_associated=false)
-    if for_associated
-      { :user_id => self.to_param }
-    else
-      { :id => self.to_param }
-    end
+    { :"#{for_associated ? 'user_id' : 'id'}" => self.to_param }
   end
   
   def name_and_nick
@@ -93,6 +89,12 @@ class User < ActiveRecord::Base
     return false
   end
   
+  def create_rule(attrs={})
+    attrs[:user_id] = self.id
+    raise ArgumentError, 'Need to supply a user or user_id.' unless attrs[:user_id]
+    self.rule = PermissionRule.create!(attrs)          
+  end
+  
   def email=(addy)
     @old_email = self.email
     self[:email] = addy
@@ -107,6 +109,10 @@ class User < ActiveRecord::Base
     self.password_salt, self.password_hash = salt, Digest::SHA256.hexdigest(pass + salt)
     @password = pass
     return self
+  end
+  
+  def accessible_by?(user=nil)
+    self == user || self.rule.accessible_by?(user)
   end
 
   def self.authenticate(nick, pass)

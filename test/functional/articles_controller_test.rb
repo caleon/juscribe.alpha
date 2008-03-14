@@ -32,7 +32,7 @@ class ArticlesControllerTest < ActionController::TestCase
     articles(:blog).send(:make_permalink)
     articles(:blog).publish!
     date = articles(:blog).published_date
-    get :show, { :year => sprintf("%02d", date.year), :month => sprintf("%02d", date.month), :day => sprintf("%02d", date.day), :permalink => articles(:blog).permalink, :user_id => articles(:blog).user.nick }
+    get :show, { :year => sprintf("%02d", date.year), :month => sprintf("%02d", date.month), :day => sprintf("%02d", date.day), :id => articles(:blog).permalink, :user_id => articles(:blog).user.nick }
     assert_response :success
     assert_equal articles(:blog), assigns(:article)
   end
@@ -41,7 +41,7 @@ class ArticlesControllerTest < ActionController::TestCase
     articles(:blog).send(:make_permalink)
     articles(:blog).publish!
     date = articles(:blog).published_date
-    get :show, { :year => date.year, :month => date.month, :day => date.day, :permalink => articles(:blog).permalink, :user_id => articles(:blog).user.nick }
+    get :show, { :year => date.year, :month => date.month, :day => date.day, :id => articles(:blog).permalink, :user_id => articles(:blog).user.nick }
     assert_response 301
     assert_equal articles(:blog), assigns(:article)
     assert_equal "http://test.host/#{date.year}/#{sprintf("%02d", date.month)}/#{sprintf("%02d", date.day)}/Today-was-a-really-weird-day/by/colin",
@@ -52,7 +52,7 @@ class ArticlesControllerTest < ActionController::TestCase
     articles(:blog).send(:make_permalink)
     articles(:blog).publish!
     date = articles(:blog).published_date
-    get :show, { :permalink => articles(:blog).permalink, :user_id => articles(:blog).user.nick }
+    get :show, { :id => articles(:blog).permalink, :user_id => articles(:blog).user.nick }
     assert_response 303
     assert_redirected_to articles(:blog).to_path
     assert_equal "http://test.host/#{date.year}/#{sprintf("%02d", date.month)}/#{sprintf("%02d", date.day)}/Today-was-a-really-weird-day/by/colin",
@@ -63,7 +63,7 @@ class ArticlesControllerTest < ActionController::TestCase
     articles(:blog).send(:make_permalink)
     articles(:blog).publish!
     date = articles(:blog).published_date
-    get :show, { :permalink => articles(:blog).permalink }
+    get :show, { :id => articles(:blog).permalink }
     assert_response 303
     assert_redirected_to articles(:blog).to_path
     assert_equal "http://test.host/#{date.year}/#{sprintf("%02d", date.month)}/#{sprintf("%02d", date.day)}/Today-was-a-really-weird-day/by/colin",
@@ -79,7 +79,7 @@ class ArticlesControllerTest < ActionController::TestCase
     assert_equal art2.permalink, articles(:blog).permalink
     art2.publish!
     
-    get :show, { :permalink => articles(:blog).permalink }
+    get :show, { :id => articles(:blog).permalink }
     assert_template 'error'
     assert_flash_equal "That article could not be found. Please check the address.", :warning
   end
@@ -170,7 +170,7 @@ class ArticlesControllerTest < ActionController::TestCase
     articles(:blog).send(:make_permalink)
     articles(:blog).publish!
     date = articles(:blog).published_date
-    get :edit, { :permalink => articles(:blog).permalink.chop, :user_id => articles(:blog).user.nick, :year => date.year.to_s, :month => sprintf("%02d", date.month), :day => sprintf("%02d", date.day) }, as(:colin)
+    get :edit, { :id => articles(:blog).permalink.chop, :user_id => articles(:blog).user.nick, :year => date.year.to_s, :month => sprintf("%02d", date.month), :day => sprintf("%02d", date.day) }, as(:colin)
     assert_flash_equal 'That article could not be found. Please check the address.', :warning
   end
   
@@ -264,7 +264,7 @@ class ArticlesControllerTest < ActionController::TestCase
   def test_draft_edit_with_wrong_permalink
     articles(:blog).send(:make_permalink, :with_save => true)
     assert articles(:blog).draft?
-    get :edit, articles(:blog).to_path.update(:permalink => articles(:blog).permalink.chop), as(:colin)
+    get :edit, articles(:blog).to_path.update(:id => articles(:blog).permalink.chop), as(:colin)
     assert_template 'error'
     assert_flash_equal 'That article could not be found. Please check the address.', :warning
   end
@@ -312,7 +312,7 @@ class ArticlesControllerTest < ActionController::TestCase
   def test_draft_show_with_only_permalink
     articles(:blog).send(:make_permalink, :with_save => true)
     assert articles(:blog).draft?
-    get :show, { :permalink => articles(:blog).permalink }, as(:colin)
+    get :show, { :id => articles(:blog).permalink }, as(:colin)
     assert_response 303
     assert_redirected_to draft_url(articles(:blog).to_path)
   end
@@ -320,7 +320,7 @@ class ArticlesControllerTest < ActionController::TestCase
   def test_draft_show_with_wrong_permalink # TODO: draft show action need to be authorized
     articles(:blog).send(:make_permalink, :with_save => true)
     assert articles(:blog).draft?
-    get :show, articles(:blog).to_path.update(:permalink => articles(:blog).permalink.chop), as(:colin)
+    get :show, articles(:blog).to_path.update(:id => articles(:blog).permalink.chop), as(:colin)
     assert_template 'error'
     assert_flash_equal 'That article could not be found. Please check the address.', :warning
   end
@@ -378,7 +378,7 @@ class ArticlesControllerTest < ActionController::TestCase
   def test_draft_update_with_wrong_permalink
     articles(:blog).send(:make_permalink, :with_save => true)
     assert articles(:blog).draft?
-    put :update, articles(:blog).to_path.merge(:article => { :content => "la dee la" }, :permalink => articles(:blog).permalink.chop), as(:colin)
+    put :update, articles(:blog).to_path.merge(:article => { :content => "la dee la" }, :id => articles(:blog).permalink.chop), as(:colin)
     assert_template 'error'
     assert_flash_equal 'That article could not be found. Please check the address.', :warning
   end
@@ -427,7 +427,7 @@ class ArticlesControllerTest < ActionController::TestCase
   def test_draft_publish_with_wrong_permalink
     articles(:blog).send(:make_permalink, :with_save => true)
     assert articles(:blog).draft?
-    put :publish, articles(:blog).to_path.merge(:permalink => articles(:blog).permalink.chop), as(:colin)
+    put :publish, articles(:blog).to_path.merge(:id => articles(:blog).permalink.chop), as(:colin)
     assert_template 'error'
     assert_flash_equal "That article could not be found. Please check the address.", :warning
   end

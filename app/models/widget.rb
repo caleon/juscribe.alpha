@@ -11,6 +11,18 @@ class Widget < ActiveRecord::Base
   # Widgets are basically box elements that show up on a user's page.
   # A user can widget an article written by someone else.
   
+  def to_path(for_associated=false)
+    if self.user.nil?
+      { :"#{for_associated ? 'clip_id' : 'id'}" => self.to_param }
+    else
+      { :user_id => self.user.to_param, :"#{for_associated ? 'clip_id' : 'id'}" => self.to_param }
+    end
+  end
+  
+  def to_polypath
+    { :id => self.to_param }.merge(self.widgetable.nil? ? {} : self.widgetable.to_path(true))
+  end
+  
   def full_name
     (self[:name] ? "#{self[:name]}: " : "") + (self.widgetable.name rescue self.widgetable.title)
   end

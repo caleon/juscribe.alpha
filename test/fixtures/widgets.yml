@@ -1,0 +1,10 @@
+colin_clip:
+  user: colin
+  widgetable_type: User
+  widgetable_id: <%= 'colin'.hash.abs %>
+  name: founder
+article_clip:
+  user: nana
+  widgetable_type: Article
+  widgetable_id: <%= 'blog'.hash.abs %>
+  name: news of the day

@@ -13,69 +13,82 @@ ActionController::Routing::Routes.draw do |map|
     ar.new_article    'articles/by/:user_id/new', :action => 'new',
                                   :conditions =>   { :method => :get },
                                   :requirements => { :user_id   => regex_for(:user, :nick) }
-    ar.edit_article   ':year/:month/:day/:permalink/by/:user_id/edit',     :action => 'edit',
+    ar.edit_article   ':year/:month/:day/:id/by/:user_id/edit',            :action => 'edit',
                                   :conditions =>   { :method => :get },
                                   :requirements => { :year => /\d{4}/,
                                                      :month => /\d{1,2}/,
                                                      :day => /\d{1,2}/,
-                                                     :permalink => regex_for(:article, :permalink),
+                                                     :id        => regex_for(:article, :permalink),
                                                      :user_id   => regex_for(:user, :nick) }
-    ar.unpublish_article ':year/:month/:day/:permalink/by/:user_id/unpublish',:action => 'unpublish',
+    ar.unpublish_article ':year/:month/:day/:id/by/:user_id/unpublish',    :action => 'unpublish',
                                   :conditions =>   { :method => :put },
                                   :requirements => { :year => /\d{4}/,
                                                      :month => /\d{1,2}/,
                                                      :day => /\d{1,2}/,
-                                                     :permalink => regex_for(:article, :permalink),
+                                                     :id        => regex_for(:article, :permalink),
                                                      :user_id   => regex_for(:user, :nick) }
-    ar.article        ':year/:month/:day/:permalink/by/:user_id',          :action => 'show',
+    ar.article        ':year/:month/:day/:id/by/:user_id',                 :action => 'show',
                                   :conditions =>   { :method => :get },
                                   :requirements => { :year => /\d{4}/,
                                                      :month => /\d{1,2}/,
                                                      :day => /\d{1,2}/,
-                                                     :permalink => regex_for(:article, :permalink),
+                                                     :id        => regex_for(:article, :permalink),
                                                      :user_id   => regex_for(:user, :nick) }                                                                                                          
-    ar.connect        ':year/:month/:day/:permalink/by/:user_id',          :action => 'update',
+    ar.connect        ':year/:month/:day/:id/by/:user_id',                 :action => 'update',
                                   :conditions =>   { :method => :put },
                                   :requirements => { :year => /\d{4}/,
                                                      :month => /\d{1,2}/,
                                                      :day => /\d{1,2}/,
-                                                     :permalink => regex_for(:article, :permalink),
+                                                     :id        => regex_for(:article, :permalink),
                                                      :user_id   => regex_for(:user, :nick) }
-    ar.connect        ':year/:month/:day/:permalink/by/:user_id',          :action => 'destroy',
+    ar.connect        ':year/:month/:day/:id/by/:user_id',                 :action => 'destroy',
                                   :conditions =>   { :method => :delete },
                                   :requirements => { :year => /\d{4}/,
                                                      :month => /\d{1,2}/,
                                                      :day => /\d{1,2}/,
-                                                     :permalink => regex_for(:article, :permalink),
+                                                     :id        => regex_for(:article, :permalink),
                                                      :user_id   => regex_for(:user, :nick) }
-    ar.particle       'articles/:permalink/by/:user_id',                   :action => 'show',
+    ar.particle       'articles/:id/by/:user_id',                          :action => 'show',
                                   :conditions =>   { :method => :get },
-                                  :requirements => { :permalink => regex_for(:article, :permalink),
+                                  :requirements => { :id        => regex_for(:article, :permalink),
                                                      :user_id   => regex_for(:user, :nick) }
-    ar.particle       'articles/:permalink',                               :action => 'show',
+    ar.particle       'articles/:id',                                      :action => 'show',
                                   :conditions =>   { :method => :get },
-                                  :requirements => { :permalink => regex_for(:article, :permalink) }                    
-    ar.edit_draft     'draft/:permalink/by/:user_id/edit',                 :action => 'edit',
+                                  :requirements => { :id        => regex_for(:article, :permalink) }                    
+    ar.edit_draft     'draft/:id/by/:user_id/edit',                        :action => 'edit',
                                   :conditions =>   { :method => :get },
-                                  :requirements => { :permalink => regex_for(:article, :permalink),
+                                  :requirements => { :id        => regex_for(:article, :permalink),
                                                      :user_id   => regex_for(:user, :nick) }
-    ar.draft          'draft/:permalink/by/:user_id',                      :action => 'show',
+    ar.draft          'draft/:id/by/:user_id',                             :action => 'show',
                                   :conditions =>   { :method => :get },
-                                  :requirements => { :permalink => regex_for(:article, :permalink),
+                                  :requirements => { :id        => regex_for(:article, :permalink),
                                                      :user_id   => regex_for(:user, :nick) }
-    ar.connect        'draft/:permalink/by/:user_id',                      :action => 'update',
+    ar.connect        'draft/:id/by/:user_id',                      :action => 'update',
                                   :conditions =>   { :method => :put },
-                                  :requirements => { :permalink => regex_for(:article, :permalink),
+                                  :requirements => { :id        => regex_for(:article, :permalink),
                                                      :user_id   => regex_for(:user, :nick) }
-    ar.publish_draft  'draft/:permalink/by/:user_id',                      :action => 'publish',
+    ar.publish_draft  'draft/:id/by/:user_id',                             :action => 'publish',
                                   :conditions =>   { :method => :put },
-                                  :requirements => { :permalink => regex_for(:article, :permalink),
+                                  :requirements => { :id        => regex_for(:article, :permalink),
                                                      :user_id   => regex_for(:user, :nick) }
-    ar.connect        'draft/:permalink/by/:user_id',                      :action => 'destroy',
+    ar.connect        'draft/:id/by/:user_id',                             :action => 'destroy',
                                   :conditions =>   { :method => :delete },
-                                  :requirements => { :permalink => regex_for(:article, :permalink),
+                                  :requirements => { :id        => regex_for(:article, :permalink),
                                                      :user_id   => regex_for(:user, :nick) }
                                                     
+  end
+  
+  map.with_options :controller => 'clips', :requirements => { :year => /\d{4}/, :month => /\d{1,2}/, :day => /\d{1,2}/,
+                                                              :article_id => regex_for(:article, :permalink),
+                                                              :user_id => regex_for(:user, :nick) } do |cl|
+    # Article
+    cl.article_clips ':year/:month/:day/:article_id/by/:user_id/clips', :action => 'index', :conditions => { :method => :get }
+    cl.connect ':year/:month/:day/:article_id/by/:user_id/clips', :action => 'create', :conditions => { :method => :post }
+    cl.new_article_clip ':year/:month/:day/:article_id/by/:user_id/clips/new', :action => 'new', :conditions => { :method => :get }
+    cl.edit_article_clip ':year/:month/:day/:article_id/by/:user_id/clips/:id/edit', :action => 'edit', :conditions => { :method => :get }, :requirements => { :id => /\d+/ }
+    cl.article_clip ':year/:month/:day/:article_id/by/:user_id/clips/:id', :action => 'show', :conditions => { :method => :get }, :requirements => { :id => /\d+/ }
+    cl.connect ':year/:month/:day/:article_id/by/:user_id/clips/:id', :action => 'update', :conditions => { :method => :put }, :requirements => { :id => /\d+/ }
+    cl.connect ':year/:month/:day/:article_id/by/:user_id/clips/:id', :action => 'destroy', :conditions => { :method => :delete }, :requirements => { :id => /\d+/ }
   end
 
   map.resources :messages

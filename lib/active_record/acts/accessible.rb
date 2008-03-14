@@ -38,7 +38,7 @@ module ActiveRecord::Acts::Accessible #:nodoc:
     def accessible_by?(user=nil)
       # The rescue is in case this module is attached to a
       # model which does not have a #user method.
-      (self.user == user rescue NoMethodError true) || self.rule.accessible_by?(user)
+      (self.user == user rescue true) || self.rule.accessible_by?(user)
     end
 
     def editable_by?(user)
@@ -46,8 +46,8 @@ module ActiveRecord::Acts::Accessible #:nodoc:
     end
   
     def rule
-      self.permission.permission_rule
-    rescue NoMethodError
+      self.permission.permission_rule || self.create_rule
+    rescue NoMethodError, ActiveRecord::RecordNotFound
       self.create_rule
     end
   
@@ -63,6 +63,7 @@ module ActiveRecord::Acts::Accessible #:nodoc:
       else
         p = self.create_permission(:permission_rule_id => permission_rule.id)
       end
+      self.reload
       permission_rule
     end
   
