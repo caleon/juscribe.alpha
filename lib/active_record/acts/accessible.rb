@@ -1,4 +1,5 @@
-module ActiveRecord::Acts::Accessible #:nodoc:
+require_dependency 'permission' # Holy shit. this fixed it.
+module ActiveRecord::Acts::Accessible #:nodoc:  
   def self.included(base)
 #    base.module_eval <<-EOS
 #      def self.accessible?; false; end
@@ -28,7 +29,7 @@ module ActiveRecord::Acts::Accessible #:nodoc:
     def accessible?; true; end
   end
 
-  module InstanceMethods        
+  module InstanceMethods
     # example: article.create_rule(:title => 'for friends', :description => 'blah blah blah', :allow => {:user => 2}, :deny => {})
     def public?; self.rule.public?; end
     def private?; self.rule.private?; end
@@ -42,7 +43,7 @@ module ActiveRecord::Acts::Accessible #:nodoc:
     end
 
     def editable_by?(user)
-      user.is_a?(User::Admin) || self.user == user rescue false
+      user.admin? || self.user == user rescue false
     end
   
     def rule
