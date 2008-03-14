@@ -1,10 +1,10 @@
 module ActiveRecord::Acts::Taggable
   def self.included(base)
     # CHANGED: this following class_eval. Actually a lot in this file.
-    base.module_eval <<-EOS
-      def self.taggable?; false; end
-      def taggable?; false; end
-    EOS
+#    base.module_eval <<-EOS
+#      def self.taggable?; false; end
+#      def taggable?; false; end
+#    EOS
     base.extend(ClassMethods)  
   end
 
