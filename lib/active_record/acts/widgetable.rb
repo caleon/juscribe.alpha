@@ -53,7 +53,7 @@ module ActiveRecord::Acts::Widgetable #:nodoc:
     end
     
     def clip!(attrs={})
-      raise ArgumentError, "Hash pair for :user_id/:user must be supplied." unless attrs[:user_id] ||= (attrs[:user].id if attrs[:user].is_a?(User))
+      raise ArgumentError, "Hash pair for :user_id/:user must be supplied." unless attrs[:user_id] ||= (attrs[:user].id if attrs[:user])
       pos = attrs.delete(:position)
       cl = self.clips.new(attrs)
       cl.place(pos) if pos
@@ -61,7 +61,7 @@ module ActiveRecord::Acts::Widgetable #:nodoc:
     end
     
     def unclip!(attrs={})
-      raise ArgumentError, "Hash pair for :user_id/:user must be supplied." unless attrs[:user_id] ||= (attrs[:user].id if attrs[:user].is_a?(User))
+      raise ArgumentError, "Hash pair for :user_id/:user must be supplied." unless attrs[:user_id] ||= (attrs[:user].id if attrs[:user])
       self.clips.find_by_user_id(attrs[:user_id]).destroy rescue nil
     end
     

@@ -13,11 +13,11 @@ class Event < ActiveRecord::Base
     self.name
   end
   
-  def to_path
+  def to_path(for_associated=false)
     if self.user.nil?
-      { :id => self.to_param }      
+      { :"#{for_associated ? 'event_id' : 'id'}" => self.to_param }
     else
-      { :user_id => self.user.to_param, :id => self.to_param }
+      { :user_id => self.user.to_param, :"#{for_associated ? 'event_id' : 'id'}" => self.to_param }
     end
   end
   

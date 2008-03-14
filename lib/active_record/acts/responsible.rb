@@ -1,3 +1,7 @@
+require_dependency 'response'
+require_dependency 'comment'
+require_dependency 'rating'
+require_dependency 'favorite'
 # TODO: Need to finish hooking in mailer actions
 module ActiveRecord::Acts::Responsible
   def self.included(base)
@@ -57,14 +61,12 @@ module ActiveRecord::Acts::Responsible
       self.reports.create(attrs)
     end
           
-    def favorited_by?(user_id)
-      user_id = user_id.id if user_id.is_a?(User)
-      !self.favorites.find_by_user_id(user_id).blank?
+    def favorited_by?(user)
+      !self.favorites.find_by_user_id(user.id).blank?
     end
   
-    def favorit(user_id)
-      user_id = user_id.id if user_id.is_a?(User)
-      Favorite.create(:user_id => user_id, :responsible => self)
+    def favorit(user)
+      Favorite.create(:user => user, :responsible => self)
     end
   
     # Usage: track.comment_with!(1, :secondary_id => 3, :body => "Hello")

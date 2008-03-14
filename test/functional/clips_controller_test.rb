@@ -204,14 +204,12 @@ class ClipsControllerTest < ActionController::TestCase
   end
  
   def test_destroy
-    @request.env["HTTP_REFERER"] = "http://www.cnn.com/"
     delete :destroy, widgets(:colin_clip).to_path, as(:colin)
     assert_redirected_to user_url(users(:colin))
     assert_equal "You have unclipped #{users(:colin).display_name}.", flash[:notice]
   end
   
   def test_destroy_by_random_user
-    @request.env["HTTP_REFERER"] = "http://www.cnn.com/"
     delete :destroy, widgets(:colin_clip).to_path, as(:alessandra)
     assert_redirected_to user_url(users(:alessandra))
     assert_equal "You are not authorized for that action.", flash[:warning]
@@ -230,10 +228,8 @@ class ClipsControllerTest < ActionController::TestCase
     assert widgets(:article_clip).accessible_by?(users(:colin))
     assert !widgets(:article_clip).accessible_by?(users(:nana))
     
-    @request.env["HTTP_REFERER"] = "http://www.cnn.com/"
     delete :destroy, widgets(:article_clip).to_polypath, as(:colin)
-    assert_redirected_to articles(:blog).to_path # Instead of article_url since this isn't published yet
-    # The previous line works but not in test because this test doesn't recognize it's redirected to a different controller.
+    assert_redirected_to article_url(articles(:blog).to_path)
     assert_equal "You have unclipped #{articles(:blog).display_name}.", flash[:notice]
   end
 end

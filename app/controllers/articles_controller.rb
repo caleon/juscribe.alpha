@@ -10,8 +10,10 @@ class ArticlesController < ApplicationController
       display_error(:message => 'That user could not be found.')
       return
     end
-    find_opts = get_find_opts(:order => 'articles.id DESC', :conditions => ["articles.user_id = ?", @user.id])
-    @articles = Article.find(:all, find_opts)
+#    find_opts = get_find_opts(:order => 'articles.id DESC', :conditions => ["articles.user_id = ?", @user.id])
+    find_opts = get_find_opts(:order => 'articles.id DESC')
+#    @articles = Article.find(:all, find_opts)
+    @articles = @user.articles.find(:all, find_opts)
   end
   
   def show

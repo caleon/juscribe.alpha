@@ -1,5 +1,5 @@
 module KropperHelper
-  KROPPER_SCRIPTS = %w( dom-drag kropper )
-  KROPPER_CSS = 'kropper'
+  def kropper_scripts; %w( dom-drag kropper ); end
+  def kropper_css; 'kropper'; end
   
 end

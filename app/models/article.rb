@@ -1,7 +1,7 @@
 class Article < ActiveRecord::Base
   include_custom_plugins  
   
-  belongs_to :user
+  belongs_to :user, :include => :primary_picture
   has_many :pictures, :as => :depictable
     
   validates_presence_of :user_id, :title, :permalink, :content

@@ -5,7 +5,7 @@ class Picture < ActiveRecord::Base
   belongs_to :user
   belongs_to :depictable, :polymorphic => true
   has_attachment  :content_type => :image,
-                  :storage => (RAILS_ENV != 'production' ? :file_system : :s3),
+                  :storage => :file_system, #(RAILS_ENV != 'production' ? :file_system : :s3),
                   :path_prefix => "public/images/uploads", # TODO: Setup shared directory.
                   :min_size => 100.bytes,
                   :max_size => 2048.kilobytes,

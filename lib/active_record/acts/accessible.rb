@@ -18,7 +18,7 @@ module ActiveRecord::Acts::Accessible #:nodoc:
     
       class_inheritable_reader :acts_as_accessible_options
     
-      has_one :permission, :as => :permissible
+      has_one :permission, :as => :permissible, :include => :permission_rule
 
       include ActiveRecord::Acts::Accessible::InstanceMethods
       extend ActiveRecord::Acts::Accessible::SingletonMethods

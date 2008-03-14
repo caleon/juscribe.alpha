@@ -6,7 +6,7 @@
 	<%# auto_discovery_link_tag if action_accepts?(:xml) %>
 	<%= link_tags %>	
 	<%= stylesheet_link_tag 'setup', 'main', 'modalbox', 'lightbox', :cache => 'base' %>
-	<%= stylesheet_link_tag KropperHelper::KROPPER_CSS if @use_kropper %>
+	<%= stylesheet_link_tag kropper_css if @use_kropper %>
 	<%= yield :extra_stylesheets %>
 	<%= stylesheet_link_tag @skin_file if @skin_file %>
 

@@ -78,7 +78,8 @@ ActionController::Routing::Routes.draw do |map|
                                                     
   end
   
-  # Notice that in the following, there aren't paths to Draft clips. That's because Drafts aren't public. Intentionally done.
+  # Notice that in the following, there aren't paths to Draft clips. That's because Drafts aren't public.
+  # Intentionally done. This means I don't need to check #widgetable? on a draft. Routing handles that.
   map.with_options :controller => 'clips', :requirements => { :year => /\d{4}/, :month => /\d{1,2}/, :day => /\d{1,2}/,
                                                               :article_id => regex_for(:article, :permalink),
                                                               :user_id => regex_for(:user, :nick) } do |cl|

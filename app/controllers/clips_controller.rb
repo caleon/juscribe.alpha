@@ -16,7 +16,7 @@ class ClipsController < ApplicationController
   end
   
   def show
-    return unless setup
+    return unless setup # Widget does not associate with Permission.
     respond_to do |format|
       format.html
       format.js
@@ -88,7 +88,7 @@ class ClipsController < ApplicationController
   def setup(includes=nil, error_opts={})
     return unless get_widgetable
     @clip = @widgetable.clips.find(params[:id], :include => includes)
-    true && authorize(@widgetable)
+    authorize(@widgetable)
   rescue ActiveRecord::RecordNotFound
     error_opts[:message] ||= "That Clip could not be found. Please check the address."
     display_error(error_opts) # Error will only have access to @object from the setup method.
@@ -103,9 +103,9 @@ class ClipsController < ApplicationController
     end
     widgetable_class = widgetable_id_key.gsub(/_id$/, '').classify.constantize
     if widgetable_class == Article
-      @widgetable = Article.primary_find(params, :for_association => true)
+      @widgetable = Article.primary_find(params, :for_association => true, :include => :permission )
     else
-      @widgetable = widgetable_class.primary_find(params[widgetable_id_key])
+      @widgetable = widgetable_class.primary_find(params[widgetable_id_key], :include => :permission)
     end
     raise ActiveRecord::RecordNotFound if @widgetable.nil?
     @widgetable

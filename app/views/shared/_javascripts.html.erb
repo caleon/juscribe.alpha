@@ -1,5 +1,5 @@
 <%= javascript_include_tag :defaults, 'lowpro', 'modalbox', 'lightbox', :cache => 'base' %>
-<%= javascript_include_tag *KropperHelper::KROPPER_SCRIPTS if @use_kropper %>
+<%= javascript_include_tag *kropper_scripts if @use_kropper %>
 <% if print_scripts_block? -%>
 	<script type="text/javascript">
 	<%= extra_scripts %>
