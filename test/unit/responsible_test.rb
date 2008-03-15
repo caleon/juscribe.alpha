@@ -37,7 +37,7 @@ class ResponsibleTest < Test::Unit::TestCase
     acc1 = @acc[1]
     assert !acc1.reported_with?
     assert rep = acc1.report(:user => @user)
-    assert rep.variation == RESPONSE_PREFS[:report][:questionable]
+    assert rep.variation == Report::VARIATIONS[:questionable]
     assert 1, acc1.num_reported_with
     assert acc1.reported_with?
     assert !acc1.reported_with?(:dupe)
@@ -65,10 +65,10 @@ class ResponsibleTest < Test::Unit::TestCase
     assert Favorite.general.is_a?(Array)
     assert Favorite.general.size <= 5
     acc1 = @acc[1]
-    assert !acc1.favorited_by?(@user.id)
-    assert acc1.favorit(@user.id)
+    assert !acc1.favorited_by?(@user)
+    assert acc1.favorit(@user)
     assert_equal 1, Favorite.count
-    assert acc1.favorited_by?(@user.id)
+    assert acc1.favorited_by?(@user)
     fav = acc1.favorit(@user)
     assert fav.is_a?(Favorite) && !fav.valid?
     assert_raise(ActiveRecord::RecordInvalid) { fav.save! }

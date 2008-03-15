@@ -1,6 +1,6 @@
 class ArticlesController < ApplicationController
   use_shared_options :custom_finder => :find_by_path
-  # setup will handle authorization. as well as defaults from application.rb
+  # setup will handle authorization. as well as defaults from common_methods.rb
   verify_login_on :new, :create, :edit, :update, :destroy, :publish, :unpublish
   authorize_on :edit, :update, :publish, :unpublish, :destroy
   
@@ -10,9 +10,7 @@ class ArticlesController < ApplicationController
       display_error(:message => 'That user could not be found.')
       return
     end
-#    find_opts = get_find_opts(:order => 'articles.id DESC', :conditions => ["articles.user_id = ?", @user.id])
     find_opts = get_find_opts(:order => 'articles.id DESC')
-#    @articles = Article.find(:all, find_opts)
     @articles = @user.articles.find(:all, find_opts)
   end
   

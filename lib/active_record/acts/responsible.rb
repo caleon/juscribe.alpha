@@ -1,7 +1,3 @@
-require_dependency 'response'
-require_dependency 'comment'
-require_dependency 'rating'
-require_dependency 'favorite'
 # TODO: Need to finish hooking in mailer actions
 module ActiveRecord::Acts::Responsible
   def self.included(base)
@@ -12,19 +8,21 @@ module ActiveRecord::Acts::Responsible
     base.extend(ClassMethods)  
   end
 
-  module ClassMethods
+  module ClassMethods    
     def acts_as_responsible(options={})
+      variations_hash = { :report => Report::VARIATIONS }
       write_inheritable_attribute(:acts_as_responsible_options, {
         :responsible_type => ActiveRecord::Base.send(:class_name_of_active_record_descendant, self).to_s,
         # TODO: hook destroy callback to remove associated.
-        :destroy => options[:destroy]
+        :destroy => options[:destroy],
+        :variations => variations_hash
       })
     
       class_inheritable_reader :acts_as_responsible_options
     
       has_many :responses, :as => :responsible
       has_many :reports, :as => :responsible do
-        RESPONSE_PREFS[:report].each_pair do |key, val|
+        variations_hash[:report].each_pair do |key, val|
           class_eval %{
             def #{key}; find(:all, :conditions => ["responses.variation = ?", #{val}]); end
           }
@@ -46,8 +44,14 @@ module ActiveRecord::Acts::Responsible
   end
 
   module InstanceMethods
+    def response_values(klass, kind=nil)
+      res = self.class.acts_as_responsible_options[:variations][klass]
+      kind ? res[kind] : res
+    end
+    
     def num_reported_with(var=nil)
-      self.reports.count(:all, :conditions => var ? ["variation = ?", RESPONSE_PREFS[:report][var]] : nil)
+      #self.reports.count(:all, :conditions => var ? ["variation = ?", RESPONSE_PREFS[:report][var]] : nil);
+      self.reports.count(:all, :conditions => var ? ["variation = ?", response_values(:report, var)] : nil)
     end
   
     def reported_with?(var=:questionable)
@@ -57,7 +61,7 @@ module ActiveRecord::Acts::Responsible
     def report(*args)
       attrs = args.extract_options!
       var = args.shift || :questionable
-      attrs[:variation] ||= RESPONSE_PREFS[:report][var]
+      attrs[:variation] ||= response_values(:report, var)
       self.reports.create(attrs)
     end
           
