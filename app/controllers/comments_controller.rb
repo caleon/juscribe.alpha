@@ -59,7 +59,7 @@ class CommentsController < ApplicationController
     if @comment.update_attributes(params[:comment])
       msg = "You have successfully updated #{@comment.display_name}."
       respond_to do |format|
-        format.html { flash[:notice] = msg; redirect_to commentable_url_for(@comment) }
+        format.html { flash[:notice] = msg; redirect_to commentable_url_for(@commentable) }
         format.js { flash.now[:notice] = msg }
       end
     else
@@ -130,7 +130,7 @@ class CommentsController < ApplicationController
   end
   
   def commentable_url_for(commentable)
-    prefix= "#{commentable.class.to_s.underscore}_"
+    prefix = commentable.class.to_s.underscore
     instance_eval %{ #{prefix}_url(commentable.to_path) }
   end
 end

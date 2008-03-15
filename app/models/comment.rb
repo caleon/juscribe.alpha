@@ -22,7 +22,7 @@ class Comment < ActiveRecord::Base
   end
   
   def accessible_by?(user=nil)
-    (self.commentable.accessible_by?(user) rescue true) && self.rule.accessible_by?(user)
+    (self.user == user || self.commentable.accessible_by?(user) rescue true) && self.rule.accessible_by?(user)
   end
   
   def editable_by?(user=nil)
