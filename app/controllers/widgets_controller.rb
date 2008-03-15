@@ -1,9 +1,10 @@
 class WidgetsController < ApplicationController
   use_shared_options
-  verify_login_on :new, :create, :edit, :update, :destroy
+  verify_login_on :new, :create, :edit, :update, :destroy, :place, :unplace
+  authorize_on :index, :show, :edit, :update, :destroy, :place, :unplace
 
   def index
-    return unless get_user(:message => "Unable to find the user specified. Please check the address.")
+    return unless get_user(:message => "Unable to find the user specified. Please check the address.") && authorize(@user)
     find_opts = get_find_opts(:order => 'id DESC')
     @widgets = @user.widgets.find(:all, find_opts)
     respond_to do |format|
@@ -44,7 +45,7 @@ class WidgetsController < ApplicationController
     if @widget.update_attributes(params[:widget])
       msg = "You have successfully updated #{@widget.display_name}."
       respond_to do |format|
-        format.html { flash[:notice] = msg; redirect_to user_widget_url(@widget.to_path) }
+        format.html { flash[:notice] = msg; redirect_to user_widgets_url(@user) }
         format.js { flash.now[:notice] = msg }
       end
     else
@@ -58,10 +59,10 @@ class WidgetsController < ApplicationController
   
   def destroy
     return unless setup && authorize(@widget, :editable => true)
-    @widgetable.nullify!(:user => get_viewer)
+    @widget.nullify!(get_viewer)
     msg = "You have deleted #{@widget.display_name}."
     respond_to do |format|
-      format.html { flash[:notice] = msg; redirect_to user_widgets_url(@user) }
+      format.html { flash[:notice] = msg; redirect_to user_url(@user) }
       format.js { flash.now[:notice] = msg }
     end
   end
@@ -74,11 +75,13 @@ class WidgetsController < ApplicationController
       format.html { flash[:notice] = msg; redirect_to user_widgets_url(@user) }
       format.js { flash.now[:notice] = msg }
     end
+  rescue
+    display_error(:message => "Invalid request. Please try again.")
   end
   
   def unplace
     return unless setup && authorize(@widget, :editable => true)
-    @widget.unplace!(params[:widget][:position])
+    @widget.unplace!
     msg = "You have unplaced #{@widget.display_name}."
     respond_to do |format|
       format.html { flash[:notice] = msg; redirect_to user_widgets_url(@user) }
@@ -88,7 +91,7 @@ class WidgetsController < ApplicationController
   
   private
   def setup(includes=nil, error_opts={})
-    @user = User.primary_find(params[:user_id])
+    return false unless get_user
     @widget = @user.widgets.find(params[:id], :include => includes)
     true && authorize(@widget)
   rescue ActiveRecord::RecordNotFound
@@ -108,5 +111,14 @@ class WidgetsController < ApplicationController
       return false
     end
     true
+  end
+  
+  def get_user(opts={})
+    @user = User.primary_find(params[:user_id])
+    raise ActiveRecord::RecordNotFound if @user.nil?
+    @user
+  rescue ActiveRecord::RecordNotFound
+    display_error(:message => opts[:message] || "That User could not be found.")
+    false
   end
 end

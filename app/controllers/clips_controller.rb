@@ -98,7 +98,7 @@ class ClipsController < ApplicationController
   
   # Method sets @widgetable based on param keys, or if not found, displays error.
   def get_widgetable(opts={})
-    return if (possible_widgetable_id_keys = params.keys.map(&:to_s).select{|key| key.match(/_id$/)}).empty?
+    return false if (possible_widgetable_id_keys = params.keys.map(&:to_s).select{|key| key.match(/_id$/)}).empty?
     widgetable_id_key = %w( article picture song project item group event entry list playlist user ).map{|kls| "#{kls}_id"}.detect do |key|
       possible_widgetable_id_keys.include?(key)
     end
@@ -111,7 +111,7 @@ class ClipsController < ApplicationController
     raise ActiveRecord::RecordNotFound if @widgetable.nil?
     @widgetable
   rescue ActiveRecord::RecordNotFound
-    display_error(:message => opts[:message] || "That #{widgetable_class} does not have the clip you requested.")
+    display_error(:message => opts[:message] || "That #{widgetable_class} could not be found.")
     # Incorrect messaging. This place is reached if the widgetable does not find a match. Not for the widget itself.
     false
   end

@@ -200,7 +200,7 @@ class ClipsControllerTest < ActionController::TestCase
   def test_update_with_wrong_nick
     put :update, widgets(:colin_clip).to_path.update(:widget => { :name => 'blah' }, :user_id => users(:colin).nick.chop), as(:colin)
     assert_template 'error'
-    assert_flash_equal "That User does not have the clip you requested.", :warning
+    assert_flash_equal "That User could not be found.", :warning
   end
  
   def test_destroy

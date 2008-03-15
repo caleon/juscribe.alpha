@@ -21,7 +21,7 @@ module ActiveRecord
     def display_name(opts={}); "#{self.to_param} (#{self.class})"; end
     
     def nullify!(user=nil)
-      user.wheel? ? destroy! : (self.nullify if self.editable_by?(user) rescue nil)
+      (user && user.wheel?) ? destroy! : (self.nullify if self.editable_by?(user) rescue nil)
       # Wheel can destroy. Admins cannot.
     end
     
