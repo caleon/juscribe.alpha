@@ -1,0 +1,7 @@
+--- 
+:address: "smtp.example.com" 
+:port: 587 
+:domain: "smtp.example.com" 
+:user_name: "test@topfunky.com" 
+:password: "not-the-real-password" 
+:authentication: :plain
