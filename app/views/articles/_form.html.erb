@@ -5,7 +5,7 @@
 <br />
 
 <% if @article.new_record? || @article.draft? %>
-<input type="submit" name="publish" value="Publish" />
+<input type="submit" name="article[publish]" value="Publish" />
 <% end %>
 
-<input type="submit" name="publish" value="Save as Draft" />
+<input type="submit" name="article[publish]" value="Save as Draft" />

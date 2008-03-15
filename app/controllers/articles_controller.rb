@@ -44,7 +44,7 @@ class ArticlesController < ApplicationController
       create_uploaded_picture_for(@article, :save => true) if picture_uploaded?
       msg = "You have successfully created your article."
       respond_to do |format|
-        format.html { flash[:notice] = msg; redirect_to article_url(@article.to_path) }
+        format.html { flash[:notice] = msg; redirect_to article_url_for(@article) }
         format.js { flash.now[:notice] = msg }
       end
     else
@@ -73,7 +73,7 @@ class ArticlesController < ApplicationController
       respond_to do |format|
         format.html do
           flash[:notice] = msg
-          redirect_to @article.published? ? article_url(@article.to_path) : draft_url(@article.to_path)
+          redirect_to article_url_for(@article)
         end
         format.js { flash.now[:notice] = msg }
       end
@@ -153,6 +153,11 @@ class ArticlesController < ApplicationController
   def only_permalink_provided?
     params[:id] && !(params[:year] || params[:month] || params[:day] || params[:user_id
       ])
+  end
+  
+  def article_url_for(article)
+    prefix = article.published? ? 'article' : 'draft'
+    instance_eval %{ #{prefix}_url(article.to_path) }
   end
   
 end
