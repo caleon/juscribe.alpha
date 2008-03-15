@@ -1,6 +1,6 @@
 class Comment < Response
   acts_as_accessible
-  
+
   belongs_to :original, :class_name => "Comment", :foreign_key => :secondary_id
   has_many :followups, :class_name => "Comment", :as => :original, :foreign_key => :secondary_id
   
@@ -20,6 +20,10 @@ class Comment < Response
   
   def accessible_by?(user=nil)
     (self.responsible.accessible_by?(user) rescue true) && self.rule.accessible_by?(user)
+  end
+  
+  def editable_by?(user=nil)
+    user && (self.responsible.editable_by?(user) || super)
   end
     
   #######

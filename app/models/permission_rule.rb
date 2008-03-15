@@ -32,11 +32,11 @@ class PermissionRule < ActiveRecord::Base
     if self.public? || (user && user.admin?)
       return true
     elsif self.protected?
-      return user && !self.denied[:user].include?(user.id) &&
-      (self.denied[:group] & user.group_ids).empty?
+      return self.user == user || (user && !self.denied[:user].include?(user.id) &&
+      (self.denied[:group] & user.group_ids).empty?)
     elsif self.private?
-      return user && !(self.allowed[:group] & user.group_ids).empty? ||
-      (user && self.allowed[:user].include?(user.id))
+      return self.user == user || (user && !(self.allowed[:group] & user.group_ids).empty? ||
+      (user && self.allowed[:user].include?(user.id)))
     end
     false
   end
