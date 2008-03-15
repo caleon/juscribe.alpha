@@ -181,7 +181,7 @@ class ClipsControllerTest < ActionController::TestCase
   
   def test_update
     put :update, widgets(:colin_clip).to_polypath.update(:widget => { :name => 'blah' }), as(:colin)
-    assert_redirected_to user_clip_url(widgets(:colin_clip).to_polypath)
+    assert_redirected_to user_url(users(:colin))
     assert_equal "You have successfully updated #{widgets(:colin_clip).display_name}.", flash[:notice]
   end
   

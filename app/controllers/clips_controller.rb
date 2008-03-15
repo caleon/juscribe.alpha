@@ -32,7 +32,7 @@ class ClipsController < ApplicationController
   
   def create
     return unless get_widgetable(:message => "Unable to find object to clip. Please check the address.") && authorize(@widgetable)
-    if @clip = @widgetable.clip!(params[:widget].merge(:user => get_viewer)) # Error messaging for already being clipped.
+    if @clip = @widgetable.clip!(params[:widget].merge(:user => get_viewer)) # TODO: Error messaging for already being clipped.
       msg = "You have clipped #{@widgetable.display_name}."
       respond_to do |format|
         format.html { flash[:notice] = msg; redirect_to widgetable_url_for(@widgetable) }
@@ -61,7 +61,7 @@ class ClipsController < ApplicationController
     if @clip.update_attributes(params[:clip])
       msg = "You have successfully updated #{@clip.display_name}."
       respond_to do |format|
-        format.html { flash[:notice] = msg; redirect_to clip_url_for(@clip) } # New pattern for polymorphic models
+        format.html { flash[:notice] = msg; redirect_to widgetable_url_for(@widgetable) } # New pattern for polymorphic models
         format.js { flash.now[:notice] = msg }
       end
     else
@@ -112,7 +112,6 @@ class ClipsController < ApplicationController
     @widgetable
   rescue ActiveRecord::RecordNotFound
     display_error(:message => opts[:message] || "That #{widgetable_class} could not be found.")
-    # Incorrect messaging. This place is reached if the widgetable does not find a match. Not for the widget itself.
     false
   end
   
