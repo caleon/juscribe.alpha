@@ -87,36 +87,51 @@ ActionController::Routing::Routes.draw do |map|
     cl.article_clips ':year/:month/:day/:article_id/by/:user_id/clips', :action => 'index', :conditions => { :method => :get }
     cl.connect ':year/:month/:day/:article_id/by/:user_id/clips', :action => 'create', :conditions => { :method => :post }
     cl.new_article_clip ':year/:month/:day/:article_id/by/:user_id/clips/new', :action => 'new', :conditions => { :method => :get }
-    cl.edit_article_clip ':year/:month/:day/:article_id/by/:user_id/clips/:id/edit', :action => 'edit', :conditions => { :method => :get }, :requirements => { :id => /\d+/ }
-    cl.article_clip ':year/:month/:day/:article_id/by/:user_id/clips/:id', :action => 'show', :conditions => { :method => :get }, :requirements => { :id => /\d+/ }
-    cl.connect ':year/:month/:day/:article_id/by/:user_id/clips/:id', :action => 'update', :conditions => { :method => :put }, :requirements => { :id => /\d+/ }
-    cl.connect ':year/:month/:day/:article_id/by/:user_id/clips/:id', :action => 'destroy', :conditions => { :method => :delete }, :requirements => { :id => /\d+/ }
+    cl.edit_article_clip ':year/:month/:day/:article_id/by/:user_id/clips/:id/edit', :action => 'edit', :conditions => { :method => :get }, :requirements => { :id => regex_for(:clip, :id) }
+    cl.article_clip ':year/:month/:day/:article_id/by/:user_id/clips/:id', :action => 'show', :conditions => { :method => :get }, :requirements => { :id => regex_for(:clip, :id) }
+    cl.connect ':year/:month/:day/:article_id/by/:user_id/clips/:id', :action => 'update', :conditions => { :method => :put }, :requirements => { :id => regex_for(:clip, :id) }
+    cl.connect ':year/:month/:day/:article_id/by/:user_id/clips/:id', :action => 'destroy', :conditions => { :method => :delete }, :requirements => { :id => regex_for(:clip, :id) }
   end
 
-  map.resources :messages
+  map.resources :messages, :requirements => { :id => regex_for(:message, :id) }
   
-  map.resources(:pictures) {|picture| picture.resources :clips }
+  map.resources :pictures, :requirements => { :id => regex_for(:picture, :id) } do |picture|
+    picture.resources :clips, :requirements => { :picture_id => regex_for(:picture, :id),
+                                                 :clip_id => regex_for(:clip, :id) }
+  end
 
   map.resources :users,
                 :member => { :friends => :get, :befriend => :put, :unfriend => :put,
                              :about => :get, :edit_password => :get,
                              :update_password => :put },
                 :requirements => { :id => regex_for(:user, :nick) } do |user|
-    user.resources :widgets, :member => { :place => :put, :unplace => :put }
-    user.resources :clips, :requirements => { :id => /\d+/ }
-    user.resources :entries
-    user.resources :events, :member => { :begin_event => :put, :end_event => :put } do |event|
-      event.resources :clips
+    user.resources :widgets, :member => { :place => :put, :unplace => :put },
+                   :requirements => { :user_id => regex_for(:user, :nick), :id => regex_for(:widget, :id) }
+    user.resources :clips, :requirements => { :user_id => regex_for(:user, :nick), :id => regex_for(:clip, :id) }
+    user.resources :entries, :requirements => { :user_id => regex_for(:user, :nick), :id => regex_for(:entry, :id) }
+    user.resources :events, :member => { :begin_event => :put, :end_event => :put },
+                   :requirements => { :user_id => regex_for(:user, :nick), :id => regex_for(:event, :id) } do |event|
+      event.resources :clips, :requirements => { :user_id => regex_for(:user, :nick),
+                                                 :event_id => regex_for(:event, :id),
+                                                 :id => regex_for(:clip, :id) }
     end
-    user.resources(:pictures) {|picture| picture.resources :clips }
+    user.resources :pictures, :requirements => { :user_id => regex_for(:user, :nick),
+                                                 :id => regex_for(:picture, :id)}  do |picture|
+      picture.resources :clips, :requirements => { :user_id => regex_for(:user, :nick),
+                                                   :picture_id => regex_for(:picture, :id),
+                                                   :id => regex_for(:clip, :id) }
+    end
   end
       
   map.login 'login', :controller => 'users', :action => 'login'
   map.logout 'logout', :controller => 'users', :action => 'logout'
   map.mine 'mine', :controller => 'users', :action => 'mine'
-  map.contents 'contents/:topic', :controller => 'main', :action => 'contents', :topic => nil
-  map.about 'about/:topic', :controller => 'main', :action => 'about', :topic => nil
-  map.help 'help/:topic', :controller => 'main', :action => 'help', :topic => nil
+  map.contents 'contents/:topic', :controller => 'main', :action => 'contents',
+                                  :requirements => { :topic => regex_for(:main, :topic) }
+  map.about 'about/:topic', :controller => 'main', :action => 'about', :topic => nil,
+                            :requirements => { :topic => regex_for(:main, :topic) }
+  map.help 'help/:topic', :controller => 'main', :action => 'help', :topic => nil,
+                          :requirements => { :topic => regex_for(:main, :topic) }
   map.copyright 'copyright', :controller => 'main', :action => 'copyright'
 
   # Install the default routes as the lowest priority.

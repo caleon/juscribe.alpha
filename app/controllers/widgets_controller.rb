@@ -1,22 +1,112 @@
 class WidgetsController < ApplicationController
   use_shared_options
+  verify_login_on :new, :create, :edit, :update, :destroy
+
+  def index
+    return unless get_user(:message => "Unable to find the user specified. Please check the address.")
+    find_opts = get_find_opts(:order => 'id DESC')
+    @widgets = @user.widgets.find(:all, find_opts)
+    respond_to do |format|
+      format.html
+      format.js
+      format.xml
+    end
+  end
+  
+  def show
+    return unless setup
+    respond_to do |format|
+      format.html
+      format.js
+      format.xml
+    end
+  end
+  
+  def new
+    # This should not be an accessible method.
+  end
+  
+  def create
+    # This should not be an accessible method.
+  end
+  
+  def edit
+    return unless setup && authorize(@widget, :editable => true)
+    @page_title = "#{@widget.display_name} - Edit"
+    respond_to do |format|
+      format.html
+      format.js
+    end
+  end
+  
+  def update
+    return unless setup && authorize(@widget, :editable => true)
+    if @widget.update_attributes(params[:widget])
+      msg = "You have successfully updated #{@widget.display_name}."
+      respond_to do |format|
+        format.html { flash[:notice] = msg; redirect_to user_widget_url(@widget.to_path) }
+        format.js { flash.now[:notice] = msg }
+      end
+    else
+      flash.now[:warning] = "There was an error updating your #{@widget.display_name}."
+      respond_to do |format|
+        format.html { render :action => 'edit' }
+        format.js { render :action => 'update_error' }
+      end
+    end
+  end
+  
+  def destroy
+    return unless setup && authorize(@widget, :editable => true)
+    @widgetable.nullify!(:user => get_viewer)
+    msg = "You have deleted #{@widget.display_name}."
+    respond_to do |format|
+      format.html { flash[:notice] = msg; redirect_to user_widgets_url(@user) }
+      format.js { flash.now[:notice] = msg }
+    end
+  end
   
   def place
-    return unless setup
+    return unless setup && authorize(@widget, :editable => true)
+    @widget.place!(params[:widget][:position])
+    msg = "You have placed #{@widget.display_name}."
+    respond_to do |format|
+      format.html { flash[:notice] = msg; redirect_to user_widgets_url(@user) }
+      format.js { flash.now[:notice] = msg }
+    end
   end
   
   def unplace
-    return unless setup
+    return unless setup && authorize(@widget, :editable => true)
+    @widget.unplace!(params[:widget][:position])
+    msg = "You have unplaced #{@widget.display_name}."
+    respond_to do |format|
+      format.html { flash[:notice] = msg; redirect_to user_widgets_url(@user) }
+      format.js { flash.now[:notice] = msg }
+    end
   end
   
   private
   def setup(includes=nil, error_opts={})
     @user = User.primary_find(params[:user_id])
-    @widget = @user.clips.find(params[:id], :include => includes)
+    @widget = @user.widgets.find(params[:id], :include => includes)
     true && authorize(@widget)
   rescue ActiveRecord::RecordNotFound
     error_opts[:message] ||= "That User/Widget could not be found. Please check the URL."
     display_error(error_opts)
     false
+  end
+  
+  def authorize(object, opts={})
+    return true if !opts[:manual] && !(self.class.read_inheritable_attribute(:authorize_list) || []).include?(action_name.intern)
+    unless object && object.accessible_by?(get_viewer) && (!opts[:editable] || object.editable_by?(get_viewer))
+      msg = "You are not authorized for that action."
+      respond_to_without_type_registration do |format|
+        format.html { flash[:warning] = msg; redirect_to get_viewer || login_url }
+        format.js { flash.now[:warning] = msg; render :action => 'shared/unauthorized' }
+      end
+      return false
+    end
+    true
   end
 end

@@ -8,9 +8,10 @@ class ClipsController < ApplicationController
   def index
     return unless get_widgetable(:message => "Unable to find the object specified. Please check the address.") && authorize(@widgetable)
     find_opts = get_find_opts(:order => 'id DESC')
-    @clips = Widget.find(:all, find_opts.merge(:conditions => ["widgetable_type = ? AND widgetable_id = ?", @widgetable.class.to_s, @widgetable.id]))
+    @clips = @widgetable.clips.find(:all, find_opts)
     respond_to do |format|
       format.html
+      format.js
       format.xml
     end
   end

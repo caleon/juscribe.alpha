@@ -1,10 +1,13 @@
 # NOTE: Needs to have backslashes escaped.
 REGEXP_STR = { # Defaults
+               :id             => "\\d+",
                :permalink      => "[a-zA-Z0-9][-a-zA-Z0-9]+[a-zA-Z0-9]",
                :title          => "[^\\s].+[^\\s]",
                :name           => "[^\\s].+[^\\s]",
                :content        => "[^\\s].+[^\\s]",
                :body           => "[^\\s].+[^\\s]",
+               # Main
+               :main      => { :topic => "([-_a-zA-Z0-9]+)?" },
                # Model specific:
                :article   => { :permalink => "[a-zA-Z0-9][-a-zA-Z0-9]+[a-zA-Z0-9]" },
                :entry     => { :location => "([^\\s].+[^\\s])?",
