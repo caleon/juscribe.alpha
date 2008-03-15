@@ -1,0 +1,5 @@
+blog_comment:
+  user: keira
+  commentable_type: Article
+  commentable_id: <%= 'blog'.hash.abs %>
+  body: Nice article, yo. This be your first comment.

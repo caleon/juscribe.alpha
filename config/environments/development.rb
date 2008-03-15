@@ -34,16 +34,10 @@ YAML.load_file("#{RAILS_ROOT}/config/preferences/db.yml")[RAILS_ENV]
 SITE =
 YAML.load_file("#{RAILS_ROOT}/config/preferences/site.yml")
 
-require "#{RAILS_ROOT}/app/models/response"
-require "#{RAILS_ROOT}/app/models/response/comment"
-require "#{RAILS_ROOT}/app/models/response/rating"
-require "#{RAILS_ROOT}/app/models/response/report"
-require "#{RAILS_ROOT}/app/models/response/favorite"
 require "#{RAILS_ROOT}/lib/plugin_package"
 require "#{RAILS_ROOT}/lib/active_record/acts/accessible"
 require "#{RAILS_ROOT}/lib/active_record/acts/itemizable"
 require "#{RAILS_ROOT}/lib/active_record/acts/layoutable"
-require "#{RAILS_ROOT}/lib/active_record/acts/responsible"
 require "#{RAILS_ROOT}/lib/active_record/acts/taggable"
 require "#{RAILS_ROOT}/lib/active_record/acts/widgetable"
 require "#{RAILS_ROOT}/lib/active_record/validations/constants"
@@ -53,7 +47,6 @@ require "#{RAILS_ROOT}/lib/active_record/validations/routing_helper"
 ActiveRecord::Base.send(:include, ActiveRecord::Validations::FormatValidations)
 ActiveRecord::Base.send(:include, ActiveRecord::Acts::Accessible)
 ActiveRecord::Base.send(:include, ActiveRecord::Acts::Itemizable)
-ActiveRecord::Base.send(:include, ActiveRecord::Acts::Responsible)
 ActiveRecord::Base.send(:include, ActiveRecord::Acts::Taggable)
 ActiveRecord::Base.send(:include, ActiveRecord::Acts::Widgetable)
 ActiveRecord::Base.send(:include, PluginPackage)

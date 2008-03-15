@@ -1,6 +1,0 @@
-blog_comment:
-  type: Comment
-  user: keira
-  responsible_type: Article
-  responsible_id: <%= 'blog'.hash.abs %>
-  body: Nice article, yo. This be your first comment.

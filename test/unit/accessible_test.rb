@@ -58,41 +58,41 @@ class AccessibleTest < ActiveSupport::TestCase
     assert !acc1.editable_by?(@user)
     acc1.user = @user
     acc1.save
-    assert acc1.editable_by?(@user), "Is @user a User::Admin? #{@user.is_a?(User::Admin)}"
+    assert acc1.editable_by?(@user)
     assert !acc1.editable_by?(@stranger)
   end
   
   def test_whitelist_blacklist
     acc1 = AccessibleMixin.create(:user => @colin)
     rule1 = acc1.create_rule(:user => @user)
-    rule1.deny!(:user, @user)
+    rule1.deny!(:user, @stranger)
     assert rule1.protected?
     assert_equal rule1, acc1.rule
-    assert !rule1.accessible_by?(@user)
-    assert !acc1.accessible_by?(@user)
+    assert !rule1.accessible_by?(@stranger)
+    assert !acc1.accessible_by?(@stranger)
     rule1.allow!(:user, @user)
     # Because #allow! doesn't remove the user from denied list:
-    assert !rule1.accessible_by?(@user)
-    assert !acc1.accessible_by?(@user)
+    assert !rule1.accessible_by?(@stranger)
+    assert !acc1.accessible_by?(@stranger)
     
-    rule1.whitelist!(:user, @user)
+    rule1.whitelist!(:user, @stranger)
     assert rule1.public? # This is only because there aren't other users on lists
-    assert rule1.allowed[:user].include?(@user.id)
+    assert rule1.allowed[:user].include?(@stranger.id)
     assert_equal rule1, acc1.rule
     assert_equal @colin, acc1.user
     assert_equal rule1.allowed, acc1.reload.rule.allowed # Hm, hate that I have to reload...
-    assert rule1.accessible_by?(@user)
-    assert acc1.rule.accessible_by?(@user)
-    assert acc1.accessible_by?(@user)
+    assert rule1.accessible_by?(@stranger)
+    assert acc1.rule.accessible_by?(@stranger)
+    assert acc1.accessible_by?(@stranger)
     assert_equal rule1, acc1.rule
-    assert acc1.accessible_by?(@user)
-    assert !rule1.denied[:user].include?(@user.id)
+    assert acc1.accessible_by?(@stranger)
+    assert !rule1.denied[:user].include?(@stranger.id)
     
-    rule1.blacklist!(:user, @user)
+    rule1.blacklist!(:user, @stranger)
     #flunk "#{acc1.rule.denied.inspect}"
-    assert rule1.denied[:user].include?(@user.id)
-    assert !acc1.reload.accessible_by?(@user) # Another reload needed
-    assert !rule1.allowed[:user].include?(@user.id)
+    assert rule1.denied[:user].include?(@stranger.id)
+    assert !acc1.reload.accessible_by?(@stranger) # Another reload needed
+    assert !rule1.allowed[:user].include?(@stranger.id)
   end
   
   def test_accessible_check

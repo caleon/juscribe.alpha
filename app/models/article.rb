@@ -3,6 +3,7 @@ class Article < ActiveRecord::Base
   
   belongs_to :user, :include => :primary_picture
   has_many :pictures, :as => :depictable
+  has_many :comments, :as => :commentable
     
   validates_presence_of :user_id, :title, :permalink, :content
   validates_length_of :title, :in => (3..100)

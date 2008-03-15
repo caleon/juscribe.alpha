@@ -1,8 +1,11 @@
-class Comment < Response
+class Comment < ActiveRecord::Base
   acts_as_accessible
 
+  belongs_to :user
+  belongs_to :commentable, :polymorphic => true
   belongs_to :original, :class_name => "Comment", :foreign_key => :secondary_id
   has_many :followups, :class_name => "Comment", :as => :original, :foreign_key => :secondary_id
+  validates_presence_of :user_id
   
   #after_create :send_notification
   
@@ -15,17 +18,21 @@ class Comment < Response
   end
   
   def to_polypath
-    { :id => self.to_param }.merge(self.responsible.nil? ? {} : self.responsible.to_path(true))
+    { :id => self.to_param }.merge(self.commentable.nil? ? {} : self.commentable.to_path(true))
   end
   
   def accessible_by?(user=nil)
-    (self.responsible.accessible_by?(user) rescue true) && self.rule.accessible_by?(user)
+    (self.commentable.accessible_by?(user) rescue true) && self.rule.accessible_by?(user)
   end
   
   def editable_by?(user=nil)
-    user && (self.responsible.editable_by?(user) || super)
+    user && (self.commentable.editable_by?(user) || super)
   end
-    
+  
+  def invalidate!
+    self.destroy
+  end
+
   #######
   private
   #######

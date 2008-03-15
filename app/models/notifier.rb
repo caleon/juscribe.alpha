@@ -29,21 +29,13 @@ class Notifier < ActionMailer::Base
       # URLS to be generated according to routes in VIEW
       #@body["url"] = generate_url_for(comment)
     else
-      @user = comment.responsible.user
-      @subject = "Your #{comment.responsible_type.downcase} has a comment"
+      @user = comment.commentable.user
+      @subject = "Your #{comment.commentable_type.downcase} has a comment"
       #@body["url"] = generate_url_for(comment.responsible)
     end
   end
     
   def message_notification(msg_record)
-    
-  end
-  
-  def rating_notification(rating_record)
-    
-  end
-  
-  def report_notification(*args)
     
   end
   

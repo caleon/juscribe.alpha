@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 49) do
+ActiveRecord::Schema.define(:version => 50) do
 
   create_table "articles", :force => true do |t|
     t.string   "title"
@@ -21,6 +21,16 @@ ActiveRecord::Schema.define(:version => 49) do
     t.datetime "updated_at"
     t.date     "published_date"
     t.time     "published_time"
+  end
+
+  create_table "comments", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "original_id"
+    t.string   "commentable_type"
+    t.integer  "commentable_id"
+    t.text     "body"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "entries", :force => true do |t|
@@ -147,19 +157,6 @@ ActiveRecord::Schema.define(:version => 49) do
     t.datetime "updated_at"
     t.integer  "list_id"
     t.integer  "position"
-  end
-
-  create_table "responses", :force => true do |t|
-    t.integer  "user_id"
-    t.integer  "responsible_id"
-    t.integer  "secondary_id"
-    t.string   "type"
-    t.string   "responsible_type"
-    t.integer  "number",           :default => 0
-    t.integer  "variation"
-    t.text     "body"
-    t.datetime "created_at"
-    t.datetime "updated_at"
   end
 
   create_table "songs", :force => true do |t|

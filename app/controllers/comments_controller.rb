@@ -125,7 +125,7 @@ class CommentsController < ApplicationController
   end
   
   def comment_url_for(comment)
-    prefix = "#{comment.responsible_type.underscore}_"
+    prefix = "#{comment.commentable_type.underscore}_"
     instance_eval %{ #{prefix}comment_url(comment.to_polypath) }
   end
   
