@@ -21,7 +21,7 @@ class ArticlesControllerTest < ActionController::TestCase
   def test_index_with_invalid_nick
     get :index, { :user_id => 'colina' }
     assert_template 'error'
-    assert_flash_equal 'That user could not be found.', :warning
+    assert_flash_equal 'That User could not be found. Please check the address.', :warning
   end
   
   def test_list
@@ -107,7 +107,7 @@ class ArticlesControllerTest < ActionController::TestCase
   def test_new_with_wrong_nick
     get :new, { :user_id => 'colina' }, as(:colin)
     assert_template 'error'
-    assert_flash_equal "That User could not be found. Please check your address.", :warning
+    assert_flash_equal "That User could not be found. Please check the address.", :warning
   end
   
   def test_create
@@ -289,8 +289,8 @@ class ArticlesControllerTest < ActionController::TestCase
     articles(:blog).send(:make_permalink, :with_save => true)
     assert articles(:blog).draft?
     get :edit, articles(:blog).to_path, as(:nana)
-    assert_redirected_to user_url(users(:nana))
-    assert_equal "You are not authorized for that action.", flash[:warning]
+    assert_template 'error'
+    assert_flash_equal "That article could not be found. Please check the address.", :warning
   end
   
   def test_draft_edit_with_non_user
@@ -337,24 +337,24 @@ class ArticlesControllerTest < ActionController::TestCase
     articles(:blog).send(:make_permalink, :with_save => true)
     assert articles(:blog).draft?
     get :show, articles(:blog).to_path
-    assert_redirected_to login_url
-    assert_equal "You are not authorized for that action.", flash[:warning]
+    assert_template 'error'
+    assert_flash_equal 'That article could not be found. Please check the address.', :warning
   end
   
   def test_draft_show_with_wrong_user
     articles(:blog).send(:make_permalink, :with_save => true)
     assert articles(:blog).draft?
     get :show, articles(:blog).to_path, as(:nana)
-    assert_redirected_to user_url(users(:nana))
-    assert_equal "You are not authorized for that action.", flash[:warning]
+    assert_template 'error'
+    assert_flash_equal 'That article could not be found. Please check the address.', :warning
   end
   
   def test_draft_show_with_non_user
     articles(:blog).send(:make_permalink, :with_save => true)
     assert articles(:blog).draft?
     get :show, articles(:blog).to_path, as(123456677)
-    assert_redirected_to login_url
-    assert_equal "You are not authorized for that action.", flash[:warning]
+    assert_template 'error'
+    assert_flash_equal "That article could not be found. Please check the address.", :warning
   end
   
   def test_draft_update
@@ -403,8 +403,8 @@ class ArticlesControllerTest < ActionController::TestCase
     articles(:blog).send(:make_permalink, :with_save => true)
     assert articles(:blog).draft?
     put :update, articles(:blog).to_path.merge(:article => { :content => "la dee la" }), as(:nana)
-    assert_redirected_to user_url(users(:nana))
-    assert_equal "You are not authorized for that action.", flash[:warning]
+    assert_template 'error'
+    assert_flash_equal 'That article could not be found. Please check the address.', :warning
   end
   
   def test_draft_update_with_non_user
@@ -453,8 +453,8 @@ class ArticlesControllerTest < ActionController::TestCase
     assert articles(:blog).draft?
     assert_not_nil articles(:blog)[:permalink]
     put :publish, articles(:blog).to_path, as(:nana)
-    assert_redirected_to user_url(users(:nana)), articles(:blog).to_path.inspect
-    assert_equal "You are not authorized for that action.", flash[:warning]
+    assert_template 'error'
+    assert_flash_equal "That article could not be found. Please check the address.", :warning
   end
   
   def test_draft_publish_with_non_user
@@ -489,8 +489,7 @@ class ArticlesControllerTest < ActionController::TestCase
     articles(:blog).send(:make_permalink, :with_save => true)
     assert articles(:blog).draft?
     delete :destroy, articles(:blog).to_path, as(:nana)
-    assert_redirected_to user_url(users(:nana))
-    assert_equal "You are not authorized for that action.", flash[:warning]
+    assert_flash_equal "That article could not be found. Please check the address.", :warning
   end
   
   def test_draft_destroy_with_non_user

@@ -101,7 +101,7 @@ class WidgetsController < ApplicationController
   end
   
   def authorize(object, opts={})
-    return true if !opts[:manual] && !(self.class.read_inheritable_attribute(:authorize_list) || []).include?(action_name.intern)
+    return true if !(self.class.read_inheritable_attribute(:authorize_list) || []).include?(action_name.intern)
     unless object && object.accessible_by?(get_viewer) && (!opts[:editable] || object.editable_by?(get_viewer))
       msg = "You are not authorized for that action."
       respond_to_without_type_registration do |format|
@@ -111,14 +111,5 @@ class WidgetsController < ApplicationController
       return false
     end
     true
-  end
-  
-  def get_user(opts={})
-    @user = User.primary_find(params[:user_id])
-    raise ActiveRecord::RecordNotFound if @user.nil?
-    @user
-  rescue ActiveRecord::RecordNotFound
-    display_error(:message => opts[:message] || "That User could not be found.")
-    false
   end
 end

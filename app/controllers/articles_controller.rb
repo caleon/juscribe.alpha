@@ -6,10 +6,7 @@ class ArticlesController < ApplicationController
   
   def index
     # don't show drafts unless viewer == user
-    unless @user = User.primary_find(params[:user_id])
-      display_error(:message => 'That user could not be found.')
-      return
-    end
+    return unless get_user
     find_opts = get_find_opts(:order => 'articles.id DESC')
     @articles = @user.articles.find(:all, find_opts)
   end
@@ -27,16 +24,16 @@ class ArticlesController < ApplicationController
   end
   
   def new
-    if !(@user = User.primary_find(params[:user_id]))
-      display_error(:message => "That User could not be found. Please check your address.")
-      return
-    elsif @user != get_viewer
-      redirect_to new_article_url(get_viewer)
+    return unless get_user
+    if @user == get_viewer
+      @article = @user.articles.new
+    else
+      redirect_to new_article_url(get_viewer) and return if @user != get_viewer
     end
-    @article = Article.new
   end
   
   def create
+    return unless get_user
     @article = Article.new(params[:article].merge(:user => get_viewer))
     if @article.save
       create_uploaded_picture_for(@article, :save => true) if picture_uploaded?
@@ -115,7 +112,7 @@ class ArticlesController < ApplicationController
         redirect_to draft_url(@article.to_path), :status => 303 and return false
       end
     elsif only_permalink_and_nick_provided? && (arts = Article.find_any_by_permalink_and_nick(params[:id], params[:user_id]))
-      if @article = arts.detect {|art| art.draft? }
+      if @article = arts.detect {|art| art.draft? && art.user == get_viewer }
         true && authorize(@article)
       elsif (pub_arts = arts.select {|art| art.published? }).size == 1
         @article = pub_arts.first

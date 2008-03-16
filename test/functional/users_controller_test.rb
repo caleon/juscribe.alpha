@@ -283,7 +283,8 @@ class UsersControllerTest < ActionController::TestCase
   
   def test_about_with_non_user
     get :about, { :id => 'blahblah' }
-    assert_template 'error'
+    #assert_template 'error'
+    assert_flash_equal "That User entry could not be found. Please check the address.", :warning
   end
   
   def test_destroy

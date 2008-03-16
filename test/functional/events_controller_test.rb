@@ -17,7 +17,7 @@ class EventsControllerTest < ActionController::TestCase
   def test_index_with_wrong_nick
     get :index, { :user_id => users(:colin).nick.chop }
     assert_nil assigns(:events)
-    assert_flash_equal "That User entry could not be found. Please check the address.", :warning
+    assert_flash_equal "That User could not be found. Please check the address.", :warning
   end
   
   def test_show
@@ -129,7 +129,7 @@ class EventsControllerTest < ActionController::TestCase
   def test_update_with_wrong_nick
     put :update, events(:birthday).to_path.merge(:user_id => users(:colin).nick.chop, :event => { :content => "birthday bash!" }), as(:colin)
     assert_template 'error'
-    assert_flash_equal "That User entry could not be found. Please check the address.", :warning
+    assert_flash_equal "That User could not be found. Please check the address.", :warning
   end
   
   def test_begin_event

@@ -4,35 +4,62 @@ ActionController::Routing::Routes.draw do |map|
   map.root :controller => 'main'
   
   map.with_options :controller => 'articles', :requirements => { :user_id => regex_for(:user, :nick) } do |ar|
-    ar.articles       'articles/by/:user_id', :action => 'index', :conditions =>   { :method => :get }
-    ar.connect        'articles/by/:user_id', :action => 'create', :conditions =>   { :method => :post }
-    ar.new_article    'articles/by/:user_id/new', :action => 'new', :conditions =>   { :method => :get }
+    ar.articles 'articles/by/:user_id', :action => 'index', :conditions => { :method => :get }
+    ar.formatted_articles 'articles/by/:user_id.:format', :action => 'index', :conditions => { :method => :get }
+    ar.connect 'articles/by/:user_id', :action => 'create', :conditions => { :method => :post }
+    ar.connect 'articles/by/:user_id.:format', :action => 'create', :conditions => { :method => :post }
+    ar.new_article 'articles/by/:user_id/new', :action => 'new', :conditions => { :method => :get }
+    ar.formatted_new_article 'articles/by/:user_id/new.:format', :action => 'new', :conditions => { :method => :get }
     ar.with_options :requirements => { :year => /\d{4}/, :month => /\d{1,2}/, :day => /\d{1,2}/, :id => regex_for(:article, :permalink) } do |arpm|
-      arpm.edit_article   ':year/:month/:day/:id/by/:user_id/edit', :action => 'edit',
+      arpm.edit_article ':year/:month/:day/:id/by/:user_id/edit', :action => 'edit',
+                                    :conditions =>   { :method => :get }
+      arpm.formatted_edit_article ':year/:month/:day/:id/by/:user_id/edit.:format', :action => 'edit',
                                     :conditions =>   { :method => :get }
       arpm.unpublish_article ':year/:month/:day/:id/by/:user_id/unpublish',    :action => 'unpublish',
                                     :conditions =>   { :method => :put }
+      arpm.formatted_unpublish_article ':year/:month/:day/:id/by/:user_id/unpublish.:format', :action => 'unpublish',
+                                    :conditions =>   { :method => :put }
       arpm.article        ':year/:month/:day/:id/by/:user_id',                 :action => 'show',
                                     :conditions =>   { :method => :get }                                                                                                      
+      arpm.formatted_article ':year/:month/:day/:id/by/:user_id',              :action => 'show',
+                                    :conditions =>   { :method => :get }
       arpm.connect        ':year/:month/:day/:id/by/:user_id',                 :action => 'update',
+                                    :conditions =>   { :method => :put }
+      arpm.connect        ':year/:month/:day/:id/by/:user_id.:format',         :action => 'update',
                                     :conditions =>   { :method => :put }
       arpm.connect        ':year/:month/:day/:id/by/:user_id',                 :action => 'destroy',
                                     :conditions =>   { :method => :delete }
+      arpm.connect        ':year/:month/:day/:id/by/:user_id.:format',         :action => 'destroy',
+                                    :conditions =>   { :method => :delete }
     end
     ar.with_options :requirements => { :id => regex_for(:article, :permalink) } do |par|
-      par.user_particles 'articles/:id/by/:user_id',                          :action => 'show',
+      par.user_particles            'articles/:id/by/:user_id',               :action => 'show',
                                     :conditions =>   { :method => :get }
-      par.particles      'articles/:id',                                      :action => 'show',
+      par.formatted_user_particles  'articles/:id/by/:user_id.:format',       :action => 'show',
+                                    :conditions =>   { :method => :get }
+      par.particles                 'articles/:id',                           :action => 'show',
                                     :conditions =>   { :method => :get }                  
-      par.edit_draft     'draft/:id/by/:user_id/edit',                        :action => 'edit',
+      par.formatted_particles       'articles/:id.:format',                   :action => 'show',
                                     :conditions =>   { :method => :get }
-      par.publish_draft  'draft/:id/by/:user_id/publish',                     :action => 'publish',
-                                    :conditions =>   { :method => :put }
-      par.draft          'draft/:id/by/:user_id',                             :action => 'show',
+      par.edit_draft                'draft/:id/by/:user_id/edit',             :action => 'edit',
                                     :conditions =>   { :method => :get }
-      par.connect        'draft/:id/by/:user_id',                      :action => 'update',
+      par.formatted_edit_draft      'draft/:id/by/:user_id/edit.:format',     :action => 'edit',
+                                    :conditions =>   { :method => :get }
+      par.publish_draft             'draft/:id/by/:user_id/publish',          :action => 'publish',
                                     :conditions =>   { :method => :put }
-      par.connect        'draft/:id/by/:user_id',                             :action => 'destroy',
+      par.formatted_publish_draft   'draft/:id/by/:user_id/publish.:format',  :action => 'publish',
+                                    :conditions =>   { :method => :put }
+      par.draft                     'draft/:id/by/:user_id',                  :action => 'show',
+                                    :conditions =>   { :method => :get }
+      par.foramtted_draft           'draft/:id/by/:user_id.:format',          :action => 'show',
+                                    :conditions =>   { :method => :get }
+      par.connect                   'draft/:id/by/:user_id',                  :action => 'update',
+                                    :conditions =>   { :method => :put }
+      par.connect                   'draft/:id/by/:user_id.:format',          :action => 'update',
+                                    :conditions =>   { :method => :put }
+      par.connect                   'draft/:id/by/:user_id',                  :action => 'destroy',
+                                    :conditions =>   { :method => :delete }
+      par.connect                   'draft/:id/by/:user_id.:format',          :action => 'destroy',
                                     :conditions =>   { :method => :delete }
     end
   end
@@ -134,7 +161,7 @@ ActionController::Routing::Routes.draw do |map|
                                                      :event_id => regex_for(:event, :id),
                                                      :id => regex_for(:permission, :id) }
     end
-    user.resource :gallery, :requirements => { :id => regex_for(:gallery, :id) }
+    user.resources :galleries, :requirements => { :id => regex_for(:gallery, :id) }
     user.resource :permission, :requirements => { :user_id => regex_for(:user, :nick),
                                                    :id => regex_for(:permission, :id) }
     user.resources :widgets, :member => { :place => :put, :unplace => :put },
@@ -143,15 +170,25 @@ ActionController::Routing::Routes.draw do |map|
   end
       
   map.login 'login', :controller => 'users', :action => 'login'
+  map.formatted_login 'login.:format', :controller => 'users', :action => 'login'
   map.logout 'logout', :controller => 'users', :action => 'logout'
+  map.formatted_logout 'logout.:format', :controller => 'users', :action => 'logout'
   map.mine 'mine', :controller => 'users', :action => 'mine'
+  map.formatted_mine 'mine.:format', :controller => 'users', :action => 'mine'
   map.contents 'contents/:topic', :controller => 'main', :action => 'contents', :topic => nil,
+                                  :requirements => { :topic => regex_for(:main, :topic) }
+  map.formatted_contents 'contents/:topic.:format', :controller => 'main', :action => 'contents',
                                   :requirements => { :topic => regex_for(:main, :topic) }
   map.about 'about/:topic', :controller => 'main', :action => 'about', :topic => nil,
                             :requirements => { :topic => regex_for(:main, :topic) }
+  map.formatted_about 'about/:topic.:format', :controller => 'main', :action => 'about',
+                                              :requirements => { :topic => regex_for(:main, :topic) }
   map.help 'help/:topic', :controller => 'main', :action => 'help', :topic => nil,
                           :requirements => { :topic => regex_for(:main, :topic) }
+  map.formatted_help 'help/:topic.:format', :controller => 'main', :action => 'help',
+                                           :requirements => { :topic => regex_for(:main, :topic) }
   map.copyright 'copyright', :controller => 'main', :action => 'copyright'
+  map.formatted_copyright 'copyright.:format', :controller => 'main', :action => 'copyright'
 
   # Install the default routes as the lowest priority.
   # map.connect ':controller/:action/:id'

@@ -133,7 +133,7 @@ class ClipsController < ApplicationController
   #end
   
   def authorize(object, opts={})
-    return true if !opts[:manual] && !(self.class.read_inheritable_attribute(:authorize_list) || []).include?(action_name.intern)
+    return true if !(self.class.read_inheritable_attribute(:authorize_list) || []).include?(action_name.intern)
     unless object && object.accessible_by?(get_viewer) && (!opts[:editable] || object.editable_by?(get_viewer))
       msg = "You are not authorized for that action."
       respond_to_without_type_registration do |format|

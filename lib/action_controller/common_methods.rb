@@ -53,9 +53,12 @@ module ActionController::CommonMethods
       klass = shared_setup_options[:model_class]
       instance_var = shared_setup_options[:instance_var]
       custom_finder = shared_setup_options[:custom_finder] || nil
-      if instance_variable_set(instance_var, klass.send(custom_finder, params[:id], {:include => includes}) )
-        true && authorize(instance_variable_get(instance_var))
-      else
+      begin
+        instance_variable_set(instance_var, klass.send(custom_finder, params[:id], {:include => includes}) )
+        # Need to raise if custom finder isn't #find since it can return nil.
+        raise ActiveRecord::RecordNotFound if instance_variable_get(instance_var).nil?
+        authorize(instance_variable_get(instance_var))
+      rescue ActiveRecord::RecordNotFound
         error_opts[:message] ||= "That #{klass} entry could not be found. Please check the address."
         display_error(error_opts)
         false
@@ -168,6 +171,14 @@ module ActionController::CommonMethods
       end
     end
     
+    def get_user(error_opts={})
+      @user = User.primary_find(params[:user_id])
+      raise ActiveRecord::RecordNotFound if @user.nil?
+      @user
+    rescue ActiveRecord::RecordNotFound
+      display_error(:message => error_opts[:message] || "That User could not be found. Please check the address.")
+      return false
+    end
     
     # verify_logged_in is called from before_filter
     def verify_logged_in
@@ -183,7 +194,7 @@ module ActionController::CommonMethods
     
     # authorize(@object) is called within setup.
     def authorize(object, opts={})
-      return true if !opts[:manual] && !(self.class.read_inheritable_attribute(:authorize_list) || []).include?(action_name.intern)
+      return true if !(self.class.read_inheritable_attribute(:authorize_list) || []).include?(action_name.intern)
       unless object && object.editable_by?(get_viewer)
         msg = "You are not authorized for that action."
         respond_to_without_type_registration do |format|
@@ -210,7 +221,7 @@ module ActionController::CommonMethods
       valid_mimes = Mime::EXTENSIONS & [:html, :js, :xml]
       valid_mimes.each do |mime|
         instance_eval %{ @#{mime}_opts = opts.delete(:#{mime}) || {} }
-      end    
+      end
       respond_to_without_type_registration do |format|
         valid_mimes.each do |mime|
           instance_eval %{ format.#{mime} { return_error_view(:#{mime}, @#{mime}_opts.merge!(opts)) } }

@@ -66,7 +66,7 @@ class EntriesControllerTest < ActionController::TestCase
   
   def test_create
     post :create, users(:colin).to_path(true).merge(:entry => { :user_id => users(:colin).id, :content => 'boogity-boo!' }), as(:colin)
-    assert_not_nil assigns(:entry)
+    assert_not_nil assigns(:entry), users(:colin).to_path(true).inspect
     assert assigns(:entry).valid?, assigns(:entry).errors.inspect
     assert_redirected_to user_entry_url(assigns(:entry).to_path)
     assert_equal "You have successfully created your Entry.", flash[:notice]
@@ -131,7 +131,7 @@ class EntriesControllerTest < ActionController::TestCase
   def test_update_with_wrong_nick
     put :update, entries(:happenings).to_path.update(:entry => { :location => 'somewhere' }, :user_id => users(:colin).to_param.chop), as(:colin)
     assert_template 'error'
-    assert_flash_equal "That User entry could not be found. Please check the address.", :warning
+    assert_flash_equal "That User could not be found. Please check the address.", :warning
   end
   
   def test_destroy

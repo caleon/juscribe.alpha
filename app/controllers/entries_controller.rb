@@ -13,19 +13,17 @@ class EntriesController < ApplicationController
   end
   
   def new
-    if @user = User.primary_find(params[:user_id])
-      if @user == get_viewer
-        @entry = Entry.new
-      else
-        redirect_to new_user_entry_url(get_viewer) and return
-      end
+    return unless get_user
+    if @user == get_viewer
+      @entry = @user.entries.new
     else
-      display_error(:message => "That User entry could not be found. Please check the address.")
+      redirect_to new_user_entry_url(get_viewer) and return
     end
   end
   
   def create
-    @entry = Entry.new(params[:entry].merge(:user => get_viewer))
+    return unless get_user
+    @entry = get_viewer.entries.new(params[:entry])
     if @entry.save
       msg = "You have successfully created your Entry."
       respond_to do |format|
@@ -78,23 +76,17 @@ class EntriesController < ApplicationController
   
   private
   def setup(includes=nil, error_opts={})
-    if @user = User.find_by_nick(params[:user_id])
-      if @entry = Entry.find(params[:id], :conditions => ["user_id = ?", @user.id], :include => includes)
-        true && authorize(@entry)
-      else
-        error_opts[:message] ||= "That Entry could not be found. Please check the address."
-        display_error(error_opts)
-        false
-      end
-    else
-      error_opts[:message] ||= "That User entry could not be found. Please check the address."
-      display_error(error_opts)
-      false
-    end
+    return false unless get_user
+    @entry = Entry.find(params[:id], :conditions => ["user_id = ?", @user.id], :include => includes)
+    authorize(@entry)
+  rescue ActiveRecord::RecordNotFound
+    error_opts[:message] ||= "That Entry could not be found. Please check the address."
+    display_error(error_opts)
+    false
   end
   
   def authorize(object, opts={})
-    return true if !opts[:manual] && !(self.class.read_inheritable_attribute(:authorize_list) || []).include?(action_name.intern)
+    return true if !(self.class.read_inheritable_attribute(:authorize_list) || []).include?(action_name.intern)
     unless object && object.accessible_by?(get_viewer) && (!opts[:editable] || object.editable_by?(get_viewer))
       msg = "You are not authorized for that action."
       respond_to_without_type_registration do |format|
