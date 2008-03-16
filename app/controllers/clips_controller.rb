@@ -98,8 +98,8 @@ class ClipsController < ApplicationController
   
   # Method sets @widgetable based on param keys, or if not found, displays error.
   def get_widgetable(opts={})
-    return false if (possible_widgetable_id_keys = params.keys.map(&:to_s).select{|key| key.match(/_id$/)}).empty?
-    widgetable_id_key = %w( article picture song project item group event entry list playlist user ).map{|kls| "#{kls}_id"}.detect do |key|
+    return false if (possible_widgetable_id_keys = params.keys.select{|key| key.match(/_id$/)}).empty?
+    widgetable_id_key = %w( picture article song project item group event entry list playlist user ).map{|kls| "#{kls}_id"}.detect do |key|
       possible_widgetable_id_keys.include?(key)
     end
     widgetable_class = widgetable_id_key.gsub(/_id$/, '').classify.constantize
@@ -115,6 +115,23 @@ class ClipsController < ApplicationController
     false
   end
   
+  #def get_widgetable(opts={})
+  #  unless request.path.match(/\/([a-zA-Z]+)\/([^\/]+)\/clips/)
+  #    display_error(:message => "Unable to process the request. Please check the address.")
+  #    return false
+  #  end
+  #  begin
+  #    klass, id = $1.singularize.classify.constantize, $2
+  #    @widgetable = klass.primary_find(id, :include => :permission)
+  #  rescue NameError
+  #    klass, id = Article, nil
+  #    @widgetable = Article.primary_find(params, :for_association => true, :include => :permission)
+  #  end
+  #  raise ActiveRecord::RecordNotFound if @widgetable.nil?
+  #rescue ActiveRecord::RecordNotFound
+  #  display_error(:message => opts[:message] || "That #{klass.to_s.humanize} could not be found.")
+  #end
+  
   def authorize(object, opts={})
     return true if !opts[:manual] && !(self.class.read_inheritable_attribute(:authorize_list) || []).include?(action_name.intern)
     unless object && object.accessible_by?(get_viewer) && (!opts[:editable] || object.editable_by?(get_viewer))
@@ -129,12 +146,12 @@ class ClipsController < ApplicationController
   end
   
   def clip_url_for(clip)
-    prefix = "#{clip.widgetable_type.underscore}_"
-    instance_eval %{ #{prefix}clip_url(clip.to_polypath) }
+    prefix = clip.widgetable_type.underscore
+    instance_eval %{ #{prefix}_clip_url(clip.to_polypath) }
   end
   
   def widgetable_url_for(widgetable)
-    prefix = "#{widgetable.class.to_s.underscore}_"
-    instance_eval %{ #{prefix}url(widgetable.to_path) }
+    prefix = widgetable.class.to_s.underscore
+    instance_eval %{ #{prefix}_url(widgetable.to_path) }
   end
 end

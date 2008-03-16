@@ -67,7 +67,6 @@ class Article < ActiveRecord::Base
   def self.find_by_params(params, opts={})
     for_association = opts.delete(:for_association)
     params.symbolize_keys!
-    debugger
     date = Date.new(params[:year].to_i, params[:month].to_i, params[:day].to_i)
     return nil unless user = User.find_by_nick(params[:user_id])
     find(:first, { :conditions => [ "articles.user_id = ? AND published_date = ? AND permalink = ?", user.id, date.to_formatted_s(:db), for_association ? params[:article_id] : params[:id]] })

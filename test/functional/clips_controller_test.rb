@@ -223,7 +223,7 @@ class ClipsControllerTest < ActionController::TestCase
     assert widgets(:article_clip).accessible_by?(users(:nana))
     assert widgets(:article_clip).accessible_by?(users(:colin))
     assert articles(:blog).public?
-    articles(:blog).rule.toggle_privacy! #same as toggle_privacy! on widgetable
+    articles(:blog).rule.toggle_privacy!
     assert articles(:blog).private?
     assert widgets(:article_clip).accessible_by?(users(:colin))
     assert !widgets(:article_clip).accessible_by?(users(:nana))

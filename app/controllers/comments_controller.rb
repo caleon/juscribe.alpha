@@ -94,8 +94,8 @@ class CommentsController < ApplicationController
   end
   
   def get_commentable(opts={})
-    return false if (possible_commentable_keys = params.keys.map(&:to_s).select{|key| key.match(/_id$/)}).empty?
-    commentable_id_key = %w( article picture song project item group event entry list playlist user ).map{|kls| "#{kls}_id"}.detect do |key|
+    return false if (possible_commentable_keys = params.keys.select{|key| key.match(/_id$/)}).empty?
+    commentable_id_key = %w( picture article song project item group event entry list playlist user ).map{|kls| "#{kls}_id"}.detect do |key|
       possible_commentable_keys.include?(key)
     end
     commentable_class = commentable_id_key.gsub(/_id$/, '').classify.constantize
@@ -125,8 +125,8 @@ class CommentsController < ApplicationController
   end
   
   def comment_url_for(comment)
-    prefix = "#{comment.commentable_type.underscore}_"
-    instance_eval %{ #{prefix}comment_url(comment.to_polypath) }
+    prefix = comment.commentable_type.underscore
+    instance_eval %{ #{prefix}_comment_url(comment.to_polypath) }
   end
   
   def commentable_url_for(commentable)
