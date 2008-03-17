@@ -92,6 +92,7 @@ class BlogsController < ApplicationController
   def setup(includes=nil, error_opts={})
     return unless get_bloggable
     @blog = @bloggable.blogs.primary_find(params[:id], :include => includes)
+    raise ActiveRecord::RecordNotFound if @blog.nil?
     authorize(@blog)
   rescue ActiveRecord::RecordNotFound
     error_opts[:message] ||= "That Blog could not be found. Please check the address."

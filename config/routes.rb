@@ -122,7 +122,9 @@ ActionController::Routing::Routes.draw do |map|
     end
   end
 
-  map.resources :groups, :requirements => { :id => regex_for(:group, :id) } do |grp|
+  map.resources :groups, :requirements => { :id => regex_for(:group, :id) },
+                         :member => { :join => :put, :leave => :put,
+                                      :kick => :put, :invite => :put } do |grp|
     grp.resources :blogs, :requirements => { :group_id => regex_for(:group, :id),
                                              :id => regex_for(:blog, :permalink) }
   end
