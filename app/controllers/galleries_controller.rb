@@ -6,7 +6,7 @@ class GalleriesController < ApplicationController
   def index
     return unless get_user
     find_opts = get_find_opts
-    @galleries = @user.galleries.find(:all, find_opts.merge(:include => :pictures))
+    @galleries = @user.galleries.find(:all, find_opts.merge(:include => :primary_picture))
     respond_to do |format|
       format.html
       format.js
@@ -17,7 +17,7 @@ class GalleriesController < ApplicationController
   def show
     setup([:pictures, :permission])
     find_opts = get_find_opts
-    @pictures = @gallery.pictures.find(:all, find_opts.merge(:include => :depictable))
+    @pictures = @gallery.pictures.find(:all, find_opts)
     respond_to do |format|
       format.html
       format.js
@@ -37,7 +37,7 @@ class GalleriesController < ApplicationController
   
   def create
     return unless get_user
-    @gallery = @user.galleries.new(params[:gallery])
+    @gallery = get_viewer.galleries.new(params[:gallery])
     if @gallery.save
       msg = "You have successfully created your gallery."
       respond_to do |format|
@@ -54,7 +54,7 @@ class GalleriesController < ApplicationController
   end
   
   def edit
-    return unless setup(:permission) && authorize(@event, :editable => true)
+    return unless setup(:permission) && authorize(@gallery, :editable => true)
     @page_title = "#{@gallery.display_name} - Edit"
     respond_to do |format|
       format.html
@@ -65,7 +65,7 @@ class GalleriesController < ApplicationController
   def update
     return unless setup(:permission) && authorize(@gallery, :editable => true)
     if @gallery.update_attributes(params[:gallery])
-      msg = "You have successfull updated #{@gallery.display_name}."
+      msg = "You have successfully updated #{@gallery.display_name}."
       respond_to do |format|
         format.html { flash[:notice] = msg; redirect_to user_gallery_url(@gallery.to_path) }
         format.js { flash.now[:notice] = msg }
@@ -90,8 +90,8 @@ class GalleriesController < ApplicationController
   
   private
   def setup(includes=nil, error_opts={})
-    return false unless get_user(error_opts) && params[:id]
-    @gallery = @user.galleries.find(param[:id], :include => includes)
+    return false unless get_user(error_opts)
+    @gallery = @user.galleries.find(params[:id], :include => includes)
   rescue ActiveRecord::RecordNotFound
     display_error(:message => "That Gallery could not be found. Please check the address.")
     return false

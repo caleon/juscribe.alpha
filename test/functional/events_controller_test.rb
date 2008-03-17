@@ -53,12 +53,12 @@ class EventsControllerTest < ActionController::TestCase
   end
   
   def test_new_with_diff_user
-    get :new, { :user_id => users(:colin).nick }, as(:nana)
+    get :new, users(:colin).to_path(true), as(:nana)
     assert_redirected_to new_user_event_url(users(:nana))
   end
   
   def test_new_with_non_user
-    get :new, { :user_id => users(:colin).nick }, { :id => 12312312312 }
+    get :new, users(:colin).to_path(true), as(12312312312)
     assert_redirected_to login_url
     assert_equal "You need to be logged in to do that.", flash[:warning]
   end
@@ -148,5 +148,15 @@ class EventsControllerTest < ActionController::TestCase
     @request.env["HTTP_REFERER"] = "http://www.cnn.com/"
     delete :destroy, events(:birthday).to_path, as(:colin)
     assert_redirected_to "http://www.cnn.com/"
+  end
+  
+  def test_destroy_by_unlogged_in
+    delete :destroy, events(:birthday).to_path
+    assert_redirected_to login_url
+  end
+  
+  def test_destroy_by_unauthorized
+    delete :destroy, events(:birthday).to_path, as(:keira)
+    assert_redirected_to user_url(users(:keira))
   end
 end

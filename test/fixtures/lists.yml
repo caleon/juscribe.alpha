@@ -10,10 +10,6 @@ normal:
   name: $LABEL
   user: colin
   type: ~
-gallery:
-  name: $LABEL
-  user: colin
-  type: Gallery
 portfolio:
   name: $LABEL
   user: colin

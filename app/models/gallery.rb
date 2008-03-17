@@ -14,4 +14,12 @@ class Gallery < ActiveRecord::Base
     self[:name] || "Untitled"
   end
   
+  def to_path(for_associated=false)
+    if self.user.nil?
+      { :"#{for_associated ? 'gallery_id' : 'id'}" => self.to_param }
+    else
+      { :user_id => self.user.to_param, :"#{for_associated ? 'gallery_id' : 'id'}" => self.to_param }
+    end
+  end
+  
 end
