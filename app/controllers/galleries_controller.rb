@@ -15,7 +15,7 @@ class GalleriesController < ApplicationController
   end
   
   def show
-    setup([:pictures, :permission])
+    return unless setup([:pictures, :permission])
     find_opts = get_find_opts
     @pictures = @gallery.pictures.find(:all, find_opts)
     respond_to do |format|
@@ -92,8 +92,10 @@ class GalleriesController < ApplicationController
   def setup(includes=nil, error_opts={})
     return false unless get_user(error_opts)
     @gallery = @user.galleries.find(params[:id], :include => includes)
+    authorize(@gallery)
   rescue ActiveRecord::RecordNotFound
-    display_error(:message => "That Gallery could not be found. Please check the address.")
+    error_opts[:message] ||= "That Gallery could not be found. Please check the address."
+    display_error(error_opts)
     return false
   end
 end

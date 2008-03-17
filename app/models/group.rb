@@ -17,6 +17,10 @@ class Group < ActiveRecord::Base
   
   attr_protected :rank
   alias_attribute :content, :description
+  
+  def to_path(for_associated=false)
+    { :"#{for_associated ? 'group_id' : 'id'}" => self.to_param }
+  end
       
   def editable_by?(user)
     self.users.admin.include?(user)

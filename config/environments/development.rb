@@ -34,15 +34,15 @@ YAML.load_file("#{RAILS_ROOT}/config/preferences/db.yml")[RAILS_ENV]
 SITE =
 YAML.load_file("#{RAILS_ROOT}/config/preferences/site.yml")
 
-require "#{RAILS_ROOT}/lib/plugin_package"
-require "#{RAILS_ROOT}/lib/active_record/acts/accessible"
-require "#{RAILS_ROOT}/lib/active_record/acts/itemizable"
-require "#{RAILS_ROOT}/lib/active_record/acts/layoutable"
-require "#{RAILS_ROOT}/lib/active_record/acts/taggable"
-require "#{RAILS_ROOT}/lib/active_record/acts/widgetable"
-require "#{RAILS_ROOT}/lib/active_record/validations/constants"
-require "#{RAILS_ROOT}/lib/active_record/validations/format_validations"
-require "#{RAILS_ROOT}/lib/active_record/validations/routing_helper"
+require_dependency "#{RAILS_ROOT}/lib/plugin_package"
+require_dependency "#{RAILS_ROOT}/lib/active_record/acts/accessible"
+require_dependency "#{RAILS_ROOT}/lib/active_record/acts/itemizable"
+require_dependency "#{RAILS_ROOT}/lib/active_record/acts/layoutable"
+require_dependency "#{RAILS_ROOT}/lib/active_record/acts/taggable"
+require_dependency "#{RAILS_ROOT}/lib/active_record/acts/widgetable"
+require_dependency "#{RAILS_ROOT}/lib/active_record/validations/constants"
+require_dependency "#{RAILS_ROOT}/lib/active_record/validations/format_validations"
+require_dependency "#{RAILS_ROOT}/lib/active_record/validations/routing_helper"
 
 ActiveRecord::Base.send(:include, ActiveRecord::Validations::FormatValidations)
 ActiveRecord::Base.send(:include, ActiveRecord::Acts::Accessible)
@@ -52,4 +52,4 @@ ActiveRecord::Base.send(:include, ActiveRecord::Acts::Widgetable)
 ActiveRecord::Base.send(:include, PluginPackage)
 ActionController::Base.send(:include, ActionController::CommonMethods)
 
-require "#{RAILS_ROOT}/app/models/article"
+require_dependency "#{RAILS_ROOT}/app/models/article"

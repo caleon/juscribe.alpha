@@ -26,11 +26,11 @@ class GalleriesControllerTest < ActionController::TestCase
     assert_equal galleries(:trip), assigns(:gallery)
   end
   
-  def show_without_user_nick
+  def test_show_without_user_nick
     assert_raise(ActionController::RoutingError) { get :show, { :id => galleries(:trip).id }, as(:colin) }
   end
   
-  def show_without_login
+  def test_show_without_login
     get :show, galleries(:trip).to_path
     assert galleries(:trip).public?
     assert galleries(:trip).rule.public?
@@ -40,7 +40,7 @@ class GalleriesControllerTest < ActionController::TestCase
     assert_template 'show'
   end
   
-  def show_without_login_on_protected
+  def test_show_without_login_on_protected
     galleries(:trip).rule.toggle_privacy!
     get :show, galleries(:trip).to_path, as(:keira)
     assert_redirected_to user_url(users(:keira))

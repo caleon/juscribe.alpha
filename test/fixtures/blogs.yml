@@ -3,8 +3,10 @@ first:
   permalink: HELLO-WORLD
   bloggable_type: User
   bloggable_id: <%= 'colin'.hash.abs %>
+  user: colin
 nanas:
   name: World
   permalink: WORLD
   bloggable_type: User
   bloggable_id: <%= 'nana'.hash.abs %>
+  user: nana

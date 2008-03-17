@@ -1,8 +1,10 @@
 class Blog < ActiveRecord::Base
   include_custom_plugins
   
+  belongs_to :user # creator
   belongs_to :bloggable, :polymorphic => true
   has_many :articles, :order => 'articles.id DESC'
+  has_one :primary_article, :class_name => 'Article', :order => 'articles.id DESC'
   has_many :pictures, :as => :depictable, :order => 'pictures.position'
   has_one :primary_picture, :class_name => 'Picture', :order => 'pictures.position'
   has_many :comments, :as => :commentable, :order => 'comments.id DESC'
@@ -19,6 +21,10 @@ class Blog < ActiveRecord::Base
   def to_param; self.permalink; end
   def permalink
     self[:permalink] ||= make_permalink
+  end
+  
+  def self.primary_find(*args)
+    self.find_by_permalink(*args)
   end
   
   def name=(str)

@@ -122,6 +122,10 @@ ActionController::Routing::Routes.draw do |map|
     end
   end
 
+  map.resources :groups, :requirements => { :id => regex_for(:group, :id) } do |grp|
+    grp.resources :blogs, :requirements => { :group_id => regex_for(:group, :id),
+                                             :id => regex_for(:blog, :permalink) }
+  end
   map.resources :messages, :requirements => { :id => regex_for(:message, :id) }
   map.resources :pictures, :requirements => { :id => regex_for(:picture, :id) } do |picture|
     picture.resources :clips, :requirements => { :picture_id => regex_for(:picture, :id),
@@ -134,6 +138,8 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :users, :member => { :friends => :get, :befriend => :put, :unfriend => :put,
                         :about => :get, :edit_password => :get, :update_password => :put },
                         :requirements => { :id => regex_for(:user, :nick) } do |user|
+    user.resources :blogs, :requirements => { :user_id => regex_for(:user, :nick),
+                                              :id => regex_for(:blog, :permalink) }
     user.resources :clips, :requirements => { :user_id => regex_for(:user, :nick),
                                               :id => regex_for(:clip, :id) }
     user.resources :comments, :requirements => { :user_id => regex_for(:user, :nick),
