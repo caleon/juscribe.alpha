@@ -72,7 +72,7 @@ class CommentsController < ApplicationController
   end
   
   def destroy
-    return unless setup && authorize(@comment, :editable => true)
+    return unless setup(:permission) && authorize(@comment, :editable => true)
     @comment.nullify!(get_viewer)
     msg = "You have deleted a comment on #{@commentable.display_name}."
     respond_to do |format|
