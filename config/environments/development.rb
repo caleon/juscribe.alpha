@@ -25,31 +25,31 @@ config.action_mailer.raise_delivery_errors = false
 # when the collection of model objects is retrieved by @user.articles.find(...) as opposed
 # to Article.find(...). This inevitably leads to defining already-defined constants APP, DB
 # and SITE which is already defined in preferences.rb.
-APP =
-YAML.load_file("#{RAILS_ROOT}/config/preferences/app.yml")
-
-DB =
-YAML.load_file("#{RAILS_ROOT}/config/preferences/db.yml")[RAILS_ENV]
-
-SITE =
-YAML.load_file("#{RAILS_ROOT}/config/preferences/site.yml")
-
-require_dependency "#{RAILS_ROOT}/lib/plugin_package"
-require_dependency "#{RAILS_ROOT}/lib/active_record/acts/accessible"
-require_dependency "#{RAILS_ROOT}/lib/active_record/acts/itemizable"
-require_dependency "#{RAILS_ROOT}/lib/active_record/acts/layoutable"
-require_dependency "#{RAILS_ROOT}/lib/active_record/acts/taggable"
-require_dependency "#{RAILS_ROOT}/lib/active_record/acts/widgetable"
-require_dependency "#{RAILS_ROOT}/lib/active_record/validations/constants"
-require_dependency "#{RAILS_ROOT}/lib/active_record/validations/format_validations"
-require_dependency "#{RAILS_ROOT}/lib/active_record/validations/routing_helper"
-
-ActiveRecord::Base.send(:include, ActiveRecord::Validations::FormatValidations)
-ActiveRecord::Base.send(:include, ActiveRecord::Acts::Accessible)
-ActiveRecord::Base.send(:include, ActiveRecord::Acts::Itemizable)
-ActiveRecord::Base.send(:include, ActiveRecord::Acts::Taggable)
-ActiveRecord::Base.send(:include, ActiveRecord::Acts::Widgetable)
-ActiveRecord::Base.send(:include, PluginPackage)
-ActionController::Base.send(:include, ActionController::CommonMethods)
-
-require_dependency "#{RAILS_ROOT}/app/models/article"
+#APP =
+#YAML.load_file("#{RAILS_ROOT}/config/preferences/app.yml")
+#
+#DB =
+#YAML.load_file("#{RAILS_ROOT}/config/preferences/db.yml")[RAILS_ENV]
+#
+#SITE =
+#YAML.load_file("#{RAILS_ROOT}/config/preferences/site.yml")
+#
+#require_dependency "#{RAILS_ROOT}/lib/plugin_package"
+#require_dependency "#{RAILS_ROOT}/lib/active_record/acts/accessible"
+#require_dependency "#{RAILS_ROOT}/lib/active_record/acts/itemizable"
+#require_dependency "#{RAILS_ROOT}/lib/active_record/acts/layoutable"
+#require_dependency "#{RAILS_ROOT}/lib/active_record/acts/taggable"
+#require_dependency "#{RAILS_ROOT}/lib/active_record/acts/widgetable"
+#require_dependency "#{RAILS_ROOT}/lib/active_record/validations/constants"
+#require_dependency "#{RAILS_ROOT}/lib/active_record/validations/format_validations"
+#require_dependency "#{RAILS_ROOT}/lib/active_record/validations/routing_helper"
+#
+#ActiveRecord::Base.send(:include, ActiveRecord::Validations::FormatValidations)
+#ActiveRecord::Base.send(:include, ActiveRecord::Acts::Accessible)
+#ActiveRecord::Base.send(:include, ActiveRecord::Acts::Itemizable)
+#ActiveRecord::Base.send(:include, ActiveRecord::Acts::Taggable)
+#ActiveRecord::Base.send(:include, ActiveRecord::Acts::Widgetable)
+#ActiveRecord::Base.send(:include, PluginPackage)
+#ActionController::Base.send(:include, ActionController::CommonMethods)
+#
+#require_dependency "#{RAILS_ROOT}/app/models/article"

@@ -32,8 +32,8 @@ module ActiveRecord::Acts::Itemizable
         belongs_to :list, :class_name => acts_as_itemizable_options[:list_class_name],
                    :foreign_key => acts_as_itemizable_options[:list_class_id]
       end
-      #acts_as_list :scope =>
-      #acts_as_itemizable_options[:list_table_name].singularize.intern # => :list
+      acts_as_list :scope =>
+      acts_as_itemizable_options[:list_table_name].singularize.intern # => :list
 
       validates_uniqueness_of :id,
             :scope => :"#{acts_as_itemizable_options[:list_class_id]}" # => :list_id

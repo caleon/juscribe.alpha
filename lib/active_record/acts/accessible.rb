@@ -1,4 +1,4 @@
-require_dependency 'permission' # Holy shit. this fixed it.
+#require_dependency 'permission' # Holy shit. this fixed it.
 module ActiveRecord::Acts::Accessible #:nodoc:  
   def self.included(base)
 #    base.module_eval <<-EOS
