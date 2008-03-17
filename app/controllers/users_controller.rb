@@ -40,8 +40,17 @@ class UsersController < ApplicationController
     end
   end
   
+  def edit
+    return unless setup(:permission) && authorize(@user, :editable => true)
+    @page_title = "#{@user.display_name} - Edit"
+    respond_to do |format|
+      format.html
+      format.js
+    end
+  end
+  
   def update    
-    return unless setup
+    return unless setup && authorize(@user, :editable => true)
     if @user.update_attributes(params[:user])
       save_uploaded_picture_for(@user) if picture_uploaded?
       msg = "You have successfully updated your profile."
@@ -59,12 +68,12 @@ class UsersController < ApplicationController
   end
   
   def edit_password
-    return unless setup
+    return unless setup(:permission) && authorize(@user, :editable => true)
     @page_title = "#{@user.nick} - Edit Password"
   end
   
   def update_password
-    return unless setup
+    return unless setup(:permission) && authorize(@user, :editable => true)
     if @user.update_attributes(params[:user])
       msg = "You have successfully changed your password."
       respond_to do |format|
@@ -78,6 +87,16 @@ class UsersController < ApplicationController
         format.js { render :action => 'update_password_error' }
       end
     end      
+  end
+  
+  def destroy
+    return unless setup(:permission) && authorize(@user, :editable => true)
+    msg = "You have deleted #{@user.display_name}."
+    @user.nullify!(get_viewer)
+    respond_to do |format|
+      format.html { flash[:notice] = msg; redirect_to :back }
+      format.js { flash.now[:notice] = msg }
+    end
   end
   
   def login

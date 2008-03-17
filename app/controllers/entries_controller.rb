@@ -81,24 +81,11 @@ class EntriesController < ApplicationController
   private
   def setup(includes=nil, error_opts={})
     return false unless get_user
-    @entry = Entry.find(params[:id], :conditions => ["user_id = ?", @user.id], :include => includes)
+    @entry = @user.entries.find(params[:id], :include => includes)
     authorize(@entry)
   rescue ActiveRecord::RecordNotFound
     error_opts[:message] ||= "That Entry could not be found. Please check the address."
     display_error(error_opts)
     false
-  end
-  
-  def authorize(object, opts={})
-    return true if !(self.class.read_inheritable_attribute(:authorize_list) || []).include?(action_name.intern)
-    unless object && object.accessible_by?(get_viewer) && (!opts[:editable] || object.editable_by?(get_viewer))
-      msg = "You are not authorized for that action."
-      respond_to_without_type_registration do |format|
-        format.html { flash[:warning] = msg; redirect_to get_viewer || login_url }
-        format.js { flash.now[:warning] = msg; render :action => 'shared/unauthorized' }
-      end
-      return false
-    end
-    true
   end
 end

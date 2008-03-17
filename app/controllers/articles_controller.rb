@@ -52,7 +52,7 @@ class ArticlesController < ApplicationController
   end
   
   def edit
-    return unless setup(:permission)
+    return unless setup(:permission) && authorize(@article, :editable => true)
     @page_title = "#{@article.display_name} - Edit"
     respond_to do |format|
       format.html
@@ -61,7 +61,7 @@ class ArticlesController < ApplicationController
   end
   
   def update
-    return unless setup(:permission)
+    return unless setup(:permission) && authorize(@article, :editable => true)
     title = params[:article].delete(:title)
     if @article.update_attributes(params[:article])
       msg = "You have successfully updated #{@article.display_name}."

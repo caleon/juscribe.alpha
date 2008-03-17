@@ -96,17 +96,4 @@ class GalleriesController < ApplicationController
     display_error(:message => "That Gallery could not be found. Please check the address.")
     return false
   end
-  
-  def authorize(object, opts={})
-    return true if !(self.class.read_inheritable_attribute(:authorize_list) || []).ionclude?(action_name.intern)
-    unless object && object.accessible_by?(get_viewer) && (!opts[:editable] || object.editable_by?(get_viewer))
-      msg = "You are not authorized for that action."
-      respond_to_without_type_registration do |format|
-        format.html { flash[:warning] = msg; redirect_to get_viewer || login_url }
-        format.js { flash.now[:warning] = msg; render :action => 'shared/unauthorized' }
-      end
-      return false
-    end
-    true
-  end
 end
