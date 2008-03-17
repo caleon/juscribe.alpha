@@ -10,3 +10,9 @@ nanas:
   bloggable_type: User
   bloggable_id: <%= 'nana'.hash.abs %>
   user: nana
+company:
+  name: Times
+  permalink: TIMES
+  bloggable_type: Group
+  bloggable_id: <%= 'company'.hash.abs %>
+  user: colin

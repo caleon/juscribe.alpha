@@ -60,9 +60,110 @@ class BlogsControllerTest < ActionController::TestCase
     assert_equal "You are not authorized for that action.", flash[:warning]
   end
   
+  def test_new_with_no_user
+    get :new, groups(:company).to_path(true)
+    assert_redirected_to login_url
+    assert_equal "You need to be logged in to do that.", flash[:warning]
+  end
   
+  def test_new_with_no_user_but_private
+    groups(:company).rule.toggle_privacy!
+    assert groups(:company).private?
+    get :new, groups(:company).to_path(true)
+    assert_redirected_to login_url
+    assert_equal "You need to be logged in to do that.", flash[:warning]
+  end
   
+  def test_new_as_owner_but_private
+    groups(:company).rule.toggle_privacy!
+    assert groups(:company).private?
+    get :new, groups(:company).to_path(true), as(:colin)
+    assert_response :success
+    assert_not_nil assigns(:blog)
+    assert_equal groups(:company), assigns(:bloggable)
+    assert assigns(:blog).new_record?
+  end
   
+  def test_create
+    post :create, groups(:company).to_path(true).merge(:blog => { :name => 'newsletter' }), as(:colin)
+    assert_not_nil assigns(:blog)
+    assert assigns(:blog).valid?
+    assert_redirected_to group_blog_url(assigns(:blog).to_path)
+    assert_equal "You have successfully created your blog.", flash[:notice]
+  end
   
+  def test_create_with_non_user
+    post :create, groups(:company).to_path(true).merge(:blog => { :name => 'newsletter' })
+    assert_nil assigns(:blog)
+    assert_redirected_to login_url
+    assert_equal "You need to be logged in to do that.", flash[:warning]
+  end
+  
+  def test_create_with_diff_user
+    post :create, groups(:company).to_path(true).merge(:blog => { :name => 'newsletter' }), as(:keira)
+    assert_equal groups(:company), assigns(:bloggable)
+    assert_redirected_to user_url(users(:keira))
+    assert_equal "You are not authorized for that action.", flash[:warning]
+  end
+  
+  def test_create_with_member_of_group_but_private
+    groups(:company).join(users(:keira))
+    assert groups(:company).users.include?(users(:keira))
+    assert groups(:company).accessible_by?(users(:keira))
+    post :create, groups(:company).to_path(true).merge(:blog => { :name => 'newsletter' }), as(:keira)
+    assert_redirected_to user_url(users(:keira))
+    assert_equal "You are not authorized for that action.", flash[:warning]
+  end
+  
+  def test_create_with_member_promoted_to_admin
+    groups(:company).join(users(:keira))
+    assert groups(:company).accessible_by?(users(:keira))
+    assert !groups(:company).editable_by?(users(:keira))
+    assert groups(:company).assign_rank(users(:keira), Membership::ADMIN_RANK)
+    assert groups(:company).editable_by?(users(:keira))
+    post :create, groups(:company).to_path(true).merge(:blog => { :name => 'newsletter' }), as(:keira)
+    assert_redirected_to group_blog_url(assigns(:blog).to_path)
+    assert_equal "You have successfully created your blog.", flash[:notice]
+  end
+  
+  def test_edit_as_creator_of_blog
+    get :edit, blogs(:company).to_polypath, as(:colin)
+    assert_response :success
+    assert_equal blogs(:company), assigns(:blog)
+  end
+  
+  def test_edit_as_random
+    get :edit, blogs(:company).to_polypath, as(:nana)
+    assert_redirected_to user_url(users(:nana))
+    assert_equal "You are not authorized for that action.", flash[:warning]
+  end
+  
+  def test_edit_as_non_logged
+    get :edit, blogs(:company).to_polypath
+    assert_redirected_to login_url
+    assert_equal "You need to be logged in to do that.", flash[:warning]
+  end
+  
+  def test_edit_as_member
+    groups(:company).join(users(:keira))
+    assert groups(:company).accessible_by?(users(:keira))
+    get :edit, blogs(:company).to_polypath, as(:keira)
+    assert_redirected_to user_url(users(:keira))
+    assert_equal "You are not authorized for that action.", flash[:warning]
+  end
+  
+  def test_edit_as_admin
+    groups(:company).join(users(:keira), :rank => Membership::ADMIN_RANK)
+    assert groups(:company).accessible_by?(users(:keira))
+    assert groups(:company).editable_by?(users(:keira))
+    get :edit, blogs(:company).to_polypath, as(:keira)
+    assert_redirected_to user_url(users(:keira))
+    assert_equal "You are not authorized for that action.", flash[:warning]
+  end
+  
+  def test_edit_as_blog_authorized
+    groups(:company).join(users(:keira))
+    
+  end
   
 end

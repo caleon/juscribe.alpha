@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 53) do
+ActiveRecord::Schema.define(:version => 54) do
 
   create_table "articles", :force => true do |t|
     t.string   "title"
@@ -141,6 +141,7 @@ ActiveRecord::Schema.define(:version => 53) do
     t.datetime "updated_at"
     t.integer  "user_id"
     t.boolean  "private",     :default => false
+    t.text     "bosses"
   end
 
   create_table "permissions", :force => true do |t|

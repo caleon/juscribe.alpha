@@ -1,7 +1,7 @@
 class BlogsController < ApplicationController
   use_shared_options
   verify_login_on :new, :create, :edit, :update, :destroy
-  authorize_on :show, :new, :edit, :update, :destroy
+  authorize_on :show, :new, :create, :edit, :update, :destroy
   
   def index
     return unless get_bloggable
@@ -35,7 +35,7 @@ class BlogsController < ApplicationController
   end
   
   def create
-    return unless get_bloggable
+    return unless get_bloggable && authorize(@bloggable, :editable => true)
     @blog = @bloggable.blogs.new(params[:blog])
     if @blog.save
       msg = "You have successfully created your blog."
