@@ -10,10 +10,9 @@ class Song < ActiveRecord::Base
   
   before_save :verify_non_empty_permalink
   
-  
-  # something like 'widget_alias :name, :title' can handle the following mapping.
-  def name; self.title; end
-  def name=(str); self.title = str; end
+  # For Widget
+  alias_attribute :name, :title  
+  def content; "\"#{self.title}\" by #{self.artist}"; end
   
   def to_param; self.permalink; end
   def permalink

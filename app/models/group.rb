@@ -15,6 +15,7 @@ class Group < ActiveRecord::Base
   validates_with_regexp :name
   
   attr_protected :rank
+  alias_attribute :content, :description
       
   def editable_by?(user)
     self.users.admin.include?(user)

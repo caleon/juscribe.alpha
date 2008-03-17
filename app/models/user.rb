@@ -11,6 +11,9 @@ class User < ActiveRecord::Base
     
   attr_protected :nick, :email, :password_salt, :password_hash, :type
   attr_accessor :tos_agreement
+  # For Widget
+  alias_attribute :name, :nick
+  alias_attribute :content, :full_name
   
   def self.primary_find(*args)
     find_by_nick(*args)

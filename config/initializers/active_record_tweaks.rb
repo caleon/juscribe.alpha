@@ -37,7 +37,7 @@ module ActiveRecord
   end
   
   ## acts_as_list fix For Widgetable
-  module Acts::List::InstanceMethods
+  module Acts::Listable::InstanceMethods
     def add_to_list_bottom_with_filter
       self[position_column] = bottom_position_in_list.to_i + 1 unless self.is_a?(Widget)
     end

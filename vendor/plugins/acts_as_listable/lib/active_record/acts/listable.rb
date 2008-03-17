@@ -1,6 +1,6 @@
 module ActiveRecord
   module Acts #:nodoc:
-    module List #:nodoc:
+    module Listable #:nodoc:
       def self.included(base)
         base.extend(ClassMethods)
       end
@@ -51,7 +51,7 @@ module ActiveRecord
           end
 
           class_eval <<-EOV
-            include ActiveRecord::Acts::List::InstanceMethods
+            include ActiveRecord::Acts::Listable::InstanceMethods
 
             def acts_as_list_class
               ::#{self.name}

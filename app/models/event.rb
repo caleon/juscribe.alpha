@@ -9,9 +9,7 @@ class Event < ActiveRecord::Base
   validates_length_of :name, :in => (3..20)
   validates_with_regexp :name
   
-  def to_s
-    self.name
-  end
+  def to_s; self.name; end
   
   def to_path(for_associated=false)
     if self.user.nil?

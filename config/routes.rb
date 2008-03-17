@@ -161,7 +161,10 @@ ActionController::Routing::Routes.draw do |map|
                                                      :event_id => regex_for(:event, :id),
                                                      :id => regex_for(:permission, :id) }
     end
-    user.resources :galleries, :requirements => { :id => regex_for(:gallery, :id) }
+    user.resources :galleries, :requirements => { :id => regex_for(:gallery, :id) } do |gal|
+      gal.resources :pictures, :requirements => { :gallery_id => regex_for(:gallery, :id),
+                                                 :id => regex_for(:picture, :id) }
+    end
     user.resource :permission, :requirements => { :user_id => regex_for(:user, :nick),
                                                    :id => regex_for(:permission, :id) }
     user.resources :widgets, :member => { :place => :put, :unplace => :put },

@@ -9,6 +9,10 @@ class EventsController < ApplicationController
     @events = Event.find(:all, find_opts.merge(:conditions => ["user_id = ?", @user.id]))
   end
   
+  def show
+    super(:include => :permission)
+  end
+  
   def new # TODO: extend ActiveRecord's association collection to be able to do user.events.accessible_by?
     return unless get_user
     redirect_to new_user_event_url(get_viewer) and return if @user != get_viewer

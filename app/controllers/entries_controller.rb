@@ -12,6 +12,10 @@ class EntriesController < ApplicationController
     end
   end
   
+  def show
+    super(:include => :permission)
+  end
+  
   def new
     return unless get_user
     if @user == get_viewer
@@ -66,7 +70,7 @@ class EntriesController < ApplicationController
   end
   
   def destroy
-    return unless setup && authorize(@entry, :editable => true)
+    return unless setup(:permission) && authorize(@entry, :editable => true)
     msg = "You have deleted #{@entry.display_name}."
     respond_to do |format|
       format.html { flash[:notice] = msg; redirect_to :back }

@@ -1,9 +1,9 @@
 class Picture < ActiveRecord::Base
-  acts_as_itemizable :scope => :gallery
   include_custom_plugins  
   
   belongs_to :user
   belongs_to :depictable, :polymorphic => true
+  acts_as_list :scope => 'depictable_id = #{depictable_id} AND depictable_type = \'#{depictable_type}\''
   has_attachment  :content_type => :image,
                   :storage => :file_system, #(RAILS_ENV != 'production' ? :file_system : :s3),
                   :path_prefix => "public/images/uploads", # TODO: Setup shared directory.
@@ -19,6 +19,7 @@ class Picture < ActiveRecord::Base
   validates_presence_of :depictable_type, :depictable_id, :user_id
   # attr_protected :depictable_type, :depictable_id ????? Perhaps this needed so forms dont get hax0red.
   # Needs more validations for kropper
+  alias_attribute :content, :caption
   
   DEFAULT_CROP = { :crop_left         =>  0,
                    :crop_top          =>  0,

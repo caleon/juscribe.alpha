@@ -7,6 +7,10 @@ class Comment < ActiveRecord::Base
   has_many :followups, :class_name => "Comment", :as => :original, :foreign_key => :secondary_id
   validates_presence_of :user_id
   
+  # For widget
+  alias_attribute :content, :body
+  def name; self.body.to_s[0..10] + '...'; end
+  
   #after_create :send_notification
   
   def to_path(for_associated=false)

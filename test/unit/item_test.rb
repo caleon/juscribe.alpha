@@ -10,7 +10,7 @@ require File.dirname(__FILE__) + '/../test_helper'
 class ItemTest < ActiveSupport::TestCase
 
   def test_initial_validity
-    (Item.find(:all) + Picture.find(:all, :limit => 0) + Project.find(:all) + Song.find(:all)).each do |item|
+    (Item.find(:all) + Project.find(:all) + Song.find(:all)).each do |item|
       assert item.valid?, item.errors.inspect
     end
   end
@@ -38,7 +38,7 @@ class ItemTest < ActiveSupport::TestCase
   end
   
   def test_plugins
-    [ Item, Picture, Project, Song ].each do |klass|
+    [ Item, Project, Song ].each do |klass|
       assert klass.accessible?
       assert klass.taggable?
       assert klass.widgetable?

@@ -12,6 +12,7 @@ REGEXP_STR = { # Defaults
                :article   => { :permalink => "[a-zA-Z0-9][-a-zA-Z0-9]+[a-zA-Z0-9]" },
                :entry     => { :location => "([^\\s].+[^\\s])?",
                                :content => "([^\\s].+[^\\s])?" },
+               :gallery   => { :name => "([^\\s].+[^\\s])?" },
                :message   => { :subject => "[^\\s].+[^\\s]" },
                :permission_rule => { :name => "([^\\s].+[^\\s])?" },
                :picture   => {},

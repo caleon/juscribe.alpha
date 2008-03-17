@@ -12,7 +12,7 @@ class User < ActiveRecord::Base
   has_many :owned_pictures, :class_name => 'Picture', :dependent => :nullify
   has_many :galleries, :order => 'id DESC'
   has_many :pictures, :as => :depictable, :order => :position, :dependent => :nullify
-  has_one :primary_picture, :class_name => 'Picture', :as => :depictable # Hm. Apparently this works.
+  has_one :primary_picture, :class_name => 'Picture', :as => :depictable, :order => :position
   has_many :memberships, :dependent => :destroy
   has_many :groups, :through => :memberships
   has_many :owned_groups, :class_name => 'Group', :dependent => :nullify

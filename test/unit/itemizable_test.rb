@@ -12,11 +12,10 @@ end
 class ItemizableTest < ActiveSupport::TestCase
   
   def test_itemizable_setup
-    %w( Item Picture Project Song ).each do |class_str|
+    %w( Item Project Song ).each do |class_str|
       assert class_str.constantize.itemizable?
     end
     assert items(:list_item1).itemizable?
-    assert pictures(:gallery_item1).itemizable?
     assert projects(:portfolio_item1).itemizable?
     assert songs(:playlist_item1).itemizable?
   end
@@ -27,7 +26,6 @@ class ItemizableTest < ActiveSupport::TestCase
   end
   
   def test_pseudo_alias_associations
-    assert_equal pictures(:gallery_item1).gallery, pictures(:gallery_item1).list
     assert_equal projects(:portfolio_item1).portfolio, projects(:portfolio_item1).list
     assert_equal songs(:playlist_item1).playlist, songs(:playlist_item1).list
   end

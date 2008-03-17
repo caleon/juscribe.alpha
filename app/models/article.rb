@@ -13,11 +13,11 @@ class Article < ActiveRecord::Base
   validates_with_regexp :content
   
   attr_protected :permalink, :published_date, :published_time
+  alias_attribute :name, :title # Content is already correct for widget
   
   before_save :verify_non_empty_permalink
   
   def to_s; self.title; end
-  def name; self.title; end
   def to_param; self.permalink; end
   def permalink
     self[:permalink] ||= make_permalink

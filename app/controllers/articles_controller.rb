@@ -12,7 +12,7 @@ class ArticlesController < ApplicationController
   end
   
   def show
-    return unless setup
+    return unless setup(:permission)
     if @article.draft?
       return unless authorize(@article, :manual => true)
     end
@@ -61,7 +61,7 @@ class ArticlesController < ApplicationController
   end
   
   def update
-    return unless setup
+    return unless setup(:permission)
     title = params[:article].delete(:title)
     if @article.update_attributes(params[:article])
       msg = "You have successfully updated #{@article.display_name}."
@@ -82,7 +82,7 @@ class ArticlesController < ApplicationController
   end
   
   def publish
-    return unless setup
+    return unless setup(:permission)
     @article.publish!
     msg = "You have published #{@article.display_name}."
     respond_to do |format|
@@ -92,7 +92,7 @@ class ArticlesController < ApplicationController
   end
   
   def unpublish
-    return unless setup
+    return unless setup(:permission)
     @article.unpublish!
     msg = "You have unpublished #{@article.display_name}."
     respond_to do |format|

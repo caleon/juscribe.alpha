@@ -15,7 +15,9 @@ class GalleriesController < ApplicationController
   end
   
   def show
-    setup(:pictures)
+    setup([:pictures, :permission])
+    find_opts = get_find_opts
+    @pictures = @gallery.pictures.find(:all, find_opts.merge(:include => :depictable))
     respond_to do |format|
       format.html
       format.js
