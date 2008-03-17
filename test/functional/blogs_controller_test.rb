@@ -162,8 +162,70 @@ class BlogsControllerTest < ActionController::TestCase
   end
   
   def test_edit_as_blog_authorized
-    groups(:company).join(users(:keira))
-    
+    groups(:company).join(users(:keira), :rank => Membership::ADMIN_RANK)
+    assert groups(:company).accessible_by?(users(:keira))
+    assert groups(:company).editable_by?(users(:keira))
+    assert !blogs(:company).editable_by?(users(:keira))
+    blogs(:company).rule.add_boss!(:user, users(:keira))
+    assert blogs(:company).editable_by?(users(:keira))
+    get :edit, blogs(:company).to_polypath, as(:keira)
+    assert_response :success
+    assert_equal blogs(:company), assigns(:blog)
   end
   
+  def test_update_as_owner
+    put :update, blogs(:company).to_polypath.merge(:blog => { :description => 'laaaaaa' }), as(:colin)
+    assert_redirected_to group_blog_url(blogs(:company).to_path)
+    assert_equal "You have successfully updated #{blogs(:company).display_name}.", flash[:notice]
+  end
+  
+  def test_update_as_non_logged
+    put :update, blogs(:company).to_polypath.merge(:blog => { :description => 'laaaaaa' })
+    assert_redirected_to login_url
+    assert_equal "You need to be logged in to do that.", flash[:warning]
+  end
+  
+  def test_update_as_random
+    put :update, blogs(:company).to_polypath.merge(:blog => { :description => 'laaaaaa' }), as(:keira)
+    assert_redirected_to user_url(users(:keira))
+    assert_equal "You are not authorized for that action.", flash[:warning]
+  end
+  
+  def test_update_as_member
+    groups(:company).join(users(:keira))
+    put :update, blogs(:company).to_polypath.merge(:blog => { :description => 'laaaaaa' }), as(:keira)
+    assert_redirected_to user_url(users(:keira))
+    assert_equal "You are not authorized for that action.", flash[:warning]
+  end
+  
+  def test_update_as_admin
+    groups(:company).join(users(:keira), :rank => Membership::ADMIN_RANK)
+    put :update, blogs(:company).to_polypath.merge(:blog => { :description => 'laaaaa' }), as(:keira)
+    assert_redirected_to user_url(users(:keira))
+    assert_equal "You are not authorized for that action.", flash[:warning]
+  end
+  
+  def test_update_as_boss
+    blogs(:company).rule.add_boss!(:user, users(:keira))
+    assert blogs(:company).editable_by?(users(:keira))
+    put :update, blogs(:company).to_polypath.merge(:blog => { :description => 'laaaaaa' }), as(:keira)
+    assert_redirected_to group_blog_url(blogs(:company).to_path)
+    assert_equal "You have successfully updated #{blogs(:company).display_name}.", flash[:notice]
+  end
+  
+  def test_update_as_boss_though_private
+    blogs(:company).rule.add_boss!(:user, users(:keira))
+    blogs(:company).rule.toggle_privacy!
+    assert blogs(:company).private?
+    put :update, blogs(:company).to_polypath.merge(:blog => { :description => 'laaaaaa' }), as(:keira)
+    assert_redirected_to group_blog_url(blogs(:company).to_path)
+    assert_equal "You have successfully updated #{blogs(:company).display_name}.", flash[:notice]
+  end
+  
+  def test_destroy_as_owner
+    @request.env["HTTP_REFERER"] = "http://www.cnn.com/"
+    delete :destroy, blogs(:company).to_polypath, as(:colin)
+    assert_equal "You have successfully deleted #{blogs(:company).display_name}.", flash[:notice]
+    assert_redirected_to "http://www.cnn.com/"
+  end
 end

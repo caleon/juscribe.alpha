@@ -80,7 +80,8 @@ class BlogsController < ApplicationController
   
   def destroy
     return unless setup(:permission) && authorize(@blog, :editable => true)
-    msg = "You have deleted #{@blog.display_name}."
+    msg = "You have successfully deleted #{@blog.display_name}."
+    @blog.nullify!(get_viewer)
     respond_to do |format|
       format.html { flash[:notice] = msg; redirect_to :back }
       format.js { flash.now[:notice] = msg }
