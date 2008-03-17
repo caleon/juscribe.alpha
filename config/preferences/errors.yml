@@ -1,0 +1,41 @@
+---
+:create:
+  :success: You have successfully created ?.
+  :failure: There was an error creating your ?.
+:update:
+  :success: You have successfuly updated ?.
+  :failure: There was an error updating your ?.
+:destroy:
+  :success:
+:setup:
+  :failure:
+:authorize:
+  :failure: You are not authorized for that action.
+:articles:
+  :create:
+    :success: You have successfully created ?.
+    :failure: There was an error creating ?.
+  :update:
+    :success: You have successfully updated ?.
+    :failure: There was an error updating ?.
+  :publish:
+    :success: You have successfully published ?.
+  :unpublish:
+    :success: You have unpublished ?.
+  :setup:
+    :failure: That article could not be found. Please check the address.
+:clips:
+  :create:
+    :success: You have clipped ?.
+    :failure: There was an error clipping ?.
+  :update:
+    :success: You have successfully updated ?.
+    :failure: There was an error updating your ?.
+  :destroy:
+    :success: You have unclipped ?.
+  :setup:
+    :failure: That clip could not be found. Please check the address.
+  :get_widgetable:
+    :failure: That ? could not be found.
+:comments:
+  

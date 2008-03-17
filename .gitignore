@@ -4,7 +4,6 @@ config/amazon_s3.yml
 config/database.yml
 config/mongrel_cluster.yml
 config/nginx.conf
-config/preferences/*
 coverage/*
 log/*.log
 public/images/uploads/*

@@ -68,4 +68,5 @@ class ApplicationController < ActionController::Base
   def picture_uploaded?
     params[:picture] && !params[:picture][:uploaded_data].blank?
   end
+  
 end

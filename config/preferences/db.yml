@@ -1,0 +1,13 @@
+--- 
+development:
+  :wheel_id: 0
+  :garbage_id: 2
+  
+staging:
+  :wheel_id: ~
+  
+test:
+  :wheel_id: 690249644
+
+production:
+  :wheel_id: ~
