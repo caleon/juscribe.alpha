@@ -14,7 +14,7 @@ class ArticlesController < ApplicationController
   def show
     return unless setup(:permission)
     if @article.draft?
-      return unless authorize(@article, :manual => true)
+      return unless authorize(@article, :editable => true)
     end
     respond_to do |format|
       format.html

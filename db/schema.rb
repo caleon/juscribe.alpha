@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 51) do
+ActiveRecord::Schema.define(:version => 52) do
 
   create_table "articles", :force => true do |t|
     t.string   "title"
@@ -21,6 +21,18 @@ ActiveRecord::Schema.define(:version => 51) do
     t.datetime "updated_at"
     t.date     "published_date"
     t.time     "published_time"
+    t.integer  "blog_id"
+    t.integer  "clips_count",    :default => 0
+  end
+
+  create_table "blogs", :force => true do |t|
+    t.string   "bloggable_type"
+    t.integer  "bloggable_id"
+    t.string   "name"
+    t.string   "permalink"
+    t.text     "description"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "comments", :force => true do |t|

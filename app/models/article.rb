@@ -1,12 +1,13 @@
 class Article < ActiveRecord::Base
   include_custom_plugins  
   
-  belongs_to :user, :include => :primary_picture
+  belongs_to :user
+  belongs_to :blog
   has_many :pictures, :as => :depictable
   has_many :comments, :as => :commentable
     
   validates_presence_of :user_id, :title, :permalink, :content
-  validates_length_of :title, :in => (3..100)
+  validates_length_of :title, :in => (3..70)
   validates_uniqueness_of :permalink, :scope => :user_id # Hm this, or published_date?
   
   validates_with_regexp :permalink, :title, :message => "uses an incorrect format: please edit your title"
@@ -97,5 +98,4 @@ class Article < ActiveRecord::Base
   def verify_non_empty_permalink
     make_permalink if self[:permalink].blank?
   end
-     
 end

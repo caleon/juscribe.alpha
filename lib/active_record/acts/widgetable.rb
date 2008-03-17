@@ -57,7 +57,12 @@ module ActiveRecord::Acts::Widgetable #:nodoc:
       pos = attrs.delete(:position)
       cl = self.clips.new(attrs)
       cl.place(pos) if pos
-      cl.save ? cl : false
+      if cl.save
+        self.increment!(:clips_count) if self.respond_to?(:clips_count)
+        return cl
+      else
+        return false
+      end
     end
     
     def unclip!(attrs={})

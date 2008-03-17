@@ -74,7 +74,7 @@ class ArticlesControllerTest < ActionController::TestCase
     articles(:blog).send(:make_permalink)
     articles(:blog).publish!
     date = articles(:blog).published_date
-    art2 = Article.create(:title => articles(:blog).title, :content => articles(:opinion).content, :user => users(:nana))
+    art2 = Article.create(:title => articles(:blog).title, :content => articles(:opinion).content, :user => users(:nana), :blog => blogs(:nanas))
     assert_not_nil art2[:permalink]
     assert_equal art2.permalink, articles(:blog).permalink
     art2.publish!
@@ -111,7 +111,7 @@ class ArticlesControllerTest < ActionController::TestCase
   end
   
   def test_create
-    post :create, { :article => { :title => "Blah blahdy la la la", :content => "dum dum dum dum dum", :publish => "1" }, :user_id => 'colin' }, as(:colin)
+    post :create, { :article => { :title => "Blah blahdy la la la", :content => "dum dum dum dum dum", :publish => "1", :blog_id => 'first'.hash.abs }, :user_id => 'colin' }, as(:colin)
     article = Article.find(:first, :order => 'id DESC', :conditions => ["title = ?", "Blah blahdy la la la"])
     assert article.valid?
     assert_redirected_to article_url(article.to_path)
@@ -119,20 +119,20 @@ class ArticlesControllerTest < ActionController::TestCase
   end
   
   def test_create_without_login
-    post :create, { :article => { :title => "Blah blahdy la la la", :content => "dum dum dum" }, :user_id => 'colin' }
+    post :create, { :article => { :title => "Blah blahdy la la la", :content => "dum dum dum", :blog_id => 'first'.hash.abs }, :user_id => 'colin' }
     assert_redirected_to login_url
     assert_equal "You need to be logged in to do that.", flash[:warning]
   end
   
   def test_create_with_error
-    post :create, { :article => { :title => "", :content => "dum dum dum"}, :user_id => 'colin' }, as(:colin)
+    post :create, { :article => { :title => "", :content => "dum dum dum", :blog_id => 'first'.hash.abs }, :user_id => 'colin' }, as(:colin)
     assert_not_nil assigns(:article)
     assert !assigns(:article).valid?
     assert_flash_equal "There was an error creating your article.", :warning
   end
   
   def test_create_with_picture
-    post :create, { :article => { :title => "this is a picture post", :content => "dum dum dum dum dum dum dum", :publish => "1" }, :picture => { :uploaded_data => fixture_file_upload("yuri.jpg", "image/jpg") }, :user_id => 'colin' }, as(:colin)
+    post :create, { :article => { :title => "this is a picture post", :content => "dum dum dum dum dum dum dum", :publish => "1", :blog_id => 'first'.hash.abs }, :picture => { :uploaded_data => fixture_file_upload("yuri.jpg", "image/jpg") }, :user_id => 'colin' }, as(:colin)
     article = Article.find_by_title('this is a picture post')
     assert_not_nil article[:permalink]
     assert article.valid?

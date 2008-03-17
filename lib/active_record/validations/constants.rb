@@ -10,6 +10,7 @@ REGEXP_STR = { # Defaults
                :main      => { :topic => "([-_a-zA-Z0-9]+)?" },
                # Model specific:
                :article   => { :permalink => "[a-zA-Z0-9][-a-zA-Z0-9]+[a-zA-Z0-9]" },
+               :blog      => { :permalink => "[A-Z0-9][-A-Z0-9]+[A-Z0-9]" },
                :entry     => { :location => "([^\\s].+[^\\s])?",
                                :content => "([^\\s].+[^\\s])?" },
                :gallery   => { :name => "([^\\s].+[^\\s])?" },

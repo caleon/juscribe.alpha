@@ -1,0 +1,10 @@
+first:
+  name: Hello World!
+  permalink: HELLO-WORLD
+  bloggable_type: User
+  bloggable_id: <%= 'colin'.hash.abs %>
+nanas:
+  name: World
+  permalink: WORLD
+  bloggable_type: User
+  bloggable_id: <%= 'nana'.hash.abs %>

@@ -9,6 +9,7 @@ class Group < ActiveRecord::Base
     end
   end
   has_many :pictures, :as => :depictable
+  has_many :blogs, :as => :bloggable
   
   validates_presence_of :name, :user_id
   validates_length_of :name, :in => (3..20)

@@ -1,5 +1,6 @@
 class User < ActiveRecord::Base
   has_many :articles, :dependent => :nullify
+  has_many :blogs, :as => :bloggable, :dependent => :nullify
   has_many :entries, :dependent => :nullify
   has_many :songs, :dependent => :nullify
   has_many :events, :dependent => :nullify

@@ -7,12 +7,12 @@ class Comment < ActiveRecord::Base
   has_many :followups, :class_name => "Comment", :as => :original, :foreign_key => :secondary_id
   validates_presence_of :user_id
   
+  after_create :increment_counter#, :send_notification
+  
   # For widget
   alias_attribute :content, :body
   def name; self.body.to_s[0..10] + '...'; end
-  
-  #after_create :send_notification
-  
+    
   def to_path(for_associated=false)
     if self.user.nil?
       { :"#{for_associated ? 'comment_id' : 'id'}" => self.to_param }
@@ -32,14 +32,13 @@ class Comment < ActiveRecord::Base
   def editable_by?(user=nil)
     user && (self.commentable.editable_by?(user) || super)
   end
-  
-  def invalidate!
-    self.destroy
-  end
 
   #######
   private
   #######
+  def increment_counter
+    self.commentable.increment!(:comments_count) if self.commentable.respond_to?(:comments_count)
+  end
   
   def send_notification
     Notifier.deliver_comment_notification(self)
