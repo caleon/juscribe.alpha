@@ -26,6 +26,10 @@ class CommentsController < ApplicationController
   def new
     return unless get_commentable(:message => "Unable to find object to comment. Please check the address.") && authorize(@commentable)
     @comment = Comment.new
+    respond_to do |format|
+      format.html
+      format.js
+    end
   end
   
   def create

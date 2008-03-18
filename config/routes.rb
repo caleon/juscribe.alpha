@@ -101,25 +101,6 @@ ActionController::Routing::Routes.draw do |map|
                  :action => 'destroy', :conditions => { :method => :delete },
                  :requirements => { :id => regex_for(:comment, :id) }
     end
-    # Article -> Permissions
-    ars.with_options :controller => 'permissions' do |pm|
-      pm.connect ':year/:month/:day/:article_id/by/:user_id/permission',
-                 :action => 'create', :conditions => { :method => :post }
-      pm.new_article_permission ':year/:month/:day/:article_id/by/:user_id/permission/new',
-                 :action => 'new', :conditions => { :method => :get }
-      pm.edit_article_permission ':year/:month/:day/:article_id/by/:user_id/permission/:id/edit',
-                 :action => 'edit', :conditions => { :method => :get },
-                 :requirements => { :id => regex_for(:permission, :id) }
-      pm.article_permission ':year/:month/:day/:article_id/by/:user_id/permission/:id',
-                 :action => 'show', :conditions => { :method => :get },
-                 :requirements => { :id => regex_for(:permission, :id) }
-      pm.connect ':year/:month/:day/:article_id/by/:user_id/permission/:id',
-                 :action => 'update', :conditions => { :method => :put },
-                 :requirements => { :id => regex_for(:permission, :id) }
-      pm.connect ':year/:month/:day/:article_id/by/:user_id/permission/:id',
-                 :action => 'destroy', :conditions => { :method => :delete },
-                 :requirements => { :id => regex_for(:permission, :id) }
-    end
   end
 
   map.resources :groups, :requirements => { :id => regex_for(:group, :id) },
@@ -129,13 +110,12 @@ ActionController::Routing::Routes.draw do |map|
                                              :id => regex_for(:blog, :permalink) }
   end
   map.resources :messages, :requirements => { :id => regex_for(:message, :id) }
+  map.resources :permissions, :requirements => { :id => regex_for(:permission_rule, :id) }
   map.resources :pictures, :requirements => { :id => regex_for(:picture, :id) } do |picture|
     picture.resources :clips, :requirements => { :picture_id => regex_for(:picture, :id),
                                                  :id => regex_for(:clip, :id) }
     picture.resources :comments, :requirements => { :picture_id => regex_for(:picture, :id),
                                                     :id => regex_for(:comment, :id) }
-    picture.resource :permission, :requirements => { :picture_id => regex_for(:picture, :id),
-                                                     :id => regex_for(:permission, :id) }
   end
   map.resources :users, :member => { :friends => :get, :befriend => :put, :unfriend => :put,
                         :about => :get, :edit_password => :get, :update_password => :put },
@@ -154,9 +134,6 @@ ActionController::Routing::Routes.draw do |map|
       entry.resources :comments, :requirements => { :user_id => regex_for(:user, :nick),
                                                     :entry_id => regex_for(:entry, :id),
                                                     :id => regex_for(:comment, :id) }
-      entry.resource :permission, :requirements => { :user_id => regex_for(:user, :nick),
-                                                     :entry_id => regex_for(:entry, :id),
-                                                     :id => regex_for(:permission, :id) }
     end
     user.resources :events, :member => { :begin_event => :put, :end_event => :put }, :requirements => { :user_id => regex_for(:user, :nick), :id => regex_for(:event, :id) } do |event|
       event.resources :clips, :requirements => { :user_id => regex_for(:user, :nick),
@@ -165,16 +142,11 @@ ActionController::Routing::Routes.draw do |map|
       event.resources :comments, :requirements => { :user_id => regex_for(:user, :nick),
                                                     :event_id => regex_for(:event, :id),
                                                     :id => regex_for(:comment, :id) }
-      event.resource :permission, :requirements => { :user_id => regex_for(:user, :nick),
-                                                     :event_id => regex_for(:event, :id),
-                                                     :id => regex_for(:permission, :id) }
     end
     user.resources :galleries, :requirements => { :id => regex_for(:gallery, :id) } do |gal|
       gal.resources :pictures, :requirements => { :gallery_id => regex_for(:gallery, :id),
                                                  :id => regex_for(:picture, :id) }
     end
-    user.resource :permission, :requirements => { :user_id => regex_for(:user, :nick),
-                                                   :id => regex_for(:permission, :id) }
     user.resources :widgets, :member => { :place => :put, :unplace => :put },
                    :requirements => { :user_id => regex_for(:user, :nick),
                                       :id => regex_for(:widget, :id) }
