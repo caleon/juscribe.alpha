@@ -22,4 +22,8 @@ class Gallery < ActiveRecord::Base
     end
   end
   
+  def path_name_prefix
+    [ self.user.path_name_prefix, 'gallery' ].join('_')
+  end
+  
 end

@@ -24,6 +24,10 @@ class Entry < ActiveRecord::Base
     end
   end
   
+  def path_name_prefix
+    [ self.user.path_prefix, 'entry' ].join('_')
+  end
+  
   def location_empty?; self.location.blank?; end
   def content_empty?; self.content.blank?; end
   

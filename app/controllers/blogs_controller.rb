@@ -115,12 +115,10 @@ class BlogsController < ApplicationController
   end
   
   def blog_url_for(blog)
-    prefix = blog.bloggable_type.underscore
-    instance_eval %{ #{prefix}_blog_url(blog.to_polypath) }
+    instance_eval %{ #{blog.path_name_prefix}_url(blog.to_path) }
   end
   
   def bloggable_url_for(bloggable)
-    prefix = bloggable.class.to_s.underscore
-    instance_eval %{ #{prefix}_url(bloggable.to_path) }
+    instance_eval %{ #{bloggable.path_name_prefix}_url(bloggable.to_path) }
   end
 end

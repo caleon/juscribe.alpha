@@ -12,17 +12,13 @@ class Comment < ActiveRecord::Base
   # For widget
   alias_attribute :content, :body
   def name; self.body.to_s[0..10] + '...'; end
-    
+  
   def to_path(for_associated=false)
-    if self.user.nil?
-      { :"#{for_associated ? 'comment_id' : 'id'}" => self.to_param }
-    else
-      { :user_id => self.user.to_param, :"#{for_associated ? 'comment_id' : 'id'}" => self.to_param }
-    end
+    { :"#{for_associated ? 'comment_id' : 'id'}" => self.to_param }.merge(self.commentable.nil? ? {} : self.commentable.to_path(true))
   end
   
-  def to_polypath
-    { :id => self.to_param }.merge(self.commentable.nil? ? {} : self.commentable.to_path(true))
+  def path_name_prefix
+    [ self.commentable.path_name_prefix, 'comment' ].join('_')
   end
   
   def accessible_by?(user=nil)

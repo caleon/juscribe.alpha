@@ -56,13 +56,12 @@ class Picture < ActiveRecord::Base
     public_filename
   end
   
-  def to_path
-    if self.depictable.nil?
-      { :id => self.to_param }
-    else
-      depictable_sym = "#{self.depictable_type.downcase}_id".intern
-      { depictable_sym => self.depictable.to_param, :id => self.to_param }      
-    end
+  def to_path(for_associated=false)
+    { :"#{for_associated ? 'picture_id' : 'id'}" => self.to_param }.merge(self.depictable.nil? ? {} : self.depictable.to_path(true))
+  end
+  
+  def path_name_prefix
+    [ self.depictable.path_name_prefix, 'picture' ].join('_')
   end
   
   # set_crop_params only for internal use. Use built-in attribute-setter

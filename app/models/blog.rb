@@ -38,16 +38,20 @@ class Blog < ActiveRecord::Base
     self.articles.find(:first).content.to_s
   end
   
+  #def to_path(for_associated=false)
+  #  if self.bloggable.nil?
+  #    { :"#{for_associated ? 'blog_id' : 'id'}" => self.to_param }
+  #  else
+  #    self.to_polypath(for_associated)
+  #  end
+  #end
+  
   def to_path(for_associated=false)
-    if self.bloggable.nil?
-      { :id => self.to_param }
-    else
-      self.to_polypath
-    end
+    { :"#{for_associated ? 'blog_id' : 'id'}" => self.to_param }.merge(self.bloggable.nil? ? {} : self.bloggable.to_path(true))
   end
   
-  def to_polypath
-    { :id => self.to_param }.merge(self.bloggable.nil? ? {} : self.bloggable.to_path(true))
+  def path_name_prefix
+    [ self.bloggable.path_name_prefix, 'blog' ].join('_')
   end
   
   def self.permalink_for(name)

@@ -115,12 +115,10 @@ class ClipsController < ApplicationController
   end
   
   def clip_url_for(clip)
-    prefix = clip.widgetable_type.underscore
-    instance_eval %{ #{prefix}_clip_url(clip.to_polypath) }
+    instance_eval %{ #{clip.path_name_prefix}_clip_url(clip.to_path) }
   end
   
   def widgetable_url_for(widgetable)
-    prefix = widgetable.class.to_s.underscore
-    instance_eval %{ #{prefix}_url(widgetable.to_path) }
+    instance_eval %{ #{widgetable.path_name_prefix}_url(widgetable.to_path) }
   end
 end

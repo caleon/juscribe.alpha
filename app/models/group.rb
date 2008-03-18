@@ -23,6 +23,8 @@ class Group < ActiveRecord::Base
   def to_path(for_associated=false)
     { :"#{for_associated ? 'group_id' : 'id'}" => self.to_param }
   end
+  
+  def path_name_prefix; 'group'; end
       
   def editable_by?(user)
     self.users.admin.include?(user) || super

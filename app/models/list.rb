@@ -27,6 +27,10 @@ class List < ActiveRecord::Base
     { :user_id => self.user.to_param, :id => self.to_param }
   end
   
+  def path_name_prefix
+    [ self.user.path_name_prefix, 'list' ]
+  end
+  
   def self.primary_find(pmlink, opts={})
     find(:first, opts.merge(:conditions => ["lists.permalink = ?", pmlink]))
   end

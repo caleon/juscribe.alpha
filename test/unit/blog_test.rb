@@ -9,7 +9,7 @@ class BlogTest < ActiveSupport::TestCase
     assert_not_nil blogs(:first).bloggable
     assert_equal users(:colin), blogs(:first).bloggable
     expected_hash = { :id => blogs(:first).to_param, :user_id => users(:colin).to_param }
-    assert_equal expected_hash, blogs(:first).to_polypath
+    assert_equal expected_hash, blogs(:first).to_path
   end
   
   def test_basics_on_new_blog

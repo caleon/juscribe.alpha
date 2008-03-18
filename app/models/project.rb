@@ -11,5 +11,9 @@ class Project < ActiveRecord::Base
   def to_path
     { :user_id => self.user.to_param, :id => self.to_param }
   end
+  
+  def path_name_prefix
+    [ self.user.path_name_prefix, 'project' ].join('_')
+  end
     
 end

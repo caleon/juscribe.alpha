@@ -19,6 +19,10 @@ class Event < ActiveRecord::Base
     end
   end
   
+  def path_name_prefix
+    [ self.user.path_name_prefix, 'event' ].join('_')
+  end
+  
   def begin!(time=Time.now, force=false)
     if !self.begins_at.nil? && !force
       self.errors.add(:begins_at, "is already set")

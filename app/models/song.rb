@@ -28,6 +28,10 @@ class Song < ActiveRecord::Base
     { :playlist_id => self.playlist.to_param, :id => self.to_param }
   end
   
+  def path_name_prefix
+    [ (self.playlist.nil? ? self.user.path_name_prefix : self.playlist.path_name_prefix), 'song' ].join('_')
+  end
+  
   def self.primary_find(pmlink, opts={})
     self.find(:first, opts.merge(:conditions => ["songs.permalink = ?", pmlink]))
   end

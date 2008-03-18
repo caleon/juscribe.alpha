@@ -46,28 +46,28 @@ class CommentsControllerTest < ActionController::TestCase
   
   def test_show
     articles(:blog).publish!
-    get :show, comments(:blog_comment).to_polypath
+    get :show, comments(:blog_comment).to_path
     assert_response :success
     assert_equal comments(:blog_comment), assigns(:comment)
   end
   
   def test_show_as_owner_of_commentable
     articles(:blog).publish!
-    get :show, comments(:blog_comment).to_polypath, as(:colin)
+    get :show, comments(:blog_comment).to_path, as(:colin)
     assert_response :success
     assert_equal comments(:blog_comment), assigns(:comment)
   end
   
   def test_show_as_owner_of_comment
     articles(:blog).publish!
-    get :show, comments(:blog_comment).to_polypath, as(:keira)
+    get :show, comments(:blog_comment).to_path, as(:keira)
     assert_response :success
     assert_equal comments(:blog_comment), assigns(:comment)
   end
   
   def test_show_as_random_person
     articles(:blog).publish!
-    get :show, comments(:blog_comment).to_polypath, as(:nana)
+    get :show, comments(:blog_comment).to_path, as(:nana)
     assert_response :success
     assert_equal comments(:blog_comment), assigns(:comment)
   end
@@ -77,7 +77,7 @@ class CommentsControllerTest < ActionController::TestCase
     articles(:blog).rule.toggle_privacy!
     assert articles(:blog).private?
     assert articles(:blog).accessible_by?(users(:colin))
-    get :show, comments(:blog_comment).to_polypath
+    get :show, comments(:blog_comment).to_path
     assert_redirected_to login_url
     assert_equal "You are not authorized for that action.", flash[:warning]
   end
@@ -86,7 +86,7 @@ class CommentsControllerTest < ActionController::TestCase
     articles(:blog).publish!
     articles(:blog).rule.toggle_privacy!
     assert articles(:blog).private?
-    get :show, comments(:blog_comment).to_polypath, as(:nana)
+    get :show, comments(:blog_comment).to_path, as(:nana)
     assert_redirected_to user_url(users(:nana))
     assert_equal "You are not authorized for that action.", flash[:warning]
   end
@@ -99,7 +99,7 @@ class CommentsControllerTest < ActionController::TestCase
     assert !articles(:blog).accessible_by?(users(:keira))
     assert_equal articles(:blog), comments(:blog_comment).commentable
     assert comments(:blog_comment).accessible_by?(users(:keira))
-    get :show, comments(:blog_comment).to_polypath, as(:keira)
+    get :show, comments(:blog_comment).to_path, as(:keira)
     assert_response :success
     assert_equal comments(:blog_comment), assigns(:comment)
   end
@@ -196,35 +196,35 @@ class CommentsControllerTest < ActionController::TestCase
   
   def test_edit_as_comment_owner
     articles(:blog).publish!
-    get :edit, comments(:blog_comment).to_polypath, as(:keira)
+    get :edit, comments(:blog_comment).to_path, as(:keira)
     assert_response :success
     assert_equal comments(:blog_comment), assigns(:comment)
   end
   
   def test_edit_as_non_comment_owner
     articles(:blog).publish!
-    get :edit, comments(:blog_comment).to_polypath, as(:nana)
+    get :edit, comments(:blog_comment).to_path, as(:nana)
     assert_redirected_to user_url(users(:nana))
     assert_equal "You are not authorized for that action.", flash[:warning]
   end
   
   def test_edit_as_commentable_owner
     articles(:blog).publish!
-    get :edit, comments(:blog_comment).to_polypath, as(:colin)
+    get :edit, comments(:blog_comment).to_path, as(:colin)
     assert_response :success
     assert_equal comments(:blog_comment), assigns(:comment)
   end
   
   def test_update_as_non_user
     articles(:blog).publish!
-    get :edit, comments(:blog_comment).to_polypath
+    get :edit, comments(:blog_comment).to_path
     assert_redirected_to login_url
     assert_equal "You need to be logged in to do that.", flash[:warning]
   end
   
   def test_update_as_comment_owner
     articles(:blog).publish!
-    put :update, comments(:blog_comment).to_polypath.merge(:comment => { :body => 'blah blah' }), as(:keira)
+    put :update, comments(:blog_comment).to_path.merge(:comment => { :body => 'blah blah' }), as(:keira)
     assert_redirected_to article_url(articles(:blog).to_path)
     assert_equal "You have successfully updated #{comments(:blog_comment).display_name}.", flash[:notice]
     assert_equal 'blah blah', comments(:blog_comment).reload.body
@@ -232,42 +232,42 @@ class CommentsControllerTest < ActionController::TestCase
   
   def test_update_as_non_comment_owner
     articles(:blog).publish!
-    put :update, comments(:blog_comment).to_polypath.merge(:comment => { :body => 'blah blah' }), as(:nana)
+    put :update, comments(:blog_comment).to_path.merge(:comment => { :body => 'blah blah' }), as(:nana)
     assert_redirected_to user_url(users(:nana))
     assert_equal "You are not authorized for that action.", flash[:warning]
   end
   
   def test_update_as_commentable_owner
     articles(:blog).publish!
-    put :update, comments(:blog_comment).to_polypath.merge(:comment => { :body => 'blah blah' }), as(:colin)
+    put :update, comments(:blog_comment).to_path.merge(:comment => { :body => 'blah blah' }), as(:colin)
     assert_redirected_to article_url(articles(:blog).to_path)
     assert_equal "You have successfully updated #{comments(:blog_comment).display_name}.", flash[:notice]
   end
   
   def test_update_as_non_user
     articles(:blog).publish!
-    put :update, comments(:blog_comment).to_polypath.merge(:comment => { :body => 'blah blah' })
+    put :update, comments(:blog_comment).to_path.merge(:comment => { :body => 'blah blah' })
     assert_redirected_to login_url
     assert_equal "You need to be logged in to do that.", flash[:warning]
   end
   
   def test_destroy_as_comment_owner
     articles(:blog).publish!
-    delete :destroy, comments(:blog_comment).to_polypath, as(:keira)
+    delete :destroy, comments(:blog_comment).to_path, as(:keira)
     assert_redirected_to article_url(articles(:blog).to_path)
     assert_equal "You have deleted a comment on #{articles(:blog).display_name}.", flash[:notice]
   end
   
   def test_destroy_as_non_comment_owner
     articles(:blog).publish!
-    delete :destroy, comments(:blog_comment).to_polypath, as(:nana)
+    delete :destroy, comments(:blog_comment).to_path, as(:nana)
     assert_redirected_to user_url(users(:nana))
     assert_equal "You are not authorized for that action.", flash[:warning]
   end
   
   def test_destroy_as_commentable_owner
     articles(:blog).publish!
-    delete :destroy, comments(:blog_comment).to_polypath, as(:colin)
+    delete :destroy, comments(:blog_comment).to_path, as(:colin)
     assert_redirected_to article_url(articles(:blog).to_path)
     assert_equal "You have deleted a comment on #{articles(:blog).display_name}.", flash[:notice]
   end

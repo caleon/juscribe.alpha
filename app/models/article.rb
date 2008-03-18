@@ -39,6 +39,8 @@ class Article < ActiveRecord::Base
     end
   end
   
+  def path_name_prefix; 'article'; end
+  
   def draft?; !self.published_time? && !self.published_date?; end
   def published?; self.published_time? && self.published_date?; end
   def publish!

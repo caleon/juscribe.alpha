@@ -51,6 +51,8 @@ class User < ActiveRecord::Base
     { :"#{for_associated ? 'user_id' : 'id'}" => self.to_param }
   end
   
+  def path_name_prefix; "user"; end
+  
   def name_and_nick
     self.full_name + " (#{self.nick})"
   end

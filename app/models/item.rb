@@ -9,4 +9,6 @@ class Item < ActiveRecord::Base
   
   def name; self[:name] || "Untitled Item"; end
   
+  def path_name_prefix; 'item'; end
+  
 end
