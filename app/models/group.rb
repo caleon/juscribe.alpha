@@ -9,8 +9,10 @@ class Group < ActiveRecord::Base
     end
   end
   has_many :pictures, :as => :depictable
+  has_one :primary_picture, :class_name => 'Picture', :as => :depictable, :order => :position
   has_many :blogs, :as => :bloggable
   
+  validates_uniqueness_of :name
   validates_presence_of :name, :user_id
   validates_length_of :name, :in => (3..20)
   validates_with_regexp :name
@@ -23,7 +25,7 @@ class Group < ActiveRecord::Base
   end
       
   def editable_by?(user)
-    self.users.admin.include?(user)
+    self.users.admin.include?(user) || super
   end
   
   def accessible_by?(user)
@@ -38,6 +40,13 @@ class Group < ActiveRecord::Base
   
   def has_member?(user)
     true if self.membership_for(user)
+  rescue
+    self.errors.clear
+    false
+  end
+  
+  def has_admin?(user)
+    true if self.membership_for(user) && self.rank_for(user) >= Membership::ADMIN_RANK
   rescue
     self.errors.clear
     false
@@ -96,10 +105,19 @@ class Group < ActiveRecord::Base
     
   end
   
-  def disband!
+  def disband!(user=nil)
     Notifier.deliver_group_disband_notification(self)
     Membership.delete_all("group_id = #{self.id}")
-    self.destroy
+    self.nullify!(user)
+  end
+  
+  def invite(opts)
+    if !self.has_member?(opts[:to_user]) && self.has_member?(opts[:from_user])
+      Notifier.deliver_group_invitation(opts)
+      true
+    else
+      false
+    end
   end
 
 end

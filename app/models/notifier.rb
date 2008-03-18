@@ -1,4 +1,6 @@
 class Notifier < ActionMailer::Base
+  # TODO: setup Postman intermediary that decides whether to use Notifier or
+  # in-system Message model.
   
   def setup_email
     @from = APP[:mailer_from]
@@ -49,6 +51,11 @@ class Notifier < ActionMailer::Base
   
   def friendship_request(*args)
     
+  end
+  
+  def group_invitation(opts)
+    to_user = opts[:to_user]
+    from_user = opts[:from_user]
   end
   
   def group_disband_notification(group)

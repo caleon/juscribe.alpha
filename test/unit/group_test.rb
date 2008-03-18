@@ -99,7 +99,8 @@ class GroupTest < ActiveSupport::TestCase
     orig_membership_count = Membership.count
     groups(:friends).disband!
     assert_equal orig_membership_count - members_count, Membership.count
-    assert_raise(ActiveRecord::RecordNotFound) { Group.find('friends'.hash.abs) }
+    # Group is nullified, not destroyed.
+    #assert_raise(ActiveRecord::RecordNotFound) { Group.find('friends'.hash.abs) }
     assert_equal orig_deliveries_count + 1, ActionMailer::Base.deliveries.size
   end
 end

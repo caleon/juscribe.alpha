@@ -78,13 +78,15 @@ class User < ActiveRecord::Base
     full ? { :f => 'female', :m => 'male' }[sym] : sym.to_s
   end
   
-  def found(attrs={})
+  def found(attrs={}, opts={})
     grp = self.owned_groups.new(attrs)
     raise LimitError, "You (#{self.internal_name}) have reached the maximum number of groups you can found (#{APP[:limits][:groups]}). Please contact #{APP[:contact]} to resolve this issue." if self.owned_groups.count >= APP[:limits][:groups]
-    if grp.save
-      grp.join(self, :rank => Membership::RANKS[:founder])
-    else
-      return false
+    unless opts[:without_save] || false
+      if grp.save
+        grp.join(self, :rank => Membership::RANKS[:founder])
+      else
+        return false
+      end
     end
     grp
   rescue LimitError => e

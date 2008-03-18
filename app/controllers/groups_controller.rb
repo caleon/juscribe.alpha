@@ -1,7 +1,7 @@
 class GroupsController < ApplicationController
   use_shared_options
   verify_login_on :new, :create, :edit, :update, :destroy, :join, :leave, :kick, :invite
-  authorize_on :edit, :update, :destroy, :kick
+  authorize_on :show, :edit, :update, :destroy, :kick
   
   def index
     find_opts = get_find_opts(:include => :primary_picture, :order => 'groups.name ASC')
@@ -25,7 +25,7 @@ class GroupsController < ApplicationController
   end
   
   def new
-    @group = get_viewer.groups.new
+    @group = Group.new
     respond_to do |format|
       format.html
       format.js
@@ -33,7 +33,7 @@ class GroupsController < ApplicationController
   end
   
   def create
-    @group = get_viewer.groups.new(params[:group])
+    @group = get_viewer.found(params[:group], :without_save => true)
     if @group.save
       @group.join(get_viewer, :rank => Membership::RANKS[:founder])
       msg = "You have successfully founded your group."
@@ -79,7 +79,7 @@ class GroupsController < ApplicationController
   def destroy
     return unless setup(:permission) && authorize(@group, :editable => true)
     msg = "You have successfully disbanded #{@group.display_name}."
-    @group.nullify!(get_viewer)
+    @group.disband!(get_viewer)
     respond_to do |format|
       format.html { flash[:notice] = msg; redirect_to :back }
       format.js { flash.now[:notice] = msg }
@@ -141,7 +141,7 @@ class GroupsController < ApplicationController
   
   def invite
     return unless setup(:permission)
-    if @group.invite(user = User.find(params[:member]), :from => get_viewer)
+    if @group.invite({:to_user => (user = User.find(params[:member])), :from_user => get_viewer})
       msg = "You have invited #{user.display_name} to #{@group.display_name}."
       respond_to do |format|
         format.html { flash[:notice] = msg; redirect_to group_url(@group) }
