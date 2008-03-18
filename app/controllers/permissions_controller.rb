@@ -13,7 +13,7 @@ class PermissionsController < ApplicationController
   end
   
   def show
-    return unless setup
+    return unless setup(:permissions)
     respond_to do |format|
       format.html
       format.js
@@ -29,9 +29,9 @@ class PermissionsController < ApplicationController
   end
   
   def create
-    @permission_rule = PermissionRule.create(params[:permission_rule].merge(:user => get_viewer))
+    @permission_rule = PermissionRule.new(params[:permission_rule].merge(:user => get_viewer))
     if @permission_rule.save
-      msg = "You have created successfully created a permission rule."
+      msg = "You have successfully created a permission rule."
       respond_to do |format|
         format.html { flash[:notice] = msg; redirect_to permission_url(@permission_rule) }
         format.js { flash.now[:notice] = msg }
@@ -74,7 +74,7 @@ class PermissionsController < ApplicationController
   def destroy
     return unless setup
     @permission_rule.nullify!(get_viewer)
-    msg = "You have deleted the permission rule #{@permission_rule.display_name}"
+    msg = "You have deleted the permission rule #{@permission_rule.display_name}."
     respond_to do |format|
       format.html { flash[:notice] = msg; redirect_to permissions_url }
       format.js { flash.now[:notice] = msg }

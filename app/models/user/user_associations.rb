@@ -13,6 +13,7 @@ class User < ActiveRecord::Base
   has_many :owned_taggings, :class_name => 'Tagging', :dependent => :nullify
   has_many :owned_pictures, :class_name => 'Picture', :dependent => :nullify
   has_many :galleries, :order => 'galleries.id DESC'
+  has_many :permission_rules, :order => 'permission_rules.id DESC'
   has_many :pictures, :as => :depictable, :order => :position, :dependent => :nullify
   has_one :primary_picture, :class_name => 'Picture', :as => :depictable, :order => :position
   has_many :memberships, :dependent => :destroy

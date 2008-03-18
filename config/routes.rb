@@ -151,7 +151,8 @@ ActionController::Routing::Routes.draw do |map|
                    :requirements => { :user_id => regex_for(:user, :nick),
                                       :id => regex_for(:widget, :id) }
   end
-      
+  
+  map.search 'search/:query', :controller => 'search', :action => 'index', :query => nil
   map.login 'login', :controller => 'users', :action => 'login'
   map.formatted_login 'login.:format', :controller => 'users', :action => 'login'
   map.logout 'logout', :controller => 'users', :action => 'logout'
@@ -172,8 +173,4 @@ ActionController::Routing::Routes.draw do |map|
                                            :requirements => { :topic => regex_for(:main, :topic) }
   map.copyright 'copyright', :controller => 'main', :action => 'copyright'
   map.formatted_copyright 'copyright.:format', :controller => 'main', :action => 'copyright'
-
-  # Install the default routes as the lowest priority.
-  # map.connect ':controller/:action/:id'
-  # map.connect ':controller/:action/:id.:format'
 end

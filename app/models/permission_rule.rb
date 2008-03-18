@@ -17,8 +17,13 @@ class PermissionRule < ActiveRecord::Base
                :bosses => { :user => [], :group => [] } }
   PASTS = {:allow => :allowed, :deny => :denied, :boss => :bosses}
   
+  validates_presence_of :name
   validates_uniqueness_of :name, :scope => :user_id, :allow_nil => true
   validates_with_regexp :name
+  
+  def to_path
+    { :id => self.to_param }
+  end
   
   def public?; !self.private? && (self.denied[:user].empty? && self.denied[:group].empty?); end
   def protected?; !self.private? && (!self.denied[:user].empty? || !self.denied[:group].empty?); end
