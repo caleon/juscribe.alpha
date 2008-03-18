@@ -98,21 +98,21 @@ class CommentsController < ApplicationController
   end
   
   def get_commentable(opts={})
-    return false if (possible_commentable_keys = params.keys.select{|key| key.match(/_id$/)}).empty?
-    commentable_id_key = %w( widget event entry song item project article gallery blog playlist list group user ).map{|kls| "#{kls}_id"}.detect do |key|
-      possible_commentable_keys.include?(key)
+    unless request.path.match(/\/([_a-zA-Z]+)\/([^\/]+)\/comments/)
+      display_error(:message => "Unable to process the request. Please check the address.")
+      return false
     end
-    commentable_class = commentable_id_key.gsub(/_id$/, '').classify.constantize
-    if commentable_class == Article
+    begin
+      klass, id = $1.singularize.classify.constantize, $2
+      @commentable = klass.primary_find(id, :include => :permission)
+    rescue
+      klass, id = Article, nil
       @commentable = Article.primary_find(params, :for_association => true, :include => :permission)
-    else
-      @commentable = commentable_class.primary_find(params[commentable_id_key], :include => :permission)
     end
     raise ActiveRecord::RecordNotFound if @commentable.nil?
     @commentable
   rescue ActiveRecord::RecordNotFound
-    display_error(:message => opts[:message] || "That #{commentable_class} could not be found.")
-    false
+    display_error(:message => opts[:message] || "That #{klass.to_s.humanize} could not be found. Please check the address.")
   end
   
   def comment_url_for(comment)

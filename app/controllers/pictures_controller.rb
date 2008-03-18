@@ -84,7 +84,7 @@ class PicturesController < ApplicationController
   end
   
   private
-  def setup
+  def setup(includes=nil, error_opts={})
     return unless get_depictable
     @picture = @depictable.pictures.find(params[:id], :include => includes)
     authorize(@picture)
@@ -94,21 +94,22 @@ class PicturesController < ApplicationController
     false
   end
   
-  def get_depictable(opts={})
-    return false if (possible_depictable_keys = params.keys.select{|key| key.match(/_id$/) }).empty?
-    depictable_id_key = %w( event entry song item project article gallery blog playlist list group user ).map{|kls| "#{kls}_id" }.detect do |key|
-      possible_depictable_keys.include?(key)
+  def get_widgetable(opts={})
+    unless request.path.match(/\/([_a-zA-Z]+)\/([^\/]+)\/pictures/)
+      display_error(:message => "Unable to process the request. Please check the address.")
+      return false
     end
-    depictable_class = depictable_id_key.gsub(/_id$$/, '').classify.constantize
-    if depictable_class == Article
-      @depictable = Article.primary_find(params, :for_association=> true, :include => :permission)
-    else
-      @depictable = depictable_class.primary_find(params[depictable_id_key], :include => :permission)
+    begin      
+      klass, id = $1.singularize.classify.constantize, $2
+      @depictable = klass.primary_find(id, :include => :permission)
+    rescue NameError
+      klass, id = Article, nil
+      @depictable = Article.primary_find(params, :for_association => true, :include => :permission)
     end
     raise ActiveRecord::RecordNotFound if @depictable.nil?
+    @depictable
   rescue ActiveRecord::RecordNotFound
-    display_error(:message => opts[:message] || "That #{depictable_class} could not be found.")
-    false
+    display_error(:message => opts[:message] || "That #{klass.to_s.humanize} could not be found. Please check the address.")
   end
   
   def picture_url_for(picture)

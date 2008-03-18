@@ -292,12 +292,6 @@ ActionController::Routing::Routes.draw do |map|
   end
   map.resources :messages, :requirements => { :id => regex_for(:message, :id) }
   map.resources :permissions, :requirements => { :id => regex_for(:permission_rule, :id) }
-  map.resources :pictures, :requirements => { :id => regex_for(:picture, :id) } do |picture|
-    picture.resources :clips, :requirements => { :picture_id => regex_for(:picture, :id),
-                                                 :id => regex_for(:clip, :id) }
-    picture.resources :comments, :requirements => { :picture_id => regex_for(:picture, :id),
-                                                    :id => regex_for(:comment, :id) }
-  end
   map.resources :users, :member => { :friends => :get, :befriend => :put, :unfriend => :put,
                         :about => :get, :edit_password => :get, :update_password => :put },
                         :requirements => { :id => regex_for(:user, :nick) } do |user|

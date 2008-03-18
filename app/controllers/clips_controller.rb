@@ -96,41 +96,23 @@ class ClipsController < ApplicationController
     false
   end
   
-  # Method sets @widgetable based on param keys, or if not found, displays error.
   def get_widgetable(opts={})
-    return false if (possible_widgetable_id_keys = params.keys.select{|key| key.match(/_id$/)}).empty?
-    widgetable_id_key = %w( event entry song item project article gallery blog playlist list group user ).map{|kls| "#{kls}_id"}.detect do |key|
-      possible_widgetable_id_keys.include?(key)
+    unless request.path.match(/\/([_a-zA-Z]+)\/([^\/]+)\/clips/)
+      display_error(:message => "Unable to process the request. Please check the address.")
+      return false
     end
-    widgetable_class = widgetable_id_key.gsub(/_id$/, '').classify.constantize
-    if widgetable_class == Article
-      @widgetable = Article.primary_find(params, :for_association => true, :include => :permission )
-    else
-      @widgetable = widgetable_class.primary_find(params[widgetable_id_key], :include => :permission)
+    begin      
+      klass, id = $1.singularize.classify.constantize, $2
+      @widgetable = klass.primary_find(id, :include => :permission)
+    rescue NameError
+      klass, id = Article, nil
+      @widgetable = Article.primary_find(params, :for_association => true, :include => :permission)
     end
     raise ActiveRecord::RecordNotFound if @widgetable.nil?
     @widgetable
   rescue ActiveRecord::RecordNotFound
-    display_error(:message => opts[:message] || "That #{widgetable_class} could not be found.")
-    false
+    display_error(:message => opts[:message] || "That #{klass.to_s.humanize} could not be found. Please check the address.")
   end
-  
-  #def get_widgetable(opts={})
-  #  unless request.path.match(/\/([a-zA-Z]+)\/([^\/]+)\/clips/)
-  #    display_error(:message => "Unable to process the request. Please check the address.")
-  #    return false
-  #  end
-  #  begin
-  #    klass, id = $1.singularize.classify.constantize, $2
-  #    @widgetable = klass.primary_find(id, :include => :permission)
-  #  rescue NameError
-  #    klass, id = Article, nil
-  #    @widgetable = Article.primary_find(params, :for_association => true, :include => :permission)
-  #  end
-  #  raise ActiveRecord::RecordNotFound if @widgetable.nil?
-  #rescue ActiveRecord::RecordNotFound
-  #  display_error(:message => opts[:message] || "That #{klass.to_s.humanize} could not be found.")
-  #end
   
   def clip_url_for(clip)
     prefix = clip.widgetable_type.underscore
