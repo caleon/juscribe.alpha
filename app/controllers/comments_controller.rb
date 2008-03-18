@@ -99,7 +99,7 @@ class CommentsController < ApplicationController
   
   def get_commentable(opts={})
     return false if (possible_commentable_keys = params.keys.select{|key| key.match(/_id$/)}).empty?
-    commentable_id_key = %w( picture article song project item group event entry list playlist user ).map{|kls| "#{kls}_id"}.detect do |key|
+    commentable_id_key = %w( widget event entry song item project article gallery blog playlist list group user ).map{|kls| "#{kls}_id"}.detect do |key|
       possible_commentable_keys.include?(key)
     end
     commentable_class = commentable_id_key.gsub(/_id$/, '').classify.constantize

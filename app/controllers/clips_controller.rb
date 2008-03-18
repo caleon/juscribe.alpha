@@ -99,7 +99,7 @@ class ClipsController < ApplicationController
   # Method sets @widgetable based on param keys, or if not found, displays error.
   def get_widgetable(opts={})
     return false if (possible_widgetable_id_keys = params.keys.select{|key| key.match(/_id$/)}).empty?
-    widgetable_id_key = %w( picture article song project item group event entry list playlist user ).map{|kls| "#{kls}_id"}.detect do |key|
+    widgetable_id_key = %w( event entry song item project article gallery blog playlist list group user ).map{|kls| "#{kls}_id"}.detect do |key|
       possible_widgetable_id_keys.include?(key)
     end
     widgetable_class = widgetable_id_key.gsub(/_id$/, '').classify.constantize

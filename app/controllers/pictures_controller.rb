@@ -79,7 +79,7 @@ class PicturesController < ApplicationController
     msg = "You have deleted a picture on #{@depictable.display_name}."
     respond_to do |format|
       format.html { flash[:notice] = msg; redirect_to depictable_url_for(@depictable) }
-      format.js { flash.now[:notice]= msg }
+      format.js { flash.now[:notice] = msg }
     end
   end
   
@@ -96,7 +96,7 @@ class PicturesController < ApplicationController
   
   def get_depictable(opts={})
     return false if (possible_depictable_keys = params.keys.select{|key| key.match(/_id$/) }).empty?
-    depictable_id_key = %w( article song project item group event entry list playlist user ).map{|kls| "#{kls}_id" }.detect do |key|
+    depictable_id_key = %w( event entry song item project article gallery blog playlist list group user ).map{|kls| "#{kls}_id" }.detect do |key|
       possible_depictable_keys.include?(key)
     end
     depictable_class = depictable_id_key.gsub(/_id$$/, '').classify.constantize
