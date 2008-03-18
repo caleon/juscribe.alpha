@@ -78,4 +78,17 @@ class MessagesControllerTest < ActionController::TestCase
     assert_flash_equal 'There was an error creating your message.', :warning
   end
   
+  def test_destroy
+    @request.env["HTTP_REFERER"] = "http://www.cnn.com/"
+    delete :destroy, messages(:colin_to_nana).to_path, as(:nana)
+    assert_redirected_to "http://www.cnn.com/"
+    assert_equal "You have successfully deleted #{messages(:colin_to_nana).display_name}.", flash[:notice]
+  end
+  
+  def test_destroy_by_sender
+    @request.env["HTTP_REFERER"] = "http://www.cnn.com/"
+    delete :destroy, messages(:colin_to_nana).to_path, as(:colin)
+    assert_redirected_to "http://www.cnn.com/"
+    assert_equal "Only the recipient may delete messages.", flash[:warning]
+  end
 end
