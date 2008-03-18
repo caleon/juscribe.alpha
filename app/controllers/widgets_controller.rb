@@ -93,7 +93,7 @@ class WidgetsController < ApplicationController
   def setup(includes=nil, error_opts={})
     return false unless get_user
     @widget = @user.widgets.find(params[:id], :include => includes)
-    true && authorize(@widget)
+    authorize(@widget)
   rescue ActiveRecord::RecordNotFound
     error_opts[:message] ||= "That User/Widget could not be found. Please check the URL."
     display_error(error_opts)

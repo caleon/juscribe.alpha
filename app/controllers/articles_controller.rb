@@ -26,7 +26,7 @@ class ArticlesController < ApplicationController
   def new
     return unless get_user
     if @user == get_viewer
-      @article = @user.articles.new
+      @article = Article.new
     else
       redirect_to new_article_url(get_viewer) and return if @user != get_viewer
     end
@@ -113,7 +113,7 @@ class ArticlesController < ApplicationController
       end
     elsif only_permalink_and_nick_provided? && (arts = Article.find_any_by_permalink_and_nick(params[:id], params[:user_id]))
       if @article = arts.detect {|art| art.draft? && art.user == get_viewer }
-        true && authorize(@article)
+        authorize(@article)
       elsif (pub_arts = arts.select {|art| art.published? }).size == 1
         @article = pub_arts.first
         redirect_to article_url(@article.to_path), :status => 303 and return false
@@ -125,7 +125,7 @@ class ArticlesController < ApplicationController
       if params[:month] !~ /\d\d/ || params[:day] !~ /\d\d/
         redirect_to article_url(@article.to_path), :status => 301 and return false
       else
-        true && authorize(@article)
+       authorize(@article)
       end
     else
       error_opts[:message] ||= "That article could not be found. Please check the address."

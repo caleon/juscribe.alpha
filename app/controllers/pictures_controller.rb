@@ -25,8 +25,6 @@ class PicturesController < ApplicationController
   
   def new
     return unless get_depictable(:message => "Unable to find the object to depict. Please check the address.") && authorize(@depictable)
-    # Does authorize need to be here? What happens when friend wants to upload
-    # a picture of you?
     @picture = @depictable.pictures.new
   end
   
@@ -51,11 +49,12 @@ class PicturesController < ApplicationController
   
   def update
     return unless setup(:permission) && authorize(@picture, :editable => true)
+    @use_kropper = true
     if params[:picture].delete(:crop_cancel) == "true"
       msg = "Image editing canceled."
       respond_to do |format|
         format.html { flash[:notice] = msg; redirect_to picture_url_for(@picture) }
-        format.js { flash.now[:notice] = msg; render :action => 'update_canceled'}
+        format.js { flash.now[:notice] = msg; render :action => 'update_canceled' }
       end
     else
       begin

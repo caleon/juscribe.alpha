@@ -289,6 +289,8 @@ class UsersControllerTest < ActionController::TestCase
   
   def test_destroy
     @request.env["HTTP_REFERER"] = "http://www.cnn.com/"
+    users(:colin).update_attribute(:admin, true)
+    assert users(:alessandra).editable_by?(users(:colin))
     delete :destroy, users(:alessandra).to_path, as(:colin)
     assert_response :redirect
     assert_redirected_to "http://www.cnn.com/"
