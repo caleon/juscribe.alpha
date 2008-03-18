@@ -22,22 +22,23 @@ The param passed is the max zoom level for the cropping UI. -->
 <![endif]-->
 
 <div>
-	<% form_for @picture, :url => picture_path(@picture) do |f| -%>
+	<%#FIXME: form_for @picture, :url => picture_path(@picture) do |f| -%>
+	<% form_for @picture, :url => '#' do |f| %>
 		<div id="crop_form_fields">
 			<h4>Form fields passed to the server (you'll probably want to make these hidden fields in your app)</h4>
 			<p>These four fields are in the image's coordinate space&#8212;they project the
 				cropping stencil onto the image. This lets you crop an image to the stencil's
 				shape without shrinking it down to the stencil's actual size.</p>
 				<!-- will have to rename domId selectors in kropper.js -->
-			<p>crop_left: <%= f.text_field "crop_left", :value => "0" %></p>
-			<p>crop_top: <%= f.text_field "crop_top", :value => "0" %></p>
-			<p>crop_width: <%= f.text_field "crop_width", :value => "1" %></p>
-			<p>crop_height: <%= f.text_field "crop_height", :value => "1" %></p>
+			<p>crop_left: <%= text_field_tag "picture_crop_crop_left", "0", :name => 'picture_crop[crop_left]' %></p>
+			<p>crop_top: <%= text_field_tag "picture_crop_crop_top", "0", :name => 'picture_crop[crop_top]' %></p>
+			<p>crop_width: <%= text_field_tag "picture_crop_crop_width", "1", :name => 'picture_crop[crop_width]' %></p>
+			<p>crop_height: <%= text_field_tag "picture_crop_crop_height", "1", :name => 'picture_crop[crop_height]' %></p>
 			<p>stencil_width and stencil_height pass the onscreen size of the cropping stencil.
 				Set resize_to_stencil to true to resize the cropped image to the actual stencil size.</p>
-			<p>stencil_width: <%= f.text_field "stencil_width", :value => "1" %></p>
-			<p>stencil_height: <%= f.text_field "stencil_height", :value => "1" %></p>
-			<p>resize_to_stencil: <%= f.text_field "resize_to_stencil", :value => "false" %></p>
+			<p>stencil_width: <%= text_field_tag "picture_crop_stencil_width", "1", :name => 'picture_crop[stencil_width]' %></p>
+			<p>stencil_height: <%= text_field_tag "picture_crop_stencil_height", "1", :name => 'picture_crop[stencil_height]' %></p>
+			<p>resize_to_stencil: <%= text_field_tag "picture_crop_resize_to_stencil", "false", :name => 'picture_crop[resize_to_stencil]' %></p>
 			<p>When the cancel button is clicked, this field is set to true and the form is submitted. This lets your controller customize what action the server takes when cropping is canceled.</p>
 			<p>crop_cancel: <%= f.text_field "crop_cancel", :value => "false" %></p>
 		</div>
@@ -60,7 +61,9 @@ The param passed is the max zoom level for the cropping UI. -->
 		        	<div id="zoom_slider_handle"></div>
 		    	</div>
 				<div id="crop_buttons">
-					<%= f.submit "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Crop Image&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", :id => "crop_submit_btn" %>
+					<%= f.submit "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Crop and Update&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", :id => "crop_submit_btn" %>
+					<input type="button" name="picture[do_crop]" value="Crop" id="do_crop_btn_crop" />
+					<input type="button" name="picture[do_crop]" value="Update" id="do_crop_btn_update" />
 					<input type="button" value="Cancel" id="crop_cancel_btn" onclick="this.form.crop_cancel.value='true';this.form.submit();" />
 					<input type="button" value="&nbsp;Reset&nbsp;" id="crop_reset_btn" />
 				</div>
@@ -73,6 +76,3 @@ The param passed is the max zoom level for the cropping UI. -->
 	<% end -%>
 	
 </div>
-
-<%= link_to 'Show', @picture %> |
-<%= link_to 'Back', pictures_path %>

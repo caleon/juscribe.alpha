@@ -114,11 +114,11 @@ class BlogsController < ApplicationController
     false
   end
   
-  def blog_url_for(blog)
-    instance_eval %{ #{blog.path_name_prefix}_url(blog.to_path) }
+  def blog_url_for(blog, acshun=nil)
+    instance_eval %{ #{acshun ? "#{acshun}_" : ''}#{blog.path_name_prefix}_url(blog.to_path) }
   end
   
-  def bloggable_url_for(bloggable)
-    instance_eval %{ #{bloggable.path_name_prefix}_url(bloggable.to_path) }
+  def bloggable_url_for(bloggable, acshun=nil)
+    instance_eval %{ #{acshun ? "#{acshun}_" : ''}#{bloggable.path_name_prefix}_url(bloggable.to_path) }
   end
 end

@@ -51,7 +51,7 @@ ActionController::Routing::Routes.draw do |map|
                                     :conditions =>   { :method => :put }
       par.draft                     'draft/:id/by/:user_id',                  :action => 'show',
                                     :conditions =>   { :method => :get }
-      par.foramtted_draft           'draft/:id/by/:user_id.:format',          :action => 'show',
+      par.formatted_draft           'draft/:id/by/:user_id.:format',          :action => 'show',
                                     :conditions =>   { :method => :get }
       par.connect                   'draft/:id/by/:user_id',                  :action => 'update',
                                     :conditions =>   { :method => :put }
@@ -63,6 +63,33 @@ ActionController::Routing::Routes.draw do |map|
                                     :conditions =>   { :method => :delete }
     end
   end
+  
+  ### Draft Pictures ##
+  map.with_options :controller => 'pictures', :requirements => { :article_id => regex_for(:article, :permalink), :user_id => regex_for(:user, :nick) } do |draft|
+    draft.draft_pictures 'draft/:article_id/by/:user_id/pictures', :action => 'index', :conditions => { :method => :get }
+    draft.formatted_draft_pictures 'draft/:article_id/by/:user_id/pictures.:format', :action => 'index', :conditions => { :method => :get }
+    draft.connect 'draft/:article_id/by/:user_id/pictures', :action => 'create', :conditions => { :method => :post }
+    draft.connect 'draft/:article_id/by/:user_id/pictures.:format', :action => 'create', :conditions => { :method => :post }
+    draft.new_draft_picture 'draft/:article_id/by/:user_id/pictures/new', :action => 'new', :conditions => { :method => :get }
+    draft.formatted_new_draft_picture 'draft/:article_id/by/:user_id/pictures/new.:format', :action => 'new', :conditions => { :method => :get }
+    draft.edit_draft_picture 'draft/:article_id/by/:user_id/pictures/:id/edit', :action => 'edit', :conditions => { :method => :get },
+                        :requirements => { :id => regex_for(:picture, :id) }
+    draft.formatted_edit_draft_picture 'draft/:article_id/by/:user_id/pictures/:id/edit.:format', :action => 'edit', :conditions => { :method => :get },
+                        :requirements => { :id => regex_for(:picture, :id) }
+    draft.draft_picture 'draft/:article_id/by/:user_id/pictures/:id', :action => 'show', :conditions => { :method => :get },
+                        :requirements => { :id => regex_for(:picture, :id) }
+    draft.formatted_draft_picture 'draft/:article_id/by/:user_id/pictures/:id.:format', :action => 'show', :conditions => { :method => :get },
+                        :requirements => { :id => regex_for(:picture, :id) }
+    draft.connect 'draft/:article_id/by/:user_id/pictures/:id', :action => 'update', :conditions => { :method => :put },
+                        :requirements => { :id => regex_for(:picture, :id) }
+    draft.connect 'draft/:article_id/by/:user_id/pictures/:id.:format', :action => 'update', :conditions => { :method => :put },
+                        :requirements => { :id => regex_for(:picture, :id) }
+    draft.connect 'draft/:article_id/by/:user_id/pictures/:id', :action => 'destroy', :conditions => { :method => :delete },
+                        :requirements => { :id => regex_for(:picture, :id) }
+    draft.connect 'draft/:article_id/by/:user_id/pictures/:id.:format', :action => 'destroy', :conditions => { :method => :delete },
+                        :requirements => { :id => regex_for(:picture, :id) }
+  end
+  
   
   ### A R T I C L E   S U B S E T S ##
   # Notice that in the article_clips routes, there aren't paths to Draft clips. That's because

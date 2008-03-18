@@ -17,7 +17,10 @@ class Picture < ActiveRecord::Base
   # ...does the following:  validates_presence_of :size, :content_type, :filename
   #                         validate :attachment_attributes_valid?
   validates_presence_of :depictable_type, :depictable_id, :user_id
-  # attr_protected :depictable_type, :depictable_id ????? Perhaps this needed so forms dont get hax0red.
+  validates_length_of :name, :in => 3..50
+  validates_length_of :caption, :in => 3..200, :allow_nil => true
+  validates_with_regexp :name, :caption
+  attr_protected :depictable_type, :depictable_id #????? Perhaps this needed so forms dont get hax0red.
   # Needs more validations for kropper
   alias_attribute :content, :caption
   
@@ -47,10 +50,15 @@ class Picture < ActiveRecord::Base
   
   # Make this method grab values from existing column values in DB table
   def crop_params; @crop_params ||= CropParams.new; end
-  def set_crop_params(attrs); @crop_params = CropParams.new(attrs); end; private :set_crop_params
+  def set_crop_params(attrs); @crop_params = CropParams.new(attrs); end
+  private :set_crop_params
   [ :crop_left, :crop_top, :crop_width, :crop_height, :stencil_width, :stencil_height, :resize_to_stencil ].each do |key|
     class_eval %{ def #{key}=(val); crop_params.set(:#{key}, val.to_i); end; def #{key}; crop_params.get(:#{key}); end }
   end # :resize_to_stencil will have to be set to 1 or "1" to be true
+  
+  def name
+    self[:name] || "Untitled"
+  end
   
   def file_path(size=nil) # TODO: symlink uploads directory in images to shared one.
     public_filename
@@ -62,6 +70,14 @@ class Picture < ActiveRecord::Base
   
   def path_name_prefix
     [ self.depictable.path_name_prefix, 'picture' ].join('_')
+  end
+  
+  def accessible_by?(user)
+    self.depictable.accessible_by?(user) && super
+  end
+  
+  def editable_by?(user)
+    self.depictable.editable_by?(user) || super
   end
   
   # set_crop_params only for internal use. Use built-in attribute-setter

@@ -162,8 +162,8 @@ class WidgetsControllerTest < ActionController::TestCase
     assert widgets(:article_clip).accessible_by?(users(:colin))
     assert articles(:blog).public?
     articles(:blog).rule.toggle_privacy!
-    assert widgets(:article_clip).accessible_by?(users(:colin))
-    assert !widgets(:article_clip).accessible_by?(users(:nana))
+    assert widgets(:article_clip).reload.accessible_by?(users(:colin))
+    assert !widgets(:article_clip).reload.accessible_by?(users(:keira))
     
     delete :destroy, widgets(:article_clip).to_path(:user), as(:colin)
     assert_redirected_to user_url(users(:nana))

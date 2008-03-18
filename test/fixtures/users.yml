@@ -46,3 +46,10 @@ keira:
   email: kknight@venturous.net
   birthdate: 1985-01-29
   sex: 0
+jessica:
+  first_name: $LABEL
+  last_name: alba
+  nick: jessica
+  email: jalba@venturous.net
+  birthdate: 1985-01-29
+  sex: 0

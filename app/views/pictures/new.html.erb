@@ -2,10 +2,9 @@
 
 <%= error_messages_for :picture %>
 
-<% form_for(@picture) do |f| %>
+<% form_for :picture, @picture, :url => '#' do |f| %>
   <p>
     <%= f.submit "Create" %>
   </p>
 <% end %>
 
-<%= link_to 'Back', pictures_path %>

@@ -171,15 +171,6 @@ module ActionController::CommonMethods
       end
     end
     
-    def get_user(error_opts={})
-      @user = User.primary_find(params[:user_id])
-      raise ActiveRecord::RecordNotFound if @user.nil?
-      @user
-    rescue ActiveRecord::RecordNotFound
-      display_error(:message => error_opts[:message] || "That User could not be found. Please check the address.")
-      return false
-    end
-    
     # verify_logged_in is called from before_filter
     def verify_logged_in
       return true unless (self.class.read_inheritable_attribute(:verify_login_list) || []).include?(action_name.intern)
@@ -204,43 +195,6 @@ module ActionController::CommonMethods
         return false
       end
       true
-    end
-    
-    ######################################################################
-    ##                                                                  ##
-    ##    E R R O R    H A N D L I N G                                  ##
-    ##                                                                  ##
-    ######################################################################
-
-    def error; render :template => 'shared/warning', :layout => false; end
-
-    # Example call from PermissionRulesController:
-    # display_error(:class_name => 'Permission Rule', :message => 'Kaboom!',
-    #               :html => {:redirect => true, :error_path => @permission_rule})
-    def display_error(opts={})
-      valid_mimes = Mime::EXTENSIONS & [:html, :js, :xml]
-      valid_mimes.each do |mime|
-        instance_eval %{ @#{mime}_opts = opts.delete(:#{mime}) || {} }
-      end
-      respond_to_without_type_registration do |format|
-        valid_mimes.each do |mime|
-          instance_eval %{ format.#{mime} { return_error_view(:#{mime}, @#{mime}_opts.merge!(opts)) } }
-        end
-      end
-    end
-
-    def return_error_view(format, opts={})
-      klass = opts[:class]
-      klass_name = opts[:class_name] || klass.class_name.humanize rescue nil
-      msg = opts[:message] || "Error accessing #{klass_name || 'action'}."
-      error_pathing = opts[:error_path]
-      if opts[:redirect] ||= false
-        flash[:warning] = msg
-        redirect_to error_pathing || error_url, :status => 404
-      else
-        flash.now[:warning] = msg
-        render error_pathing || { :template => 'shared/error' }
-      end
     end
   end
 end

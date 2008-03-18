@@ -11,5 +11,6 @@ public/javascripts/all.js
 public/javascripts/base.js
 public/stylesheets/all.css
 public/stylesheets/base.css
+test/fixtures/*.jpg
 tmp/*
 vendor/plugins/attachment_fu/test/*.log

@@ -115,13 +115,11 @@ class CommentsController < ApplicationController
     display_error(:message => opts[:message] || "That #{klass.to_s.humanize} could not be found. Please check the address.")
   end
   
-  def comment_url_for(comment)
-    prefix = comment.commentable_type.underscore
-    instance_eval %{ #{prefix}_comment_url(comment.to_polypath) }
+  def comment_url_for(comment, acshun=nil)
+    instance_eval %{ #{acshun ? "#{acshun}_" : ''}#{comment.path_name_prefix}_url(comment.to_path) }
   end
   
-  def commentable_url_for(commentable)
-    prefix = commentable.class.to_s.underscore
-    instance_eval %{ #{prefix}_url(commentable.to_path) }
+  def commentable_url_for(commentable, acshun=nil)
+    instance_eval %{ #{acshun ? "#{acshun}_" : ''}#{commentable.path_name_prefix}_url(commentable.to_path) }
   end
 end

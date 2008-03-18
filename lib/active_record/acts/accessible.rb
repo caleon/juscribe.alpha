@@ -39,7 +39,7 @@ module ActiveRecord::Acts::Accessible #:nodoc:
     def accessible_by?(user=nil)
       # The rescue is in case this module is attached to a
       # model which does not have a #user method.
-      (self.user == user rescue true) || self.rule.accessible_by?(user)
+      (self.user == user rescue true) || (user && self.editable_by?(user)) || self.rule.accessible_by?(user)
     end
 
     def editable_by?(user)

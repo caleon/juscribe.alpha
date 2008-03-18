@@ -28,6 +28,15 @@ class ApplicationController < ActionController::Base
     @viewer ||= (User.find(session[:id]) rescue nil) if session[:id]
   end
   
+  def get_user(error_opts={})
+    @user = User.primary_find(params[:user_id])
+    raise ActiveRecord::RecordNotFound if @user.nil?
+    @user
+  rescue ActiveRecord::RecordNotFound
+    display_error(:message => error_opts[:message] || "That User could not be found. Please check the address.")
+    return false
+  end
+  
   def get_find_opts(hash={})
     params[:page] ||= 1
     limit, page = 20, params[:page].to_i
@@ -45,14 +54,12 @@ class ApplicationController < ActionController::Base
   def create_uploaded_picture_for(record, opts={})
     raise unless picture_uploaded? && !record.nil? && (record.respond_to?(:pictures) || record.respond_to?(:picture))
     params[:picture].merge!(:user => get_viewer || opts[:user])
-    if !opts[:save]
-      picture = record.pictures.new(params[:picture]) rescue record.picture.new(params[:picture])
-      return picture
-    end
-    if record.pictures.create(params[:picture])
+    picture = record.pictures.new(params[:picture]) rescue record.picture.new(params[:picture])
+    return picture if !opts[:save]
+    if picture.save
       msg = "Your picture has been uploaded."
       respond_to do |format|
-        format.html { flash[:notice] = msg; redirect_to opts[:redirect_to] || edit_picture_url(picture) }
+        format.html { flash[:notice] = msg; redirect_to opts[:redirect_to] || picture_url_for(picture, 'edit') }
         format.js { flash.now[:notice] = msg }
       end if opts[:respond]
       # Now go to end of method to return picture back to original controller.
@@ -60,13 +67,57 @@ class ApplicationController < ActionController::Base
     else
       flash.now[:warning] = "Sorry, could not save the uploaded picture. Please upload another picture."
       record.errors.add(:picture, "could not be saved because " + picture.errors.full_messages.join(', '))
-      return false
     end
-    return picture # needs to be saved elsewhere then.
+    return picture # needs to be saved elsewhere if not opts[:save].
   end
   
   def picture_uploaded?
     params[:picture] && !params[:picture][:uploaded_data].blank?
+  end
+  
+  def picture_url_for(picture, acshun=nil)
+    instance_eval %{ #{acshun ? "#{acshun}_" : ''}#{picture.path_name_prefix}_url(picture.to_path) }
+  end
+  
+  def depictable_url_for(depictable, acshun=nil)
+    instance_eval %{ #{acshun ? "#{acshun}_" : ''}#{depictable.path_name_prefix}_url(depictable.to_path) }
+  end
+  
+  ######################################################################
+  ##                                                                  ##
+  ##    E R R O R    H A N D L I N G                                  ##
+  ##                                                                  ##
+  ######################################################################
+
+  def error; render :template => 'shared/warning', :layout => false; end
+
+  # Example call from PermissionRulesController:
+  # display_error(:class_name => 'Permission Rule', :message => 'Kaboom!',
+  #               :html => {:redirect => true, :error_path => @permission_rule})
+  def display_error(opts={})
+    valid_mimes = Mime::EXTENSIONS & [:html, :js, :xml]
+    valid_mimes.each do |mime|
+      instance_eval %{ @#{mime}_opts = opts.delete(:#{mime}) || {} }
+    end
+    respond_to_without_type_registration do |format|
+      valid_mimes.each do |mime|
+        instance_eval %{ format.#{mime} { return_error_view(:#{mime}, @#{mime}_opts.merge!(opts)) } }
+      end
+    end
+  end
+
+  def return_error_view(format, opts={})
+    klass = opts[:class]
+    klass_name = opts[:class_name] || klass.class_name.humanize rescue nil
+    msg = opts[:message] || "Error accessing #{klass_name || 'action'}."
+    error_pathing = opts[:error_path]
+    if opts[:redirect] ||= false
+      flash[:warning] = msg
+      redirect_to error_pathing || error_url, :status => 404
+    else
+      flash.now[:warning] = msg
+      render error_pathing || { :template => 'shared/error' }
+    end
   end
   
 end

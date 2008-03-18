@@ -5,7 +5,8 @@ class PicturesController < ApplicationController
   
   def index
     return unless get_depictable(:message => "Unable to find the object specified. Please check the address.") && authorize(@depictable)
-    find_opts = @depictable.pictures.find(:all, find_opts)
+    find_opts = get_find_opts(:order => 'pictures.id DESC')
+    @pictures = @depictable.pictures.find(:all, find_opts)
     respond_to do |format|
       format.html
       format.js
@@ -30,7 +31,9 @@ class PicturesController < ApplicationController
   end
   
   def create
-    return if @picture = create_uploaded_picture_for(get_viewer, :save => true, :respond => true)
+    return unless get_depictable(:message => "Unable to find_the_object to depict. Please check the address.") && authorize(@depictable)
+    @picture = create_uploaded_picture_for(@depictable, :save => true, :respond => true)
+    return if @picture.errors.empty?
     respond_to do |format|
       format.html { render :action => 'new' }
       format.js { render :action => 'create_error' }
@@ -38,7 +41,7 @@ class PicturesController < ApplicationController
   end
   
   def edit
-    return unless setup(:permission)
+    return unless setup(:permission) && authorize(@picture, :editable => true)
     @use_kropper = true
     respond_to do |format|
       format.html
@@ -47,26 +50,30 @@ class PicturesController < ApplicationController
   end
   
   def update
-    return unless setup(:permission)
+    return unless setup(:permission) && authorize(@picture, :editable => true)
     if params[:picture].delete(:crop_cancel) == "true"
       msg = "Image editing canceled."
       respond_to do |format|
-        format.html { flash[:notice] = msg; redirect_to @picture }
+        format.html { flash[:notice] = msg; redirect_to picture_url_for(@picture) }
         format.js { flash.now[:notice] = msg; render :action => 'update_canceled'}
       end
     else
       begin
-        @picture.attributes = params[:picture]
-        @picture.crop!
+        if params[:picture].delete(:do_crop) == "Crop"
+          @picture.send(:set_crop_params, params[:picture_crop])
+          @picture.crop!
+        else
+          @picture.update_attributes!(params[:picture])
+        end
         msg = "You have successfully edited your image."
         respond_to do |format|
-          format.html { flash[:notice] = msg; redirect_to edit_picture_url(@picture) }
+          format.html { flash[:notice] = msg; redirect_to picture_url_for(@picture, 'edit') }
           format.js { flash.now[:notice] = msg }
         end
       rescue Picture::InvalidCropRect, ActiveRecord::RecordInvalid => e
         flash.now[:warning] = "There was an error editing your picture: #{e.message}"
         respond_to do |format|
-          format.html { render :action => 'crop' }
+          format.html { render :action => 'edit' }
           format.js { render :action => 'update_error' }
         end
       end
@@ -75,7 +82,7 @@ class PicturesController < ApplicationController
   
   def destroy
     return unless setup(:permission) && authorize(@picture, :editable => true)
-    @picture.nullif!(get_viewer)
+    @picture.nullify!(get_viewer)
     msg = "You have deleted a picture on #{@depictable.display_name}."
     respond_to do |format|
       format.html { flash[:notice] = msg; redirect_to depictable_url_for(@depictable) }
@@ -94,7 +101,7 @@ class PicturesController < ApplicationController
     false
   end
   
-  def get_widgetable(opts={})
+  def get_depictable(opts={})
     unless request.path.match(/\/([_a-zA-Z]+)\/([^\/]+)\/pictures/)
       display_error(:message => "Unable to process the request. Please check the address.")
       return false
@@ -111,15 +118,4 @@ class PicturesController < ApplicationController
   rescue ActiveRecord::RecordNotFound
     display_error(:message => opts[:message] || "That #{klass.to_s.humanize} could not be found. Please check the address.")
   end
-  
-  def picture_url_for(picture)
-    prefix = picture.depictable_type.underscore
-    instance_eval %{ #{prefix}_picture_url(picture.to_polypath) }
-  end
-  
-  def depictable_url_for(depictable)
-    prefix = depictable.class.to_s.underscore
-    instance_eval %{ #{prefix}_url(depictable.to_path) }
-  end
-  
 end

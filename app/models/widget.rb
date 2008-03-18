@@ -65,7 +65,7 @@ class Widget < ActiveRecord::Base
   def unplace!
     self.update_attribute(:position, nil)
   end
-  
+    
   def method_missing(method_id, *arguments)
     self.widgetable.send!(method_id, *arguments) rescue super
   end

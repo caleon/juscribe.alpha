@@ -61,12 +61,12 @@ function setup_image_cropper(max_zoom)
 		// set the initial image position, slider position, and form fields.
 		// the initial slider position is for a zoom factor of 1.
 		form_params = new Object();
-		form_params.crop_left = $("picture_crop_left");
-		form_params.crop_top = $("picture_crop_top");
-		form_params.crop_width = $("picture_crop_width");
-		form_params.crop_height = $("picture_crop_height");
-		form_params.stencil_width = $("picture_stencil_width");   
-		form_params.stencil_height = $("picture_stencil_height");
+		form_params.crop_left = $("picture_crop_crop_left");
+		form_params.crop_top = $("picture_crop_crop_top");
+		form_params.crop_width = $("picture_crop_crop_width");
+		form_params.crop_height = $("picture_crop_crop_height");
+		form_params.stencil_width = $("picture_crop_stencil_width");   
+		form_params.stencil_height = $("picture_crop_stencil_height");
 		set_initial_positions(uncropped_image_obj, form_params, zoom_slider_handle_obj, img, cropstencil, min_zoom, max_zoom, slider_range );
 
 		// make the image and the slider handle draggable

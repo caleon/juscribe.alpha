@@ -1,15 +1,31 @@
+DEFAULTS: &DEFAULTS
+  size: 2000
+  content_type: image/jpeg
 gallery_item1:
   depictable_type: User
   depictable_id: <%= 'colin'.hash.abs %>
   user: colin
   position: 1
+  filename: blahblah1.jpg
+  <<: *DEFAULTS
 gallery_item2:
   depictable_type: User
   depictable_id: <%= 'keira'.hash.abs %>
   user: colin
   position: 2
+  filename: blahblah2.jpg
+  <<: *DEFAULTS
 gallery_item3:
   depictable_type: User
   depictable_id: <%= 'megan'.hash.abs %>
   user: colin
   position: 3
+  filename: blahblah3.jpg
+  <<: *DEFAULTS
+for_blog:
+  depictable_type: Article
+  depictable_id: <%= 'blog'.hash.abs %>
+  user: colin
+  position: 1
+  filename: blahblah4.jpg
+  <<: *DEFAULTS
