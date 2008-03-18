@@ -118,7 +118,7 @@ class ClipsControllerTest < ActionController::TestCase
   end
   
   def test_create
-    post :create, users(:keira).to_path(true).merge(:widget => { :name => 'blahwidget' }), as(:keira)
+    post :create, users(:keira).to_path(true).merge(:clip => { :name => 'blahwidget' }), as(:keira)
     assert_not_nil assigns(:clip)
     assert assigns(:clip).valid?
     assert_redirected_to user_url(users(:keira))
@@ -126,7 +126,7 @@ class ClipsControllerTest < ActionController::TestCase
   end
   
   def test_create_with_diff_user
-    post :create, users(:keira).to_path(true).merge(:widget => { :name => 'blahwidget' }), as(:nana)
+    post :create, users(:keira).to_path(true).merge(:clip => { :name => 'blahwidget' }), as(:nana)
     assert_not_nil assigns(:clip)
     assert assigns(:clip).valid?
     assert_redirected_to user_url(users(:keira))
@@ -134,7 +134,7 @@ class ClipsControllerTest < ActionController::TestCase
  end
   
   def test_create_with_non_user
-    post :create, users(:keira).to_path(true).merge(:widget => { :name => 'blahwidget' })
+    post :create, users(:keira).to_path(true).merge(:clip => { :name => 'blahwidget' })
     assert_nil assigns(:clip)
     assert_redirected_to login_url
     assert_equal "You need to be logged in to do that.", flash[:warning]
@@ -144,7 +144,7 @@ class ClipsControllerTest < ActionController::TestCase
     users(:keira).rule.toggle_privacy!
     assert users(:keira).private?
     assert !users(:keira).accessible_by?(users(:nana))
-    post :create, users(:keira).to_path(true).merge(:widget => { :name => 'blahwidget' }), as(:nana)
+    post :create, users(:keira).to_path(true).merge(:clip => { :name => 'blahwidget' }), as(:nana)
     assert_equal "You are not authorized for that action.", flash[:warning]
     assert_redirected_to user_url(users(:nana))
   end
@@ -153,7 +153,7 @@ class ClipsControllerTest < ActionController::TestCase
     users(:keira).rule.toggle_privacy!
     assert users(:keira).private?
     assert users(:keira).accessible_by?(users(:keira))
-    post :create, users(:keira).to_path(true).merge(:widget => { :name => 'blahwidget' }), as(:keira)
+    post :create, users(:keira).to_path(true).merge(:clip => { :name => 'blahwidget' }), as(:keira)
     assert_not_nil assigns(:clip)
     assert assigns(:clip).valid?
     assert_redirected_to user_url(users(:keira))
@@ -180,25 +180,25 @@ class ClipsControllerTest < ActionController::TestCase
   end
   
   def test_update
-    put :update, widgets(:colin_clip).to_path.update(:widget => { :name => 'blah' }), as(:colin)
+    put :update, widgets(:colin_clip).to_path.update(:clip => { :name => 'blah' }), as(:colin)
     assert_redirected_to user_url(users(:colin))
     assert_equal "You have successfully updated #{widgets(:colin_clip).display_name}.", flash[:notice]
   end
   
   def test_update_without_login
-    put :update, widgets(:colin_clip).to_path.update(:widget => { :name => 'blah' })
+    put :update, widgets(:colin_clip).to_path.update(:clip => { :name => 'blah' })
     assert_redirected_to login_url
     assert_equal "You need to be logged in to do that.", flash[:warning]
   end
   
   def test_update_by_unauthorized
-    put :update, widgets(:colin_clip).to_path.update(:widget => { :name => 'blah' }), as(:nana)
+    put :update, widgets(:colin_clip).to_path.update(:clip => { :name => 'blah' }), as(:nana)
     assert_redirected_to user_url(users(:nana))
     assert_equal "You are not authorized for that action.", flash[:warning]
   end
   
   def test_update_with_wrong_nick
-    put :update, widgets(:colin_clip).to_path.update(:widget => { :name => 'blah' }, :user_id => users(:colin).nick.chop), as(:colin)
+    put :update, widgets(:colin_clip).to_path.update(:clip => { :name => 'blah' }, :user_id => users(:colin).nick.chop), as(:colin)
     assert_template 'error'
     assert_flash_equal "That User could not be found. Please check the address.", :warning
   end

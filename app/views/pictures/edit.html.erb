@@ -23,7 +23,7 @@ The param passed is the max zoom level for the cropping UI. -->
 
 <div>
 	<%#FIXME: form_for @picture, :url => picture_path(@picture) do |f| -%>
-	<% form_for @picture, :url => '#' do |f| %>
+	<% form_for :picture, @picture, :url => picture_path_for(@picture), :html => { :method => :put } do |f| %>
 		<div id="crop_form_fields">
 			<h4>Form fields passed to the server (you'll probably want to make these hidden fields in your app)</h4>
 			<p>These four fields are in the image's coordinate space&#8212;they project the
@@ -40,7 +40,7 @@ The param passed is the max zoom level for the cropping UI. -->
 			<p>stencil_height: <%= text_field_tag "picture_crop_stencil_height", "1", :name => 'picture_crop[stencil_height]' %></p>
 			<p>resize_to_stencil: <%= text_field_tag "picture_crop_resize_to_stencil", "false", :name => 'picture_crop[resize_to_stencil]' %></p>
 			<p>When the cancel button is clicked, this field is set to true and the form is submitted. This lets your controller customize what action the server takes when cropping is canceled.</p>
-			<p>crop_cancel: <%= f.text_field "crop_cancel", :value => "false" %></p>
+			<p>crop_cancel: <%= f.text_field "crop_cancel", :value => "1" %></p>
 		</div>
 
 		<!-- The dimensions and appearance of these elements are all defined in kropper.css -->
@@ -62,8 +62,8 @@ The param passed is the max zoom level for the cropping UI. -->
 		    	</div>
 				<div id="crop_buttons">
 					<%= f.submit "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Crop and Update&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", :id => "crop_submit_btn" %>
-					<input type="button" name="picture[do_crop]" value="Crop" id="do_crop_btn_crop" />
-					<input type="button" name="picture[do_crop]" value="Update" id="do_crop_btn_update" />
+					<input type="submit" name="picture[do_crop]" value="Crop" id="do_crop_btn_crop" />
+					<input type="submit" name="picture[do_crop]" value="Update" id="do_crop_btn_update" />
 					<input type="button" value="Cancel" id="crop_cancel_btn" onclick="this.form.crop_cancel.value='true';this.form.submit();" />
 					<input type="button" value="&nbsp;Reset&nbsp;" id="crop_reset_btn" />
 				</div>

@@ -100,6 +100,11 @@ ActionController::Routing::Routes.draw do |map|
     ars.with_options :controller => 'clips' do |cl|
       # Article clips
       cl.article_clips ':year/:month/:day/:article_id/by/:user_id/clips', :action => 'index', :conditions => { :method => :get }
+      cl.formatted_article_clips ':year/:month/:day/:article_id/by/:user_id/clips', :action => 'index', :conditions => { :method => :get }
+      cl.connect ':year/:month/:day/:article_id/by/:user_id/clips', :action => 'create', :conditions => { :method => :post }
+      cl.connect ':year/:month/:day/:article_id/by/:user_id/clips.:format', :action => 'create', :conditions => { :method => :post }
+      cl.new_article_clip ':year/:month/:day/:article_id/by/:user_id/clips/new', :action => 'new', :conditions => { :method => :get }
+      cl.formatted_new_article_clip ':year/:month/:day/:article_id/by/:user_id/clips/new.:format', :action => 'new', :conditions => { :method => :get }
       cl.formatted_article_clips ':year/:month/:day/:article_id/by/:user_id/clips.:format',
                                  :action => 'index', :conditions => { :method => :get }
       cl.connect ':year/:month/:day/:article_id/by/:user_id/clips', :action => 'create', :conditions => { :method => :post }

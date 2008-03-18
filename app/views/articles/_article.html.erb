@@ -2,4 +2,6 @@
 <%= article.published_date %><br />
 <p><%=h article.content %></p>
 <br />
+<%= link_to 'Clip!', new_article_clip_path(article.to_path(true)) if article.published? %>
+<br />
 <hr />

@@ -1,4 +1,13 @@
 module JavascriptHelper
+  def add_script_file(arg)
+    (@script_files ||= []) << arg
+  end
+  
+  def link_script_files
+    (@script_files ||= []).map do |script|
+      javascript_include_tag script
+    end.join('\r\n')
+  end
   
   def add_onload(arg)
     (@onloads ||= []) << arg

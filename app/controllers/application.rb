@@ -8,7 +8,7 @@ class ApplicationController < ActionController::Base
   
   # See ActionController::RequestForgeryProtection for details
   # Uncomment the :secret if you're not using the cookie session store
-  protect_from_forgery :secret => 'a241500281274090ecdf656d5074d028'
+  protect_from_forgery# :secret => 'a241500281274090ecdf656d5074d028'
   filter_parameter_logging :password, :password_confirmation
   before_filter :load_config, :get_viewer
   helper :all  

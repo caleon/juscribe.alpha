@@ -59,8 +59,8 @@ class PicturesController < ApplicationController
     else
       begin
         if params[:picture].delete(:do_crop) == "Crop"
-          @picture.send(:set_crop_params, params[:picture_crop])
-          @picture.crop!
+          @picture.attributes = params[:picture]
+          @picture.crop!(params[:picture_crop])
         else
           @picture.update_attributes!(params[:picture])
         end

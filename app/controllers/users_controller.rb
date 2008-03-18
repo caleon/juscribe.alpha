@@ -52,7 +52,7 @@ class UsersController < ApplicationController
   def update    
     return unless setup && authorize(@user, :editable => true)
     if @user.update_attributes(params[:user])
-      save_uploaded_picture_for(@user) if picture_uploaded?
+      create_uploaded_picture_for(@user, :save => true) if picture_uploaded?
       msg = "You have successfully updated your profile."
       respond_to do |format|
         format.html { flash[:notice] = msg; redirect_to @user }

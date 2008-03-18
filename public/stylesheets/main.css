@@ -1,10 +1,10 @@
 #wrapper { margin: 0; padding: 0; }
-#header { position: relative; height: 200px; background: #000; }
+#header { position: relative; height: 100px; background: #000; }
 #header h1 { color: #fff; text-align: center; margin-top: 0; }
 .navigation { overflow: hidden; }
 .navigation ul.navigationList { position: relative; }
 .navigation li.navigationEl { float: left; list-style-type: none; }
-.navigation li.navigationEl a { display: block; padding: 0.5em; height: 3em; line-height: 3em; }
+.navigation li.navigationEl a { display: block; padding: 0.5em; height: 2em; line-height: 2em; }
 #header .navigation { position: absolute; bottom: 0; background-color: #00f; padding: 0 2em; }
 #header .navigation li.navigationEl { margin-right: 2em; }
 #header .navigation li.navigationEl.last { margin-right: 0; }
@@ -28,3 +28,4 @@
 #errorExplanation ul li{ font-size: 12px; list-style: square; }
 
 .userForm input { display: block; }
+.timestamp { font-weight: bold; color: #ccc; }

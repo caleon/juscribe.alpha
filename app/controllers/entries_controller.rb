@@ -6,7 +6,7 @@ class EntriesController < ApplicationController
   def index
     find_opts = get_find_opts(:order => 'id DESC')
     if @user = User.primary_find(params[:user_id])
-      @entries = Entry.find(:all, find_opts.merge(:conditions => ["user_id = ?", @user.id]))
+      @entries = @user.entries.find(:all, find_opts)
     else
       display_error(:message => "That User entry could not be found. Please check the address.")
     end

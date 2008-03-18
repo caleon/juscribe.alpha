@@ -39,12 +39,12 @@ class Picture < ActiveRecord::Base
     def set(key, val); @attrs[key] = val; end
     def get(key); @attrs[key]; end
     def valid_with?(width, height)
-      self[:crop_width] > 0 && self[:crop_height] > 0 && self[:crop_left] + self[:crop_width] > 0 &&
-      self[:crop_top] + self[:crop_height] > 0 && self[:crop_left] < width && self[:crop_top] < height
+      self[:crop_width].to_i > 0 && self[:crop_height].to_i > 0 && self[:crop_left].to_i + self[:crop_width].to_i > 0 &&
+      self[:crop_top].to_i + self[:crop_height].to_i > 0 && self[:crop_left].to_i < width && self[:crop_top].to_i < height
     end
     def reveal
-      [ self[:crop_left], self[:crop_top], self[:crop_left] +
-        self[:crop_width], self[:crop_top] + self[:crop_height] ]
+      [ self[:crop_left].to_i, self[:crop_top].to_i, self[:crop_left].to_i +
+        self[:crop_width].to_i, self[:crop_top].to_i + self[:crop_height].to_i ]
     end
   end
   
@@ -95,7 +95,7 @@ class Picture < ActiveRecord::Base
       raise InvalidCropRect unless par.valid_with?(img.width, img.height)
       self.temp_path = write_to_temp_file(filename)
       img.with_crop(*par.reveal) do |cropped_img|
-        if par[:resize_to_stencil]
+        if par[:resize_to_stencil] == 1.0
           cropped_img.resize(par[:stencil_width], par[:stencil_height]) do |crop_resized_img|
             crop_resized_img.save temp_path
             callback_with_args :after_resize, crop_resized_img

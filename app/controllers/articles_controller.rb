@@ -64,6 +64,7 @@ class ArticlesController < ApplicationController
     return unless setup(:permission) && authorize(@article, :editable => true)
     title = params[:article].delete(:title)
     if @article.update_attributes(params[:article])
+      create_uploaded_picture_for(@article, :save => true) if picture_uploaded?
       msg = "You have successfully updated #{@article.display_name}."
       respond_to do |format|
         format.html do

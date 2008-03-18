@@ -1,5 +1,8 @@
 <h2><%= @article.title %></h2>
-<p><%= @article.content %></p>
+<p>
+	<%= image_tag(@article.primary_picture.public_filename, :class => 'articlePic') if @article.primary_picture %>
+	<%= @article.content %>
+</p>
 <em>Published at <%= @article.published_at %></em>
 
 <br /><br />

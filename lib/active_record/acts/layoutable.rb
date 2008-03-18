@@ -11,7 +11,7 @@ module ActiveRecord::Acts::Layoutable # included when PluginPackage is included
   end
   
   def layout_path
-    "#{self.class.class_name.underscore.pluralize}/#{layout}/"
+    "#{self.class.class_name.underscore.pluralize}/layouts/#{layout}/"
   end
   
   def layout_file(file=layout)

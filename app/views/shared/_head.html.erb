@@ -9,6 +9,7 @@
 	<%= stylesheet_link_tag kropper_css if @use_kropper %>
 	<%= yield :extra_stylesheets %>
 	<%= stylesheet_link_tag @skin_file if @skin_file %>
+	<%= link_style_files %>
 
 	<%= render :partial => 'shared/javascripts' unless @config[:scripts_at_bottom] %>
 	
