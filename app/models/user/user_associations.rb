@@ -3,6 +3,7 @@ class User < ActiveRecord::Base
   has_many :owned_blogs, :class_name => 'Blog', :dependent => :nullify
   has_many :blogs, :as => :bloggable, :dependent => :nullify
   has_many :entries, :dependent => :nullify
+  has_one :latest_entry, :class_name => 'Entry', :order => 'entries.id DESC'
   has_many :songs, :dependent => :nullify
   has_many :events, :dependent => :nullify
   has_many :projects, :dependent => :nullify

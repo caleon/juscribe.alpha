@@ -27,9 +27,13 @@ module PicturesHelper
   
   def picture_for(record, html_opts={})
     picture, class_str, dom_id_str = picture_and_dom_id_for(record)
-    image_tag(picture.public_filename, {:class => class_str, :id => dom_id_str}.merge(html_opts)) if picture
+    if picture
+      image_tag(picture.public_filename, {:class => class_str, :id => dom_id_str}.merge(html_opts))
+    else
+      ''
+    end
   rescue
-    nil
+    ''
   end
   
   def picture_and_dom_id_for(record)

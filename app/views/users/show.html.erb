@@ -9,57 +9,107 @@
 		</div>
 	
 		<div id="msm_main_column-a">
-			<div id="msm_lead_widget">
+			<div id="msm_lead_widget" class="msm_module">
 			<% if lead_widget = @widgets.shift -%>
 				<% if lead_widget.primary_picture -%>
 					<%= link_to image_tag(lead_widget.picture.file_path, :class => 'msm_lead_picture'), widgetable_path_for(lead_widget.widgetable) %>
+				<% end %>
 					<strong><%= lead_widget.primary_picture.caption %></strong>
 					<h2><%= link_to lead_widget.wid_name, widgetable_path_for(lead_widget.widgetable) %></h2>
-					<p><%= truncate(lead_widget.wid_content, 500) %></p>
+					<p><%= truncate(lead_widget.wid_content, 300) %></p>
 					<small>
 						<em>by: <%= link_to lead_widget.wid_user.nick, lead_widget.wid_user %></em> | 
 						<%= lead_widget.published_at.to_s %> | 
 						<%= link_to 'Source', widgetable_path_for(lead_widget.widgetable) %>
 					</small>
-				</div>
-				<% content_tag(:ul, :id => 'msm_lead_follow_ups') do -%>
-					<% lead_widget.widgetable.find_similars(3).each do |similar| -%>
-						<li><%= link_to similar.name, similar %></li>
-					<% end -%>
-				<% end if !lead_widget.widgetable.tags.empty? -%>
+					<% content_tag(:ul, :id => 'msm_lead_follow_ups') do -%>
+						<% lead_widget.widgetable.find_similars(3).each do |similar| -%>
+							<li><%= link_to similar.name, similar %></li>
+						<% end -%>
+					<% end if !lead_widget.widgetable.tags.empty? -%>
 			<% end -%>
-		<% end -%>
+			</div>
+			<div class="msm_module">
+				<h3>Upcoming Events</h3>
+				<ul>
+					<li><%= link_to 'Party in my plants', '#' %> <span class="timestamp"><%= Time.now %></span></li>
+					<li><%= link_to 'Farewell Dinner', '#' %> <span class="timestamp"><%= Time.now %></span></li>
+					<li><%= link_to 'Company Picnic', '#' %> <span class="timestamp"><%= Time.now %></span></li>
+				</ul>
+			</div>
 		</div>
 	
 		<div id="msm_main_column-b">
-			<h3>Latest News</h3>
-			<% content_tag(:ul, :id => 'msm_other_main_widgets') do -%>
-				<% @widgets.slice!(0..4).each do |wid| -%>
-					<li><%= link_to wid.wid_name, widgetable_path_for(wid.widgetable) %></li>
-					<%= render :partial => wid.wid_partial(@user.layout_path, :line), :object => wid.widgetable %>
-				<% end -%>
-			<% end if !@widgets.empty? -%>
+			<div class="msm_module">
+				<h3>Latest News</h3>
+				<% content_tag(:ul, :id => 'msm_other_main_widgets') do -%>
+					<% @widgets.slice!(0..4).each do |wid| -%>
+						<li>
+							<% if ((blog = wid.widgetable.blog) rescue false) %><span class="articleBlog"><%= blog.name %>:</span><% end %><%= link_to wid.wid_name, widgetable_path_for(wid.widgetable) %>
+							<br />
+							<%= render :partial => wid.wid_partial(@user.layout_path, :line), :object => wid.widgetable %>
+						</li>
+					<% end -%>
+				<% end if !@widgets.empty? -%>
+			</div>
+			<div class="msm_module">
+				<h3>Network Updates</h3>
+					<%= render :partial => 'entries/entry', :collection => @user.friends[0..2].map {|friend| friend.latest_entry }.compact %>
+			</div>
 		</div>
 	
 	</div>
 	<div id="msm_side_column">
-		<div class="msm_side_column-box">
-			<div class="msm_side_column-box-inner">
+		<div class="msm_module">
+			<div class="msm_module-inner">
 				<h3>Friends</h3>
-				<ul id="msm_friends">
+				<ul id="msm_friends" class="msm_media">
 					<%= render :partial => 'users/friend', :collection => @user.friends, :locals => { :tag => :li } %>
 				</ul>
-				<div class="msm_side_column-box-footer">
+				<div class="msm_module-footer">
 					<%= link_to 'View all Friends', friends_user_path(@user) %>
 				</div>
 			</div>
 		</div>
-		<div class="msm_side_column-box">
-			
+		<div class="msm_module">
+			<div class="msm_module-inner">
+				<h3>Status</h3>
+				<p class="status"><%= render(:partial => 'entries/entry', :object => @user.latest_entry, :locals => { :with_break => true }) if @user.latest_entry %></p>
+			</div>
 		</div>
-		<div class="msm_side_column-box">
-			
+		<div class="msm_module">
+			<div class="msm_module-inner">
+				<h3>MacRumors Feed</h3>
+				<p class="feed">
+					Apple has released a new security update for Mac OS X . Apple provides a support document detailing the changes
+					Security Update 2008-002 is recommended for all users and improves the security of Mac OS X. Previous security updates have been incorporated into this security update.
+					<br /><br />
+					The update is available via Software Update or from the Apple Downloads page in the following versions:
+					<br /><br />
+					- 10.5.2: Universal (50 MB)<br />
+					- 10.4.11: PPC (68 MB)<br />
+					- 10.4.11: Universal (103 MB)<br />
+					<br /><br />
+					- 10.5.2 Server: Universal (108 MB)<br />
+					- 10.4.11 Server: PPC (82 MB)<br />
+					- 10.4.11 Server: Universal (107 MB)<br />
+				</p>
+			</div>
 		</div>
+		<div class="msm_module">
+			<div class="msm_module-inner">
+				<h3>Travel Gallery</h3>
+				<ul id="msm_pictures" class="msm_media">
+				<% Picture.find(:all).select{|pic| pic.public_filename rescue false }.each do |pic| %>
+					<li><%= image_tag(pic.public_filename, :class => 'pic') %></li>
+				<% end %>
+				</ul>
+				<div class="msm_module-footer">
+					<%= link_to 'View all Pictures', '#' %>
+				</div>
+			</div>
+		</div>
+		
 	</div>
 	<div id="msm_footer">
 	

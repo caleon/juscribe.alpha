@@ -6,6 +6,7 @@
 	<% if @user && !@user.new_record? %>
 		<%= navi_el "Friends", friends_user_path(@user) %>
 		<%= navi_el "Articles", articles_path(@user) %>
+		<%= navi_el "Blogs", user_blogs_path(@user) %>
 		<%= navi_el "Events", user_events_path(@user) %>
 		<%= navi_el "Entries", user_entries_path(@user) %>
 		<%= navi_el "Pictures", user_galleries_path(@user) %>

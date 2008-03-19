@@ -29,6 +29,7 @@ class EntriesController < ApplicationController
     return unless get_user
     @entry = get_viewer.entries.new(params[:entry])
     if @entry.save
+      create_uploaded_picture_for(@entry, :save => true) if picture_uploaded?
       msg = "You have successfully created your Entry."
       respond_to do |format|
         format.html { flash[:notice] = msg; redirect_to user_entry_url(@entry.to_path) }
