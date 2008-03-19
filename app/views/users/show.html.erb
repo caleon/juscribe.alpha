@@ -2,64 +2,109 @@
 <% set_link_author!(@user) -%>
 <% add_style_file('users/msm') %>
 <div id="msm_layout" class="msm_layout">
-	<div id="msm_main_column">
-	
-		<div id="msm_main_header">
-
-		</div>
-	
-		<div id="msm_main_column-a">
-			<div id="msm_lead_widget" class="msm_module">
-			<% if lead_widget = @widgets.shift -%>
-				<% if lead_widget.primary_picture -%>
-					<%= link_to image_tag(lead_widget.picture.file_path, :class => 'msm_lead_picture'), widgetable_path_for(lead_widget.widgetable) %>
-				<% end %>
-					<strong><%= lead_widget.primary_picture.caption %></strong>
-					<h2><%= link_to lead_widget.wid_name, widgetable_path_for(lead_widget.widgetable) %></h2>
-					<p><%= truncate(lead_widget.wid_content, 300) %></p>
-					<small>
-						<em>by: <%= link_to lead_widget.wid_user.nick, lead_widget.wid_user %></em> | 
-						<%= lead_widget.published_at.to_s %> | 
-						<%= link_to 'Source', widgetable_path_for(lead_widget.widgetable) %>
-					</small>
-					<% content_tag(:ul, :id => 'msm_lead_follow_ups') do -%>
-						<% lead_widget.widgetable.find_similars(3).each do |similar| -%>
-							<li><%= link_to similar.name, similar %></li>
-						<% end -%>
-					<% end if !lead_widget.widgetable.tags.empty? -%>
-			<% end -%>
+	<div id="msm_main_column" class="msm_column">
+		<div class="msm_main_column-inner">
+			<div id="msm_main_header">
+				<span class="timestamp">updated by colin at 9:00am PST</span>
 			</div>
-			<div class="msm_module">
-				<h3>Upcoming Events</h3>
+	
+			<div class="msm_main_column-a msm_column nopad">
+				<div id="msm_lead_widget" class="msm_module">
+				<% if lead_widget = @widgets.shift -%>
+					<% if lead_widget.primary_picture -%>
+						<%= link_to image_tag(lead_widget.picture.file_path, :class => 'msm_lead_picture'), widgetable_path_for(lead_widget.widgetable) %>
+					<% end %>
+						<strong><%= lead_widget.primary_picture.caption %></strong>
+						<h2><%= link_to lead_widget.wid_name, widgetable_path_for(lead_widget.widgetable) %></h2>
+						<p><%= truncate(lead_widget.wid_content, 300) %></p>
+						<small>
+							<em>by: <%= link_to lead_widget.wid_user.nick, lead_widget.wid_user %></em> | 
+							<%= lead_widget.published_at.to_s %> | 
+							<%= link_to 'Source', widgetable_path_for(lead_widget.widgetable) %>
+						</small>
+						<% content_tag(:ul, :id => 'msm_lead_follow_ups') do -%>
+							<% lead_widget.widgetable.find_similars(3).each do |similar| -%>
+								<li><%= link_to similar.name, similar %></li>
+							<% end -%>
+						<% end if !lead_widget.widgetable.tags.empty? -%>
+				<% end -%>
+				</div>
+				<div class="msm_module">
+					<h3>Upcoming Events</h3>
+					<ul>
+						<li><span><%= link_to 'Party in my plants', '#' %> <span class="timestamp"><%= Time.now.to_s(:concise) %></span></soan></li>
+						<li><span><%= link_to 'Farewell Dinner', '#' %> <span class="timestamp"><%= Time.now.to_s(:concise) %></span></span></li>
+						<li><span><%= link_to 'Company Picnic', '#' %> <span class="timestamp"><%= Time.now.to_s(:concise) %></span></span></li>
+					</ul>
+				</div>
+			</div>
+	
+			<div class="msm_main_column-b msm_column">
+				<div class="msm_module">
+					<h3>Latest News</h3>
+					<% content_tag(:ul, :id => 'msm_other_main_widgets') do -%>
+						<% @widgets.slice!(0..4).each do |wid| -%>
+							<li>
+								<span>
+									<% if ((blog = wid.widgetable.blog) rescue false) %><span class="articleBlog"><%= blog.name %>:</span><% end %>
+									<%= link_to wid.wid_name, widgetable_path_for(wid.widgetable) %>
+									<br />
+									<%= render :partial => wid.wid_partial(@user.layout_path, :line), :object => wid.widgetable %>
+								</span>
+							</li>
+						<% end -%>
+					<% end if !@widgets.empty? -%>
+				</div>
+				<div class="msm_module">
+					<h3>Network Updates</h3>
+						<%= render :partial => 'entries/entry', :collection => @user.friends[0..2].map {|friend| friend.latest_entry }.compact %>
+				</div>
+			</div>
+		</div>
+		
+		<div class="msm_main_column-inner">
+			<div class="msm_main_column-ab msm_column">
+				<h3>From james' <a href="#">Something Witty</a></h3>
+				<h4>In Two Weeks And Two Days</h4>
+				<p>
+					I'll be home, in California again.
+					<br /><br />
+					Not for good mind you, but it will be for the longest period since I left. A psuedo-vacation, if you will, since I'll be working at UCLA by day, and gallivanting around my old stomping grounds at night.
+					<br /><br />
+					I'm shocked, really. I can't believe I'm leaving. While I never felt completely comfortable here, I managed to find less and less to complain about-- some might even call it "adjusting." My experiences ranged from the mundane to the absurd, and while I never want to come back-- well, you can insert your favorite "life lessons" cliché [here]. Take a look at one of my first entries in Texas, and see what an embarrassing mess I was. Compare that with this recent one and gasp at the differences in tone, subject, diction, and all that jazz. New and improved James! Now with less desperation and more positivity! Yours for only three easy installments of $29.99!
+				</p>
+			</div>
+		</div>
+		
+		<div class="msm_main_column-inner nobg">
+			<div class="msm_main_column-a msm_column">
+				<h3>From caleon's <a href="#">WORLD</a></h3>
+				<h4>History of Middle East in 10 minutes</h4>
+				<p>
+					Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+				</p>
+			</div>
+			
+			<div class="msm_main_column-b msm_column">
+				<h3>Thoughtlets</h3>
 				<ul>
-					<li><%= link_to 'Party in my plants', '#' %> <span class="timestamp"><%= Time.now %></span></li>
-					<li><%= link_to 'Farewell Dinner', '#' %> <span class="timestamp"><%= Time.now %></span></li>
-					<li><%= link_to 'Company Picnic', '#' %> <span class="timestamp"><%= Time.now %></span></li>
+					<li><span>Safari 3.1 has let me down.</span></li>
+					<li><span>What's the big deal with GTD anyway?</span></li>
+					<li><span>Maybe I should take out a loan.</span></li>
+					<li><span>Guess Firefox is staying in my dock.</span></li>
+					<li><span>ARRGH</span></li>
 				</ul>
 			</div>
 		</div>
-	
-		<div id="msm_main_column-b">
-			<div class="msm_module">
-				<h3>Latest News</h3>
-				<% content_tag(:ul, :id => 'msm_other_main_widgets') do -%>
-					<% @widgets.slice!(0..4).each do |wid| -%>
-						<li>
-							<% if ((blog = wid.widgetable.blog) rescue false) %><span class="articleBlog"><%= blog.name %>:</span><% end %><%= link_to wid.wid_name, widgetable_path_for(wid.widgetable) %>
-							<br />
-							<%= render :partial => wid.wid_partial(@user.layout_path, :line), :object => wid.widgetable %>
-						</li>
-					<% end -%>
-				<% end if !@widgets.empty? -%>
-			</div>
-			<div class="msm_module">
-				<h3>Network Updates</h3>
-					<%= render :partial => 'entries/entry', :collection => @user.friends[0..2].map {|friend| friend.latest_entry }.compact %>
+		
+		<div class="msm_main_column-inner">
+			<div class="msm_main_column-ab msm_column">
+				last one
 			</div>
 		</div>
-	
 	</div>
-	<div id="msm_side_column">
+	
+	<div id="msm_side_column" class="msm_column">
 		<div class="msm_module">
 			<div class="msm_module-inner">
 				<h3>Friends</h3>
@@ -100,8 +145,8 @@
 			<div class="msm_module-inner">
 				<h3>Travel Gallery</h3>
 				<ul id="msm_pictures" class="msm_media">
-				<% Picture.find(:all).select{|pic| pic.public_filename rescue false }.each do |pic| %>
-					<li><%= image_tag(pic.public_filename, :class => 'pic') %></li>
+				<% Picture.find(:all).select{|pic| pic.public_filename rescue false }[0..5].each do |pic| %>
+					<li class="pic"><%= link_to image_tag(pic.public_filename, :class => 'picPic'), picture_path_for(pic) %></li>
 				<% end %>
 				</ul>
 				<div class="msm_module-footer">

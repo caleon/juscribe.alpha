@@ -1,2 +1,2 @@
-<%= entry.content %><% if (with_break ||= false) %><br /><br /><% else %> <% end %><span class="timestamp"><%= entry.created_at.to_s %></span>
+<%= entry.content %><% if (with_break ||= false) %><br /><br /><% else %> <% end %><span class="timestamp"><%= entry.created_at.to_s(:concise) %></span>
 <br />

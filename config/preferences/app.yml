@@ -1,8 +1,8 @@
 --- 
-:name: writn
-:rating_increment: 1
+:name: juscribe
 :mailer_from: noreply@venturous.net
 :contact: colin@venturous.net
+:rating_increment: 1
 :limits:
   :memberships: 30
   :groups: 10
