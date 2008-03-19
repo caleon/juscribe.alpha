@@ -7,6 +7,7 @@ class ArticlesController < ApplicationController
   def index
     # don't show drafts unless viewer == user
     return unless get_user
+    @page_title = "#{@user.display_name} - Articles"
     find_opts = get_find_opts(:order => 'articles.id DESC')
     @articles = @user.articles.find(:all, find_opts)
   end
@@ -16,6 +17,7 @@ class ArticlesController < ApplicationController
     if @article.draft?
       return unless authorize(@article, :editable => true)
     end
+    @page_title = "#{@article.display_name}"
     respond_to do |format|
       format.html
       format.js

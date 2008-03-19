@@ -20,6 +20,10 @@ module ApplicationHelper
     @user || @group || @widget || @article || @event || @entry || @list || @item
   end
   
+  def get_canvas_class
+    "#{controller.controller_name}-#{controller.action_name}"
+  end
+  
   def warning_field
     content_tag(:div, flash[:warning], :id => 'flashWarning', :class => 'flashBox') if flash[:warning]
   end
@@ -31,6 +35,11 @@ module ApplicationHelper
   def navi_el(text, path, opts={})
     conditions = opts[:conditions].nil? ? true : opts.delete(:conditions)
     content_tag(:li, link_to(text, path, opts), :class => 'navigationEl') if conditions
+  end
+  
+  def byline_for(record)
+    render :partial => "#{record.class.class_name.pluralize.underscore}/byline",
+                       :locals => { :"#{record.class.class_name.underscore}" => record }
   end
   
 end

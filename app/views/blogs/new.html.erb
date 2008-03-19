@@ -1,0 +1,9 @@
+<% form_for :blog, @blog, :url => blogs_path_from_bloggable(@bloggable), :html => { :method => :post, :multipart => true } do |f| %>
+	<fieldset>
+		<legend>Start a new blog</legend>
+		<%= f.label :name %>
+		<%= f.text_field :name %>
+		<br />
+		<%= render :partial => 'form', :locals => { :f => f } %>
+	</fieldset>
+<% end %>

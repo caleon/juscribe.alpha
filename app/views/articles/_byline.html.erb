@@ -1,0 +1,5 @@
+<small>
+	by: <%= link_to article.user.nick, article.user %> | 
+	<%= article.published_at.to_s %> | 
+	<%= link_to 'Source', article_path(article.to_path) %>
+</small>

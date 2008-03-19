@@ -1,0 +1,8 @@
+<div class="sub navigation">
+	<ul class="navigationList">
+	<% if @depictable %>
+		<%= navi_el 'New', picture_path_from_depictable(@depictable, :prefix => 'new') %>
+		<%= navi_el 'List', pictures_path_from_depictable(@depictable) %>
+	<% end %>
+	</ul>
+</div>

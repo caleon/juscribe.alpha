@@ -85,7 +85,7 @@ class BlogsControllerTest < ActionController::TestCase
   end
   
   def test_create
-    post :create, groups(:company).to_path(true).merge(:blog => { :name => 'newsletter' }), as(:colin)
+    post :create, groups(:company).to_path(true).merge(:blog => { :name => 'newsletter', :short_name => 'newsletter' }), as(:colin)
     assert_not_nil assigns(:blog)
     assert assigns(:blog).valid?
     assert_redirected_to group_blog_url(assigns(:blog).to_path)
@@ -93,14 +93,14 @@ class BlogsControllerTest < ActionController::TestCase
   end
   
   def test_create_with_non_user
-    post :create, groups(:company).to_path(true).merge(:blog => { :name => 'newsletter' })
+    post :create, groups(:company).to_path(true).merge(:blog => { :name => 'newsletter', :short_name => 'newsletter' })
     assert_nil assigns(:blog)
     assert_redirected_to login_url
     assert_equal "You need to be logged in to do that.", flash[:warning]
   end
   
   def test_create_with_diff_user
-    post :create, groups(:company).to_path(true).merge(:blog => { :name => 'newsletter' }), as(:keira)
+    post :create, groups(:company).to_path(true).merge(:blog => { :name => 'newsletter', :short_name => 'newsletter' }), as(:keira)
     assert_equal groups(:company), assigns(:bloggable)
     assert_redirected_to user_url(users(:keira))
     assert_equal "You are not authorized for that action.", flash[:warning]
@@ -110,7 +110,7 @@ class BlogsControllerTest < ActionController::TestCase
     groups(:company).join(users(:keira))
     assert groups(:company).users.include?(users(:keira))
     assert groups(:company).accessible_by?(users(:keira))
-    post :create, groups(:company).to_path(true).merge(:blog => { :name => 'newsletter' }), as(:keira)
+    post :create, groups(:company).to_path(true).merge(:blog => { :name => 'newsletter', :short_name => 'newsletter' }), as(:keira)
     assert_redirected_to user_url(users(:keira))
     assert_equal "You are not authorized for that action.", flash[:warning]
   end
@@ -121,7 +121,7 @@ class BlogsControllerTest < ActionController::TestCase
     assert !groups(:company).editable_by?(users(:keira))
     assert groups(:company).assign_rank(users(:keira), Membership::ADMIN_RANK)
     assert groups(:company).editable_by?(users(:keira))
-    post :create, groups(:company).to_path(true).merge(:blog => { :name => 'newsletter' }), as(:keira)
+    post :create, groups(:company).to_path(true).merge(:blog => { :name => 'newsletter', :short_name => 'newsletter' }), as(:keira)
     assert_redirected_to group_blog_url(assigns(:blog).to_path)
     assert_equal "You have successfully created your blog.", flash[:notice]
   end

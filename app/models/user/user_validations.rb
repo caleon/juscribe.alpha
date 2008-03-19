@@ -1,5 +1,5 @@
 class User < ActiveRecord::Base
-  PROHIBITED_NICKS = %w(colin caleon admin superuser administrator user users show edit update create friend friends new root sysadmin system login logout mine mailbox any about unfriend befriend )
+  PROHIBITED_NICKS = %w( colin caleon admin superuser administrator user users show edit update create friend friends new root sysadmin system login logout mine mailbox any about unfriend befriend )
   
   validates_presence_of     :email, :first_name, :last_name, :nick, :birthdate
   validates_uniqueness_of   :nick, :email

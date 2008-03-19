@@ -1,0 +1,8 @@
+<div class="sub navigation">
+	<ul class="navigationList">
+	<% if @bloggable %>
+		<%= navi_el 'New', blog_path_from_bloggable(@bloggable, :prefix => 'new') %>
+		<%= navi_el 'List', blogs_path_from_bloggable(@bloggable) %>
+	<% end %>
+	</ul>
+</div>

@@ -1,17 +1,20 @@
 first:
   name: Hello World!
+  short_name: Hello World
   permalink: HELLO-WORLD
   bloggable_type: User
   bloggable_id: <%= 'colin'.hash.abs %>
   user: colin
 nanas:
   name: World
+  short_name: World
   permalink: WORLD
   bloggable_type: User
   bloggable_id: <%= 'nana'.hash.abs %>
   user: nana
 company:
   name: Times
+  short_name: Times
   permalink: TIMES
   bloggable_type: Group
   bloggable_id: <%= 'company'.hash.abs %>

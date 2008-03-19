@@ -38,6 +38,7 @@ class BlogsController < ApplicationController
     return unless get_bloggable && authorize(@bloggable, :editable => true)
     @blog = @bloggable.blogs.new(params[:blog])
     if @blog.save
+      create_uploaded_picture_for(@blog, :save => true) if picture_uploaded?
       msg = "You have successfully created your blog."
       respond_to do |format|
         format.html { flash[:notice] = msg; redirect_to blog_url_for(@blog) }
@@ -64,6 +65,7 @@ class BlogsController < ApplicationController
   def update
     return unless setup(:permission) && authorize(@blog, :editable => true)
     if @blog.update_attributes(params[:blog])
+      create_uploaded_picture_for(@blog, :save => true) if picture_uploaded?
       msg = "You have successfully updated #{@blog.display_name}."
       respond_to do |format|
         format.html { flash[:notice] = msg; redirect_to blog_url_for(@blog) }

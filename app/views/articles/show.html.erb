@@ -1,11 +1,48 @@
-<h2><%= @article.title %></h2>
-<p>
-	<%= image_tag(@article.primary_picture.public_filename, :class => 'articlePic') if @article.primary_picture %>
-	<%= @article.content %>
-</p>
-<em>Published at <%= @article.published_at %></em>
+<% add_meta_keyword!('colin') -%>
+<% set_link_author!(@user) -%>
+<% add_style_file('users/msm') -%>
+<div id="msm_layout" class="msm_layout">
+	<div id="msm_header">
+		<div class="msm_column msm_column-a">
+			<span class="timestamp">updated by <%= @user.display_name %> at <%= @article.updated_at.to_s %></span>
+			<h2><%= @article.title %></h2>
+		</div>
+		<div class="msm_column msm_column-b">
+			<%= @article.tags.map(&:to_s).join(', ') %>
+		</div>
+	</div>
+	
+	<div id="msm_main_column" class="msm_column">
+		<div class="msm_main_column-inner">			
+			
+			<p class="articleContent">
+				<%= image_tag(@article.primary_picture.public_filename, :class => 'articlePic') if @article.primary_picture %>
+				<%= format_article(@article) %>
+			</p>
+			<em>Published at <%= @article.published_at %></em>
 
-<br /><br />
-<%= render :partial => 'comments/comment', :layout => 'comment', :collection => @article.comments %>
-<br />
-<%= render :partial => 'comment_form' %>
+			<%= render :partial => 'comments/comment', :layout => 'comment', :collection => @article.comments %>
+			<%= render :partial => 'comment_form' %>
+		</div>
+	</div>
+	
+	<div id="msm_side_column" class="msm_column">
+		<div class="msm_module">
+			<div class="msm_module-inner">
+				<h3>Google Ads</h3>
+
+			</div>
+		</div>
+		<div class="msm_module">
+			<div class="msm_module-inner">
+				<h3>Friends</h3>
+				<ul id="msm_friends" class="msm_media">
+					<%= render :partial => 'users/friend', :collection => @user.friends, :locals => { :tag => :li } %>
+				</ul>
+				<div class="msm_module-footer">
+					<%= link_to 'View all Friends', friends_user_path(@user) %>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

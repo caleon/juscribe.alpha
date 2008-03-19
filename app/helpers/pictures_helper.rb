@@ -17,12 +17,23 @@ module PicturesHelper
     user_image.public_filename
   end
   
-  def picture_path_for(picture, acshun=nil)
-    instance_eval %{ #{acshun ? "#{acshun}_" : ''}#{picture.path_name_prefix}_path(picture.to_path) }
+  def picture_path_for(picture, opts={})
+    opts[:params] ||= {}
+    instance_eval %{ #{opts[:prefix] ? "#{opts[:prefix]}_" : ''}#{picture.path_name_prefix}_path(picture.to_path.merge(opts[:params])) }
   end
   
-  def depictable_path_for(depictable, acshun=nil)
-    instance_eval %{ #{acshun ? "#{acshun}_" : ''}#{depictable.path_name_prefix}_path(depictable.to_path) }
+  def picture_path_from_depictable(depictable, opts={})
+    opts[:params] ||= {}
+    instance_eval %{ #{opts[:prefix] ? "#{opts[:prefix]}_" : ''}#{depictable.path_name_prefix}_#{opts[:suffix] || 'picture'}_path(depictable.to_path(true).merge(opts[:params])) }
+  end
+  
+  def pictures_path_from_depictable(depictable, opts={})
+    picture_path_from_depictable(depictable, opts.merge(:suffix => 'pictures'))
+  end
+  
+  def depictable_path_for(depictable, opts={})
+    opts[:params] ||= {}
+    instance_eval %{ #{opts[:prefix] ? "#{opts[:prefix]}_" : ''}#{depictable.path_name_prefix}_path(depictable.to_path.merge(opts[:params])) }
   end
   
   def picture_for(record, html_opts={})

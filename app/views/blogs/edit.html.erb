@@ -1,0 +1,6 @@
+<% form_for :blog, @blog, :url => blog_path_from_bloggable(@bloggable, :prefix => 'edit'), :html => { :method => :put, :multipart => true } do |f| %>
+	<fieldset>
+		<legend>Edit your blog</legend>
+		<%= render :partial => 'form', :locals => { :f => f } %>
+	</fieldset>
+<% end %>

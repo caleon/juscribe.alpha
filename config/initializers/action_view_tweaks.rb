@@ -29,6 +29,18 @@ module ActionView::Helpers
     alias_method_chain :error_messages_for, :format
   end
   
+  module TextHelper
+    def simple_format_with_options(text, opts={})
+      open_p = %{<p#{opts[:class] ? " class=\"#{opts[:class]}\"" : ''}>}
+      content_tag 'p', text.to_s.
+        gsub(/\r\n?/, "\n").                    # \r\n and \r -> \n
+        gsub(/\n\n+/, "</p>\n\n#{open_p}").           # 2+ newline  -> paragraph
+        gsub(/([^\n]\n)(?=[^\n])/, '\1<br />'), # 1 newline   -> br
+        opts
+    end
+    alias_method_chain :simple_format, :options
+  end
+  
   module JavaScriptHelper
     def javascript_tag_with_flip_flop(content, html_options={})
       if @config[:scripts_at_bottom]

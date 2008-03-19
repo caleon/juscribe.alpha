@@ -2,7 +2,9 @@ class User < ActiveRecord::Base
   has_many :articles, :dependent => :nullify
   has_many :owned_blogs, :class_name => 'Blog', :dependent => :nullify
   has_many :blogs, :as => :bloggable, :dependent => :nullify
-  has_many :entries, :dependent => :nullify
+  has_many :comments, :as => :commentable, :order => 'comments.id DESC'
+  has_many :owned_comments, :class_name => 'Comment', :dependent => :nullify
+  has_many :entries, :dependent => :nullify, :order => 'entries.id DESC'
   has_one :latest_entry, :class_name => 'Entry', :order => 'entries.id DESC'
   has_many :songs, :dependent => :nullify
   has_many :events, :dependent => :nullify
@@ -28,15 +30,11 @@ class User < ActiveRecord::Base
       find(:all, :conditions => "position IS NULL", :limit => limit)
     end 
   end
-  has_many :favorite, :class_name => 'Favorite',
-                      :order => 'id desc', :dependent => :nullify do
-    def articles; find(:all, :conditions => "responsible_type = 'Article'"); end
-    def comments; find(:all, :conditions => "responsible_type = 'Comment'"); end
-    def entries; find(:all, :conditions => "repsonsible_type = 'Entry'"); end
-    def projects; find(:all, :conditions => "responsible_type = 'Project'"); end
-    def pictures; find(:all, :conditions => "responsible_type = 'Picture'"); end
-    def groups; find(:all, :conditions => "responsible_type = 'Group'"); end
-  end
+  has_many :placed_widgets, :class_name => 'Widget', :order => :position, :dependent => :nullify,
+                            :conditions => "position IS NOT NULL"
+  has_many :unplaced_widgets, :class_name => 'Widget', :order => :position, :dependent => :nullify,
+                              :conditions => "position IS NULL"
+    
   
   def primary_picture_path
     self.primary_picture.file_path

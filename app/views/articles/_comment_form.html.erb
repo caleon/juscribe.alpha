@@ -1,6 +1,6 @@
-<h3>Comment on this post</h3>
 <% form_for :comment, @comment, :url => '#', :html => { :class => 'commentForm', :method => 'post' } do |f| %>
 	<fieldset>
+		<legend>Comment on this article</legend>
 		<%= render :partial => 'comments/form', :locals => { :f => f } %>
 	</fieldset>
 <% end %>

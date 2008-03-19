@@ -1,0 +1,3 @@
+class Wishlist < List
+  
+end

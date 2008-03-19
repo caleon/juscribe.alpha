@@ -29,3 +29,4 @@
 
 .userForm input { display: block; }
 .timestamp { font-weight: bold; color: #ccc; }
+strong.articleIntro { margin-right: 4px; }

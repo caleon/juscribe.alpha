@@ -1,1 +1,6 @@
-Blah
+<% content_tag :li, :class => 'comment' do %>
+	<span>
+		<%= comment.body %>
+		<%= byline_for comment %>
+	</span>
+<% end %>

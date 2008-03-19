@@ -9,10 +9,11 @@ class Blog < ActiveRecord::Base
   has_one :primary_picture, :class_name => 'Picture', :order => 'pictures.position'
   has_many :comments, :as => :commentable, :order => 'comments.id DESC'
   
-  validates_presence_of :bloggable_type, :bloggable_id, :name, :permalink
+  validates_presence_of :bloggable_type, :bloggable_id, :name, :short_name, :permalink
   validates_length_of :name, :in => (3..70)
+  validates_length_of :short_name, :in => (3..12)
   validates_uniqueness_of :permalink, :scope => [ :bloggable_id, :bloggable_type ]
-  validates_with_regexp :name, :permalink
+  validates_with_regexp :name, :short_name, :permalink
   
   attr_protected :permalink
   
@@ -29,6 +30,10 @@ class Blog < ActiveRecord::Base
   
   def name=(str)
     self[:name] = str
+  end
+  
+  def short_name=(str)
+    self[:short_name] = str
     make_permalink
   end
   
@@ -62,7 +67,7 @@ class Blog < ActiveRecord::Base
     
   private
   def make_permalink(opts={})
-    str = Blog.permalink_for(self[:name] || self.name)
+    str = Blog.permalink_for(self[:short_name] || self.short_name)
     self.permalink = str
     self.save if opts[:with_save]
     str
