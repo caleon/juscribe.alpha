@@ -1,4 +1,4 @@
-<% form_for :event, @event, :url => user_events_path(@user), :html => { :class => "eventForm", :method => :post } do |f| %>
+<% form_for :event, @event, :url => user_events_path(@user), :html => { :class => "eventForm", :method => :post, :multipart => true } do |f| %>
 	<fieldset>
 		<legend>New Event</legend>
 		<%= render :partial => 'form', :locals => { :f => f } %>

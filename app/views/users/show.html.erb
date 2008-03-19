@@ -47,9 +47,7 @@
 				<div class="msm_module">
 					<h3>Upcoming Events</h3>
 					<ul>
-						<li><span><%= link_to 'Party in my plants', '#' %> <span class="timestamp"><%= Time.now.to_s(:concise) %></span></soan></li>
-						<li><span><%= link_to 'Farewell Dinner', '#' %> <span class="timestamp"><%= Time.now.to_s(:concise) %></span></span></li>
-						<li><span><%= link_to 'Company Picnic', '#' %> <span class="timestamp"><%= Time.now.to_s(:concise) %></span></span></li>
+						<%= render :partial => 'events/event', :collection => @events %>
 					</ul>
 				</div>
 			</div>
@@ -57,6 +55,19 @@
 		
 		<div class="msm_main_column-inner">
 			<div class="msm_main_column-ab msm_column">
+			<%# FIXME: THIS IS DONE SO I DONT HAVE TO WAIT FOR RSS CONNECTION EACH TIME %>
+			<% if true %>
+				<h3><span class="articleBlog">RSS:</span>From <a href="http://cdmjimmy.blogspot.com/">[Something Witty]</a> by <a href="#">James</a></h3>
+								<h4><a href="http://cdmjimmy.blogspot.com/2008/03/in-two-weeks-and-two-days.html">In Two Weeks And Two Days,</a></h4>
+								<p class="articleContent">
+									I'll be home, in California again.<a href="http://bp3.blogger.com/_lUeWypH_FWU/R92LQm8y8rI/AAAAAAAAAsw/VXWEKrqjpgo/s1600-h/Huntington+Beach.jpg"><img src="http://bp3.blogger.com/_lUeWypH_FWU/R92LQm8y8rI/AAAAAAAAAsw/VXWEKrqjpgo/s320/Huntington+Beach.jpg" alt="" /></a>Not for good mind you, but it will be for the longest period since I left. A psuedo-vacation, if you will, since I'll be working at UCLA by day, and gallivanting around my old stomping grounds at night.I'm shocked, really. I can't believe I'm leaving. While I never felt completely comfortable <a href="http://cdmjimmy.blogspot.com/2008/03/when-i-grow-up.html">here</a>, I managed to find less and less to complain about-- some might even call it "adjusting." My experiences ranged from the mundane to the absurd, and while I never want to come back-- well, you can insert your favorite "life lessons" cliché [here]. Take a look at <a href="http://cdmjimmy.blogspot.com/2007/07/oil-and-water.html">one</a> of my first entries in T...
+								</p>
+								<small>
+					by: <a href="#">James</a> | 
+					Sun, 16 Mar 2008 14:07:00 -0700 | 
+					<a href="http://cdmjimmy.blogspot.com/2008/03/in-two-weeks-and-two-days.html">Source</a>
+				</small>
+			<% else %>
 				<% feed_item = parseFeed('http://cdmjimmy.blogspot.com/feeds/posts/default?alt=rss') %>
 				<h3><span class="articleBlog">RSS:</span>From <%= link_to feed_item.feed_title, feed_item.feed_link %> by <%= link_to feed_item.item_author, '#' %></h3>
 				<h4><%= link_to feed_item.item_title, feed_item.item_link %></h4>
@@ -64,6 +75,7 @@
 					<%= truncate sanitize(feed_item.item_content, :tags => %w(a img)), 1000 %>
 				</p>
 				<%= byline_for feed_item %>
+			<% end %>
 			</div>
 		</div>
 		

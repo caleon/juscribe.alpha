@@ -1,1 +1,13 @@
-<%= render :partial => 'event', :object => @event %>
+<%= picture_for(@event) %>
+Name: <%= link_to @event.name, user_event_path(@event.user, @event) %>
+<br />
+Location: <%=h @event.location %>
+<br />
+Begins at: <%= @event.begins_at %>
+<br />
+Ends at: <%= @event.ends_at %>
+<br />
+Description: <%=h @event.content %>
+<br />
+Created by: <%= @event.user.nick %>
+<br /><br />

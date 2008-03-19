@@ -1,8 +1,17 @@
 <%= f.label :name %>
 <%= f.text_field :name %>
 <br />
-<%= f.label :content %>
-<%= f.text_area :content %>
+<%= f.label :begins_at %>
+<%= f.datetime_select :begins_at, :include_blank => true %>
+<br />
+<%= f.label :ends_at %>
+<%= f.datetime_select :ends_at, :include_blank => true %>
+<br />
+<%= f.label :location %>
+<%= f.text_field :location %>
+<br />
+<%= f.label :description %>
+<%= f.text_area :description %>
 <br />
 <%= render :partial => 'pictures/form' %>
 <br />

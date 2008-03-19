@@ -7,7 +7,7 @@ class User < ActiveRecord::Base
   has_many :entries, :dependent => :nullify, :order => 'entries.id DESC'
   has_one :latest_entry, :class_name => 'Entry', :order => 'entries.id DESC'
   has_many :songs, :dependent => :nullify
-  has_many :events, :dependent => :nullify
+  has_many :events, :dependent => :nullify, :order => 'events.begins_at DESC'
   has_many :projects, :dependent => :nullify
   has_many :messages, :foreign_key => 'recipient_id', :dependent => :nullify,
            :order => 'messages.id DESC'

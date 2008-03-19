@@ -51,6 +51,7 @@ class EventsController < ApplicationController
   def update
     return unless setup(:permission) && authorize(@event, :editable => true)
     if @event.update_attributes(params[:event])
+      create_uploaded_picture_for(@event, :save => true) if picture_uploaded?
       msg = "You have successfully updated #{@event.display_name}."
       respond_to do |format|
         format.html { flash[:notice] = msg; redirect_to user_event_url(@event.to_path) }

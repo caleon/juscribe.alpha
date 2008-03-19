@@ -39,17 +39,43 @@ module PicturesHelper
   def picture_for(record, html_opts={})
     picture, class_str, dom_id_str = picture_and_dom_id_for(record)
     if picture
-      image_tag(picture.public_filename, {:class => class_str, :id => dom_id_str}.merge(html_opts))
+      image_tag(picture.public_filename, picture_html_opts_for(record).merge(html_opts))
     else
-      ''
+      default_picture_for(record.class.class_name, html_opts)
     end
   rescue
     ''
   end
   
+  def default_picture_for(klass_name, html_opts={})
+    file_path = [ klass_name.underscore, 'default.gif' ].join('/')
+    image_tag(file_path, { :class => picture_class_str_for(klass_name) }.merge(html_opts))
+  end
+  
+  def picture_html_opts_for(record)
+    if arr = picture_and_dom_id_for(record)
+      { :class => arr[0], :id => arr[1] }
+    else
+      {}
+    end
+  end
+  
   def picture_and_dom_id_for(record)
     picture = record.primary_picture
-    [ picture, "#{record.class.class_name.downcase}Pic",
-      "#{record.class.class_name.downcase}Pic-#{record.id}-#{picture.id}" ] if picture
+    [ picture, picture_class_str_for(record),
+      picture_id_str_for(record, picture) ] if picture
+  end
+  
+  def picture_class_str_for(record_or_klass_name)
+    if record_or_klass_name.is_a?(String)
+      record_or_klass_name.underscore + 'Pic'
+    else
+      record.class.class_name.underscore + 'Pic'
+    end
+  end
+  
+  def picture_id_str_for(record, picture=nil)
+    record.class.class_name.underscore + 'Pic-' +
+    "#{record.id}-#{(picture || record.primary_picture).id}"
   end
 end
