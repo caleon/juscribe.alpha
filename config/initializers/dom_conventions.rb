@@ -1,21 +1,41 @@
 module ActionController::RecordIdentifier  
   # IDEALLY: dom_class(comment, :include => [:group, :user, :event]) in descending order of hierarchy
   #  result => "comment event-comment user-event-comment group-user-event-comment"
-  def dom_class(record_or_class, *args)
+  def dom_class_with_associations(record_or_class, *args)
     opts = args.extract_options!
     prefix = args.shift
+    opts[:include] = [opts[:include]] unless (opts[:include].is_a?(Array) || opts[:include].nil?)
     res = []
-    if prefix
-      res << [ prefix, singular_class_name(record_or_class) ].compact * '-'
-    else
-      arr = opts[:include] || []
-      arr = arr.map(&:to_s)
-      arr.push(singular_class_name(record_or_class))
-      0.upto(arr.size - 1) do |i|
-        res << arr[i..(arr.size-1)].compact * '-'
+    if !opts[:include].blank?
+      0.upto(opts[:include].size) do |i|
+        res << dom_class_helper(record_or_class, prefix, :include => opts[:include][i..(opts[:include].size-1)])
       end
+    else
+      res << dom_class_helper(record_or_class, prefix)
     end
     res.join(' ')
+  end
+  alias_method_chain :dom_class, :associations
+  # => dom_class_helper(com, :include => [ :user, :event ])
+  # => which returns: "user-event-comment"
+  def dom_class_helper(record_or_class, *args)
+    opts = args.extract_options!
+    prefix = args.shift
+    opts[:include] = [opts[:include]] unless (opts[:include].is_a?(Array) || opts[:include].nil?)
+
+    res = []
+    if !opts[:include].blank?
+      next_sym = opts[:include].pop
+      if record_or_class.is_a?(Class)
+        res << dom_class_helper(next_sym.to_s.classify.constantize, prefix, :include => opts[:include])
+      else
+        res << dom_class_helper(record_or_class.send(next_sym), prefix, :include => opts[:include])
+      end
+    end
+    res << singular_class_name(record_or_class)
+    res.compact.join('-')
+  rescue NameError
+    nil
   end
   
   def dom_id_with_associations(record, *args) 

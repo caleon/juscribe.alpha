@@ -36,12 +36,17 @@ module PicturesHelper
     instance_eval %{ #{opts[:prefix] ? "#{opts[:prefix]}_" : ''}#{depictable.path_name_prefix}_path(depictable.to_path.merge(opts[:params])) }
   end
   
-  def picture_for(record, html_opts={})
-    picture, class_str, dom_id_str = picture_and_dom_id_for(record)
+  def picture_for(record, opts={})
+    includes = opts.delete(:include) || []
+    includes.push(:depictable) unless includes.last == :depictable
+    picture = record.primary_picture rescue record.pictures.first
     if picture
-      image_tag(picture.public_filename, picture_html_opts_for(record).merge(html_opts))
+      image_tag(picture.public_filename,
+                :class => dom_class(picture, :include => includes),
+                :id => dom_id(picture, :include => includes) )
     else
-      default_picture_for(record.class.class_name, html_opts)
+      default_picture_for(record.class.class_name,
+                          :class => dom_class(Picture, :include => includes) )
     end
   rescue
     ''
@@ -49,33 +54,6 @@ module PicturesHelper
   
   def default_picture_for(klass_name, html_opts={})
     file_path = [ klass_name.underscore, 'default.gif' ].join('/')
-    image_tag(file_path, { :class => picture_class_str_for(klass_name) }.merge(html_opts))
-  end
-  
-  def picture_html_opts_for(record)
-    if arr = picture_and_dom_id_for(record)
-      { :class => arr[0], :id => arr[1] }
-    else
-      {}
-    end
-  end
-  
-  def picture_and_dom_id_for(record)
-    picture = record.primary_picture
-    [ picture, picture_class_str_for(record),
-      picture_id_str_for(record, picture) ] if picture
-  end
-  
-  def picture_class_str_for(record_or_klass_name)
-    if record_or_klass_name.is_a?(String)
-      record_or_klass_name.underscore + 'Pic'
-    else
-      record.class.class_name.underscore + 'Pic'
-    end
-  end
-  
-  def picture_id_str_for(record, picture=nil)
-    record.class.class_name.underscore + 'Pic-' +
-    "#{record.id}-#{(picture || record.primary_picture).id}"
+    image_tag(file_path, html_opts)
   end
 end
