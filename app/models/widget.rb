@@ -45,10 +45,6 @@ class Widget < ActiveRecord::Base
     self.widgetable.owner rescue nil # maybe also #creator
   end
   
-  def wid_partial(base, kind=nil)
-    base + '/' + self.widgetable_type.underscore + (kind ? "_#{kind}" : '')
-  end
-  
   def placed?; self.position?; end
   
   def place(pos)

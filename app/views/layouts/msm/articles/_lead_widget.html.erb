@@ -1,0 +1,4 @@
+<% if lead_widget = @widgets.shift %>
+	<%= render :partial => lead_widget.wid_partial(@user.layout_path, :lead),
+						 :object => lead_widget.widgetable %>
+<% end %>

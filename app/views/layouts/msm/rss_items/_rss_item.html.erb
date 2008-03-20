@@ -1,0 +1,7 @@
+<% feed_item = parseFeed(url) %>
+<h3><span class="articleBlog">RSS:</span>From <%= link_to feed_item.feed_title, feed_item.feed_link %> by <%= feed_item.item_author %></h3>
+<h4><%= link_to feed_item.item_title, feed_item.item_link %></h4>
+<p class="articleContent">
+	<%= truncate sanitize(feed_item.item_content, :tags => %w(a img)), 1000 %>
+</p>
+<%= byline_for feed_item %>

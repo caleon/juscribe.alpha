@@ -1,0 +1,101 @@
+<% add_meta_keyword!('colin') -%>
+<% set_link_author!(@user) -%>
+<% add_style_file('users/msm') %>
+<div id="msm_layout" class="msm_layout">
+	<div id="msm_main_column" class="msm_column">
+		<div class="msm_main_column-inner">
+			<div id="msm_main_header">
+				<span class="timestamp">updated by colin at 9:00am PST</span>
+			</div>
+	
+			<div class="msm_main_column-a msm_column nopad">
+				<div id="msm_lead_widget" class="msm_module">
+					<%= wrender :kind => :lead %>
+					<%= @wcount %>
+				</div>
+			</div>
+	
+			<div class="msm_main_column-b msm_column">
+				<div class="msm_module">
+					<%= wrender :latest_articles, :collection => @widgets[0..3] %>
+					<%= @wcount %>
+				</div>
+
+				<div class="msm_module">
+					<%= wrender :upcoming_events %>
+					<%= @wcount %>
+				</div>
+			</div>
+		</div>
+		
+		<div class="msm_main_column-inner">
+			<div class="msm_main_column-ab msm_column">
+				<%= wrender :rss_item, :url => 'http://cdmjimmy.blogspot.com/feeds/posts/default?alt=rss' %>
+				<%= @wcount %>
+			</div>
+		</div>
+		
+		<div class="msm_main_column-inner nobg">
+			<div class="msm_main_column-a msm_column">
+				<%= wrender :without_picture => true %>
+				<%= @wcount %>
+			</div>
+			
+			<div class="msm_main_column-b msm_column msm_module">
+				<div class="msm_module-inner">
+					<%= wrender :entries, :outer => { :class => "msm_main_column" } %>
+					<%= @wcount %>
+				</div>
+			</div>
+		</div>
+		
+		<div class="msm_main_column-inner">
+			<div class="msm_main_column-ab msm_column">
+				<%= wrender %>
+				<%= @wcount %>....
+			</div>
+		</div>
+	</div>
+	
+	<div id="msm_side_column" class="msm_column">
+		<div class="msm_module">
+			<div class="msm_module-inner">
+				<%= wrender :friends %>
+				<%= @wcount %>
+			</div>
+		</div>
+
+		<div class="msm_module">
+			<div class="msm_module-inner">
+				<%= wrender %>
+				<%= @wcount %>
+			</div>
+		</div>
+		
+		<div class="msm_module">
+			<div class="msm_module-inner">
+				<%= wrender :google_ads %>
+				<%= @wcount %>
+			</div>
+		</div>
+		
+		<div class="msm_module">
+			<div class="msm_module-inner">
+				<%= wrender :latest_pictures, :collection => @user.owned_pictures[0..5] %>
+
+				<%= @wcount %>
+			</div>
+		</div>
+		
+		<div class="msm_module">
+			<div class="msm_module-inner">
+				<%= wrender :comments %>
+				<%= @wcount %>
+			</div>
+		</div>
+		
+	</div>
+	<div id="msm_footer">
+	
+	</div>
+</div>

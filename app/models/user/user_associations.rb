@@ -10,7 +10,9 @@ class User < ActiveRecord::Base
   has_many :events, :dependent => :nullify, :order => 'events.begins_at DESC'
   has_many :projects, :dependent => :nullify
   has_many :messages, :foreign_key => 'recipient_id', :dependent => :nullify,
-           :order => 'messages.id DESC'
+           :order => 'messages.id DESC' do
+             def unread; find(:all, :conditions => [ "`read` = ?", false ]); end
+           end
   has_many :sent_messages, :class_name => 'Message', :foreign_key => 'sender_id',
            :order => 'messages.id DESC'
   has_many :owned_taggings, :class_name => 'Tagging', :dependent => :nullify

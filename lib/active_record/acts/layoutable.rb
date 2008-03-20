@@ -10,12 +10,8 @@ module ActiveRecord::Acts::Layoutable # included when PluginPackage is included
     self[:skin] || 'default'
   end
   
-  def layout_path
-    "#{self.class.class_name.underscore.pluralize}/layouts/#{layout}/"
-  end
-  
   def layout_file(file=layout)
-    layout_path + file.to_s
+    [ '/layouts', self.layout, self.class.class_name.pluralize.underscore, file.to_s ].join('/')
   end
   
   def skin_file

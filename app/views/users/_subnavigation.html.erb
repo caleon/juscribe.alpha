@@ -15,7 +15,7 @@
 	<% if !this_is_viewer? %>
 		<%= navi_el "Message", new_message_path %>
 	<% else %>
-		<%= navi_el "Inbox", messages_path %>
+		<%= navi_el "Inbox#{@user.messages.unread.size > 0 ? " (#{@user.messages.unread.size})" : ''}", messages_path %>
 	<% end %>
 	<% if viewer.friends_with?(@user) %>
 		<%= navi_el "Unfriend", unfriend_user_path(@user), { :method => :put } %>
