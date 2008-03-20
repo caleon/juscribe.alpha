@@ -1,9 +1,9 @@
 <% add_meta_keyword!('colin') -%>
 <% set_link_author!(@user) -%>
-<% add_style_file('users/msm') %>
+<% add_style_file(@layoutable.skin_file) %>
 <div id="msm_layout" class="msm_layout">
 	<div id="msm_main_column" class="msm_column">
-		<div class="msm_row">
+		<div class="msm_row" id="msm_row-1">
 			<div id="msm_main_header">
 				<span class="timestamp">updated by colin at 9:00am PST</span>
 			</div>
@@ -16,16 +16,18 @@
 				<%= wrender :latest_articles, :collection => @widgets[0..3] %>
 				<%= wrender :upcoming_events %>
 			</div>
+			<%= br_clear %>
 		</div>
 		
-		<div class="msm_row">
+		<div class="msm_row" id="msm_row-2">
 			<div class="msm_main_column">
-				<%= wrender :rss_item, :layout => :none,
+				<%= wrender :rss_item,
 										:url => 'http://cdmjimmy.blogspot.com/feeds/posts/default?alt=rss' %>
 			</div>
+			<%= br_clear %>
 		</div>
 		
-		<div class="msm_row nobg">
+		<div class="msm_row nobg" id="msm_row-3">
 			<div class="msm_main_column-a msm_main_column">
 				<%= wrender :without_picture => true %>
 			</div>
@@ -33,12 +35,14 @@
 			<div class="msm_main_column-b msm_main_column nopad">
 				<%= wrender :entries, :outer => { :class => "msm_main_column" }, :layout => :framed %>
 			</div>
+			<%= br_clear %>
 		</div>
 		
-		<div class="msm_row">
+		<div class="msm_row" id="msm_row-4">
 			<div class="msm_main_column-ab msm_main_column">
 				<%= wrender %>
 			</div>
+			<%= br_clear %>
 		</div>
 	</div>
 	

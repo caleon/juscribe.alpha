@@ -8,4 +8,8 @@ module CssHelper
       stylesheet_link_tag style
     end.join('\r\n')
   end
+  
+  def br_clear
+    '<br style="clear: both;" />'
+  end
 end

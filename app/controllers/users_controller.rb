@@ -15,10 +15,16 @@ class UsersController < ApplicationController
     @events = @user.events.sort_by {|ev| -ev.begins_at.to_i }
     @skin_file = @user.skin_file
     @layoutable = @user
-    if @user[:layout]
-      render :template => @user.layout_file(:show)
-    else
-      render :action => 'show'
+    respond_to do |format|
+      format.html do
+        if @user[:layout]
+          render :template => @user.layout_file(:show)
+        else
+          render :action => 'show'
+        end
+      end
+      format.js
+      format.xml
     end
   end
   

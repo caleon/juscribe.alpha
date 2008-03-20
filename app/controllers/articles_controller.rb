@@ -18,8 +18,15 @@ class ArticlesController < ApplicationController
       return unless authorize(@article, :editable => true)
     end
     @page_title = "#{@article.display_name}"
+    @layoutable = @article
     respond_to do |format|
-      format.html
+      format.html do
+        if @article.layout
+          render :template => @article.layout_file(:show)
+        else
+          render :action => 'show'
+        end
+      end
       format.js
       format.xml
     end

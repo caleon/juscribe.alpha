@@ -1,0 +1,362 @@
+/* @override http://localhost:3000/stylesheets/users/msm.css?1206045027 */
+
+#canvas {
+	overflow: hidden;
+	background-color: #dadada;
+	padding: 12px 0;
+}
+
+/* @group General */
+
+	#msm_layout {
+		width: 965px;
+		margin: 0 auto;
+	}
+	.msm_layout h2,
+	.msm_layout h3,
+	.msm_layout h4,
+	.msm_layout h5 {
+		margin:  0 0 6px;
+	}
+	
+	.msm_layout h2 {
+		font-size: 180%;
+	}
+	
+	.msm_layout h3 {
+		font-size: 120%;
+	}
+	
+	.msm_layout p {
+		margin: 4px 0 13px;
+		line-height: 1.3em;
+	}
+	
+	.msm_layout a {
+		color: #004276;
+		font-weight: bold;
+	}
+	
+	.msm_layout a:hover {
+		text-decoration: none;
+	}
+	
+	.msm_layout a:hover img {
+		border-color: #CA0002;
+	}
+	
+	.msm_layout a:hover,
+	.msm_layout span.timeago {
+		color:  #CA0002;
+	}
+	
+	.msm_layout ul {
+		padding: 0;
+		list-style-type: none;
+	}
+	
+	.msm_layout .msm_column li > span {
+		display: block;
+		padding-left: 6px;
+	}
+	
+	.msm_layout span.timeago {
+		margin-left: 4px;
+		font-size: 88%;
+	}
+	
+	.msm_layout form.commentForm fieldset {
+		background-color: #F5FAFE;
+	}
+	
+	/* This can be made to specify an article pic */
+	.msm_layout img.smallPic {
+		height: 100px;
+		width: auto;
+	}
+
+/* @end */
+
+/* @group Layout */
+
+	.msm_row {
+		background-color: #fff;
+		margin-bottom: 9px;
+	}
+	
+	.msm_row.nobg {
+		background-color: transparent;
+	}
+	
+	#msm_main_column {
+		float: left;
+		margin-right: 9px;
+		width: 616px;
+	}
+	
+	#msm_side_column {
+		float: left;
+		width: 340px;
+	}
+	
+	#msm_main_column,
+	#msm_side_column {
+		min-height: 500px;
+	}
+	
+	#msm_footer {
+		clear: both;
+		height: 50px;
+		background-color: #fff;
+	}
+	
+	.msm_main_column {
+		padding: 18px;
+	}
+	
+	.msm_main_column.nopad {
+		padding: 0;
+	}
+	
+	.msm_main_column-a {
+		float: left;
+		width: 262px;
+	}
+	
+	.msm_main_column-b {
+		float: left;
+		width: 277px;
+	}
+	
+	/* @group Specifics */
+
+		.msm_row.nobg .msm_main_column {
+			background: #fff;
+		}
+		
+		.msm_row.nobg .msm_main_column-a {
+			margin-right: 9px;
+		}
+		
+		#msm_row-1 > .msm_main_column-a {
+			width: 303px;
+		}
+		
+		.msm_row.nobg > .msm_main_column-b {
+			width: 309px;
+		}
+		
+		#msm_main_header {
+			height: 30px;
+			background-color: #fff;
+			border-bottom: 1px solid #f6f6f6;
+		}
+		
+		#msm_main_header span.timestamp {
+			display: block;
+			color: #999;
+			font-size: 84%;
+			padding: 9px 0 0 14px;
+		}
+		
+	/* @end */
+
+/* @end */
+
+/* @group Article */
+
+	.msm_layout span.articleBlog {
+		font-weight: bold;
+		color: #999;
+		margin-right: 4px;
+	}
+	
+	/* Embedded images within a post */
+	.msm_layout p.articleContent img {
+		float: right;
+		margin: 0 0 18px 18px;
+	}
+	
+	.msm_layout p.articleContent.alt img {
+		float: left;
+		margin: 0 18px 18px 0;
+	}
+	
+	.msm_layout img.article-picture {
+		border: 1px solid #ccc;
+	}
+	
+	/* Why doesn't the <caption /> tag work yet? */
+	.msm_layout span.caption {
+		display: block;
+		position: absolute;
+		background-color: #000;
+		color: #fff;
+		padding: 7px;
+		opacity: 0.8;
+		font-weight: normal; /* Counteracts bold when link */
+		font-size: 88%;
+		text-align: center;
+	}
+
+/* @end */
+
+/* @group Widget */
+	
+	.msm_widget li {
+		margin-bottom: 9px;
+	}
+	
+	#msm_lead_widget {
+		background-color: #F6F6F6;
+		padding: 18px;
+	}
+
+	/* @group Article Picture Set */
+	
+		.msm_layout a.article_picture_link {
+			display: block;
+			position: relative;
+			overflow: hidden;
+			margin-bottom: 9px;
+		}
+		
+		#msm_lead_widget img.msm_lead_picture {
+			float: left;
+			width: 265px;
+		}
+		
+		#msm_lead_widget span.caption {
+			bottom: 1px;
+			left: 1px;
+			right: 1px;
+		}
+	
+	/* @end */
+	
+	.msm_main_column .msm_widget {
+		
+	}
+	
+	.msm_row.nobg .msm_widget-inner {
+		min-height: 250px;
+	}
+	
+	#msm_side_column .msm_widget {
+		overflow: hidden;
+		background-color: #fff;
+		margin-bottom: 9px;
+		min-height: 200px;
+	}
+	
+	#msm_side_column .msm_widget.framed {
+		min-height: 0;
+	}
+	
+	.msm_widget.framed h3 {
+		font-size: 160%;
+	}
+	
+	.msm_widget.framed .msm_widget-inner {
+		border: 1px solid #ccc;
+		margin: 9px;
+		padding: 9px;
+	}
+	
+	/* .nopad is not being used yet. I don't want to make
+		another partial layout just for them */
+	.msm_widget.framed.nopad .msm_widget-inner {
+		padding: 0;
+	}
+	
+	.msm_widget.framed.nopad h3,
+	.msm_widget.framed.nopad h4 {
+		margin: 9px;
+	}
+	
+	.msm_widget ul.msm_media {
+		overflow: hidden;
+		margin: 0 -9px;
+		padding-left: 13px;
+		padding-top: 9px;
+		background: #F2F2F2;
+	}
+	
+	.msm_widget ul.msm_media > li {
+		float: left;
+		width: 92px;
+		margin-right: 9px;
+		margin-bottom: 9px;
+		text-align: center;
+	}
+	
+	.msm_widget ul.msm_media img.picture {
+		float: left;
+	}
+	
+	.msm_layout img.user-picture,
+	.msm_widget ul.msm_media img.picture {
+		height: 86px;
+		width: 86px;
+		border: 3px solid #ccc;
+	}
+	
+	.msm_widget-footer {
+		padding-top: 9px;
+		font-size: 90%;
+	}
+
+/* @end */
+
+/* @group Users-Show */
+
+	#canvas.users-show form.commentForm textarea {
+		width: 200px;
+	}
+
+/* @end */
+
+/* @group Articles-Show */
+	
+	#canvas.articles-show span.timestamp {
+		color: #CA0002;
+		font-size: 88%;
+	}
+	
+	#canvas.articles-show #msm_header {
+		background: #fff;
+		border-top: 14px solid blue;
+		margin-bottom: 7px;
+		padding: 18px;
+	}
+	
+	#canvas.articles-show .msm_row {
+		padding: 18px;
+	}
+	
+	#canvas.articles-show a.article_picture_link {
+		float: left;
+		position: relative;
+		overflow: hidden;
+		margin: 0 18px 18px 0;
+	}
+	
+	#canvas.articles-show img.article-picture {
+		float: left;
+		width: 265px;
+		padding: 0;
+		margin: 0;
+	}
+	
+	#canvas.articles-show span.caption {
+		bottom: 1px;
+		right: 1px;
+		left: 1px;
+	}
+	
+	#canvas.articles-show p.articleContent {
+		margin: 0 0 17px;
+		line-height: 1.3em;
+	}
+
+/* @end */

@@ -50,11 +50,11 @@ select, input, textarea { font:99% arial,helvetica,clean,sans-serif;}
 pre, code { font:115% monospace;*font-size:100%;}
 body * { line-height:1.22em; }
 
+/* TODO: Set these images! */
 a.external, a[href^="http://bah"] {
 	background: url('/images/rails.png') no-repeat right top;
 	padding-right: 10px;
 }
-
 a.internal { background: url('/images/arrow.png') no-repeat right top; padding-right: 18px; }
 a.internal.small { background: url('/images/arrow10.png') no-repeat right top; padding-right: 14px; }
 a:hover.internal { background-image: url('/images/arrow-on.png'); }
@@ -67,5 +67,4 @@ body { margin: 0; padding: 0; }
 ul, ol { margin: 0; padding: 0; }
 li { margin: 0; padding: 0; }
 
-a {  }
 a img { border: none; }

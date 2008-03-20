@@ -3,11 +3,13 @@ module ActiveRecord::Acts::Layoutable # included when PluginPackage is included
   # def layoutable?; true; end
   
   def layout
-    self[:layout] || 'default'
+    #self[:layout]
+    'msm'
   end
   
   def skin
-    self[:skin] || 'default'
+    #self[:skin] || 'default'
+    'msm'
   end
   
   def layout_file(file=layout)
@@ -15,6 +17,6 @@ module ActiveRecord::Acts::Layoutable # included when PluginPackage is included
   end
   
   def skin_file
-    "#{self.class.class_name.underscore.pluralize}/" + skin
+    "skins/" + skin
   end
 end

@@ -2,6 +2,6 @@
 <ul id="msm_friends" class="msm_media">
 	<%= render :partial => 'users/friend', :collection => @user.friends, :locals => { :tag => :li } %>
 </ul>
-<div class="msm_module-footer">
+<div class="msm_widget-footer">
 	<%= link_to 'View all Friends', friends_user_path(@user) %>
 </div>
