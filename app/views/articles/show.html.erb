@@ -16,7 +16,7 @@
 		<div class="msm_main_column-inner">			
 			
 			<p class="articleContent">
-				<%= image_tag(@article.primary_picture.public_filename, :class => 'articlePic') if @article.primary_picture %>
+				<%= picture_for(@article) %>
 				<%= format_article(@article) %>
 			</p>
 			<em>Published at <%= @article.published_at %></em>

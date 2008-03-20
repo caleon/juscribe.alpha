@@ -8,7 +8,7 @@
 .msm_layout a { color: #004276; font-weight: bold; }
 .msm_layout a:hover { color: #CA0002; text-decoration: none; }
 .msm_layout span.timeago { margin-left: 4px; color: #CA0002; font-size: 88%; }
-.msm_layout img.articlePic { border: 1px solid #ccc; }
+.msm_layout img.article-picture { border: 1px solid #ccc; }
 
 #msm_main_column { float: left; width: 616px; margin-right: 9px; margin-bottom: 9px; }
 .msm_main_column-inner { overflow: hidden; background-color: #fff; margin-bottom: 9px; }
@@ -44,8 +44,9 @@ span.articleBlog { font-weight: bold; color: #aaa; margin-right: 4px; }
 #msm_side_column .msm_module p { padding: 8px; }
 .msm_module .friend,
 .msm_module .pic { width: 92px; float: left; margin-right: 9px; margin-bottom: 9px; text-align: center; }
+/*** TODO: Get rid of picPic when setup properly **/
 .msm_module img.picPic,
-.msm_module img.userPic { width: 90px; border: 3px solid #ccc; }
+.msm_module img.user-picture { width: 90px; border: 3px solid #ccc; }
 .msm_module img.picPic { height: 92px; }
 .msm_module a:hover img { border-color: #CA0002; }
 .msm_module-footer { padding: 8px; }
@@ -63,5 +64,5 @@ span.articleBlog { font-weight: bold; color: #aaa; margin-right: 4px; }
 #canvas.articles-show span.timestamp { color: #CA0002; font-size: 88%; }
 #msm_header { background: #fff; border-top: 14px solid blue; margin-bottom: 7px; padding: 18px; }
 #canvas.articles-show .msm_main_column-inner { padding: 18px; }
-#canvas.articles-show p.articleContent img.articlePic { float: left; margin: 0 18px 18px 0; width: 265px; max-height: 235px; }
+#canvas.articles-show p.articleContent img.article-picture { float: left; margin: 0 18px 18px 0; width: 265px; max-height: 235px; }
 #canvas.articles-show form.commentForm fieldset { background-color: #F5FAFE; }

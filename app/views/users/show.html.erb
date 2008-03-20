@@ -12,7 +12,7 @@
 				<div id="msm_lead_widget" class="msm_module">
 				<% if lead_widget = @widgets.shift -%>
 					<% if lead_widget.primary_picture -%>
-						<%= link_to image_tag(lead_widget.primary_picture.file_path, :class => 'msm_lead_picture articlePic'), widgetable_path_for(lead_widget.widgetable) %>
+						<%= link_to image_tag(lead_widget.primary_picture.file_path, :class => 'msm_lead_picture article-picture'), widgetable_path_for(lead_widget.widgetable) %>
 						<strong><%= lead_widget.primary_picture.caption %></strong>
 					<% end %>
 						<h2><%= link_to lead_widget.wid_name, widgetable_path_for(lead_widget.widgetable) %></h2>
