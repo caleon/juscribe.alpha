@@ -31,14 +31,12 @@ class UsersControllerTest < ActionController::TestCase
     assert_not_nil assigns(:user)
     assert_not_nil assigns(:widgets)
     assert_not_nil assigns(:skin_file)
-    assert_not_nil assigns(:layout_file)
     xhr :get, :show, users(:colin).to_path
     assert_response :success
     assert_template 'show'
     assert_not_nil assigns(:user)
     assert_not_nil assigns(:widgets)
     assert_not_nil assigns(:skin_file)
-    assert_not_nil assigns(:layout_file)
     get :show, users(:colin).to_path.merge(:format => 'xml')
     assert_response :success
     assert_template 'show'

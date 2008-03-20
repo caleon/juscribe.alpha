@@ -1,9 +1,9 @@
 module ArticlesHelper
-  def article_path_for(article)
+  def article_path_for(article, opts={})
     if article.published?
-      article_path(article.to_path)
+      instance_eval %{ #{opts[:prefix] ? "#{opts[:prefix]}_" : ''}article_path(article.to_path) }
     else
-      draft_path(article.to_path)      
+      instance_eval %{ #{opts[:prefix] ? "#{opts[:prefix]}_" : ''}draft_path(article.to_path) }      
     end
   end
   

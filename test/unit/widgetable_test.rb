@@ -40,8 +40,7 @@ class WidgetableTest < ActiveSupport::TestCase
     WidgetableMixin.class_eval %{ undef :content }
     assert_nil clip.wid_content
     assert_equal acc1.user, clip.wid_user
-    assert_equal "/widgetable_mixin", clip.wid_partial(''), clip.widgetable_type
-    assert_equal "/widgetable_mixin_default", clip.wid_partial('', 'default')
+#    assert_equal "/widgetable_mixin_default", clip.wid_partial('', 'default')
   end
   
   def test_clip

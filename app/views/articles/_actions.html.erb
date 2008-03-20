@@ -1,4 +1,4 @@
 <% content_tag :ul, :id => "#{dom_id(@article)}-actions" do %>
-	<li><%= link_to 'Clip', new_article_clip_path(@article.to_path(true)) %></li>
-	<%= content_tag :li, (link_to 'Edit', edit_article_path(@article.to_path)) if @article.editable_by?(viewer) %>
+	<%= content_tag :li, (link_to 'Clip', clip_path_from_widgetable(@article, :prefix => 'new')) if @article.published? %>
+	<%= content_tag :li, (link_to 'Edit', article_path_for(@article, :prefix => 'edit')) if @article.editable_by?(viewer) %>
 <% end %>

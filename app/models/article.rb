@@ -21,6 +21,7 @@ class Article < ActiveRecord::Base
   
   def to_s; self.title; end
   def to_param; self.permalink; end
+  def display_name; self.title; end
   def permalink
     self[:permalink] ||= make_permalink
   end
