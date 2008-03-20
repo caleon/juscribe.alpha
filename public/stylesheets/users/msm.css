@@ -16,13 +16,13 @@
 .msm_layout img.article-picture{border:1px solid #ccc;}
 .msm_layout span.caption{display:block;position:absolute;background-color:#000;color:#fff;padding:7px;opacity:0.8;font-weight:normal;font-size:88%;text-align:center;}
 #msm_main_column{float:left;width:616px;margin-right:9px;}
-.msm_main_column-inner{overflow:hidden;background-color:#fff;margin-bottom:9px;}
-.msm_main_column-inner.nobg{background:none;}
+.msm_row{overflow:hidden;background-color:#fff;margin-bottom:9px;}
+.msm_row.nobg{background:none;}
 #msm_main_header{height:30px;background-color:#fff;border-bottom:1px solid #f6f6f6;}
 #msm_main_header span.timestamp{display:block;color:#999;font-size:84%;padding:9px 0 0 14px;}
 .msm_main_column-a{float:left;width:262px;padding:18px;}
 .msm_main_column-a.nopad{padding:0;width:303px;}
-.msm_main_column-inner.nobg .msm_main_column-a{margin-right:9px;background:#fff;}
+.msm_row.nobg .msm_main_column-a{margin-right:9px;background:#fff;}
 #msm_lead_widget{background-color:#F6F6F6;margin-bottom:0;}
 #msm_lead_widget,
 .msm_main_column-a .msm_widget{padding:18px;}
@@ -33,7 +33,7 @@
 .msm_main_column-b{float:left;width:277px;padding:18px;}
 .msm_column.msm_widget{padding:0;}
 #msm_main_column .msm_main_column-b.msm_widget{width:309px;}
-.msm_main_column-inner.nobg .msm_main_column-b{width:273px;background:#fff;}
+.msm_row.nobg .msm_main_column-b{width:273px;background:#fff;}
 #msm_layout .msm_column ul{padding:0;list-style-type:none;}
 .msm_widget li{margin-bottom:9px;}
 #msm_layout .msm_column li > span{display:block;padding-left:6px;}
@@ -64,7 +64,7 @@ span.articleBlog{font-weight:bold;color:#999;margin-right:4px;}
 #canvas.articles-show{}
 #canvas.articles-show span.timestamp{color:#CA0002;font-size:88%;}
 #msm_header{background:#fff;border-top:14px solid blue;margin-bottom:7px;padding:18px;}
-#canvas.articles-show .msm_main_column-inner{padding:18px;}
+#canvas.articles-show .msm_row{padding:18px;}
 #canvas.articles-show a.article_picture_link{float:left;position:relative;overflow:hidden;margin:0 18px 18px 0;}
 #canvas.articles-show img.article-picture{float:left;width:265px;padding:0;margin:0;}
 #canvas.articles-show span.caption{bottom:1px;right:1px;left:1px;}

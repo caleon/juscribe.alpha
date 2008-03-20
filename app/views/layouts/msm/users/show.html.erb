@@ -3,7 +3,7 @@
 <% add_style_file('users/msm') %>
 <div id="msm_layout" class="msm_layout">
 	<div id="msm_main_column" class="msm_column">
-		<div class="msm_main_column-inner">
+		<div class="msm_row">
 			<div id="msm_main_header">
 				<span class="timestamp">updated by colin at 9:00am PST</span>
 			</div>
@@ -18,14 +18,15 @@
 			</div>
 		</div>
 		
-		<div class="msm_main_column-inner">
+		<div class="msm_row">
 			<div class="msm_main_column-ab msm_column">
-				<%= wrender :rss_item, :url => 'http://cdmjimmy.blogspot.com/feeds/posts/default?alt=rss', :layout => :none %>
+				<%= wrender :rss_item, :layout => :none,
+										:url => 'http://cdmjimmy.blogspot.com/feeds/posts/default?alt=rss' %>
 				<%= @wcount %>
 			</div>
 		</div>
 		
-		<div class="msm_main_column-inner nobg">
+		<div class="msm_row nobg">
 			<div class="msm_main_column-a msm_column">
 				<%= wrender :without_picture => true %>
 			</div>
@@ -35,7 +36,7 @@
 			</div>
 		</div>
 		
-		<div class="msm_main_column-inner">
+		<div class="msm_row">
 			<div class="msm_main_column-ab msm_column">
 				<%= wrender %>
 			</div>
