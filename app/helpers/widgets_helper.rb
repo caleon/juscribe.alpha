@@ -20,7 +20,9 @@ module WidgetsHelper
   end
   
   def wid_layout(layout=nil)
-    
+    return nil if layout == :none
+    layout ||= 'widget'
+    [ layout_base_path, layout.to_s ].join('/')
   end
   
   # wrender :rss, :url => 'http://blahblah.com'
@@ -58,7 +60,7 @@ module WidgetsHelper
     model = method.to_s if model.blank?
     path = [ layout_base_path, model.pluralize, method.to_s ].join('/')
     render :partial => path, :locals => wcommon_locals.merge(opts),
-                             :layout => layout
+                             :layout => wid_layout(layout)
   end
   alias_method :wrender_special, :widget_render_special
   
