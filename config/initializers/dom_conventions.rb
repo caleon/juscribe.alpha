@@ -26,7 +26,9 @@ module ActionController::RecordIdentifier
     res = []
     if !opts[:include].blank?
       next_sym = opts[:include].pop
-      if record_or_class.is_a?(Class)
+      if next_sym.respond_to?(:display_name)
+        res << dom_class_helper(next_sym, prefix, :include => opts[:include])
+      elsif record_or_class.is_a?(Class)
         res << dom_class_helper(next_sym.to_s.classify.constantize, prefix, :include => opts[:include])
       else
         res << dom_class_helper(record_or_class.send(next_sym), prefix, :include => opts[:include])
@@ -42,9 +44,14 @@ module ActionController::RecordIdentifier
     opts = args.extract_options!
     prefix = args.shift
     sub_dom_id = nil
+    subarr = opts[:include].is_a?(Array) ? opts[:include] : [opts[:include]]
     if !opts[:include].blank?
-      subarr = opts[:include].is_a?(Array) ? opts[:include] : [opts[:include]]
-      sub_dom_id = dom_id(record.send(subarr.pop), :include => subarr)
+      next_sym = subarr.pop
+      if next_sym.respond_to?(:display_name)
+        sub_dom_id = dom_id(next_sym, :include => subarr)
+      else
+        sub_dom_id = dom_id(record.send(next_sym), :include => subarr)
+      end
     end
     [ prefix, sub_dom_id, singular_class_name(record), record.id ].compact * '-'
   end
