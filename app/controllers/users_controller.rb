@@ -6,13 +6,14 @@ class UsersController < ApplicationController
       
 
   def show
-    super(:include => [:permission, :placed_widgets, :comments, :events]) do |marker|
+    super(:include => [ :permission, :placed_widgets, :comments, :entries, :events ]) do |marker|
       case marker
       when :after_setup
         @page_title = "#{@user.display_name}"
         @widgets = @user.placed_widgets.sort_by(&:position)
         # TODO: write custom sql for widgetable
         @comments = @user.comments.find(:all, :limit => 5)
+        @entries = @user.entries.sort_by{|ev| -ev.created_at.to_i }
         @events = @user.events.sort_by {|ev| -ev.begins_at.to_i }
         @skin_file = @user.skin_file
         @layout_file = @user.layout_file

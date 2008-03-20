@@ -1,20 +1,7 @@
 module PicturesHelper
-  def default_user_image
-    "/images/default_user_image.jpg"
-  end
-
-  def default_user_image_thumb
-    "/images/default_user_image_thumb.jpg"
-  end
-
   def user_image_thumb_path( user_image = nil )
     return default_user_image_thumb unless user_image
     user_image.public_filename(:thumb)
-  end
-
-  def user_image_path( user_image = nil )
-    return default_user_image unless user_image
-    user_image.public_filename
   end
   
   def picture_path_for(picture, opts={})
@@ -36,14 +23,21 @@ module PicturesHelper
     instance_eval %{ #{opts[:prefix] ? "#{opts[:prefix]}_" : ''}#{depictable.path_name_prefix}_path(depictable.to_path.merge(opts[:params])) }
   end
   
+  def caption_for(picture, opts={})
+    content_tag(:span, picture.caption, opts.merge(:class => 'caption')) if picture.caption
+  end
+  
   def picture_for(record, opts={})
     includes = opts.delete(:include) || []
-    includes.push(:depictable) unless includes.last == :depictable
+    includes.push(record) if includes.last != record
+    with = opts.delete(:with) || {}
+    
     picture = record.primary_picture rescue record.pictures.first
     if picture
+      dom_class_str = [ dom_class(picture, :include => includes), with[:class] ].compact.join(' ')
+      dom_id_str = dom_id(picture, :include => includes)
       image_tag(picture.public_filename,
-                :class => dom_class(picture, :include => includes),
-                :id => dom_id(picture, :include => includes) )
+                { :class => dom_class_str, :id => dom_id_str, :alt => picture.caption } )
     else
       default_picture_for(record.class.class_name,
                           :class => dom_class(Picture, :include => includes) )
@@ -54,6 +48,6 @@ module PicturesHelper
   
   def default_picture_for(klass_name, html_opts={})
     file_path = [ klass_name.underscore, 'default.gif' ].join('/')
-    image_tag(file_path, html_opts)
+    image_tag(file_path, { :alt => "Default #{klass_name.humanize} picture" }.merge(html_opts))
   end
 end

@@ -23,8 +23,8 @@
 		<%= navi_el "Request Friendship", befriend_user_path(@user), { :method => :put } %>
 	<% end %>
 	<% if @user.editable_by?(viewer) %>
+		<%= navi_el 'Customize', user_widgets_path(@user.to_path(true)) %>
 		<%= navi_el 'Preferences', edit_user_path(@user) %>
-		<%= navi_el "Account", edit_password_user_path(@user) %>
 	<% end %>
 <% end %>
 	</ul>

@@ -10,20 +10,10 @@
 	
 			<div class="msm_main_column-a msm_column nopad">
 				<div id="msm_lead_widget" class="msm_module">
-				<% if lead_widget = @widgets.shift -%>
-					<% if lead_widget.primary_picture -%>
-						<%= link_to image_tag(lead_widget.primary_picture.file_path, :class => 'msm_lead_picture article-picture'), widgetable_path_for(lead_widget.widgetable) %>
-						<strong><%= lead_widget.primary_picture.caption %></strong>
-					<% end %>
-						<h2><%= link_to lead_widget.wid_name, widgetable_path_for(lead_widget.widgetable) %></h2>
-						<p><%= format_article(lead_widget.widgetable, :truncate => 300, :without_intro => true) %></p>
-						<%= byline_for lead_widget.widgetable %>
-						<% content_tag(:ul, :id => 'msm_lead_follow_ups') do -%>
-							<% lead_widget.widgetable.find_similar(3).each do |similar| -%>
-								<li><%= link_to similar.name, similar %></li>
-							<% end -%>
-						<% end if !lead_widget.widgetable.tags.empty? -%>
-				<% end -%>
+				<% if lead_widget = @widgets.shift %>
+					<%= render :partial => lead_widget.wid_partial(@user.layout_path, :lead),
+										 :object => lead_widget.widgetable %>
+				<% end %>
 				</div>
 			</div>
 	
@@ -34,7 +24,7 @@
 						<% @widgets.slice!(0, 3).each do |wid| -%>
 							<li>
 								<span>
-									<% if ((blog = wid.widgetable.blog) rescue false) %><span class="articleBlog"><%= blog.name %>:</span><% end %>
+									<% if ((blog = wid.widgetable.blog) rescue false) %><span class="articleBlog"><%= blog.short_name %>:</span><% end %>
 									<%= link_to wid.wid_name, widgetable_path_for(wid.widgetable) %>
 									<br />
 									<%= render :partial => wid.wid_partial(@user.layout_path, :line), :object => wid.widgetable %>
@@ -57,8 +47,8 @@
 			<div class="msm_main_column-ab msm_column">
 			<%# FIXME: THIS IS DONE SO I DONT HAVE TO WAIT FOR RSS CONNECTION EACH TIME %>
 			<% if true %>
-				<h3><span class="articleBlog">RSS:</span>From <a href="http://cdmjimmy.blogspot.com/">[Something Witty]</a> by <a href="#">James</a></h3>
-								<h4><a href="http://cdmjimmy.blogspot.com/2008/03/in-two-weeks-and-two-days.html">In Two Weeks And Two Days,</a></h4>
+				<h4><span class="articleBlog">RSS:</span>From <a href="http://cdmjimmy.blogspot.com/">[Something Witty]</a> by <a href="#">James</a></h4>
+								<h3><a href="http://cdmjimmy.blogspot.com/2008/03/in-two-weeks-and-two-days.html">In Two Weeks And Two Days,</a></h3>
 								<p class="articleContent">
 									I'll be home, in California again.<a href="http://bp3.blogger.com/_lUeWypH_FWU/R92LQm8y8rI/AAAAAAAAAsw/VXWEKrqjpgo/s1600-h/Huntington+Beach.jpg"><img src="http://bp3.blogger.com/_lUeWypH_FWU/R92LQm8y8rI/AAAAAAAAAsw/VXWEKrqjpgo/s320/Huntington+Beach.jpg" alt="" /></a>Not for good mind you, but it will be for the longest period since I left. A psuedo-vacation, if you will, since I'll be working at UCLA by day, and gallivanting around my old stomping grounds at night.I'm shocked, really. I can't believe I'm leaving. While I never felt completely comfortable <a href="http://cdmjimmy.blogspot.com/2008/03/when-i-grow-up.html">here</a>, I managed to find less and less to complain about-- some might even call it "adjusting." My experiences ranged from the mundane to the absurd, and while I never want to come back-- well, you can insert your favorite "life lessons" cliché [here]. Take a look at <a href="http://cdmjimmy.blogspot.com/2007/07/oil-and-water.html">one</a> of my first entries in T...
 								</p>
@@ -81,18 +71,15 @@
 		
 		<div class="msm_main_column-inner nobg">
 			<div class="msm_main_column-a msm_column">
-				<h3>From caleon's <a href="#">WORLD</a></h3>
-				<h4>History of Middle East in 10 minutes</h4>
-				<p class="articleContent">
-					Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-				</p>
+				<% this_wid = @widgets.detect {|wid| wid.position == 7 } %>
+				<%= render :partial => this_wid.wid_partial(@user.layout_path), :object => this_wid.widgetable, :locals => { :without_picture => true } %>
 			</div>
 			
 			<div class="msm_main_column-b msm_column msm_module">
 				<div class="msm_module-inner">
-					<h3>Thoughtlets</h3>
+					<h3>Thoughtlet Entries <%= link_to image_tag('feed-icon-14x14.png'), :format => 'xml' %></h3>
 					<ul>
-						<%= render :partial => 'entries/entry', :collection => @user.entries.find(:all, :limit => 5) %>
+						<%= render :partial => 'entries/entry', :collection => @entries %>
 					</ul>
 				</div>
 			</div>
@@ -100,7 +87,8 @@
 		
 		<div class="msm_main_column-inner">
 			<div class="msm_main_column-ab msm_column">
-				Blah
+				<%= other_wid = @widgets.detect{|wid| wid.position == 8 } %>
+				<%= render :partial => other_wid.wid_partial(@user.layout_path), :object => other_wid.widgetable %>
 			</div>
 		</div>
 	</div>
@@ -163,7 +151,7 @@
 			<div class="msm_module-inner">
 				<h3>Comments</h3>
 				<%= render :partial => 'comments/comment', :collection => @user.comments %>
-				<%= render :partial => 'comment_form' %>
+				<%= render :partial => 'comment_form' if logged_in? %>
 			</div>
 		</div>
 		

@@ -3,7 +3,6 @@
 <br />
 <%= render :partial => 'pictures/form' %>
 <br />
-<%# FIXME the following. This is getting to be a pain in the ass. %>
 <%= f.select :blog_id, @user.blogs.map{|b| [ b.name, b[:id] ] } %>
 <br />
 <% if @article.new_record? || @article.draft? %>

@@ -15,14 +15,16 @@
 	<div id="msm_main_column" class="msm_column">
 		<div class="msm_main_column-inner">			
 			
-			<p class="articleContent">
+			<a href="#" class="article_picture_link">
 				<%= picture_for(@article) %>
-				<%= format_article(@article) %>
-			</p>
+				<%= caption_for(@article.primary_picture) %>
+			</a>
+			<%= format_article(@article) %>
+			<%= render :partial => 'actions', :locals => { :article => @article } %>
 			<em>Published at <%= @article.published_at %></em>
 
 			<%= render :partial => 'comments/comment', :layout => 'comment', :collection => @article.comments %>
-			<%= render :partial => 'comment_form' %>
+			<%= render :partial => 'comment_form' if logged_in? %>
 		</div>
 	</div>
 	

@@ -39,7 +39,7 @@ class ClipsController < ApplicationController
         format.js { flash.now[:notice] = msg }
       end
     else
-      flash.now[:warning] = "There was an error clipping #{@widgetable.display_name}."
+      flash.now[:warning] = "There was an error clipping #{@widgetable.display_name}. #{@clip.errors.inspect}"
       respond_to do |format|
         format.html { render :action => 'show' }
         format.js { render :action => 'create_error' }

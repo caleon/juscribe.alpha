@@ -1,0 +1,17 @@
+<ul>
+<% @widgets.each do |wid| %>
+	<li>
+	<% form_for(:widget, wid, :url => place_user_widget_path(wid.to_path(:user)), :html => { :method => :put } ) do |f| %>
+		( <%= wid.position || 'x' %> )
+		<%= wid.display_name %> clipped <%= wid.widgetable.display_name %>
+	<% if !wid.placed? %>
+		<%= f.select :position, (1..10).map {|i| [i, i] } %>
+		<%= f.submit 'Place' %>
+	<% else %>
+		<%= link_to 'Unplace', unplace_user_widget_path(wid.to_path(:user)), :method => :put %> | 
+	<% end %>
+		<%= link_to 'Delete', user_widget_path(wid.to_path(:user)), :method => :delete, :confirm => "Are you sure you want to delete this widget?" %>
+	<% end %>
+	</li>
+<% end %>
+</ul>

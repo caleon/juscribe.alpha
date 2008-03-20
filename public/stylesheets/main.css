@@ -1,6 +1,10 @@
 #wrapper { margin: 0; padding: 0; }
 #header { position: relative; height: 100px; background: #000; }
 #header h1 { color: #fff; text-align: center; margin-top: 0; }
+
+.commentForm fieldset { margin: 0 9px 9px; }
+.commentForm textarea { height: 100px; }
+
 .navigation { overflow: hidden; }
 .navigation ul.navigationList { position: relative; }
 .navigation li.navigationEl { float: left; list-style-type: none; }
@@ -28,5 +32,5 @@
 #errorExplanation ul li{ font-size: 12px; list-style: square; }
 
 .userForm input { display: block; }
-.timestamp { font-weight: bold; color: #ccc; }
+.timestamp { font-weight: bold; color: #999; }
 strong.articleIntro { margin-right: 4px; }
