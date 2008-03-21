@@ -14,7 +14,8 @@
 			</div>
 	
 			<div class="msm_main_column-b msm_main_column">
-				<%= wrender :latest_articles, :collection => @widgets[0..3], :layout => :inner %>
+				<% collection = @widgets.select{|wid| wid.widgetable_type == 'Article'}[0..4].map{|wid| wid.widgetable} %>
+				<%= wrender :latest_articles, :collection => collection, :layout => :inner %>
 				<%= wrender :upcoming_events, :layout => :inner %>
 			</div>
 			<%= rounded_shim(:bottom) %>
@@ -33,7 +34,7 @@
 			</div>
 			
 			<div class="msm_main_column-b msm_main_column nopad">
-				<%= wrender :entries, :outer => { :class => "msm_main_column" }, :layout => :framed %>
+				<%= wrender :entries, :layout => :framed %>
 			</div>
 			<%= br_clear %>
 		</div>
@@ -47,6 +48,7 @@
 	
 	<div id="msm_side_column" class="msm_column">
 	<% with_options :layout => :framed do |framed| %>
+		<%= framed.wrender :motd if this_is_viewer? %>
 		<%= framed.wrender :friends %>
 		<%= framed.wrender %>
 		<%= framed.wrender :google_ads %>

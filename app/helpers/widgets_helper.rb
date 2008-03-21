@@ -19,6 +19,11 @@ module WidgetsHelper
       partial_path(widget.widgetable) + (opts[:kind] ? "_#{opts[:kind]}" : '') ].join('/')
   end
   
+  def custom_partial(path)
+    check_layoutable
+    [ layout_base_path, path ].join('/')
+  end
+  
   def wid_layout(layout=nil)
     return nil if layout == :none
     layout ||= 'widget'

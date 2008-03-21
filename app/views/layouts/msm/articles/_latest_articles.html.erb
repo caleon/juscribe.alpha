@@ -1,6 +1,8 @@
-<h3>Latest News <%= rss_link_for :articles, formatted_articles_path(@user, :format => :xml) %></h3>
+<% collection ||= user.articles.find(:all, :order => 'id DESC', :limit => 1) -%>
+<% user ||= nil %>
+<h3>Latest News <%= user ? rss_link_for(:articles, formatted_articles_path(user, :format => :xml)) : nil %></h3>
 <% content_tag(:ul, :id => 'msm_other_main_widgets') do -%>
-	<% user.articles.find(:all, :order => 'id DESC', :limit => 5).each do |art| %>
+	<% collection.each do |art| %>
 		<li>
 			<span>
 			<% if art.blog %>
@@ -10,4 +12,4 @@
 			</span>
 		</li>
 	<% end %>
-<% end if !@widgets.empty? -%>
+<% end -%>

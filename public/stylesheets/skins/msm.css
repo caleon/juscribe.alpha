@@ -240,7 +240,8 @@
 	}
 	
 	/* Why doesn't the <caption /> tag work yet? */
-	.msm_layout span.caption {
+	#msm_lead_widget span.caption,
+	#canvas.articles-show span.caption {
 		display: block;
 		position: absolute;
 		background-color: #000;

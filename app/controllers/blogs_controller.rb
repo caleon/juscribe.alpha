@@ -18,8 +18,15 @@ class BlogsController < ApplicationController
     return unless setup([:permission, :primary_article])
     find_opts = get_find_opts
     @articles = @blog.articles.find(:all, find_opts)
+    @layoutable = @blog
     respond_to do |format|
-      format.html
+      format.html do
+        if @blog.layout
+          render :template => @blog.layout_file(:show)
+        else
+          render :action => 'show'
+        end
+      end
       format.js
       format.xml
     end
