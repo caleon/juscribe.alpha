@@ -1,0 +1,9 @@
+<h3><%= link_to article.title, article_path(article.to_path) %></h3>
+<p class="articleContent">
+<% if !(without_picture ||= false) && article.primary_picture %>
+	<%= picture_for(article, :with => { :class => 'smallPic' }) %>
+	<%= caption_for(article.primary_picture) %>
+<% end %>
+	<%= format_article(article, :truncate => 500, :without_intro => true) %></p>
+</p>
+<%= byline_for article %>

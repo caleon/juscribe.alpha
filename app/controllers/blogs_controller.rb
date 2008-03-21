@@ -7,8 +7,16 @@ class BlogsController < ApplicationController
     return unless get_bloggable
     find_opts = get_find_opts
     @blogs = @bloggable.blogs.find(:all, find_opts.merge(:include => :primary_article))
+    @layoutable = @bloggable
+    @page_title = "Blogs by #{@bloggable.display_name}"
     respond_to do |format|
-      format.html
+      format.html do
+        if @bloggable.layout
+          render :template => @blogs.first.layout_file(:index) # FIXME: icky.
+        else
+          render :action => 'show'
+        end
+      end
       format.js
       format.xml
     end

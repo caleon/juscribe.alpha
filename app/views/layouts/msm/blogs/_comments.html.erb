@@ -1,3 +1,3 @@
 <h3>Comments</h3>
-<%= render :partial => 'comments/comment', :collection => @blog.comments.find(:all, :limit => 10) %>
+<%# render :partial => 'comments/comment', :collection => @blog.comments.find(:all, :limit => 10) %>
 <%= render :partial => 'users/comment_form' if logged_in? %>

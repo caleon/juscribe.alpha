@@ -46,7 +46,7 @@
 		text-decoration: none;
 	}
 	
-	.msm_layout a:hover img {
+	#msm_layout a:hover img {
 		border-color: #CA0002;
 	}
 	
@@ -139,6 +139,17 @@
 	
 	.msm_row.nobg {
 		background-color: transparent;
+	}
+			
+	.msm_layout #msm_header {
+		background: #fff;
+	/*	border-top: 14px solid blue; */
+		margin-bottom: 7px;
+	}
+	
+	.msm_layout #msm_header > .msm_row {
+		margin: 14px 18px;
+		padding: 0;
 	}
 	
 	#msm_main_column {
@@ -397,17 +408,6 @@
 	#canvas.articles-show span.timestamp {
 		color: #CA0002;
 		font-size: 88%;
-	}
-	
-	#canvas.articles-show #msm_header {
-		background: #fff;
-	/*	border-top: 14px solid blue; */
-		margin-bottom: 7px;
-	}
-	
-	#canvas.articles-show #msm_header > .msm_row {
-		margin: 14px 18px;
-		padding: 0;
 	}
 	
 	#canvas.articles-show .msm_row {
