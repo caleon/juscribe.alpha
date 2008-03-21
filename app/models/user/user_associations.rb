@@ -1,5 +1,5 @@
 class User < ActiveRecord::Base
-  has_many :articles, :dependent => :nullify
+  has_many :articles, :dependent => :nullify, :conditions => "published_date IS NOT NULL"
   has_many :drafts, :class_name => 'Article', :dependent => :nullify,
                     :conditions => "published_date IS NULL"
   has_many :owned_blogs, :class_name => 'Blog', :dependent => :nullify
