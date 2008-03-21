@@ -61,6 +61,6 @@ module LinkTagHelper
   end
   
   def tagarize_link(*link_abstracts)
-    link_abstracts.compact.map {|lnk| content_tag(:link, lnk.content, lnk.options) }.join("\r\n")
+    link_abstracts.compact.map {|lnk| tag(:link, lnk.options) }.join("\r\n")
   end
 end

@@ -1,5 +1,7 @@
 class User < ActiveRecord::Base
   has_many :articles, :dependent => :nullify
+  has_many :drafts, :class_name => 'Article', :dependent => :nullify,
+                    :conditions => "published_date IS NULL"
   has_many :owned_blogs, :class_name => 'Blog', :dependent => :nullify
   has_many :blogs, :as => :bloggable, :dependent => :nullify
   has_many :comments, :as => :commentable, :order => 'comments.id DESC'
