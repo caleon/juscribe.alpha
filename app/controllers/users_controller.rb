@@ -17,7 +17,7 @@ class UsersController < ApplicationController
     @layoutable = @user
     respond_to do |format|
       format.html do
-        if @user[:layout]
+        if @user.layout
           render :template => @user.layout_file(:show)
         else
           render :action => 'show'
