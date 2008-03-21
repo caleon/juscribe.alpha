@@ -1,4 +1,4 @@
-<h3><%= link_to article.title, article_path(article.to_path) %></h3>
+<h3><%= link_to article.title, article_path_for(article) %></h3>
 <p class="articleContent">
 <% if !(without_picture ||= false) && article.primary_picture %>
 	<%= picture_for(article, :with => { :class => 'smallPic' }) %>

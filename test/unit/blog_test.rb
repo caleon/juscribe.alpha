@@ -20,7 +20,8 @@ class BlogTest < ActiveSupport::TestCase
     assert_equal "TESTING", blog[:permalink]
     assert !blog.valid?
     blog.bloggable = users(:colin)
-    assert blog.valid?
+    blog.user = users(:colin)
+    assert blog.valid?, blog.errors.inspect
   end
   
   def test_blog_widget_content_formatting
