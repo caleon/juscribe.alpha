@@ -3,17 +3,22 @@
 <% add_style_file(@layoutable.skin_file) -%>
 <div id="msm_layout" class="msm_layout">
 	<div id="msm_header">
-		<div class="msm_column msm_column-a">
-			<span class="timestamp">updated by <%= @user.display_name %> at <%= @article.updated_at.to_s %></span>
-			<h2><%= @article.title %></h2>
+		<%= rounded_shim(:top) %>
+		<div class="msm_row">
+			<div class="msm_column msm_column-a">
+				<span class="timestamp">updated by <%= @user.display_name %> at <%= @article.updated_at.to_s %></span>
+				<h2><%= @article.title %></h2>
+			</div>
+			<div class="msm_column msm_column-b">
+				<%= @article.tags.map(&:to_s).join(', ') %>
+			</div>
 		</div>
-		<div class="msm_column msm_column-b">
-			<%= @article.tags.map(&:to_s).join(', ') %>
-		</div>
+		<%= rounded_shim(:bottom) %>
 	</div>
 	
 	<div id="msm_main_column" class="msm_column">
-		<div class="msm_row" id="msm_row-1">
+		<%= rounded_shim(:top) %>
+		<div class="last msm_row" id="msm_row-1">
 		<% if @article.primary_picture %>
 			<a href="#" class="article_picture_link">
 				<%= picture_for(@article) %>
@@ -27,6 +32,7 @@
 			<%= render :partial => 'comments/comment', :layout => 'comment', :collection => @article.comments %>
 			<%= render :partial => 'comment_form' if logged_in? %>
 		</div>
+		<%= rounded_shim(:bottom) %>
 	</div>
 	
 	<div id="msm_side_column" class="msm_column">

@@ -82,6 +82,40 @@
 		height: 100px;
 		width: auto;
 	}
+	
+	.msm_layout .msm_shim {
+		height: 4px;
+		overflow: hidden;
+		background-repeat: no-repeat;
+		background-color: #fff;
+	}
+	
+	.msm_layout .msm_shim > div {
+		height: 4px;
+		width: 4px;
+		overflow: hidden;
+		background-repeat: no-repeat;
+	}
+	
+	.msm_layout .msm_shim_top {
+		background-image: url(/images/skins/msm/corner_dg_TR.gif);
+		background-position: right top;
+	}
+	
+	.msm_layout .msm_shim_top > div {
+		background-image: url(/images/skins/msm/corner_dg_TL.gif);
+		background-position: left top;
+	}
+	
+	.msm_layout .msm_shim_bottom {
+		background-image: url(/images/skins/msm/corner_dg_BR.gif);
+		background-position: right bottom;
+	}
+	
+	.msm_layout .msm_shim_bottom > div {
+		background-image: url(/images/skins/msm/corner_dg_BL.gif);
+		background-position: left bottom;
+	}
 
 /* @end */
 
@@ -92,6 +126,10 @@
 		margin-bottom: 9px;
 	}
 	
+	.msm_row.last {
+		margin-bottom: 0;
+	}
+	
 	.msm_row.nobg {
 		background-color: transparent;
 	}
@@ -99,6 +137,7 @@
 	#msm_main_column {
 		float: left;
 		margin-right: 9px;
+		margin-bottom: 9px;
 		width: 616px;
 	}
 	
@@ -114,7 +153,7 @@
 	
 	#msm_footer {
 		clear: both;
-		height: 50px;
+		min-height: 50px;
 		background-color: #fff;
 	}
 	
@@ -218,6 +257,7 @@
 	#msm_lead_widget {
 		background-color: #F6F6F6;
 		padding: 18px;
+		margin-bottom: 9px;
 	}
 
 	/* @group Article Picture Set */
@@ -250,6 +290,23 @@
 		min-height: 250px;
 	}
 	
+	.msm_widget.regular {
+		padding: 0;
+		margin: 0;
+	}
+	
+	.msm_widget.regular > .msm_widget-inner {
+		margin: 14px 18px;
+	}
+	
+	.msm_main_column.msm_with_reg_wid {
+		padding: 0;
+	}
+		
+	#msm_row-3 > .msm_main_column-a {
+		width: 298px;
+	}
+	
 	#msm_side_column .msm_widget {
 		overflow: hidden;
 		background-color: #fff;
@@ -267,7 +324,7 @@
 	
 	.msm_widget.framed .msm_widget-inner {
 		border: 1px solid #ccc;
-		margin: 9px;
+		margin: 5px 9px;
 		padding: 9px;
 	}
 	
@@ -337,9 +394,13 @@
 	
 	#canvas.articles-show #msm_header {
 		background: #fff;
-		border-top: 14px solid blue;
+	/*	border-top: 14px solid blue; */
 		margin-bottom: 7px;
-		padding: 18px;
+	}
+	
+	#canvas.articles-show #msm_header > .msm_row {
+		margin: 14px 18px;
+		padding: 0;
 	}
 	
 	#canvas.articles-show .msm_row {

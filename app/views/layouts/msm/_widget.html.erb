@@ -1,5 +1,7 @@
-<div class="msm_widget" id="msm_widget-<%= @wcount %>">
+<div class="regular msm_widget" id="msm_widget-<%= @wcount %>">
+	<%= rounded_shim(:top) %>
 	<div class="msm_widget-inner">
 		<%= yield %>
 	</div>
+	<%= rounded_shim(:bottom) %>
 </div>
