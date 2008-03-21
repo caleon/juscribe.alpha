@@ -1,9 +1,13 @@
 <h3>Latest News</h3>
 <% content_tag(:ul, :id => 'msm_other_main_widgets') do -%>
-	
+	<% user.articles.find(:all, :order => 'id DESC', :limit => 5).each do |art| %>
 		<li>
 			<span>
-
+			<% if art.blog %>
+				<span class="articleBlog"><%= art.blog.short_name %></span>
+			<% end %>
+				<%= link_to art.title, article_path_for(art) %> <span class="timeago"><%= time_ago_in_words(art.updated_at) %></span>
 			</span>
 		</li>
+	<% end %>
 <% end if !@widgets.empty? -%>

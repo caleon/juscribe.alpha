@@ -53,6 +53,10 @@
 	.msm_layout span.timeago {
 		color:  #CA0002;
 	}
+		
+	.msm_layout span.timeago {
+		font-size: 88%;
+	}
 	
 	.msm_layout ul {
 		padding: 0;
@@ -62,11 +66,6 @@
 	.msm_layout .msm_column li > span {
 		display: block;
 		padding-left: 6px;
-	}
-	
-	.msm_layout span.timeago {
-		margin-left: 4px;
-		font-size: 88%;
 	}
 	
 	.msm_layout form.commentForm fieldset {
@@ -216,7 +215,6 @@
 	.msm_layout span.articleBlog {
 		font-weight: bold;
 		color: #999;
-		margin-right: 4px;
 	}
 	
 	/* Embedded images within a post */
