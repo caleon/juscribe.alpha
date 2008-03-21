@@ -1,36 +1,148 @@
-#wrapper { margin: 0; padding: 0; }
-#header { position: relative; height: 100px; background: #000; }
-#header h1 { color: #fff; text-align: center; margin-top: 0; }
+#wrapper {
+	margin: 0;
+	padding: 0;
+}
 
-.commentForm fieldset { margin: 0 9px 9px; }
-.commentForm textarea { height: 100px; }
+#header {
+	position: relative;
+	height: 100px;
+	background: #000;
+}
 
-.navigation { overflow: hidden; }
-.navigation ul.navigationList { position: relative; }
-.navigation li.navigationEl { float: left; list-style-type: none; }
-.navigation li.navigationEl a { display: block; padding: 0.5em; height: 2em; line-height: 2em; }
-#header .navigation { position: absolute; bottom: 0; background-color: #00f; padding: 0 2em; }
-#header .navigation li.navigationEl { margin-right: 2em; }
-#header .navigation li.navigationEl.last { margin-right: 0; }
-#header .navigation li.navigationEl a { color: #fff; font-weight: bold; }
-.sub.navigation { padding: 0 2em; }
-.sub.navigation li.navigationEl { margin-right: 2em; }
-.sub.navigation li.navigationEl.last { margin-right: 0; }
-.sub.navigation li.navigationEl a { color: #000; font-weight: bold; }
+#header h1 {
+	color: #fff;
+	text-align: center;
+	margin-top: 0;
+}
 
-#canvas { padding: 1em 2em; }
-.flashBox { border: 6px solid; background: no-repeat scroll 10px center; margin: 0 auto 1em; min-height: 2.5em; padding: 1em 1em 1em 4em; }
-#flashWarning { border-color: #D6E365; background-color: #EFFF72; }
-#flashNotice { border-color: #D6E365; background-color: #EFFF72; }
+.navigation {
+	overflow: hidden;
+}
 
-#footer { }
+.navigation ul.navigationList {
+	position: relative;
+}
 
-.fieldWithErrors{ padding: 2px; background-color: red; display: table; }
-#errorExplanation{ width:400px; border: 2px solid red; padding: 7px; padding-bottom: 12px; margin-bottom: 20px; background-color: #f0f0f0; }
-#errorExplanation h2{ text-align: left; font-weight: bold; padding: 5px 5px 5px 15px; font-size: 12px; margin: -7px; background-color: #c00; color: #fff; }
-#errorExplanation p{ color: #333; margin-bottom: 0; padding: 5px; }
-#errorExplanation ul li{ font-size: 12px; list-style: square; }
+.navigation li.navigationEl {
+	float: left;
+	list-style-type: none;
+}
 
-.userForm input { display: block; }
-.timestamp { font-weight: bold; color: #999; }
-strong.articleIntro { margin-right: 4px; }
+.navigation li.navigationEl a {
+	display: block;
+	padding: 0.5em;
+	height: 2em;
+	line-height: 2em;
+}
+
+#header .navigation {
+	position: absolute;
+	bottom: 0;
+	background-color: #00f;
+	padding: 0 2em;
+}
+
+#header .navigation li.navigationEl {
+	margin-right: 2em;
+}
+
+#header .navigation li.navigationEl.last {
+	margin-right: 0;
+}
+
+#header .navigation li.navigationEl a {
+	color: #fff;
+	font-weight: bold;
+}
+
+.sub.navigation {
+	padding: 0 2em;
+}
+
+.sub.navigation li.navigationEl {
+	margin-right: 2em;
+}
+
+.sub.navigation li.navigationEl.last {
+	margin-right: 0;
+}
+
+.sub.navigation li.navigationEl a {
+	color: #000;
+	font-weight: bold;
+}
+
+#canvas {
+	
+}
+
+.flashBox {
+	border: 6px solid;
+	background: no-repeat scroll 10px center;
+	margin: 0 auto 9px;
+	min-height: 30px;
+	padding: 12px 12px 12px 48px;
+}
+
+#flashWarning {
+	border-color: #D6E365;
+	background-color: #EFFF72;
+}
+
+#flashNotice {
+	border-color: #D6E365;
+	background-color: #EFFF72;
+}
+
+#footer {
+	
+}
+
+.fieldWithErrors {
+	padding: 2px;
+	background-color: red;
+	display: table;
+}
+
+#errorExplanation {
+	width: 400px;
+	border: 2px solid red;
+	padding: 7px;
+	padding-bottom: 12px;
+	margin-bottom: 20px;
+	background-color: #f0f0f0;
+}
+
+#errorExplanation h2 {
+	text-align: left;
+	font-weight: bold;
+	padding: 5px 5px 5px 15px;
+	font-size: 12px;
+	margin: -7px;
+	background-color: #c00;
+	color: #fff;
+}
+
+#errorExplanation p {
+	color: #333;
+	margin-bottom: 0;
+	padding: 5px;
+}
+
+#errorExplanation ul li {
+	font-size: 12px;
+	list-style: square;
+}
+
+.userForm input {
+	display: block;
+}
+
+.timestamp {
+	font-weight: bold;
+	color: #999;
+}
+
+strong.articleIntro {
+	margin-right: 4px;
+}

@@ -3,14 +3,18 @@
 #canvas {
 	overflow: hidden;
 	background-color: #dadada;
-	padding: 12px 0;
+}
+
+.flashBox {
+	width: 893px;
+	margin-bottom: 0;
 }
 
 /* @group General */
 
 	#msm_layout {
 		width: 965px;
-		margin: 0 auto;
+		margin: 12px auto;
 	}
 	.msm_layout h2,
 	.msm_layout h3,
@@ -67,6 +71,10 @@
 	
 	.msm_layout form.commentForm fieldset {
 		background-color: #F5FAFE;
+	}
+	
+	.msm_layout form.commentForm textarea {
+		height: 100px;
 	}
 	
 	/* This can be made to specify an article pic */
@@ -310,9 +318,13 @@
 
 /* @group Users-Show */
 
+	#canvas.users-show form.commentForm fieldset {
+		margin: 0 9px 9px;
+	}
 	#canvas.users-show form.commentForm textarea {
 		width: 200px;
 	}
+	
 
 /* @end */
 

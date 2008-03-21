@@ -13,7 +13,7 @@
 	</div>
 	
 	<div id="msm_main_column" class="msm_column">
-		<div class="msm_main_column-inner">			
+		<div class="msm_row" id="msm_row-1">
 		<% if @article.primary_picture %>
 			<a href="#" class="article_picture_link">
 				<%= picture_for(@article) %>
@@ -30,22 +30,9 @@
 	</div>
 	
 	<div id="msm_side_column" class="msm_column">
-		<div class="msm_module">
-			<div class="msm_module-inner">
-				<h3>Google Ads</h3>
-
-			</div>
-		</div>
-		<div class="msm_module">
-			<div class="msm_module-inner">
-				<h3>Friends</h3>
-				<ul id="msm_friends" class="msm_media">
-					<%= render :partial => 'users/friend', :collection => @user.friends, :locals => { :tag => :li } %>
-				</ul>
-				<div class="msm_module-footer">
-					<%= link_to 'View all Friends', friends_user_path(@user) %>
-				</div>
-			</div>
-		</div>
+	<% with_options :layout => :framed do |framed| %>
+		<%= framed.wrender :google_ads %>
+		<%= framed.wrender :friends %>
+	<% end %>
 	</div>
 </div>

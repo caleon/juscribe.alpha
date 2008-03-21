@@ -1,7 +1,7 @@
 <div class="sub navigation">
 	<ul class="navigationList">
-<% if logged_in? && @user && !@user.new_record? %>
-	<% if this_is_viewer? %>
+<% if @user && !@user.new_record? %>
+	<% if logged_in? && this_is_viewer? %>
 		<%= navi_el "New Post", new_article_path(@user) %>
 	<% end %>
 		<%= navi_el "List", articles_path(@user) %>
