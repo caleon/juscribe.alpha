@@ -1,73 +1,70 @@
 module WidgetsHelper
   
-  def valid_widget_keys
-    [ :events, :entries, :friends, :articles, :comments, :pictures, :galleries ]
-  end
-  
-  def wcommon_locals(hash={})
-    { :user => hash.delete(:user) || User.find_by_id(hash.delete(:user_id)) ||
-      @user || User.find_by_id(@layoutable[:user_id]), :position => @wcount }.merge(hash)
-  end
-  
   def layout_base_path(layout_name=nil)
     [ '/layouts', layout_name || @layoutable.layout ].compact.join('/')
   end
   
-  def wid_partial_for(widget, opts={})
-    check_layoutable
-    [ layout_base_path,
-      partial_path(widget.widgetable) + (opts[:kind] ? "_#{opts[:kind]}" : '') ].join('/')
-  end
-  
-  def custom_partial(path)
+  def custom_partial(path) # Is this used? I think I'll need it.
     check_layoutable
     [ layout_base_path, path ].join('/')
   end
   
-  def wid_layout(layout=nil)
+  def widget_layout(layout=nil)
     return nil if layout == :none
     layout ||= 'widget'
     [ layout_base_path, layout.to_s ].join('/')
   end
   
-  # wrender :rss, :url => 'http://blahblah.com'
-  # wrender :entries
-  # wrender :entries, :kind => :latest
-  # wrender :entries, :kind => :latest, :limit => 5
+  def increment_skippables
+    [ :motd_message, :rss_item, :google_ads ]
+  end
+  
   def widget_render(*args)
     check_layoutable
-    @wcount ||= -1
-    @wcount += 1    
+    @wcount ||= 0
+    @widgets ||= []
+
     opts = args.extract_options!
-    case var = args.first
-    when Symbol # :events, :entries, :friends, :comments
-      opts[:model] = 'rss_item' if var == :rss_item
-      opts[:model] = 'user' if [ :events, :entries, :friends, :comments ].include?(var)
-      wrender_special var, opts
+    kind = opts[:kind] ? "_#{opts[:kind]}" : ""
+    sym_or_wid = args.shift
+
+    case sym_or_wid
     when Widget
-      render :partial => wid_partial_for(var, :kind => opts[:kind]),
-             :locals => wcommon_locals.merge(:widget => var,
-                                            :"#{var.widgetable_type.underscore}" => var.widgetable).merge(opts),
-             :layout => wid_layout(opts[:layout])
-    when nil # wrender
-      orig_count = @wcount
-      @wcount -= 1
-      wrender(@widgets[orig_count], opts) unless @widgets[orig_count].nil?
-    end
+      @wcount += 1
+      instance_name = sym_or_wid.widgetable_type.underscore
+      render :partial => "#{instance_name.pluralize}/#{instance_name}#{kind}",
+             :object => sym_or_wid.widgetable,
+             :locals => { :widget => sym_or_wid }.merge(opts),
+             :layout => widget_layout(opts[:layout])
+    when Symbol
+      @wcount += 1 unless increment_skippables.include?(sym_or_wid)
+      instance_name = @layoutable.class.class_name.underscore
+      render :partial => path_from_sym(sym_or_wid, opts[:kind]),
+             :object => params[:object] ||
+                        (@layoutable.send(sym_or_wid) if @layoutable.respond_to?(sym_or_wid)),
+             :locals => { :"#{instance_name}" => @layoutable  }.merge(opts),
+             :layout => widget_layout(opts[:layout])
+    when nil
+      wrender(@widgets[@wcount], opts) unless @widgets[@wcount].nil?
+    else
+      raise "Invalid argument to #wrender. Expected Widget or Symbol or nil" if RAILS_ENV == 'development'
+    end  
   end
   alias_method :wrender, :widget_render
-    
-  def widget_render_special(method, opts={})
-    check_layoutable
-    layout = opts.delete(:layout)
-    prefix, *rest = method.to_s.split('_')
-    model = opts.delete(:model) || rest.join('_')
-    model = method.to_s if model.blank?
-    path = [ layout_base_path, model.pluralize, method.to_s ].join('/')
-    render :partial => path, :locals => wcommon_locals.merge(opts),
-                             :layout => wid_layout(layout)
+  
+  def path_from_sym(sym, kind=nil)
+    instance_name = @layoutable.class.class_name.underscore
+    kind = "_#{kind}" if kind
+    if @layoutable.respond_to?(sym)
+      "#{instance_name.pluralize}/#{sym}#{kind}"
+    elsif (sym.to_s.singularize.classify.constantize rescue false)
+      "#{sym.to_s.pluralize}/#{sym.to_s}#{kind}"
+    else
+      method, dir = sym.to_s.match(/^[^_]+_(.*)$/).to_a
+      dir = dir ? dir.pluralize : 'main'
+      [ dir.pluralize, "#{method}#{kind}" ].join('/')
+    end
   end
-  alias_method :wrender_special, :widget_render_special
   
   def check_layoutable
     raise LayoutError, "@layoutable instance variable not set." unless @layoutable; true

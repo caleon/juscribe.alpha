@@ -1,5 +1,8 @@
 class User < ActiveRecord::Base
-  has_many :articles, :dependent => :nullify, :conditions => "published_date IS NOT NULL"
+  has_many :articles, :dependent => :nullify, :conditions => "published_date IS NOT NULL",
+           :order => 'articles.id DESC'
+  has_many :latest_articles, :class_name => 'Article', :conditions => "published_date IS NOT NULL",
+           :order => 'articles.id DESC', :limit => 10
   has_many :drafts, :class_name => 'Article', :dependent => :nullify,
                     :conditions => "published_date IS NULL"
   has_many :owned_blogs, :class_name => 'Blog', :dependent => :nullify
@@ -10,6 +13,8 @@ class User < ActiveRecord::Base
   has_one :latest_entry, :class_name => 'Entry', :order => 'entries.id DESC'
   has_many :songs, :dependent => :nullify
   has_many :events, :dependent => :nullify, :order => 'events.begins_at DESC'
+  has_many :upcoming_events, :class_name => 'Event', :order => 'events.begins_at DESC',
+                             :limit => 10
   has_many :projects, :dependent => :nullify
   has_many :messages, :foreign_key => 'recipient_id', :dependent => :nullify,
            :order => 'messages.id DESC' do
@@ -19,6 +24,7 @@ class User < ActiveRecord::Base
            :order => 'messages.id DESC'
   has_many :owned_taggings, :class_name => 'Tagging', :dependent => :nullify
   has_many :owned_pictures, :class_name => 'Picture', :dependent => :nullify
+  has_many :latest_pictures, :class_name => 'Picture', :order => 'pictures.id DESC', :limit => 10
   has_many :galleries, :order => 'galleries.id DESC'
   has_many :permission_rules, :order => 'permission_rules.id DESC'
   has_many :pictures, :as => :depictable, :order => :position, :dependent => :nullify

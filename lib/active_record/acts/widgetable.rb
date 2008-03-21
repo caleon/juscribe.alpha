@@ -34,7 +34,7 @@ module ActiveRecord::Acts::Widgetable #:nodoc:
   end
 
   module InstanceMethods
-    
+    # TODO: Create descriptions field in widgets table
     def clip_for(user)
       self.clips.find_by_user_id(user.id) rescue nil
     end

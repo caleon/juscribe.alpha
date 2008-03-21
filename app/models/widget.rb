@@ -30,7 +30,8 @@ class Widget < ActiveRecord::Base
   end
   
   def locals
-    { :"#{self.widgetable_type.underscore}" => self.widgetable }
+    { :"#{self.widgetable_type.underscore}" => self.widgetable,
+      :widget                               => self }
   end
   
   def placed?; self.position?; end

@@ -1,0 +1,4 @@
+<h3>Thoughtlet Entries <%= rss_link_for(:user, formatted_user_entries_path(user.to_path(true).merge(:format => :xml)) ) %></h3>
+<ul>
+	<%= render :partial => 'entries/entry', :collection => entries %>
+</ul>

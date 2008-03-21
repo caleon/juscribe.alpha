@@ -1,8 +1,8 @@
-<% content_tag_for(:li, event) do %>
-	<span>
-		<%= link_to event.name, user_event_path(event.user, event) %> 
-	<% if event.begins_at %>
-		<span class="timestamp"><%= event.begins_at.to_s(:concise) %></span>
-	<% end %>
-	</span>
+<h3><%= link_to event.name, user_event_path(event.user, event) %></h3>
+<h5><%= event.location %></h5>
+<% if event.begins_at %>
+	<span class="timestamp"><%= event.begins_at.to_s(:concise) %></span>
 <% end %>
+<p class="eventContent">
+	<%=h event.content %>
+</p>

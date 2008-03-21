@@ -14,8 +14,7 @@
 			</div>
 	
 			<div class="msm_main_column-b msm_main_column">
-				<% collection = @widgets.select{|wid| wid.widgetable_type == 'Article'}[0..4].map{|wid| wid.widgetable} %>
-				<%= wrender :latest_articles, :collection => collection, :layout => :inner %>
+				<%= wrender :latest_articles, :layout => :inner %>
 				<%= wrender :upcoming_events, :layout => :inner %>
 			</div>
 			<%= rounded_shim(:bottom) %>
@@ -48,7 +47,7 @@
 	
 	<div id="msm_side_column" class="msm_column">
 	<% with_options :layout => :framed do |framed| %>
-		<%= framed.wrender :motd if this_is_viewer? %>
+		<%= framed.wrender :motd_message if this_is_viewer? %>
 		<%= framed.wrender :friends %>
 		<%= framed.wrender %>
 		<%= framed.wrender :google_ads %>

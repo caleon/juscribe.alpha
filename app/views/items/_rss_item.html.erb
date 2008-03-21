@@ -10,15 +10,16 @@
 		Sun, 16 Mar 2008 14:07:00 -0700 | 
 		<a href="http://cdmjimmy.blogspot.com/2008/03/in-two-weeks-and-two-days.html">Source</a>
 	</small>
-	
+
+<%# FIXME WHEN READY %>
 <% else %>
 
-	<% feed_item = parseFeed(url) %>
-	<h3><span class="articleBlog">RSS:</span>From <%= link_to feed_item.feed_title, feed_item.feed_link %> by <%= feed_item.item_author %></h3>
-	<h4><%= link_to feed_item.item_title, feed_item.item_link %></h4>
-	<p class="articleContent">
-		<%= truncate sanitize(feed_item.item_content, :tags => %w(a img)), 1000 %>
-	</p>
-	<%= byline_for feed_item %>
-	
+<% rss_item = parseFeed(url) -%>
+<h3><span class="articleBlog">RSS:</span>From <%= link_to rss_item.feed_title, rss_item.feed_link %> by <%= rss_item.item_author %></h3>
+<h4><%= link_to rss_item.item_title, rss_item.item_link %></h4>
+<p class="articleContent">
+	<%= truncate sanitize(rss_item.item_content, :tags => %w(a img code blockquote )), 1000 %>
+</p>
+<%= byline_for rss_item %>
+
 <% end %>
