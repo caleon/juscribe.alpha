@@ -4,6 +4,11 @@
 		<%= f.label :name %>
 		<%= f.text_field :name %>
 		<br />
+		<%= f.label :short_name %>
+		<%= f.text_field :short_name %>
+		<br />
 		<%= render :partial => 'form', :locals => { :f => f } %>
+		
+		<%= f.submit %>
 	</fieldset>
 <% end %>
