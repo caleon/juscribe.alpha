@@ -29,20 +29,8 @@ class Widget < ActiveRecord::Base
     (self[:name] ? "#{self[:name]}: " : "") + (self.widgetable.name rescue self.widgetable.title)
   end
   
-  def wid_name
-    self.widgetable.name rescue nil
-  end
-  
-  def wid_content
-    self.widgetable.content
-  rescue
-    self.widgetable.body rescue nil
-  end
-  
-  def wid_user
-    self.widgetable.user
-  rescue
-    self.widgetable.owner rescue nil # maybe also #creator
+  def locals
+    { :"#{self.widgetable_type.underscore}" => self.widgetable }
   end
   
   def placed?; self.position?; end
