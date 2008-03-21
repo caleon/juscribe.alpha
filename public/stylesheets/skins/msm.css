@@ -28,6 +28,7 @@
 	}
 	
 	.msm_layout h3 {
+		position: relative; /* For positioned RSS icon */
 		font-size: 120%;
 	}
 	
@@ -52,6 +53,12 @@
 	.msm_layout a:hover,
 	.msm_layout span.timeago {
 		color:  #CA0002;
+	}
+	
+	.msm_layout .rss_link {
+		position:  absolute;
+		top:  0;
+		right: 0;
 	}
 		
 	.msm_layout span.timeago {
