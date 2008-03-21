@@ -27,7 +27,7 @@ class Article < ActiveRecord::Base
   end
   
   def title=(str)
-    self[:title] = str
+    self[:title] = str.strip
     make_permalink
   end
   
@@ -94,6 +94,7 @@ class Article < ActiveRecord::Base
   
   def self.permalink_for(name)
     str = name.gsub(/['"]+/i, '').gsub(/[^a-z0-9]+/i, '-').gsub(/-{2,}/, '-').gsub(/^-/, '').gsub(/-$/, '')
+    str.strip!
     str.chop! if str.last == '-'
     str
   end
