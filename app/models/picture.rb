@@ -95,8 +95,8 @@ class Picture < ActiveRecord::Base
       raise InvalidCropRect unless par.valid_with?(img.width, img.height)
       self.temp_path = write_to_temp_file(filename)
       img.with_crop(*par.reveal) do |cropped_img|
-        if par[:resize_to_stencil] == 1.0
-          cropped_img.resize(par[:stencil_width], par[:stencil_height]) do |crop_resized_img|
+        if par[:resize_to_stencil].to_i == 1
+          cropped_img.resize(par[:stencil_width].to_i, par[:stencil_height].to_i) do |crop_resized_img|
             crop_resized_img.save temp_path
             callback_with_args :after_resize, crop_resized_img
           end

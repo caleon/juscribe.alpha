@@ -108,6 +108,7 @@
 	}
 	
 	.msm_layout .msm_shim_bottom {
+		clear: both;
 		background-image: url(/images/skins/msm/corner_dg_BR.gif);
 		background-position: right bottom;
 	}
@@ -250,7 +251,7 @@
 
 /* @group Widget */
 	
-	.msm_widget li {
+	.msm_widget-inner li {
 		margin-bottom: 9px;
 	}
 	
