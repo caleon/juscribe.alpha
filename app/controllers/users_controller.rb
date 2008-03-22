@@ -6,7 +6,7 @@ class UsersController < ApplicationController
       
 
   def show
-    return unless setup([ :permission, :placed_widgets, :comments, :entries, :events ])
+    return unless setup([ :permission, :placed_widgets, :comments ])
     @page_title = "#{@user.display_name}"
     @widgets = @user.placed_widgets.sort_by(&:position)
     # TODO: write custom sql for widgetable

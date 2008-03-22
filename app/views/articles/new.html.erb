@@ -2,6 +2,7 @@
 	<fieldset>
 		<legend>Post a new article</legend>
 		<%= f.label :title %>
+		<%= error_message_on @article, :title %>
 		<%= f.text_field :title %>
 		<br />
 		<%= render :partial => 'form', :locals => { :f => f } %>

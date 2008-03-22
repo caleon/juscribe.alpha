@@ -1,4 +1,7 @@
-/* @override http://localhost:3000/stylesheets/users/msm.css?1206045027 */
+/* @override 
+	http://localhost:3000/stylesheets/users/msm.css?1206045027
+	http://localhost:3000/stylesheets/skins/msm.css?1206077030
+*/
 
 #canvas {
 	overflow: hidden;
@@ -147,7 +150,7 @@
 		margin-bottom: 7px;
 	}
 	
-	.msm_layout #msm_header > .msm_row {
+	#msm_layout #msm_header > .msm_row {
 		margin: 14px 18px;
 		padding: 0;
 	}
@@ -393,10 +396,14 @@
 
 /* @group Users-Show */
 
-	#canvas.users-show form.commentForm fieldset {
+	#canvas.users-show form.commentForm fieldset,
+	#canvas.blogs-index form.commentForm fieldset,
+	#canvas.blogs-show form.commentForm fieldset {
 		margin: 0 9px 9px;
 	}
-	#canvas.users-show form.commentForm textarea {
+	#canvas.users-show form.commentForm textarea,
+	#canvas.blogs-index form.commentForm textarea,
+	#canvas.blogs-show form.commentForm textarea {
 		width: 200px;
 	}
 	

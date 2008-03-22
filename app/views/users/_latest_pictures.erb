@@ -7,6 +7,6 @@
 <% end %>
 </ul>
 <div class="msm_widget-footer">
-	<%= link_to 'View all Pictures', '#' %>
+	<%= link_to 'View all pictures', user_pictures_path(user.to_path(true)) %>
 	<%# FIXME: the following is for user's depictables..., user_pictures_path() %>
 </div>

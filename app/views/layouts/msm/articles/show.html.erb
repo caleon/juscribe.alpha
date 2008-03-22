@@ -1,4 +1,4 @@
-<% set_meta_keywords!(@user.name_and_nick, @article.title, @article.blog.name) -%>
+<% set_meta_keywords!(@user.name_and_nick, @article.title, (@article.blog.name rescue nil)) -%>
 <% set_link_author!(@user) -%>
 <% add_style_file(@layoutable.skin_file) -%>
 <div id="msm_layout" class="msm_layout">
@@ -30,17 +30,18 @@
 			
 			<%= render :partial => 'actions', :locals => { :article => @article } %>
 			<% if @article.published? %><em>Published at <%= @article.published_at %></em><% end %>
-
-			<%= render :partial => 'comments/comment', :layout => 'comment', :collection => @article.comments %>
-			<%= render :partial => 'comment_form' if logged_in? %>
+			
+			<%= wrender :comments, :layout => :none %>
 		</div>
 		<%= rounded_shim(:bottom) %>
 	</div>
 	
 	<div id="msm_side_column" class="msm_column">
 	<% with_options :layout => :framed do |framed| %>
+		<%= framed.wrender :user %>
+		<%= framed.wrender :pictures if @article.primary_picture %>
 		<%= framed.wrender :google_ads %>
-		<%= framed.wrender :friends %>
+		<%= framed.wrender 'blogs/latest_articles', :blog => @article.blog if @article.blog %>
 	<% end %>
 	</div>
 </div>

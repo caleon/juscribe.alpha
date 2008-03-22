@@ -7,6 +7,7 @@ class User < ActiveRecord::Base
                     :conditions => "published_date IS NULL"
   has_many :owned_blogs, :class_name => 'Blog', :dependent => :nullify
   has_many :blogs, :as => :bloggable, :dependent => :nullify
+  def all_blogs; (owned_blogs + blogs).uniq; end
   has_many :comments, :as => :commentable, :order => 'comments.id DESC'
   has_many :owned_comments, :class_name => 'Comment', :dependent => :nullify
   has_many :entries, :dependent => :nullify, :order => 'entries.id DESC'

@@ -24,6 +24,7 @@ module PicturesHelper
   end
   
   def caption_for(picture, opts={})
+    return '' if !(picture && picture.caption)
     content_tag(:span, picture.caption, opts.merge(:class => 'caption')) if picture && picture.caption
   end
   

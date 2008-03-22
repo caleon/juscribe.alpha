@@ -1,0 +1,3 @@
+<h4>Author</h4>
+<h3><%= link_to user.name_and_nick, user %></h3>
+<%= link_to(picture_for(user), user, :alt => user.nick) if user.primary_picture %>

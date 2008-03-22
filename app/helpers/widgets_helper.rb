@@ -44,8 +44,18 @@ module WidgetsHelper
                         (@layoutable.send(sym_or_wid) if @layoutable.respond_to?(sym_or_wid)),
              :locals => { :"#{instance_name}" => @layoutable  }.merge(opts),
              :layout => widget_layout(opts[:layout])
+    when String
+      @wcount += 1
+      render :partial => sym_or_wid, :locals => opts, :layout => widget_layout(opts[:layout])
     when nil
-      wrender(@widgets[@wcount], opts) unless @widgets[@wcount].nil?
+      if @widgets[@wcount]
+        wrender(@widgets[@wcount], opts)
+      elsif @layoutable.is_a?(User)
+        render :partial => "widgets/vacant", :layout => widget_layout(opts[:layout]),
+               :locals => { :user => @layoutable, :position => (@wcount + 1) }
+      else
+        render :partial => path_from_sym(:google_ad), :layout => widget_layout
+      end
     else
       raise "Invalid argument to #wrender. Expected Widget or Symbol or nil" if RAILS_ENV == 'development'
     end  

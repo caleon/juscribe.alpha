@@ -23,11 +23,11 @@ module MetaTagHelper
   def meta_keywords_tag; tagarize_meta metas[:keywords]; end
   def set_meta_keywords!(*keywords)
     meta_key_words_array = keywords
-    set_meta!(:keywords, :content => meta_keywords_array.join(', '))
+    set_meta!(:keywords, :content => meta_keywords_array.compact.join(', '))
   end
   def add_meta_keyword!(keyword)
     meta_keywords_array << keyword
-    set_meta!(:keywords, :content => meta_keywords_array.join(', '))
+    set_meta!(:keywords, :content => meta_keywords_array.compact.join(', '))
   end
 
   def meta_tags; tagarize_meta(*metas.values); end

@@ -49,9 +49,12 @@ class Article < ActiveRecord::Base
   def published?; self.published_time? && self.published_date?; end
   def publish!
     unless self.published?
-      self.published_date, self.published_time = [ Date.today, Time.now ]
+      publish
       self.save!
     end
+  end
+  def publish
+    self.published_date, self.published_time = [ Date.today, Time.now ] unless self.published?
   end
   def unpublish!
     unless self.draft?
@@ -64,7 +67,7 @@ class Article < ActiveRecord::Base
     self.published_date.to_formatted_s(:rfc822) + ', ' + self.published_time.to_s(:time)
   end
   def publish=(val) # This is for automatically setting published fields from form data.
-    self.publish! if [ "Publish", "yes", "Yes", "y", "Y", "1", 1, "true", true].include?(val)
+    self.publish if [ "Publish", "yes", "Yes", "y", "Y", "1", 1, "true", true].include?(val)
   end
     
   def widgetable?; self.published?; end

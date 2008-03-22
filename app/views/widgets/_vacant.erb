@@ -1,0 +1,4 @@
+<p class="widgetContent" style="height: 250px;">
+	The editor(s) of this page ha(s|ve) not filled in this slot (position: <%= position %>)
+</p>
+<%= link_to 'edit', user_widgets_path(user) if user.editable_by?(viewer) %>

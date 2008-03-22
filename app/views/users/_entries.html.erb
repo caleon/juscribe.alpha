@@ -2,3 +2,6 @@
 <ul>
 	<%= render :partial => 'entries/entry', :collection => entries %>
 </ul>
+<div class="msm_widget-footer">
+	<%= link_to 'View more entries', user_entries_path(user) %>
+</div>

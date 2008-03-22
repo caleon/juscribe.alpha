@@ -1,0 +1,6 @@
+<% form_for :comment, comment, :url => comments_path_from_commentable(blog), :html => { :class => 'commentForm', :method => 'post' } do |f| %>
+	<fieldset>
+		<legend>Comment on this blog</legend>
+		<%= render :partial => 'comments/form', :locals => { :f => f } %>
+	</fieldset>
+<% end %>

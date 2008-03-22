@@ -3,8 +3,11 @@ class Blog < ActiveRecord::Base
   
   belongs_to :user # creator
   belongs_to :bloggable, :polymorphic => true
-  has_many :articles, :order => 'articles.id DESC'
-  has_one :primary_article, :class_name => 'Article', :order => 'articles.id DESC'
+  with_options :order => 'articles.id DESC', :conditions => "published_date IS NOT NULL" do |art|
+    art.has_many :articles
+    art.has_many :latest_articles, :class_name => 'Article'
+    art.has_one :primary_article, :class_name => 'Article'
+  end
   has_many :pictures, :as => :depictable, :order => 'pictures.position'
   has_one :primary_picture, :class_name => 'Picture', :order => 'pictures.position'
   has_many :comments, :as => :commentable, :order => 'comments.id DESC'

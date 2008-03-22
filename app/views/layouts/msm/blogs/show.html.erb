@@ -24,23 +24,20 @@
 			</div>
 	
 			<div class="msm_main_column-a msm_main_column nopad">
-				<%= render :partial => custom_partial('articles/article_lead'),
+				<%= render :partial => 'articles/article_lead',
 				 					 :layout => custom_partial('lead_widget'),
-				 					 :locals => { :article => @articles[0] } %>
+				 					 :locals => { :article_lead => @articles[0] } %>
 			</div>
 	
 			<div class="msm_main_column-b msm_main_column">
-				<%= render :partial => custom_partial('articles/latest_articles'),
-				 					 :layout => custom_partial('inner'),
-				 					 :locals => { :blog => @blog,
-																:collection => @articles[1..7] } %>
+				<%= wrender :latest_articles, :layout => :inner %>
 			</div>
 			<%= rounded_shim(:bottom) %>
 		</div>
 		
 		<div class="msm_row" id="msm_row-2">
 			<div class="msm_main_column-ab msm_main_column msm_with_reg_wid">
-				<%= render(:partial => custom_partial('articles/article'),
+				<%= render(:partial => 'articles/article',
 									 :layout => custom_partial('widget'),
 									 :object => @articles[1]) if @articles[1] %>
 			</div>
@@ -48,13 +45,13 @@
 		
 		<div class="msm_row nobg" id="msm_row-3">
 			<div class="msm_main_column-a msm_main_column msm_with_reg_wid">
-				<%= render(:partial => custom_partial('articles/article'),
+				<%= render(:partial => 'articles/article',
 									 :layout => custom_partial('widget'),
 									 :object => @articles[2]) if @articles[2] %>
 			</div>
 			
 			<div class="msm_main_column-b msm_main_column nopad">
-				<%= render(:partial => custom_partial('articles/article'),
+				<%= render(:partial => 'articles/article',
 									 :layout => custom_partial('framed'),
 									 :object => @articles[3]) if @articles[3] %>
 			</div>
@@ -63,7 +60,7 @@
 		
 		<div class="last msm_row" id="msm_row-4">
 			<div class="msm_main_column-ab msm_main_column msm_with_reg_wid">
-				<%= render(:partial => custom_partial('articles/article'),
+				<%= render(:partial => 'articles/article',
 									 :layout => custom_partial('widget'),
 									 :object => @articles[4]) if @articles[4] %>
 			</div>
@@ -71,12 +68,12 @@
 	</div>
 	
 	<div id="msm_side_column" class="msm_column">
-	<% with_options :layout => custom_partial('framed') do |framed| %>
-		<%= framed.render :partial => custom_partial('ads/google_ads') %>
-		<%= framed.render :partial => custom_partial('blogs/description'), :locals => { :blog => @blog } %>
-		<%= framed.render :partial => custom_partial("blogs/bloggable"), :object => @blog.bloggable %>
-		<%= framed.render :partial => custom_partial('blogs/comments') %>
-		<%= framed.render :partial => custom_partial('ads/google_ads') %>
+	<% with_options :layout => :framed do |framed| %>
+		<%= framed.wrender :google_ads %>
+		<%= framed.wrender :description %>
+		<%= framed.wrender :bloggable %>
+		<%= framed.wrender :comments, :blog => @blog %>
+		<%= framed.wrender :google_ads %>
 	<% end %>
 	</div>
 	<div id="msm_footer">
