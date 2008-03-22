@@ -2,13 +2,13 @@
 	<ul class="navigationList">
 		<%= bread_el @user.nick, @user %>
 		<%= bread_el "Articles", articles_path(@user), :current => !@articles.blank? %>
-		<%= bread_el truncate(@article.title, 20), article_path_for(@article), :current => true if @article %>
+		<%= bread_el truncate(@article.title, 20), article_path_for(@article), :current => true if @article && !@article.new_record? %>
 <% if @user && !@user.new_record? %>
 	<% if this_is_viewer? %>
 		<%= subnavi_el "New Article", new_article_path(@user) %>
 	<% end %>
-		<%= subnavi_el "Edit", edit_article_path(@article.to_path) if @article && @article.editable_by?(viewer) %>
-		<%= subnavi_el "Clip", new_article_clip_path(@article.to_path(true)) if @article %>
+		<%= subnavi_el "Edit", edit_article_path(@article.to_path) if @article && !@article.new_record? && @article.editable_by?(viewer) %>
+		<%= subnavi_el "Clip", new_article_clip_path(@article.to_path(true)) if @article && !@article.new_record? && @article.published? %>
 <% end %>
 		<%= navi_skin_info %>
 	</ul>

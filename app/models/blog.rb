@@ -3,10 +3,10 @@ class Blog < ActiveRecord::Base
   
   belongs_to :user # creator
   belongs_to :bloggable, :polymorphic => true
-  with_options :order => 'articles.id DESC', :conditions => "published_date IS NOT NULL" do |art|
+  with_options :class_name => 'Article', :order => 'articles.id DESC', :conditions => "articles.published_date IS NOT NULL AND articles.published_time < NOW()" do |art|
     art.has_many :articles
-    art.has_many :latest_articles, :class_name => 'Article'
-    art.has_one :primary_article, :class_name => 'Article'
+    art.has_many :latest_articles, :limit => 10
+    art.has_one :primary_article
   end
   has_many :pictures, :as => :depictable, :order => 'pictures.position'
   has_one :primary_picture, :class_name => 'Picture', :order => 'pictures.position'

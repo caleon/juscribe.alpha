@@ -1,8 +1,8 @@
 class User < ActiveRecord::Base
-  has_many :articles, :dependent => :nullify, :conditions => "published_date IS NOT NULL",
-           :order => 'articles.id DESC'
-  has_many :latest_articles, :class_name => 'Article', :conditions => "published_date IS NOT NULL",
-           :order => 'articles.id DESC', :limit => 10
+  with_options :class_name => 'Article', :conditions => "articles.published_date IS NOT NULL AND articles.published_time < NOW()", :order => 'articles.id DESC' do |art|
+    art.has_many :articles, :dependent => :nullify
+    art.has_many :latest_articles, :limit => 10
+  end
   has_many :drafts, :class_name => 'Article', :dependent => :nullify,
                     :conditions => "published_date IS NULL"
   has_many :all_articles, :class_name => 'Article', :order => 'articles.id DESC'

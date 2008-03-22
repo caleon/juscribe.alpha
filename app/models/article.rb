@@ -62,6 +62,12 @@ class Article < ActiveRecord::Base
       self.save!
     end
   end
+  def publish_at
+    self.published_time
+  end
+  def publish_at=(datetime)
+    self.published_date, self.published_time = datetime.to_date, datetime
+  end
   def published_at
     return nil unless self.published?
     self.published_date.to_formatted_s(:rfc822) + ', ' + self.published_time.to_s(:time)
