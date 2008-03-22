@@ -188,6 +188,10 @@
 	list-style: square;
 }
 
+form {
+	margin-bottom: 0px;
+}
+
 .userForm input {
 	display: block;
 }

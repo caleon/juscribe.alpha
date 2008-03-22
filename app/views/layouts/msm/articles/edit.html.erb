@@ -32,7 +32,7 @@
 	<div id="msm_side_column" class="msm_column">
 	<% with_options :layout => :framed do |framed| %>
 		<%= framed.wrender :user %>
-		<%= framed.wrender :pictures if @article.primary_picture %>
+		<%= framed.wrender :pictures %>
 		<%= framed.wrender :google_ads %>
 		<%= framed.wrender 'blogs/latest_articles', :blog => @article.blog if @article.blog %>
 	<% end %>
