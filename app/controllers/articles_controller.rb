@@ -5,7 +5,7 @@ class ArticlesController < ApplicationController
   authorize_on :edit, :update, :publish, :unpublish, :destroy
   
   def index
-    # don't show drafts unless viewer == user
+    # Articles#index is for articles on a user. Blogs#show has articles on a blog
     return unless get_user
     find_opts = get_find_opts
     if get_viewer == @user

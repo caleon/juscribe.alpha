@@ -19,7 +19,11 @@ class BlogsController < ApplicationController
   def show
     return unless setup([:permission, :primary_article])
     find_opts = get_find_opts
-    @articles = @blog.articles.find(:all, find_opts)
+    @articles = if @blog.editable_by?(get_viewer)
+      @blog.all_articles.find(:all, find_opts)
+    else
+      @blog.articles.find(:all, find_opts)
+    end
     @page_title = @blog.display_name
     @layoutable = @blog
     respond_to do |format|
