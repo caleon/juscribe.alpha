@@ -34,7 +34,18 @@ module ApplicationHelper
   
   def navi_el(text, path, opts={})
     conditions = opts[:conditions].nil? ? true : opts.delete(:conditions)
-    content_tag(:li, link_to(text, path, opts), :class => 'navigationEl') if conditions
+    right = opts.delete(:right)
+    content_tag(:li, link_to(text, path, opts), :class => "navigationEl#{' right' if right}") if conditions
+  end
+  
+ #<%= navi_el "Skin: <span class=\"skin_name\">#{@layoutable.skin}</span>",
+ #						(@user.editable_by?(viewer) ? edit_user_path(@user) : '#'),
+ #						:right => true if @layoutable %>
+								
+  def navi_skin_info
+    navi_el "Layout: <span class=\"layout_name\">#{@layoutable.layout}</span> - Skin: <span class=\"skin_name\">#{@layoutable.skin}</span>",
+            (@user && @user.editable_by?(viewer) ? edit_user_path(@user) : '#'),
+            :right => true if @layoutable
   end
   
   def byline_for(record)

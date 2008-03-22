@@ -1,8 +1,6 @@
 <div class="sub navigation">
 	<ul class="navigationList">
-	<% if logged_in? && @user && !@user.new_record? %>
-		<%= navi_el(@user.nick, @user) %>
-	<% end %>
+		<%= navi_el @user.nick, @user %>
 	<% if @user && !@user.new_record? %>
 		<%= navi_el "Friends", friends_user_path(@user) %>
 		<%= navi_el "Articles", articles_path(@user) %>
@@ -12,19 +10,15 @@
 		<%= navi_el "Pictures", user_galleries_path(@user) %>
 	<% end %>
 <% if logged_in? && @user && !@user.new_record? %>
-	<% if !this_is_viewer? %>
-		<%= navi_el "Message", new_message_path %>
-	<% else %>
-		<%= navi_el "Inbox#{@user.messages.unread.size > 0 ? " (#{@user.messages.unread.size})" : ''}", messages_path %>
-	<% end %>
+		<%= navi_el "Message", new_message_path, :conditions => !this_is_viewer? %>		
 	<% if viewer.friends_with?(@user) %>
 		<%= navi_el "Unfriend", unfriend_user_path(@user), { :method => :put } %>
 	<% elsif @viewer != @user && !@viewer.kinda_friends_with?(@user) %>
 		<%= navi_el "Request Friendship", befriend_user_path(@user), { :method => :put } %>
 	<% end %>
+		<%= navi_skin_info %>
 	<% if @user.editable_by?(viewer) %>
-		<%= navi_el 'Customize', user_widgets_path(@user.to_path(true)) %>
-		<%= navi_el 'Preferences', edit_user_path(@user) %>
+		<%= navi_el 'Customize', user_widgets_path(@user.to_path(true)), :right => true %>
 	<% end %>
 <% end %>
 	</ul>

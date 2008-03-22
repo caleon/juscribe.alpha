@@ -1,10 +1,12 @@
 <div class="sub navigation">
 	<ul class="navigationList">
+		<%= navi_el @user.nick, @user %>
 <% if @user && !@user.new_record? %>
+	<%= navi_el "Articles", articles_path(@user) %>
 	<% if logged_in? && this_is_viewer? %>
-		<%= navi_el "New Post", new_article_path(@user) %>
+		<%= navi_el "New Article...", new_article_path(@user) %>
 	<% end %>
-		<%= navi_el "List", articles_path(@user) %>
 <% end %>
+	<%= navi_skin_info %>
 	</ul>
 </div>

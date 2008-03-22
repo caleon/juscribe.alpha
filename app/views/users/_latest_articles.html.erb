@@ -6,7 +6,7 @@
 			<% if art.blog %>
 				<span class="articleBlog"><%= art.blog.short_name %></span>
 			<% end %>
-				<%= link_to art.title, article_path_for(art) %> <span class="timeago"><%= time_ago_in_words(art.updated_at) %></span>
+				<%= link_to art.title, article_path_for(art) %> <nobr><span class="timeago"><%= time_ago_in_words(art.updated_at) %></span></nobr>
 			</span>
 		</li>
 	<% end %>

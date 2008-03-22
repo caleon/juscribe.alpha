@@ -1,3 +1,5 @@
+/* @override http://localhost:3000/stylesheets/main.css?1206057809 */
+
 #wrapper {
 	margin: 0;
 	padding: 0;
@@ -5,8 +7,19 @@
 
 #header {
 	position: relative;
-	height: 100px;
-	background: #000;
+	height: 87px;
+	padding: 13px 0 13px 13px;
+}
+
+#logo_link {
+	display: block;
+	width: 357px;
+	height: 87px;
+}
+
+#logo {
+	width: 357px;
+	height: 87px;
 }
 
 #header h1 {
@@ -38,7 +51,7 @@
 #header .navigation {
 	position: absolute;
 	bottom: 0;
-	background-color: #00f;
+	right: 0;
 	padding: 0 2em;
 }
 
@@ -51,24 +64,32 @@
 }
 
 #header .navigation li.navigationEl a {
-	color: #fff;
 	font-weight: bold;
+	color: #000;
+}
+
+.navigation li.navigationEl a:hover {
+	text-decoration: none;
 }
 
 .sub.navigation {
-	padding: 0 2em;
+	
 }
 
 .sub.navigation li.navigationEl {
-	margin-right: 2em;
+	
 }
 
 .sub.navigation li.navigationEl.last {
 	margin-right: 0;
 }
 
-.sub.navigation li.navigationEl a {
-	color: #000;
+.sub.navigation li.navigationEl.right {
+	float: right;
+}
+
+.sub.navigation li.navigationEl > a {
+	padding: 0.25em 1em;
 	font-weight: bold;
 }
 

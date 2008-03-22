@@ -8,8 +8,12 @@ class ArticlesController < ApplicationController
     # don't show drafts unless viewer == user
     return unless get_user
     @page_title = "#{@user.display_name} - Articles"
-    find_opts = get_find_opts(:order => 'articles.id DESC')
-    @articles = @user.articles.find(:all, find_opts)
+    find_opts = get_find_opts
+    if get_viewer == @user
+      @articles = @user.all_articles.find(:all, find_opts)
+    else
+      @articles = @user.articles.find(:all, find_opts)
+    end
   end
   
   def show

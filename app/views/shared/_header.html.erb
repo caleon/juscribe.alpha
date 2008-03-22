@@ -1,7 +1,4 @@
 <div id="header">
-	<h1><%= @page_title || APP[:name] %></h1>
-<% if logged_in? -%>
-	Logged in as <%= link_to @viewer.nick, @viewer %>
-<% end -%>
+	<%= link_to image_tag('logo-alpha.png', :width => 357, :height => 87, :id => 'logo'), root_path, :id => 'logo_link', :title => "#{APP[:name]} Home" %>
 	<%= render :partial => 'shared/navigation' %>
 </div>

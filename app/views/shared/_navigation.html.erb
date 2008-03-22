@@ -2,9 +2,13 @@
 	<ul class="navigationList">
 		<%= navi_el "Home", root_path %>
 		<%= navi_el "Mine", mine_path %>
-		<%= navi_el "Help", help_path %>
-		<%= navi_el "About", about_path %>
 	<% if logged_in? -%>
+		<%= navi_el "Inbox#{viewer.messages.unread.size > 0 ? " (#{@user.messages.unread.size})" : ''}", messages_path %>
+		<%= navi_el 'Preferences', edit_user_path(viewer) %>
+	<% end %>
+		<%= navi_el "About", about_path %>
+		<%= navi_el "Help", help_path %>
+	<% if logged_in? %>
 		<li class="navigationEl last"><%= link_to 'Logout', logout_path %></li>
 	<% else -%>
 		<%= navi_el "Register", new_user_path %>

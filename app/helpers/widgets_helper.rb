@@ -69,7 +69,7 @@ module WidgetsHelper
     wrender_vacant unless obj
     render :partial => path_from_sym(sym, opts[:kind]),
            :object => params[:object] || obj,
-           :layout => opts.delete(:layout),
+           :layout => opts[:layout],
            :locals => { :"#{instance_name}" => @layoutable }
   end
   
