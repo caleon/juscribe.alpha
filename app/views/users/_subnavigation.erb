@@ -1,13 +1,15 @@
 <div class="sub navigation">
 	<ul class="navigationList">
-		<%= bread_el @user.nick, @user, :current => controller.action_name == 'show' %>
+		<%= bread_el @user.nick, @user, :current => %w(show).include?(controller.action_name) %>
 		<%= bread_el "Preferences", edit_user_path(@user), :current => true if controller.action_name == 'edit' %>
+		<%= bread_el "Friends", friends_user_path(@user), :current => true if controller.action_name == 'friends' %>
 	<% if @user && !@user.new_record? %>
-		<%= subnavi_el "Friends", friends_user_path(@user), :current => controller.action_name == 'friends' %>
+		<%= subnavi_el "Friends", friends_user_path(@user) unless controller.action_name == 'friends' %>
+	
 		<%= subnavi_el "Articles", articles_path(@user) %>
 		<%= subnavi_el "Blogs", user_blogs_path(@user) %>
-		<%= subnavi_el "Events", user_events_path(@user) %>
 		<%= subnavi_el "Entries", user_entries_path(@user) %>
+		<%= subnavi_el "Events", user_events_path(@user) %>
 		<%= subnavi_el "Galleries", user_galleries_path(@user) %>
 	<% end %>
 <% if logged_in? && @user && !@user.new_record? %>
