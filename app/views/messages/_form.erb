@@ -1,5 +1,5 @@
 <%= f.label :recipient %>
-<%= f.text_field :recipient %>
+<%= f.text_field :recipient, :disabled => !params[:recipient].nil?, :value => params[:recipient].to_param rescue nil %>
 <br />
 <%= f.label :subject %>
 <%= f.text_field :subject %>
