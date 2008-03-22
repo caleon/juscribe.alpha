@@ -1,4 +1,5 @@
 class Widget < ActiveRecord::Base
+  include ActiveRecord::Acts::Layoutable
   # This can be subclassed with column `type`
   belongs_to :user
   belongs_to :widgetable, :polymorphic => true

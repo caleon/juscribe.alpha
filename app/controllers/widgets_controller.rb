@@ -7,8 +7,12 @@ class WidgetsController < ApplicationController
     return unless get_user(:message => "Unable to find the user specified. Please check the address.") && authorize(@user)
     find_opts = get_find_opts(:order => 'id DESC')
     @widgets = @user.widgets.find(:all, find_opts)
+    @page_title = "Customize Widgets"
+    @layoutable = @user
     respond_to do |format|
-      format.html
+      format.html do
+        render :template => @widgets.first.layout_file(:index) if @user.layout #FIXME: icky too
+      end
       format.js
       format.xml
     end
