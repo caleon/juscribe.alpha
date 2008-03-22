@@ -7,12 +7,24 @@ class ArticlesController < ApplicationController
   def index
     # don't show drafts unless viewer == user
     return unless get_user
-    @page_title = "#{@user.display_name} - Articles"
     find_opts = get_find_opts
     if get_viewer == @user
       @articles = @user.all_articles.find(:all, find_opts)
     else
       @articles = @user.articles.find(:all, find_opts)
+    end
+    @layoutable = @user
+    @page_title = "Articles by #{@user.display_name}"
+    respond_to do |format|
+      format.html do
+        if @user.layout
+          render :template => @articles.first.layout_file(:index) # FIXME TOO: icky
+        else
+          render :action => 'show'
+        end
+      end
+      format.js
+      format.xml
     end
   end
   

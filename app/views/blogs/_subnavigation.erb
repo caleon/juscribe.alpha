@@ -1,10 +1,11 @@
 <div class="sub navigation">
 	<ul class="navigationList">
-	<% if @bloggable %>
 		<%= bread_el @bloggable.display_name, bloggable_path_for(@bloggable) %>
 		<%= bread_el 'Blogs', blogs_path_from_bloggable(@bloggable), :current => !@blogs.blank? %>
 		<%= bread_el truncate(@blog.name, 20), blog_path_for(@blog), :current => true if @blog %>
-		<%= navi_el 'New Blog ...', blog_path_from_bloggable(@bloggable, :prefix => 'new'), :first => true %>
-	<% end %>
+		<%= subnavi_el 'New Blog', blog_path_from_bloggable(@bloggable, :prefix => :new) %>
+		<%= subnavi_el 'Edit', blog_path_for(@blog, :prefix => :edit) if @blog && @blog.editable_by?(viewer) %>
+		<%= subnavi_el 'Clip', clip_path_from_widgetable(@blog, :prefix => :new) if @blog %>
+		<%= navi_skin_info %>
 	</ul>
 </div>

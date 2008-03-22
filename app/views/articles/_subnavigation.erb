@@ -4,9 +4,11 @@
 		<%= bread_el "Articles", articles_path(@user), :current => !@articles.blank? %>
 		<%= bread_el truncate(@article.title, 20), article_path_for(@article), :current => true if @article %>
 <% if @user && !@user.new_record? %>
-	<% if logged_in? && this_is_viewer? %>
-		<%= navi_el "New Article ...", new_article_path(@user), :first => true %>
+	<% if this_is_viewer? %>
+		<%= subnavi_el "New Article", new_article_path(@user) %>
 	<% end %>
+		<%= subnavi_el "Edit", edit_article_path(@article.to_path) if @article && @article.editable_by?(viewer) %>
+		<%= subnavi_el "Clip", new_article_clip_path(@article.to_path(true)) if @article %>
 <% end %>
 		<%= navi_skin_info %>
 	</ul>

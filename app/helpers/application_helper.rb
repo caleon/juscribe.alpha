@@ -33,10 +33,19 @@ module ApplicationHelper
   end
   
   def navi_el(text, path, opts={})
-    opts[:style] = [ opts[:style], "z-index: -1;" ].compact.join(' ')
+    @navi_count ||= 0
     conditions = opts[:conditions].nil? ? true : opts.delete(:conditions)
-    right, first = opts.delete(:right), opts.delete(:first)
-    content_tag(:li, link_to(text, path, opts), :class => "navigationEl#{' right' if right}#{' first' if first}", :style => "z-index: -1;") if conditions
+    right, first = opts.delete(:right), @navi_count == 0
+    @navi_count += 1
+    content_tag(:li, link_to(text, path, opts), :class => "navigationEl#{' right' if right}#{' first' if first}") if conditions
+  end
+  
+  def subnavi_el(text, path, opts={})
+    if (@subnav_count ||= 0) == 0
+      @subnav_count = 1 # dont need to increment for now.
+      @navi_count = 0
+    end
+    navi_el(text, path, opts)
   end
 
   def bread_el(text, path, opts={})

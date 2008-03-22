@@ -2,19 +2,19 @@
 	<ul class="navigationList">
 		<%= bread_el @user.nick, @user, :current => true %>
 	<% if @user && !@user.new_record? %>
-		<%= navi_el "Friends", friends_user_path(@user), :first => true %>
-		<%= navi_el "Articles", articles_path(@user) %>
-		<%= navi_el "Blogs", user_blogs_path(@user) %>
-		<%= navi_el "Events", user_events_path(@user) %>
-		<%= navi_el "Entries", user_entries_path(@user) %>
-		<%= navi_el "Pictures", user_galleries_path(@user) %>
+		<%= subnavi_el "Friends", friends_user_path(@user) %>
+		<%= subnavi_el "Articles", articles_path(@user) %>
+		<%= subnavi_el "Blogs", user_blogs_path(@user) %>
+		<%= subnavi_el "Events", user_events_path(@user) %>
+		<%= subnavi_el "Entries", user_entries_path(@user) %>
+		<%= subnavi_el "Pictures", user_galleries_path(@user) %>
 	<% end %>
 <% if logged_in? && @user && !@user.new_record? %>
-		<%= navi_el "Message", new_message_path, :conditions => !this_is_viewer? %>		
+		<%= subnavi_el "Message", new_message_path, :conditions => !this_is_viewer? %>		
 	<% if viewer.friends_with?(@user) %>
-		<%= navi_el "Unfriend", unfriend_user_path(@user), { :method => :put } %>
+		<%= subnavi_el "Unfriend", unfriend_user_path(@user), { :method => :put } %>
 	<% elsif @viewer != @user && !@viewer.kinda_friends_with?(@user) %>
-		<%= navi_el "Request Friendship", befriend_user_path(@user), { :method => :put } %>
+		<%= subnavi_el "Request Friendship", befriend_user_path(@user), { :method => :put } %>
 	<% end %>
 		<%= navi_skin_info %>
 		<%= navi_customize(user_widgets_path(@user.to_path(true))) %>
