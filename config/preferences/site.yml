@@ -2,3 +2,4 @@
 :load_all_initially: true
 :scripts_at_bottom: false
 :defcon: 1
+:disable_registration: false

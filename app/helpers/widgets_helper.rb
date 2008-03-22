@@ -12,10 +12,10 @@ module WidgetsHelper
     [ layout_base_path, path ].join('/')
   end
   
-  
   def widget_layout(layout=nil)
     return nil if layout == :none
-    layout ||= 'widget'
+    return layout if !(layout.nil? || layout.is_a?(Symbol))
+    layout ||= :widget
     [ layout_base_path, layout.to_s ].join('/')
   end
   alias_method :wayout, :widget_layout
@@ -37,9 +37,7 @@ module WidgetsHelper
   def widget_render(*args)
     check_layoutable
     @wcount ||= 0; @widgets ||= []
-
     opts = args.extract_options!
-    layout = opts[:layout]
     kind = opts[:kind] ? "_#{opts[:kind]}" : ""
     arg = args.shift
     @wcount += 1
@@ -58,7 +56,7 @@ module WidgetsHelper
       when nil
         return wid.wrender_vacant unless widget = @widgets[@wcount - 1]
         return wid.wrender_unauthorized unless widget.widgetable.accessible_by?(viewer)
-        @wcount -= 1 and return wrender(widget, opts.merge(:layout => layout))
+        @wcount -= 1 and return wid.wrender(widget, opts)
       end  
     end
   end
