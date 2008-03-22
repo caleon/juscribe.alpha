@@ -4,61 +4,63 @@ ActionController::Routing::Routes.draw do |map|
   map.root :controller => 'main'
   
   # User Blog Articles
-  map.with_options :controller => 'articles', :path_prefix => 'u/:user_id/:blog_id', :requirements => { :user_id => regex_for(:user, :nick), :blog_id => regex_for(:blog, :permalink) } do |ar|
-    ar.user_articles 'articles', :action => 'index', :conditions => { :method => :get }
-    ar.formatted_user_articles 'articles.:format', :action => 'index', :conditions => { :method => :get }
-    ar.connect 'articles', :action => 'create', :conditions => { :method => :post }
-    ar.connect 'articles.:format', :action => 'create', :conditions => { :method => :post }
-    ar.new_user_article 'articles/new', :action => 'new', :conditions => { :method => :get }
-    ar.formatted_new_user_article 'article/new.:format', :action => 'new', :conditions => { :method => :get }
+  map.with_options :controller => 'articles', :path_prefix => 'u/:user_id/:blog_id',
+                                              :requirements => { :user_id => regex_for(:user, :nick), :blog_id => regex_for(:blog, :permalink) } do |ar|
+    ar.user_articles              'articles',             :action => 'index',  :conditions => { :method => :get }
+    ar.formatted_user_articles    'articles.:format',     :action => 'index',  :conditions => { :method => :get }
+    ar.connect                    'articles',             :action => 'create', :conditions => { :method => :post }
+    ar.connect                    'articles.:format',     :action => 'create', :conditions => { :method => :post }
+    ar.new_user_article           'articles/new',         :action => 'new',    :conditions => { :method => :get }
+    ar.formatted_new_user_article 'article/new.:format',  :action => 'new',    :conditions => { :method => :get }
     
-    ar.with_options :path_prefix => 'u/:user_id/:blog_id/:year/:month/:day/:id', :requirements => { :year => /\d{4}/, :month => /\d{1,2}/, :day => /\d{1,2}/, :id => regex_for(:article, :permalink) } do |arpm|
-      arpm.edit_user_article 'edit', :action => 'edit', :conditions => { :method => :get }
-      arpm.formatted_edit_user_article 'edit.:format', :action => 'edit', :conditions => { :method => :get }
-      arpm.unpublish_user_article 'unpublish', :action => 'unpublish', :conditions => { :method => :put }
+    ar.with_options :path_prefix => 'u/:user_id/:blog_id/:year/:month/:day/:id',
+                    :requirements => { :year => /\d{4}/, :month => /\d{1,2}/, :day => /\d{1,2}/, :id => regex_for(:article, :permalink) } do |arpm|
+      arpm.edit_user_article                'edit',              :action => 'edit',      :conditions => { :method => :get }
+      arpm.formatted_edit_user_article      'edit.:format',      :action => 'edit',      :conditions => { :method => :get }
+      arpm.unpublish_user_article           'unpublish',         :action => 'unpublish', :conditions => { :method => :put }
       arpm.formatted_unpublish_user_article 'unpublish.:format', :action => 'unpublish', :conditions => { :method => :put }
-      arpm.user_article '', :action => 'show', :conditions => { :method => :get }                                                                                                      
-      arpm.formatted_user_article '.:format', :action => 'show', :conditions => { :method => :get }
-      arpm.connect '', :action => 'update', :conditions => { :method => :put }
-      arpm.connect '.:format', :action => 'update', :conditions => { :method => :put }
-      arpm.connect '', :action => 'destroy', :conditions => { :method => :delete }
-      arpm.connect '.:format', :action => 'destroy', :conditions => { :method => :delete }
+      arpm.user_article                     '',                  :action => 'show',      :conditions => { :method => :get }                                                                                                      
+      arpm.formatted_user_article           '.:format',          :action => 'show',      :conditions => { :method => :get }
+      arpm.connect                          '',                  :action => 'update',    :conditions => { :method => :put }
+      arpm.connect                          '.:format',          :action => 'update',    :conditions => { :method => :put }
+      arpm.connect                          '',                  :action => 'destroy',   :conditions => { :method => :delete }
+      arpm.connect                          '.:format',          :action => 'destroy',   :conditions => { :method => :delete }
     end
     ar.with_options :requirements => { :id => regex_for(:article, :permalink) } do |par|
-      par.user_particles            'articles/:id',               :action => 'show', :conditions =>   { :method => :get }
-      par.formatted_user_particles  'articles/:id.:format',       :action => 'show', :conditions =>   { :method => :get }
-      par.edit_user_draft                'draft/:id/edit',             :action => 'edit', :conditions =>   { :method => :get }
-      par.formatted_edit_user_draft      'draft/:id/edit.:format',     :action => 'edit', :conditions =>   { :method => :get }
-      par.publish_user_draft             'draft/:id/publish',          :action => 'publish', :conditions =>   { :method => :put }
-      par.formatted_publish_user_draft   'draft/:id/publish.:format',  :action => 'publish', :conditions =>   { :method => :put }
-      par.user_draft                     'draft/:id',                  :action => 'show', :conditions =>   { :method => :get }
-      par.formatted_user_draft           'draft/:id.:format',          :action => 'show', :conditions =>   { :method => :get }
-      par.connect                   'draft/:id',                  :action => 'update', :conditions =>   { :method => :put }
-      par.connect                   'draft/:id.:format',          :action => 'update', :conditions =>   { :method => :put }
-      par.connect                   'draft/:id',                  :action => 'destroy', :conditions =>   { :method => :delete }
-      par.connect                   'draft/:id.:format',          :action => 'destroy', :conditions =>   { :method => :delete }
+      par.user_particles               'articles/:id',               :action => 'show',    :conditions =>   { :method => :get }
+      par.formatted_user_particles     'articles/:id.:format',       :action => 'show',    :conditions =>   { :method => :get }
+      par.edit_user_draft              'draft/:id/edit',             :action => 'edit',    :conditions =>   { :method => :get }
+      par.formatted_edit_user_draft    'draft/:id/edit.:format',     :action => 'edit',    :conditions =>   { :method => :get }
+      par.publish_user_draft           'draft/:id/publish',          :action => 'publish', :conditions =>   { :method => :put }
+      par.formatted_publish_user_draft 'draft/:id/publish.:format',  :action => 'publish', :conditions =>   { :method => :put }
+      par.user_draft                   'draft/:id',                  :action => 'show',    :conditions =>   { :method => :get }
+      par.formatted_user_draft         'draft/:id.:format',          :action => 'show',    :conditions =>   { :method => :get }
+      par.connect                      'draft/:id',                  :action => 'update',  :conditions =>   { :method => :put }
+      par.connect                      'draft/:id.:format',          :action => 'update',  :conditions =>   { :method => :put }
+      par.connect                      'draft/:id',                  :action => 'destroy', :conditions =>   { :method => :delete }
+      par.connect                      'draft/:id.:format',          :action => 'destroy', :conditions =>   { :method => :delete }
     end
   end
   
-  ### Draft Pictures ##
+  ### User Draft Pictures ##
   map.with_options :controller => 'pictures', :path_prefix => 'u/:user_id/:blog_id/draft/:article_id',
                    :requirements => { :article_id => regex_for(:article, :permalink), :user_id => regex_for(:user, :nick),
-                                      :blog_id => regex_for(:blog, :permalink) } do |draft|
-    draft.user_draft_pictures 'pictures', :action => 'index', :conditions => { :method => :get }
-    draft.formatted_user_draft_pictures 'pictures.:format', :action => 'index', :conditions => { :method => :get }
-    draft.connect 'pictures', :action => 'create', :conditions => { :method => :post }
-    draft.connect 'pictures.:format', :action => 'create', :conditions => { :method => :post }
-    draft.new_user_draft_picture 'pictures/new', :action => 'new', :conditions => { :method => :get }
-    draft.formatted_new_user_draft_picture 'pictures/new.:format', :action => 'new', :conditions => { :method => :get }
+                                      :blog_id    => regex_for(:blog, :permalink) } do |draft|
+    draft.user_draft_pictures              'pictures',             :action => 'index',  :conditions => { :method => :get }
+    draft.formatted_user_draft_pictures    'pictures.:format',     :action => 'index',  :conditions => { :method => :get }
+    draft.connect                          'pictures',             :action => 'create', :conditions => { :method => :post }
+    draft.connect                          'pictures.:format',     :action => 'create', :conditions => { :method => :post }
+    draft.new_user_draft_picture           'pictures/new',         :action => 'new',    :conditions => { :method => :get }
+    draft.formatted_new_user_draft_picture 'pictures/new.:format', :action => 'new',    :conditions => { :method => :get }
     draft.with_options :requirements => { :id => regex_for(:picture, :id) } do |drp|
-      drp.edit_user_draft_picture 'pictures/:id/edit', :action => 'edit', :conditions => { :method => :get }
-      drp.formatted_edit_user_draft_picture 'pictures/:id/edit.:format', :action => 'edit', :conditions => { :method => :get }
-      drp.user_draft_picture 'pictures/:id', :action => 'show', :conditions => { :method => :get }
-      drp.formatted_user_draft_picture 'pictures/:id.:format', :action => 'show', :conditions => { :method => :get }
-      drp.connect 'pictures/:id', :action => 'update', :conditions => { :method => :put }
-      drp.connect 'pictures/:id.:format', :action => 'update', :conditions => { :method => :put }
-      drp.connect 'pictures/:id', :action => 'destroy', :conditions => { :method => :delete }
-      drp.connect 'pictures/:id.:format', :action => 'destroy', :conditions => { :method => :delete }
+      drp.edit_user_draft_picture           'pictures/:id/edit',         :action => 'edit',    :conditions => { :method => :get }
+      drp.formatted_edit_user_draft_picture 'pictures/:id/edit.:format', :action => 'edit',    :conditions => { :method => :get }
+      drp.user_draft_picture                'pictures/:id',              :action => 'show',    :conditions => { :method => :get }
+      drp.formatted_user_draft_picture      'pictures/:id.:format',      :action => 'show',    :conditions => { :method => :get }
+      drp.connect                           'pictures/:id',              :action => 'update',  :conditions => { :method => :put }
+      drp.connect                           'pictures/:id.:format',      :action => 'update',  :conditions => { :method => :put }
+      drp.connect                           'pictures/:id',              :action => 'destroy', :conditions => { :method => :delete }
+      drp.connect                           'pictures/:id.:format',      :action => 'destroy', :conditions => { :method => :delete }
     end
   end
   
@@ -70,107 +72,276 @@ ActionController::Routing::Routes.draw do |map|
   map.with_options :path_prefix => 'u/:user_id/:blog_id/:year/:month/:day/:article_id',
                    :requirements => { :year => /\d{4}/, :month => /\d{1,2}/, :day => /\d{1,2}/, :article_id => regex_for(:article, :permalink),
                                       :user_id => regex_for(:user, :nick), :blog_id => regex_for(:blog, :permalink) } do |ars|
-    # Article -> Clips
+    # User -> Article -> Clips
     ars.with_options :controller => 'clips' do |cl|
-      cl.user_article_clips 'clips', :action => 'index', :conditions => { :method => :get }
-      cl.formatted_user_article_clips 'clips', :action => 'index', :conditions => { :method => :get }
-      cl.connect 'clips', :action => 'create', :conditions => { :method => :post }
-      cl.connect 'clips.:format', :action => 'create', :conditions => { :method => :post }
-      cl.new_user_article_clip 'clips/new', :action => 'new', :conditions => { :method => :get }
-      cl.formatted_new_user_article_clip 'clips/new.:format', :action => 'new', :conditions => { :method => :get }
-      cl.formatted_user_article_clips 'clips.:format', :action => 'index', :conditions => { :method => :get }
-      cl.connect 'clips', :action => 'create', :conditions => { :method => :post }
-      cl.connect 'clips.:format', :action => 'create', :conditions => { :method => :post }
-      cl.new_user_article_clip 'clips/new', :action => 'new', :conditions => { :method => :get }
-      cl.formatted_new_user_article_clip 'clips/new.:format', :action => 'new', :conditions => { :method => :get }
+      cl.user_article_clips              'clips',             :action => 'index',  :conditions => { :method => :get }
+      cl.formatted_user_article_clips    'clips.:format',     :action => 'index',  :conditions => { :method => :get }
+      cl.connect                         'clips',             :action => 'create', :conditions => { :method => :post }
+      cl.connect                         'clips.:format',     :action => 'create', :conditions => { :method => :post }
+      cl.new_user_article_clip           'clips/new',         :action => 'new',    :conditions => { :method => :get }
+      cl.formatted_new_user_article_clip 'clips/new.:format', :action => 'new',    :conditions => { :method => :get }
       cl.with_options :requirements => { :id => regex_for(:clip, :id) } do |cli|
-        cl.edit_user_article_clip 'clips/:id/edit', :action => 'edit', :conditions => { :method => :get }
-        cl.formatted_edit_user_article_clip 'clips/:id/edit.:format', :action => 'edit', :conditions => { :method => :get }
-        cl.user_article_clip 'clips/:id', :action => 'show', :conditions => { :method => :get }
-        cl.formatted_user_article_clip 'clips/:id.:format', :action => 'show', :conditions => { :method => :get }
-        cl.connect 'clips/:id', :action => 'update', :conditions => { :method => :put }
-        cl.connect 'clips/:id.:format', :action => 'update', :conditions => { :method => :put }
-        cl.connect 'clips/:id', :action => 'destroy', :conditions => { :method => :delete }
-        cl.connect 'clips/:id.:format', :action => 'destroy', :conditions => { :method => :delete }
+        cl.edit_user_article_clip           'clips/:id/edit',         :action => 'edit',    :conditions => { :method => :get }
+        cl.formatted_edit_user_article_clip 'clips/:id/edit.:format', :action => 'edit',    :conditions => { :method => :get }
+        cl.user_article_clip                'clips/:id',              :action => 'show',    :conditions => { :method => :get }
+        cl.formatted_user_article_clip      'clips/:id.:format',      :action => 'show',    :conditions => { :method => :get }
+        cl.connect                          'clips/:id',              :action => 'update',  :conditions => { :method => :put }
+        cl.connect                          'clips/:id.:format',      :action => 'update',  :conditions => { :method => :put }
+        cl.connect                          'clips/:id',              :action => 'destroy', :conditions => { :method => :delete }
+        cl.connect                          'clips/:id.:format',      :action => 'destroy', :conditions => { :method => :delete }
       end
     end
-    # Article -> Comments
+    # User -> Article -> Comments
     ars.with_options :controller => 'comments' do |cm|
-      cm.user_article_comments 'comments', :action => 'index', :conditions => { :method => :get }
-      cm.formatted_user_article_comments 'comments.:format', :action => 'index', :conditions => { :method => :get }
-      cm.connect 'comments', :action => 'create', :conditions => { :method => :post }
-      cm.connect 'comments.:format', :action => 'create', :conditions => { :method => :post }
-      cm.new_user_article_comment 'comments/new', :action => 'new', :conditions => { :method => :get }
-      cm.formatted_new_user_article_comment 'comments/new.:format', :action => 'new', :conditions => { :method => :get }
+      cm.user_article_comments              'comments',             :action => 'index',  :conditions => { :method => :get }
+      cm.formatted_user_article_comments    'comments.:format',     :action => 'index',  :conditions => { :method => :get }
+      cm.connect                            'comments',             :action => 'create', :conditions => { :method => :post }
+      cm.connect                            'comments.:format',     :action => 'create', :conditions => { :method => :post }
+      cm.new_user_article_comment           'comments/new',         :action => 'new',    :conditions => { :method => :get }
+      cm.formatted_new_user_article_comment 'comments/new.:format', :action => 'new',    :conditions => { :method => :get }
       cm.with_options :requirements => { :id => regex_for(:comment, :id) } do |cmi|
-        cmi.edit_user_article_comment 'comments/:id/edit', :action => 'edit', :conditions => { :method => :get }
-        cmi.formatted_edit_user_article_comment 'comments/:id/edit.:format', :action => 'edit', :conditions => { :method => :get }
-        cmi.user_article_comment 'comments/:id', :action => 'show', :conditions => { :method => :get }
-        cmi.formatted_user_article_comment 'comments/:id.:format', :action => 'show', :conditions => { :method => :get }
-        cmi.connect 'comments/:id', :action => 'update', :conditions => { :method => :put }
-        cmi.connect 'comments/:id.:format', :action => 'update', :conditions => { :method => :put }
-        cmi.connect 'comments/:id', :action => 'destroy', :conditions => { :method => :delete }
-        cmi.connect 'comments/:id.:format', :action => 'destroy', :conditions => { :method => :delete }
+        cmi.edit_user_article_comment           'comments/:id/edit',         :action => 'edit',    :conditions => { :method => :get }
+        cmi.formatted_edit_user_article_comment 'comments/:id/edit.:format', :action => 'edit',    :conditions => { :method => :get }
+        cmi.user_article_comment                'comments/:id',              :action => 'show',    :conditions => { :method => :get }
+        cmi.formatted_user_article_comment      'comments/:id.:format',      :action => 'show',    :conditions => { :method => :get }
+        cmi.connect                             'comments/:id',              :action => 'update',  :conditions => { :method => :put }
+        cmi.connect                             'comments/:id.:format',      :action => 'update',  :conditions => { :method => :put }
+        cmi.connect                             'comments/:id',              :action => 'destroy', :conditions => { :method => :delete }
+        cmi.connect                             'comments/:id.:format',      :action => 'destroy', :conditions => { :method => :delete }
       end
     end
-    # Article -> Pictures
+    # User -> Article -> Pictures
     ars.with_options :controller => 'pictures' do |pic|
-      pic.user_article_pictures 'pictures', :action => 'index', :conditions => { :method => :get }
-      pic.formatted_user_article_pictures 'pictures.:format', :action => 'index', :conditions => { :method => :get }
-      pic.connect 'pictures', :action => 'create', :conditions => { :method => :post }
-      pic.connect 'pictures.:format', :action => 'create', :conditions => { :method => :post }
-      pic.new_user_article_picture 'pictures/new', :action => 'new', :conditions => { :method => :get }
-      pic.formatted_new_user_article_picture 'pictures/new.:format', :action => 'new', :conditions => { :method => :get }
+      pic.user_article_pictures              'pictures',             :action => 'index',  :conditions => { :method => :get }
+      pic.formatted_user_article_pictures    'pictures.:format',     :action => 'index',  :conditions => { :method => :get }
+      pic.connect                            'pictures',             :action => 'create', :conditions => { :method => :post }
+      pic.connect                            'pictures.:format',     :action => 'create', :conditions => { :method => :post }
+      pic.new_user_article_picture           'pictures/new',         :action => 'new',    :conditions => { :method => :get }
+      pic.formatted_new_user_article_picture 'pictures/new.:format', :action => 'new',    :conditions => { :method => :get }
       pic.with_options :requirements => { :id => regex_for(:picture, :id) } do |pici|
-        pici.edit_user_article_picture 'pictures/:id/edit', :action => 'edit', :conditions => { :method => :get }
-        pici.formatted_edit_user_article_picture 'pictures/:id/edit.:format', :action => 'edit', :conditions => { :method => :get }
-        pici.user_article_picture 'pictures/:id', :action => 'show', :conditions => { :method => :get }
-        pici.formatted_user_article_picture 'pictures/:id.:format', :action => 'show', :conditions => { :method => :get }
-        pici.connect 'pictures/:id', :action => 'update', :conditions => { :method => :put }
-        pici.connect 'pictures/:id.:format', :action => 'update', :conditions => { :method => :put }
-        pici.connect 'pictures/:id', :action => 'destroy', :conditions => { :method => :delete }
-        pici.connect 'pictures/:id.:format', :action => 'destroy', :conditions => { :method => :delete }
+        pici.edit_user_article_picture           'pictures/:id/edit',         :action => 'edit',    :conditions => { :method => :get }
+        pici.formatted_edit_user_article_picture 'pictures/:id/edit.:format', :action => 'edit',    :conditions => { :method => :get }
+        pici.user_article_picture                'pictures/:id',              :action => 'show',    :conditions => { :method => :get }
+        pici.formatted_user_article_picture      'pictures/:id.:format',      :action => 'show',    :conditions => { :method => :get }
+        pici.connect                             'pictures/:id',              :action => 'update',  :conditions => { :method => :put }
+        pici.connect                             'pictures/:id.:format',      :action => 'update',  :conditions => { :method => :put }
+        pici.connect                             'pictures/:id',              :action => 'destroy', :conditions => { :method => :delete }
+        pici.connect                             'pictures/:id.:format',      :action => 'destroy', :conditions => { :method => :delete }
       end
+      # User -> Article -> Picture -> Clips
       pic.with_options :controller => 'clips', :path_prefix => 'u/:user_id/:blog_id/:year/:month/:day/:article_id/pictures/:picture_id',
                                                :requirements => { :picture_id => regex_for(:picture, :id) } do |pcl|
-        pcl.user_article_picture_clips 'clips', :action => 'index', :conditions => { :method => :get }
-        pcl.user_article_picture_clips 'clips.:format', :action => 'index', :conditions => { :method => :get }
-        pcl.connect 'clips', :action => 'create', :conditions => { :method => :post }
-        pcl.connect 'clips.:format', :action => 'create', :conditions => { :method => :post }
-        pcl.new_user_article_picture_clip 'clips/new', :action => 'new', :conditions => { :method => :get }
-        pcl.formatted_new_user_article_picture_clip 'clips/new.:format', :action => 'new', :conditions => { :method => :get }
+        pcl.user_article_picture_clips              'clips',             :action => 'index',  :conditions => { :method => :get }
+        pcl.formatted_user_article_picture_clips     'clips.:format',     :action => 'index',  :conditions => { :method => :get }
+        pcl.connect                                 'clips',             :action => 'create', :conditions => { :method => :post }
+        pcl.connect                                 'clips.:format',     :action => 'create', :conditions => { :method => :post }
+        pcl.new_user_article_picture_clip           'clips/new',         :action => 'new',    :conditions => { :method => :get }
+        pcl.formatted_new_user_article_picture_clip 'clips/new.:format', :action => 'new',    :conditions => { :method => :get }
         pcl.with_options :requirements => { :id => regex_for(:clip, :id) } do |pcli|
-          pcli.edit_user_article_picture_clip 'clips/:id/edit', :action => 'edit', :conditions => { :method => :get }
-          pcli.formatted_edit_user_article_picture_clip 'clips/:id/edit.:format', :action => 'edit', :conditions => { :method => :get }
-          pcli.user_article_picture_clip 'clips/:id', :action => 'show', :conditions => { :method => :get }
-          pcli.formatted_user_article_picture_clip 'clips/:id.:format', :action => 'show', :conditions => { :method => :get }
-          pcli.connect 'clips/:id', :action => 'update', :conditions => { :method => :put }
-          pcli.connect 'clips/:id.:format', :action => 'update', :conditions => { :method => :put }
-          pcli.connect 'clips/:id', :action => 'destroy', :conditions => { :method => :delete }
-          pcli.connect 'clips/:id.:format', :action => 'destroy', :conditions => { :method => :delete }
+          pcli.edit_user_article_picture_clip           'clips/:id/edit',         :action => 'edit',    :conditions => { :method => :get }
+          pcli.formatted_edit_user_article_picture_clip 'clips/:id/edit.:format', :action => 'edit',    :conditions => { :method => :get }
+          pcli.user_article_picture_clip                'clips/:id',              :action => 'show',    :conditions => { :method => :get }
+          pcli.formatted_user_article_picture_clip      'clips/:id.:format',      :action => 'show',    :conditions => { :method => :get }
+          pcli.connect                                  'clips/:id',              :action => 'update',  :conditions => { :method => :put }
+          pcli.connect                                  'clips/:id.:format',      :action => 'update',  :conditions => { :method => :put }
+          pcli.connect                                  'clips/:id',              :action => 'destroy', :conditions => { :method => :delete }
+          pcli.connect                                  'clips/:id.:format',      :action => 'destroy', :conditions => { :method => :delete }
         end
       end
-      pic.with_options :controller => 'comments', :requirements => { :picture_id => regex_for(:picture, :id) } do |pcm|
-        pcm.article_picture_comments 'comments', :action => 'index', :conditions => { :method => :get }
-        pcm.formatted_article_picture_comments 'comments.:format', :action => 'index', :conditions => { :method => :get }
-        pcm.connect 'comments', :action => 'create', :conditions => { :method => :post }
-        pcm.connect 'comments.:format', :action => 'create', :conditions => { :method => :post }
-        pcm.new_article_picture_comment 'comments/new', :action => 'new', :conditions => { :method => :get }
-        pcm.formatted_new_article_picture_comment 'comments/new.:format', :action => 'new', :conditions => { :method => :get }
+      # User -> Article -> Picture -> Comments
+      pic.with_options :controller => 'comments', :path_prefix => 'u/:user_id/:blog_id/:year/:month/:day/:article_id/pictures/:picture_id',
+                                                  :requirements => { :picture_id => regex_for(:picture, :id) } do |pcm|
+        pcm.user_article_picture_comments              'comments',             :action => 'index',  :conditions => { :method => :get }
+        pcm.formatted_user_article_picture_comments    'comments.:format',     :action => 'index',  :conditions => { :method => :get }
+        pcm.connect                                    'comments',             :action => 'create', :conditions => { :method => :post }
+        pcm.connect                                    'comments.:format',     :action => 'create', :conditions => { :method => :post }
+        pcm.new_user_article_picture_comment           'comments/new',         :action => 'new',    :conditions => { :method => :get }
+        pcm.formatted_new_user_article_picture_comment 'comments/new.:format', :action => 'new',    :conditions => { :method => :get }
         pcm.with_options :requirements => { :id => regex_for(:comment, :id) } do |pcmi|
-          pcmi.edit_article_picture_comment 'comments/:id/edit', :action => 'edit', :conditions => { :method => :get }
-          pcmi.formatted_edit_article_picture_comment 'comments/:id/edit.:format', :action => 'edit', :conditions => { :method => :get }
-          pcmi.article_picture_comment 'comments/:id', :action => 'show', :conditions => { :method => :get }
-          pcmi.formatted_article_picture_comment 'comments/:id.:format', :action => 'show', :conditions => { :method => :get }
-          pcmi.connect 'comments/:id', :action => 'update', :conditions => { :method => :put }
-          pcmi.connect 'comments/:id.:format', :action => 'update', :conditions => { :method => :put }
-          pcmi.connect 'comments/:id', :action => 'destroy', :conditions => { :method => :delete }
-          pcmi.connect 'comments/:id.:format', :action => 'destroy', :conditions => { :method => :delete }
+          pcmi.edit_user_article_picture_comment           'comments/:id/edit',         :action => 'edit',    :conditions => { :method => :get }
+          pcmi.formatted_edit_user_article_picture_comment 'comments/:id/edit.:format', :action => 'edit',    :conditions => { :method => :get }
+          pcmi.user_article_picture_comment                'comments/:id',              :action => 'show',    :conditions => { :method => :get }
+          pcmi.formatted_user_article_picture_comment      'comments/:id.:format',      :action => 'show',    :conditions => { :method => :get }
+          pcmi.connect                                     'comments/:id',              :action => 'update',  :conditions => { :method => :put }
+          pcmi.connect                                     'comments/:id.:format',      :action => 'update',  :conditions => { :method => :put }
+          pcmi.connect                                     'comments/:id',              :action => 'destroy', :conditions => { :method => :delete }
+          pcmi.connect                                     'comments/:id.:format',      :action => 'destroy', :conditions => { :method => :delete }
         end
       end
     end
   end
+  
+  
+  ########## GROUP ARTICLES################
+  
+  
+  # Group -> Articles
+  map.with_options :controller => 'articles', :path_prefix => 'g/:group_id/:blog_id',
+                                              :requirements => { :group_id => regex_for(:group, :name), :blog_id => regex_for(:blog, :permalink) } do |ar|
+    ar.group_articles               'articles',             :action => 'index',  :conditions => { :method => :get }
+    ar.formatted_group_articles     'articles.:format',     :action => 'index',  :conditions => { :method => :get }
+    ar.connect                      'articles',             :action => 'create', :conditions => { :method => :post }
+    ar.connect                      'articles.:format',     :action => 'create', :conditions => { :method => :post }
+    ar.new_group_article            'articles/new',         :action => 'new',    :conditions => { :method => :get }
+    ar.formatted_new_groupo_article 'article/new.:format',  :action => 'new',    :conditions => { :method => :get }
+    
+    ar.with_options :path_prefix => 'g/:group_id/:blog_id/:year/:month/:day/:id',
+                    :requirements => { :year => /\d{4}/, :month => /\d{1,2}/, :day => /\d{1,2}/, :id => regex_for(:article, :permalink) } do |arpm|
+      arpm.edit_group_article                'edit',              :action => 'edit',      :conditions => { :method => :get }
+      arpm.formatted_edit_group_article      'edit.:format',      :action => 'edit',      :conditions => { :method => :get }
+      arpm.unpublish_group_article           'unpublish',         :action => 'unpublish', :conditions => { :method => :put }
+      arpm.formatted_unpublish_group_article 'unpublish.:format', :action => 'unpublish', :conditions => { :method => :put }
+      arpm.group_article                     '',                  :action => 'show',      :conditions => { :method => :get }                                                                                                      
+      arpm.formatted_group_article           '.:format',          :action => 'show',      :conditions => { :method => :get }
+      arpm.connect                           '',                  :action => 'update',    :conditions => { :method => :put }
+      arpm.connect                           '.:format',          :action => 'update',    :conditions => { :method => :put }
+      arpm.connect                           '',                  :action => 'destroy',   :conditions => { :method => :delete }
+      arpm.connect                           '.:format',          :action => 'destroy',   :conditions => { :method => :delete }
+    end
+    ar.with_options :requirements => { :id => regex_for(:article, :permalink) } do |par|
+      par.group_particles                'articles/:id',               :action => 'show',    :conditions =>   { :method => :get }
+      par.formatted_group_particles      'articles/:id.:format',       :action => 'show',    :conditions =>   { :method => :get }
+      par.edit_group_draft               'draft/:id/edit',             :action => 'edit',    :conditions =>   { :method => :get }
+      par.formatted_edit_grouop_draft    'draft/:id/edit.:format',     :action => 'edit',    :conditions =>   { :method => :get }
+      par.publish_group_draft            'draft/:id/publish',          :action => 'publish', :conditions =>   { :method => :put }
+      par.formatted_publish_group_draft  'draft/:id/publish.:format',  :action => 'publish', :conditions =>   { :method => :put }
+      par.group_draft                    'draft/:id',                  :action => 'show',    :conditions =>   { :method => :get }
+      par.formatted_group_draft          'draft/:id.:format',          :action => 'show',    :conditions =>   { :method => :get }
+      par.connect                        'draft/:id',                  :action => 'update',  :conditions =>   { :method => :put }
+      par.connect                        'draft/:id.:format',          :action => 'update',  :conditions =>   { :method => :put }
+      par.connect                        'draft/:id',                  :action => 'destroy', :conditions =>   { :method => :delete }
+      par.connect                        'draft/:id.:format',          :action => 'destroy', :conditions =>   { :method => :delete }
+    end
+  end
+  
+  # Group -> Draft -> Pictures
+  map.with_options :controller => 'pictures', :path_prefix => 'g/:group_id/:blog_id/draft/:article_id',
+                   :requirements => { :article_id => regex_for(:article, :permalink), :group_id => regex_for(:group, :name),
+                                      :blog_id    => regex_for(:blog, :permalink) } do |draft|
+    draft.group_draft_pictures              'pictures',             :action => 'index',  :conditions => { :method => :get }
+    draft.formatted_group_draft_pictures    'pictures.:format',     :action => 'index',  :conditions => { :method => :get }
+    draft.connect                           'pictures',             :action => 'create', :conditions => { :method => :post }
+    draft.connect                           'pictures.:format',     :action => 'create', :conditions => { :method => :post }
+    draft.new_group_draft_picture           'pictures/new',         :action => 'new',    :conditions => { :method => :get }
+    draft.formatted_new_group_draft_picture 'pictures/new.:format', :action => 'new',    :conditions => { :method => :get }
+    draft.with_options :requirements => { :id => regex_for(:picture, :id) } do |drp|
+      drp.edit_group_draft_picture           'pictures/:id/edit',         :action => 'edit',    :conditions => { :method => :get }
+      drp.formatted_edit_group_draft_picture 'pictures/:id/edit.:format', :action => 'edit',    :conditions => { :method => :get }
+      drp.group_draft_picture                'pictures/:id',              :action => 'show',    :conditions => { :method => :get }
+      drp.formatted_group_draft_picture      'pictures/:id.:format',      :action => 'show',    :conditions => { :method => :get }
+      drp.connect                            'pictures/:id',              :action => 'update',  :conditions => { :method => :put }
+      drp.connect                            'pictures/:id.:format',      :action => 'update',  :conditions => { :method => :put }
+      drp.connect                            'pictures/:id',              :action => 'destroy', :conditions => { :method => :delete }
+      drp.connect                            'pictures/:id.:format',      :action => 'destroy', :conditions => { :method => :delete }
+    end
+  end
 
+  map.with_options :path_prefix => 'g/:group_id/:blog_id/:year/:month/:day/:article_id',
+                   :requirements => { :year => /\d{4}/, :month => /\d{1,2}/, :day => /\d{1,2}/, :article_id => regex_for(:article, :permalink),
+                                      :group_id => regex_for(:group, :name), :blog_id => regex_for(:blog, :permalink) } do |ars|
+    # Group -> Article -> Clips
+    ars.with_options :controller => 'clips' do |cl|
+      cl.group_article_clips              'clips',             :action => 'index',  :conditions => { :method => :get }
+      cl.formatted_group_article_clips    'clips.:format',     :action => 'index',  :conditions => { :method => :get }
+      cl.connect                          'clips',             :action => 'create', :conditions => { :method => :post }
+      cl.connect                          'clips.:format',     :action => 'create', :conditions => { :method => :post }
+      cl.new_group_article_clip           'clips/new',         :action => 'new',    :conditions => { :method => :get }
+      cl.formatted_new_group_article_clip 'clips/new.:format', :action => 'new',    :conditions => { :method => :get }
+      cl.with_options :requirements => { :id => regex_for(:clip, :id) } do |cli|
+        cl.edit_group_article_clip           'clips/:id/edit',         :action => 'edit',    :conditions => { :method => :get }
+        cl.formatted_edit_group_article_clip 'clips/:id/edit.:format', :action => 'edit',    :conditions => { :method => :get }
+        cl.group_article_clip                'clips/:id',              :action => 'show',    :conditions => { :method => :get }
+        cl.formatted_group_article_clip      'clips/:id.:format',      :action => 'show',    :conditions => { :method => :get }
+        cl.connect                           'clips/:id',              :action => 'update',  :conditions => { :method => :put }
+        cl.connect                           'clips/:id.:format',      :action => 'update',  :conditions => { :method => :put }
+        cl.connect                           'clips/:id',              :action => 'destroy', :conditions => { :method => :delete }
+        cl.connect                           'clips/:id.:format',      :action => 'destroy', :conditions => { :method => :delete }
+      end
+    end
+    # Group -> Article -> Comments
+    ars.with_options :controller => 'comments' do |cm|
+      cm.group_article_comments              'comments',             :action => 'index',  :conditions => { :method => :get }
+      cm.formatted_group_article_comments    'comments.:format',     :action => 'index',  :conditions => { :method => :get }
+      cm.connect                             'comments',             :action => 'create', :conditions => { :method => :post }
+      cm.connect                             'comments.:format',     :action => 'create', :conditions => { :method => :post }
+      cm.new_group_article_comment           'comments/new',         :action => 'new',    :conditions => { :method => :get }
+      cm.formatted_new_group_article_comment 'comments/new.:format', :action => 'new',    :conditions => { :method => :get }
+      cm.with_options :requirements => { :id => regex_for(:comment, :id) } do |cmi|
+        cmi.edit_group_article_comment           'comments/:id/edit',         :action => 'edit',    :conditions => { :method => :get }
+        cmi.formatted_edit_group_article_comment 'comments/:id/edit.:format', :action => 'edit',    :conditions => { :method => :get }
+        cmi.group_article_comment                'comments/:id',              :action => 'show',    :conditions => { :method => :get }
+        cmi.formatted_group_article_comment      'comments/:id.:format',      :action => 'show',    :conditions => { :method => :get }
+        cmi.connect                              'comments/:id',              :action => 'update',  :conditions => { :method => :put }
+        cmi.connect                              'comments/:id.:format',      :action => 'update',  :conditions => { :method => :put }
+        cmi.connect                              'comments/:id',              :action => 'destroy', :conditions => { :method => :delete }
+        cmi.connect                              'comments/:id.:format',      :action => 'destroy', :conditions => { :method => :delete }
+      end
+    end
+    # Group -> Article -> Pictures
+    ars.with_options :controller => 'pictures' do |pic|
+      pic.group_article_pictures              'pictures',             :action => 'index',  :conditions => { :method => :get }
+      pic.formatted_group_article_pictures    'pictures.:format',     :action => 'index',  :conditions => { :method => :get }
+      pic.connect                             'pictures',             :action => 'create', :conditions => { :method => :post }
+      pic.connect                             'pictures.:format',     :action => 'create', :conditions => { :method => :post }
+      pic.new_group_article_picture           'pictures/new',         :action => 'new',    :conditions => { :method => :get }
+      pic.formatted_new_group_article_picture 'pictures/new.:format', :action => 'new',    :conditions => { :method => :get }
+      pic.with_options :requirements => { :id => regex_for(:picture, :id) } do |pici|
+        pici.edit_group_article_picture           'pictures/:id/edit',         :action => 'edit',    :conditions => { :method => :get }
+        pici.formatted_edit_group_article_picture 'pictures/:id/edit.:format', :action => 'edit',    :conditions => { :method => :get }
+        pici.group_article_picture                'pictures/:id',              :action => 'show',    :conditions => { :method => :get }
+        pici.formatted_group_article_picture      'pictures/:id.:format',      :action => 'show',    :conditions => { :method => :get }
+        pici.connect                              'pictures/:id',              :action => 'update',  :conditions => { :method => :put }
+        pici.connect                              'pictures/:id.:format',      :action => 'update',  :conditions => { :method => :put }
+        pici.connect                              'pictures/:id',              :action => 'destroy', :conditions => { :method => :delete }
+        pici.connect                              'pictures/:id.:format',      :action => 'destroy', :conditions => { :method => :delete }
+      end
+      # Group -> Article -> Picture -> Clips
+      pic.with_options :controller => 'clips', :path_prefix => 'g/:group_id/:blog_id/:year/:month/:day/:article_id/pictures/:picture_id',
+                                               :requirements => { :picture_id => regex_for(:picture, :id) } do |pcl|
+        pcl.group_article_picture_clips              'clips',             :action => 'index',  :conditions => { :method => :get }
+        pcl.formatted_group_article_picture_clips    'clips.:format',     :action => 'index',  :conditions => { :method => :get }
+        pcl.connect                                  'clips',             :action => 'create', :conditions => { :method => :post }
+        pcl.connect                                  'clips.:format',     :action => 'create', :conditions => { :method => :post }
+        pcl.new_group_article_picture_clip           'clips/new',         :action => 'new',    :conditions => { :method => :get }
+        pcl.formatted_new_group_article_picture_clip 'clips/new.:format', :action => 'new',    :conditions => { :method => :get }
+        pcl.with_options :requirements => { :id => regex_for(:clip, :id) } do |pcli|
+          pcli.edit_group_article_picture_clip           'clips/:id/edit',         :action => 'edit',    :conditions => { :method => :get }
+          pcli.formatted_edit_group_article_picture_clip 'clips/:id/edit.:format', :action => 'edit',    :conditions => { :method => :get }
+          pcli.group_article_picture_clip                'clips/:id',              :action => 'show',    :conditions => { :method => :get }
+          pcli.formatted_group_article_picture_clip      'clips/:id.:format',      :action => 'show',    :conditions => { :method => :get }
+          pcli.connect                                   'clips/:id',              :action => 'update',  :conditions => { :method => :put }
+          pcli.connect                                   'clips/:id.:format',      :action => 'update',  :conditions => { :method => :put }
+          pcli.connect                                   'clips/:id',              :action => 'destroy', :conditions => { :method => :delete }
+          pcli.connect                                   'clips/:id.:format',      :action => 'destroy', :conditions => { :method => :delete }
+        end
+      end
+      # Group - Article -> Picture -> Comments
+      pic.with_options :controller => 'comments', :path_prefix => 'g/:group_id/:blog_id/:year/:month/:day/:article_id/pictures/:picture_id',
+                                                  :requirements => { :picture_id => regex_for(:picture, :id) } do |pcm|
+        pcm.group_article_picture_comments              'comments',             :action => 'index',  :conditions => { :method => :get }
+        pcm.formatted_group_article_picture_comments    'comments.:format',     :action => 'index',  :conditions => { :method => :get }
+        pcm.connect                                     'comments',             :action => 'create', :conditions => { :method => :post }
+        pcm.connect                                     'comments.:format',     :action => 'create', :conditions => { :method => :post }
+        pcm.new_group_article_picture_comment           'comments/new',         :action => 'new',    :conditions => { :method => :get }
+        pcm.formatted_new_group_article_picture_comment 'comments/new.:format', :action => 'new',    :conditions => { :method => :get }
+        pcm.with_options :requirements => { :id => regex_for(:comment, :id) } do |pcmi|
+          pcmi.edit_group_article_picture_comment           'comments/:id/edit',         :action => 'edit',    :conditions => { :method => :get }
+          pcmi.formatted_edit_group_article_picture_comment 'comments/:id/edit.:format', :action => 'edit',    :conditions => { :method => :get }
+          pcmi.group_article_picture_comment                'comments/:id',              :action => 'show',    :conditions => { :method => :get }
+          pcmi.formatted_group_article_picture_comment      'comments/:id.:format',      :action => 'show',    :conditions => { :method => :get }
+          pcmi.connect                                      'comments/:id',              :action => 'update',  :conditions => { :method => :put }
+          pcmi.connect                                      'comments/:id.:format',      :action => 'update',  :conditions => { :method => :put }
+          pcmi.connect                                      'comments/:id',              :action => 'destroy', :conditions => { :method => :delete }
+          pcmi.connect                                      'comments/:id.:format',      :action => 'destroy', :conditions => { :method => :delete }
+        end
+      end
+    end
+  end
+  
+  
+  
+  
+  ########### NORMAL STUFF #################
   map.resources :groups, :requirements => { :id => regex_for(:group, :id) }, :member => { :join => :put, :leave => :put, :kick => :put, :invite => :put } do |grp|
     grp.resources :blogs, :requirements => { :group_id => regex_for(:group, :id),
                                              :id => regex_for(:blog, :permalink) } do |gbg|
