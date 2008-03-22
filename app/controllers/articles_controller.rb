@@ -52,6 +52,19 @@ class ArticlesController < ApplicationController
     return unless get_user
     if @user == get_viewer
       @article = Article.new
+      @page_title = "New Article"
+      @layoutable = @user
+      respond_to do |format|
+        format.html do
+          if @article.layout
+            render :template => @article.layout_file(:new)
+          else
+            render :action => 'show'
+          end
+        end
+        format.js
+        format.xml
+      end
     else
       redirect_to new_article_url(get_viewer) and return if @user != get_viewer
     end
@@ -79,8 +92,15 @@ class ArticlesController < ApplicationController
   def edit
     return unless setup(:permission) && authorize(@article, :editable => true)
     @page_title = "#{@article.display_name} - Edit"
+    @layoutable = @article
     respond_to do |format|
-      format.html
+      format.html do
+        if @article.layout
+          render :template => @article.layout_file(:edit)
+        else
+          render :action => 'edit'
+        end
+      end
       format.js
     end
   end

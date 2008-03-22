@@ -34,10 +34,13 @@ module ApplicationHelper
   
   def navi_el(text, path, opts={})
     @navi_count ||= 0
+    css_class = [ 'navigationEl' ]
     conditions = opts[:conditions].nil? ? true : opts.delete(:conditions)
-    right, first = opts.delete(:right), @navi_count == 0
+    css_class << 'current' if opts.delete(:current)
+    css_class << 'right' if opts.delete(:right)
+    css_class << 'first' if @navi_count == 0
     @navi_count += 1
-    content_tag(:li, link_to(text, path, opts), :class => "navigationEl#{' right' if right}#{' first' if first}") if conditions
+    content_tag(:li, link_to(text, path, opts), :class => css_class.join(' ')) if conditions
   end
   
   def subnavi_el(text, path, opts={})
@@ -50,10 +53,12 @@ module ApplicationHelper
 
   def bread_el(text, path, opts={})
     z_index = 10 - (@bread_count ||= 0)
+    css_class = [ 'navigationEl', 'breadcrumbEl' ]
     @bread_count += 1
     opts[:style] = [ opts[:style], "z-index: #{z_index};" ].compact.join(' ')
-    current, first = opts.delete(:current), opts.delete(:first)
-    content_tag(:li, link_to(text, path, opts), :class => "navigationEl breadcrumbEl#{' current' if current}#{' first' if first}", :style => "z-index: #{z_index};")
+    css_class << 'current' if opts.delete(:current)
+    css_class << 'first' if opts.delete(:first)
+    content_tag(:li, link_to(text, path, opts), :class => css_class.join(' '), :style => "z-index: #{z_index};")
   end
 								
   def navi_skin_info
