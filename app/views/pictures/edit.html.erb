@@ -22,7 +22,6 @@ The param passed is the max zoom level for the cropping UI. -->
 <![endif]-->
 
 <div>
-	<%#FIXME: form_for @picture, :url => picture_path(@picture) do |f| -%>
 	<% form_for :picture, @picture, :url => picture_path_for(@picture), :html => { :method => :put } do |f| %>
 		<div id="crop_form_fields">
 			<h4>Form fields passed to the server (you'll probably want to make these hidden fields in your app)</h4>

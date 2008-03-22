@@ -14,13 +14,27 @@ class Blog < ActiveRecord::Base
   
   validates_presence_of :bloggable_type, :bloggable_id, :user_id, :name, :short_name, :permalink
   validates_length_of :name, :in => (3..70)
-  validates_length_of :short_name, :in => (3..12)
+  validates_length_of :short_name, :in => (3..20)
   validates_uniqueness_of :permalink, :scope => [ :bloggable_id, :bloggable_type ]
   validates_with_regexp :name, :short_name, :permalink
   
   attr_protected :permalink
   
   before_save :verify_non_empty_permalink
+  
+  class << self
+    def find_by_user_and_blog(user_id, blog_id)
+      User.primary_find(user_id).blogs.primary_find(blog_id) rescue nil
+    end
+    
+    def find_by_group_and_blog(group_id, blog_id)
+      Group.primary_find(user_id).blogs.primary_find(blog_id) rescue nil
+    end
+    
+    def primary_find(*args)
+      find_by_permalink(*args)
+    end
+  end
   
   def to_param; self.permalink; end
   def permalink
@@ -40,22 +54,8 @@ class Blog < ActiveRecord::Base
     make_permalink
   end
   
-  def content # TODO: this may need better formatting
-    recent_article = self.articles.find(:first)
-    recent_article.name.to_s + ': ' +
-    self.articles.find(:first).content.to_s
-  end
-  
-  #def to_path(for_associated=false)
-  #  if self.bloggable.nil?
-  #    { :"#{for_associated ? 'blog_id' : 'id'}" => self.to_param }
-  #  else
-  #    self.to_polypath(for_associated)
-  #  end
-  #end
-  
   def to_path(for_associated=false)
-    { :"#{for_associated ? 'blog_id' : 'id'}" => self.to_param }.merge(self.bloggable.nil? ? {} : self.bloggable.to_path(true))
+    { :"#{for_associated ? 'blog_id' : 'id'}" => self.to_param }.merge(self.bloggable.to_path(true))
   end
   
   def path_name_prefix

@@ -317,7 +317,7 @@ class ArticlesControllerTest < ActionController::TestCase
     assert_redirected_to draft_url(articles(:blog).to_path)
   end
   
-  def test_draft_show_with_wrong_permalink # TODO: draft show action need to be authorized
+  def test_draft_show_with_wrong_permalink
     articles(:blog).send(:make_permalink, :with_save => true)
     assert articles(:blog).draft?
     get :show, articles(:blog).to_path.update(:id => articles(:blog).permalink.chop), as(:colin)

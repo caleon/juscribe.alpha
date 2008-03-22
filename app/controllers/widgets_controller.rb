@@ -1,5 +1,5 @@
 class WidgetsController < ApplicationController
-  use_shared_options
+  use_shared_options :collection_layoutable => :@user
   verify_login_on :new, :create, :edit, :update, :destroy, :place, :unplace
   authorize_on :index, :show, :edit, :update, :destroy, :place, :unplace
 
@@ -8,11 +8,9 @@ class WidgetsController < ApplicationController
     find_opts = get_find_opts(:order => 'id DESC')
     @widgets = @user.widgets.find(:all, find_opts)
     @page_title = "Customize Widgets"
-    @layoutable = @user
+    set_layoutable
     respond_to do |format|
-      format.html do
-        render :template => @widgets.first.layout_file(:index) if @user.layout #FIXME: icky too
-      end
+      format.html { trender }
       format.js
       format.xml
     end
@@ -20,8 +18,10 @@ class WidgetsController < ApplicationController
   
   def show
     return unless setup
+    @page_title = @widget.display_name
+    set_layoutable
     respond_to do |format|
-      format.html
+      format.html { trender }
       format.js
       format.xml
     end
@@ -38,14 +38,17 @@ class WidgetsController < ApplicationController
   def edit
     return unless setup && authorize(@widget, :editable => true)
     @page_title = "#{@widget.display_name} - Edit"
+    set_layoutable
     respond_to do |format|
-      format.html
+      format.html { trender }
       format.js
     end
   end
   
   def update
     return unless setup && authorize(@widget, :editable => true)
+    @page_title = "#{@widget.display_name} - Edit"
+    set_layoutable
     if @widget.update_attributes(params[:widget])
       msg = "You have successfully updated #{@widget.display_name}."
       respond_to do |format|
@@ -55,7 +58,7 @@ class WidgetsController < ApplicationController
     else
       flash.now[:warning] = "There was an error updating your #{@widget.display_name}."
       respond_to do |format|
-        format.html { render :action => 'edit' }
+        format.html { trender :edit }
         format.js { render :action => 'update_error' }
       end
     end

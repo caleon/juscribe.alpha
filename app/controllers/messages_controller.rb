@@ -1,6 +1,5 @@
-# TODO: setup controller-level check for #accessible_by?
 class MessagesController < ApplicationController  
-  use_shared_options
+  use_shared_options :collection_layoutable => :get_viewer
   verify_login_on :index, :show, :new, :create, :edit, :update, :destroy, :send
   authorize_on :show, :edit, :update, :destroy, :send
   
@@ -17,12 +16,9 @@ class MessagesController < ApplicationController
       @messages = Message.find(:all, find_opts.merge(:conditions => ["recipient_id = ?", get_viewer.id]))
       @page_title = "My Inbox"
     end
-    @user = get_viewer
-    @layoutable = get_viewer
+    set_layoutable
     respond_to do |format|
-      format.html do
-        render :template => Message.find(:first).layout_file(:index) if get_viewer.layout # FIXME WOW.
-      end
+      format.html { trender }
       format.js
       format.xml
     end
@@ -32,10 +28,9 @@ class MessagesController < ApplicationController
     return unless setup#([ :sender, :recipient ])
     @message.read_it! if @message.recipient == get_viewer
     @page_title = @message.subject
-    @user = get_viewer
-    @layoutable = @message
+    set_layoutable
     respond_to do |format|
-      format.html { render :template => @message.layout_file(:show) if @message.layout }
+      format.html { trender }
       format.js
       format.xml
     end
@@ -44,10 +39,9 @@ class MessagesController < ApplicationController
   def new
     @page_title = "Compose new message"
     @message = get_viewer.sent_messages.new
-    @user = get_viewer
-    @layoutable = @message
+    set_layoutable
     respond_to do |format|
-      format.html { render :template => @message.layout_file(:new) if @message.layout }
+      format.html { trender }
       format.js
     end
   end  
@@ -55,7 +49,7 @@ class MessagesController < ApplicationController
   def create
     @message = Message.new(params[:message].merge(:sender => get_viewer))
     @page_title = "Compose new message"
-    @layoutable = get_viewer
+    set_layoutable
     if @message.save
       msg = "You have sent your message to #{params[:message][:recipient]}."
       respond_to do |format|
@@ -65,13 +59,7 @@ class MessagesController < ApplicationController
     else
       flash.now[:warning] = "There was an error creating your message."
       respond_to do |format|
-        format.html do
-          if get_viewer.layout
-            render :template => Message.find(:first).layout_file(:new)
-          else
-            render :action => 'new'
-          end
-        end
+        format.html { trender :new }
         format.js { render :action => 'create_error' }
       end
     end

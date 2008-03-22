@@ -10,15 +10,29 @@ class Group < ActiveRecord::Base
   end
   has_many :pictures, :as => :depictable
   has_one :primary_picture, :class_name => 'Picture', :as => :depictable, :order => :position
-  has_many :blogs, :as => :bloggable
+  has_many :blogs, :as => :bloggable #in what order? updated_at DESC?
   
   validates_uniqueness_of :name
-  validates_presence_of :name, :user_id
+  validates_uniqueness_of :permalink
+  validates_presence_of :name, :user_id, :permalink
   validates_length_of :name, :in => (3..20)
-  validates_with_regexp :name
+  validates_with_regexp :name, :permalink, :message => "uses an incorrect format: please edit your group name"
+    
+  attr_protected :permalink
+  
+  before_save :verify_non_empty_permalink # SET UP METHOD
   
   attr_protected :rank
   alias_attribute :content, :description
+  
+  def to_param; self.permalink; end
+  def permalink
+    self[:permalink] ||= make_permalink
+  end
+  def name=(str)
+    self[:name] = str.strip
+    make_permalink
+  end
   
   def to_path(for_associated=false)
     { :"#{for_associated ? 'group_id' : 'id'}" => self.to_param }
@@ -120,6 +134,25 @@ class Group < ActiveRecord::Base
     else
       false
     end
+  end
+  
+  def self.permalink_for(name)
+    str = name.gsub(/['"]+/i, '').gsub(/[^a-z0-9]+/i, '-').gsub(/-{2,}/, '-').gsub(/^-/, '').gsub(/-$/, '')
+    str.strip!
+    str.chop! if str.last == '-'
+    str
+  end
+  
+  private
+  def make_permalink(opts={})
+    str = Group.permalink_for(self[:name] || self.name)
+    self.permalink = str
+    self.save if opts[:with_save]
+    str
+  end
+    
+  def verify_non_empty_permalink
+    make_permalink if self[:permalink].blank?
   end
 
 end

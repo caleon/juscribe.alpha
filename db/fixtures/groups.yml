@@ -1,8 +1,10 @@
 everyone:
   id: 0
   name: Everyone
+  permalink: Everyone
   user_id: 0
 admins:
   id: 1
   name: Administrators
+  permalink: Administrators
   user_id: 0

@@ -100,7 +100,6 @@ class ClipsController < ApplicationController
     end
   end
   
-  # TODO: Can the owner of @widgetable unclip it if desired?
   def destroy
     return unless setup && authorize(@clip, :editable => true)
     @widgetable.unclip!(:user => get_viewer)

@@ -13,6 +13,7 @@ REGEXP_STR = { # Defaults
                :blog       => { :short_name => "([^\\s].+[^\\s])",
                                 :permalink => "[A-Z0-9][-A-Z0-9]+[A-Z0-9]" },
                :gallery    => { :name => "([^\\s].+[^\\s])?" },
+               :group      => { :permalink => "[a-zA-Z0-9][-a-zA-Z0-9]+[a-zA-Z0-9]" },
                :message    => { :subject => "[^\\s].+[^\\s]" },
                :permission_rule => { :name => "([^\\s].+[^\\s])?" },
                :picture    => { :name => "([^\\s].+[^\\s]{3,})?",
