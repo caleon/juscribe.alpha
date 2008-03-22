@@ -39,6 +39,7 @@ module WidgetsHelper
     @wcount ||= 0; @widgets ||= []
 
     opts = args.extract_options!
+    layout = opts[:layout]
     kind = opts[:kind] ? "_#{opts[:kind]}" : ""
     arg = args.shift
     @wcount += 1
@@ -57,7 +58,7 @@ module WidgetsHelper
       when nil
         return wid.wrender_vacant unless widget = @widgets[@wcount - 1]
         return wid.wrender_unauthorized unless widget.widgetable.accessible_by?(viewer)
-        @wcount -= 1 and return wrender(widget, opts)
+        @wcount -= 1 and return wrender(widget, opts.merge(:layout => layout))
       end  
     end
   end
