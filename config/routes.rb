@@ -343,139 +343,57 @@ ActionController::Routing::Routes.draw do |map|
   
   ########### NORMAL STUFF #################
   map.resources :groups, :requirements => { :id => regex_for(:group, :id) }, :member => { :join => :put, :leave => :put, :kick => :put, :invite => :put } do |grp|
-    grp.resources :blogs, :requirements => { :group_id => regex_for(:group, :id),
-                                             :id => regex_for(:blog, :permalink) } do |gbg|
-      gbg.resources :clips, :requirements => { :group_id => regex_for(:group, :id),
-                                               :blog_id => regex_for(:blog, :permalink),
-                                               :id => regex_for(:clip, :id) }
-      gbg.resources :comments, :requirements => { :group_id => regex_for(:group, :id),
-                                                  :blog_id => regex_for(:blog, :permalink),
-                                                  :id => regex_for(:comment, :id) }
-      gbg.resources :pictures, :requirements => { :group_id => regex_for(:group, :id),
-                                                  :blog_id => regex_for(:blog, :permalink),
-                                                  :id => regex_for(:picture, :id) } do |gbpic|
-        gbpic.resources :clips, :requirements => { :group_id => regex_for(:group, :id),
-                                                   :blog_id => regex_for(:blog, :permalink),
-                                                   :picture_id => regex_for(:picture, :id),
-                                                   :id => regex_for(:clip, :id) }
-        gbpic.resources :comments, :requirements => { :group_id => regex_for(:group, :id),
-                                                      :blog_id => regex_for(:blog, :permalink),
-                                                      :picture_id => regex_for(:picture, :id),
-                                                      :id => regex_for(:comment, :id) }
-      end
-    end
-    grp.resources :clips, :requirements => { :group_id => regex_for(:group, :id),
-                                             :id => regex_for(:clip, :id) }
-    grp.resources :comments, :requirements => { :group_id => regex_for(:group, :id),
-                                                :id => regex_for(:comment, :id) }
-    grp.resources :pictures, :requirements => { :group_id => regex_for(:group, :id),
-                                                :id => regex_for(:picture, :id) } do |gpic|
-      gpic.resources :clips, :requirements => { :group_id => regex_for(:group, :id),
-                                                :picture_id => regex_for(:picture, :id),
-                                                :id => regex_for(:clip, :id) }
-      gpic.resources :comments, :requirements => { :group_id => regex_for(:group, :id),
-                                                   :picture_id => regex_for(:picture, :id),
-                                                   :id => regex_for(:comment, :id) }
+    grp.resources :clips,    :requirements => { :group_id => regex_for(:group, :id), :id => regex_for(:clip, :id) }
+    grp.resources :comments, :requirements => { :group_id => regex_for(:group, :id), :id => regex_for(:comment, :id) }
+    grp.resources :pictures, :requirements => { :group_id => regex_for(:group, :id), :id => regex_for(:picture, :id) } do |gpic|
+      gpic.resources :clips,    :requirements => { :group_id => regex_for(:group, :id), :picture_id => regex_for(:picture, :id), :id => regex_for(:clip, :id) }
+      gpic.resources :comments, :requirements => { :group_id => regex_for(:group, :id), :picture_id => regex_for(:picture, :id), :id => regex_for(:comment, :id) }
     end
   end
   map.resources :messages, :requirements => { :id => regex_for(:message, :id) }
-  # TODO: Allow a param to specify who message is to.
   map.resources :permissions, :requirements => { :id => regex_for(:permission_rule, :id) }
-  map.resources :users, :member => { :friends => :get, :befriend => :put, :unfriend => :put,
-                        :about => :get, :edit_password => :get, :update_password => :put },
+  map.resources :users, :member => { :friends => :get, :befriend => :put, :unfriend => :put, :about => :get, :edit_password => :get, :update_password => :put },
                         :requirements => { :id => regex_for(:user, :nick) } do |user|
-    user.resources :blogs, :requirements => { :user_id => regex_for(:user, :nick),
-                                              :id => regex_for(:blog, :permalink) } do |bg|
-      bg.resources :clips, :requirements => { :user_id => regex_for(:user, :nick),
-                                              :blog_id => regex_for(:blog, :permalink),
-                                              :id => regex_for(:clip, :id) }
-      bg.resources :comments, :requirements => { :user_id => regex_for(:user, :nick),
-                                                 :blog_id => regex_for(:blog, :permalink),
-                                                 :id => regex_for(:comment, :id) }
-      bg.resources :pictures, :requirements => { :user_id => regex_for(:user, :nick),
-                                                 :blog_id => regex_for(:blog, :permalink),
-                                                 :id => regex_for(:picture, :id) } do |bgp|
-        bgp.resources :clips, :requirements => { :user_id => regex_for(:user, :nick),
-                                                 :blog_id => regex_for(:blog, :permalink),
-                                                 :picture_id => regex_for(:picture, :id),
-                                                 :id => regex_for(:clip, :id) }
-        bgp.resources :comments, :requirements => { :user_id => regex_for(:user, :nick),
-                                                    :blog_id => regex_for(:blog, :permalink),
-                                                    :picture_id => regex_for(:picture, :id),
-                                                    :id => regex_for(:comment, :id) }
+    user.resources :blogs, :requirements => { :user_id => regex_for(:user, :nick), :id => regex_for(:blog, :permalink) } do |bg|
+      bg.resources :clips,    :requirements => { :blog_id => regex_for(:blog, :permalink), :id => regex_for(:clip, :id) }
+      bg.resources :comments, :requirements => { :blog_id => regex_for(:blog, :permalink), :id => regex_for(:comment, :id) }
+      bg.resources :pictures, :requirements => { :blog_id => regex_for(:blog, :permalink), :id => regex_for(:picture, :id) } do |bgp|
+        bgp.resources :clips,    :requirements => { :picture_id => regex_for(:picture, :id), :id => regex_for(:clip, :id) }
+        bgp.resources :comments, :requirements => { :picture_id => regex_for(:picture, :id), :id => regex_for(:comment, :id) }
       end
     end
-    user.resources :clips, :requirements => { :user_id => regex_for(:user, :nick),
-                                              :id => regex_for(:clip, :id) }
-    user.resources :comments, :requirements => { :user_id => regex_for(:user, :nick),
-                                                 :id => regex_for(:comment, :id) }
+    user.resources :clips,       :requirements => { :user_id => regex_for(:user, :nick), :id => regex_for(:clip, :id) }
+    user.resources :comments,    :requirements => { :user_id => regex_for(:user, :nick), :id => regex_for(:comment, :id) }
     user.resources :thoughtlets, :requirements => { :user_id => regex_for(:user, :nick), :id => regex_for(:thoughtlet, :id) } do |thoughtlet|
-      thoughtlet.resources :clips, :requirements => { :user_id => regex_for(:user, :nick),
-                                                      :thoughtlet_id => regex_for(:thoughtlet, :id),
-                                                      :id => regex_for(:clip, :id) }
-      thoughtlet.resources :comments, :requirements => { :user_id => regex_for(:user, :nick),
-                                                         :thoughtlet_id => regex_for(:thoughtlet, :id),
-                                                         :id => regex_for(:comment, :id) }
-      thoughtlet.resources :pictures, :requirements => { :user_id => regex_for(:user, :nick),
-                                                         :thoughtlet_id => regex_for(:thoughtlet, :id),
-                                                         :id => regex_for(:picture, :id) } do |ep|
-        ep.resources :clips, :requirements => { :user_id => regex_for(:user, :nick),
-                                                :thoughtlet_id => regex_for(:thoughtlet, :id),
-                                                :picture_id => regex_for(:picture, :id),
-                                                :id => regex_for(:clip, :id) }
-        ep.resources :comments, :requirements => { :user_id => regex_for(:user, :nick),
-                                                   :thoughtlet_id => regex_for(:thoughtlet, :id),
-                                                   :picture_id => regex_for(:picture, :id),
-                                                   :id => regex_for(:comment, :id) }
+      thoughtlet.resources :clips,    :requirements => { :thoughtlet_id => regex_for(:thoughtlet, :id), :id => regex_for(:clip, :id) }
+      thoughtlet.resources :comments, :requirements => { :thoughtlet_id => regex_for(:thoughtlet, :id), :id => regex_for(:comment, :id) }
+      thoughtlet.resources :pictures, :requirements => { :thoughtlet_id => regex_for(:thoughtlet, :id), :id => regex_for(:picture, :id) } do |ep|
+        ep.resources :clips,    :requirements => { :picture_id => regex_for(:picture, :id), :id => regex_for(:clip, :id) }
+        ep.resources :comments, :requirements => { :picture_id => regex_for(:picture, :id), :id => regex_for(:comment, :id) }
       end
     end
     user.resources :events, :member => { :begin_event => :put, :end_event => :put }, :requirements => { :user_id => regex_for(:user, :nick), :id => regex_for(:event, :id) } do |event|
-      event.resources :clips, :requirements => { :user_id => regex_for(:user, :nick),
-                                                 :event_id => regex_for(:event, :id),
-                                                 :id => regex_for(:clip, :id) }
-      event.resources :comments, :requirements => { :user_id => regex_for(:user, :nick),
-                                                    :event_id => regex_for(:event, :id),
-                                                    :id => regex_for(:comment, :id) }
-      event.resources :pictures, :requirements => { :user_id => regex_for(:user, :nick),
-                                                    :event_id => regex_for(:event, :id),
-                                                    :id => regex_for(:picture, :id) } do |uep|
-        uep.resources :clips, :requirements => { :user_id => regex_for(:user, :nick),
-                                                 :event_id => regex_for(:event, :id),
-                                                 :picture_id => regex_for(:picture, :id),
-                                                 :id => regex_for(:clip, :id) }
-        uep.resources :comments, :requirements => { :user_id => regex_for(:user, :nick),
-                                                    :event_id => regex_for(:event, :id),
-                                                    :picture_id => regex_for(:picture, :id),
-                                                    :id => regex_for(:comment, :id) }
+      event.resources :clips,    :requirements => { :event_id => regex_for(:event, :id), :id => regex_for(:clip, :id) }
+      event.resources :comments, :requirements => { :event_id => regex_for(:event, :id), :id => regex_for(:comment, :id) }
+      event.resources :pictures, :requirements => { :event_id => regex_for(:event, :id), :id => regex_for(:picture, :id) } do |uep|
+        uep.resources :clips,    :requirements => { :picture_id => regex_for(:picture, :id), :id => regex_for(:clip, :id) }
+        uep.resources :comments, :requirements => { :picture_id => regex_for(:picture, :id), :id => regex_for(:comment, :id) }
       end
     end
     user.resources :galleries, :requirements => { :id => regex_for(:gallery, :id) } do |gal|
-      gal.resources :clips, :requirements => { :gallery_id => regex_for(:gallery, :id),
-                                               :id => regex_for(:clip, :id) }
-      gal.resources :comments, :requirements => { :gallery_id => regex_for(:gallery, :id),
-                                                  :id => regex_for(:comment, :id) }
-      gal.resources :pictures, :requirements => { :gallery_id => regex_for(:gallery, :id),
-                                                  :id => regex_for(:picture, :id) } do |gp|
-        gp.resources :clips, :requirements => { :gallery_id => regex_for(:gallery, :id),
-                                                :picture_id => regex_for(:picture, :id),
-                                                :id => regex_for(:clip, :id) }
-        gp.resources :comments, :requirements => { :gallery_id => regex_for(:gallery, :id),
-                                                   :picture_id => regex_for(:picture, :id),
-                                                   :id => regex_for(:comment, :id) }
+      gal.resources :clips,    :requirements => { :gallery_id => regex_for(:gallery, :id), :id => regex_for(:clip, :id) }
+      gal.resources :comments, :requirements => { :gallery_id => regex_for(:gallery, :id), :id => regex_for(:comment, :id) }
+      gal.resources :pictures, :requirements => { :gallery_id => regex_for(:gallery, :id), :id => regex_for(:picture, :id) } do |gp|
+        gp.resources :clips,    :requirements => { :picture_id => regex_for(:picture, :id), :id => regex_for(:clip, :id) }
+        gp.resources :comments, :requirements => { :picture_id => regex_for(:picture, :id), :id => regex_for(:comment, :id) }
       end
     end
     user.resources :pictures, :requirements => { :user_id => regex_for(:user, :nick), :id => regex_for(:picture, :id) } do |up|
-      up.resources :clips, :requirements => { :user_id => regex_for(:user, :nick),
-                                              :picture_id => regex_for(:picture, :id),
-                                              :id => regex_for(:clip, :id) }
-      up.resources :comments, :requirements => { :user_id => regex_for(:user, :nick),
-                                                 :picture_id => regex_for(:picture, :id),
-                                                 :id => regex_for(:comment, :id) }
+      up.resources :clips, :requirements => { :picture_id => regex_for(:picture, :id), :id => regex_for(:clip, :id) }
+      up.resources :comments, :requirements => { :picture_id => regex_for(:picture, :id), :id => regex_for(:comment, :id) }
     end
     user.resources :widgets, :member => { :place => :put, :unplace => :put }, :requirements => { :user_id => regex_for(:user, :nick), :id => regex_for(:widget, :id) } do |uw|
-      uw.resources :comments, :requirements => { :user_id => regex_for(:user, :nick),
-                                                 :widget_id => regex_for(:widget, :id),
-                                                 :id => regex_for(:comment, :id) }
+      uw.resources :comments, :requirements => { :widget_id => regex_for(:widget, :id), :id => regex_for(:comment, :id) }
     end
   end
   
