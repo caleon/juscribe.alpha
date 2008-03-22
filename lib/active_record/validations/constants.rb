@@ -7,27 +7,27 @@ REGEXP_STR = { # Defaults
                :content        => "[^\\s].+[^\\s]",
                :body           => "[^\\s].+[^\\s]",
                # Main
-               :main      => { :topic => "([-_a-zA-Z0-9]+)?" },
+               :main       => { :topic => "([-_a-zA-Z0-9]+)?" },
                # Model specific:
-               :article   => { :permalink => "[a-zA-Z0-9][-a-zA-Z0-9]+[a-zA-Z0-9]" },
-               :blog      => { :short_name => "([^\\s].+[^\\s])",
-                               :permalink => "[A-Z0-9][-A-Z0-9]+[A-Z0-9]" },
-               :entry     => { :location => "([^\\s].+[^\\s])?",
-                               :content => "([^\\s].+[^\\s])?" },
-               :gallery   => { :name => "([^\\s].+[^\\s])?" },
-               :message   => { :subject => "[^\\s].+[^\\s]" },
+               :article    => { :permalink => "[a-zA-Z0-9][-a-zA-Z0-9]+[a-zA-Z0-9]" },
+               :blog       => { :short_name => "([^\\s].+[^\\s])",
+                                :permalink => "[A-Z0-9][-A-Z0-9]+[A-Z0-9]" },
+               :gallery    => { :name => "([^\\s].+[^\\s])?" },
+               :message    => { :subject => "[^\\s].+[^\\s]" },
                :permission_rule => { :name => "([^\\s].+[^\\s])?" },
-               :picture   => { :name => "([^\\s].+[^\\s]{3,})?",
-                               :caption => "([^\\s].+[^\\s]{3,})?"},
-               :project   => {},
-               :song      => { :artist => "[^\\s].+[^\\s]" },
-               :tag       => {},
-               :user      => { :nick => "[a-zA-Z][_a-zA-Z0-9]+",
-                               :first_name => "[a-zA-Z][-a-zA-Z'\\s]*[a-zA-Z]",
-                               :middle_initial => "[a-zA-Z]?",
-                               :last_name => "[a-zA-Z][-a-zA-Z'\\s]*[a-zA-Z]",
-                               :email => "([^@\\s]+)@((?:[-a-zA-Z0-9]+\\.)+[a-zA-Z]{2,})" }
-              }
+               :picture    => { :name => "([^\\s].+[^\\s]{3,})?",
+                                :caption => "([^\\s].+[^\\s]{3,})?"},
+               :project    => {},
+               :song       => { :artist => "[^\\s].+[^\\s]" },
+               :tag        => {},
+               :thoughtlet => { :location => "([^\\s].+[^\\s])?",
+                                :content => "([^\\s].+[^\\s])?" },
+               :user       => { :nick => "[a-zA-Z][_a-zA-Z0-9]+",
+                                :first_name => "[a-zA-Z][-a-zA-Z'\\s]*[a-zA-Z]",
+                                :middle_initial => "[a-zA-Z]?",
+                                :last_name => "[a-zA-Z][-a-zA-Z'\\s]*[a-zA-Z]",
+                                :email => "([^@\\s]+)@((?:[-a-zA-Z0-9]+\\.)+[a-zA-Z]{2,})" }
+              }            
 
 REGEX = Hash[*REGEXP_STR.to_a.map do |arr|
   [ arr[0], 

@@ -1,0 +1,11 @@
+<div class="sub navigation">
+	<ul class="navigationList">
+		<%= bread_el @user.display_name, @user %>
+		<%= bread_el "Thoughtlets", user_thoughtlets_path(@user), :current => @thoughtlet.nil? || @thoughtlet.new_record? %>
+		<%= bread_el truncate(@thoughtlet.display_name, 20), user_thoughtlet_path(@thoughtlet.to_path), :current => true if @thoughtlet && !@thoughtlet.new_record? %>
+		<%= subnavi_el 'New Thoughtlet', new_user_thoughtlet_path(@user.to_path(true)), :current => controller.action_name == 'new' if this_is_viewer? %>
+		<%= subnavi_el 'Edit', edit_user_thoughtlet_path(@thoughtlet.to_path), :current => controller.action_name == 'edit' if @thoughtlet && !@thoughtlet.new_record? && @thoughtlet.editable_by?(viewer) %>
+		<%= subnavi_el 'Clip', new_user_thoughtlet_clip_path(@thoughtlet.to_path(true)) if @thoughtlet && !@thoughtlet.new_record? %>
+		<%= navi_skin_info %>
+	</ul>
+</div>

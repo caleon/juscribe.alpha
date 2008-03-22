@@ -4,7 +4,7 @@ class Event < ActiveRecord::Base
   belongs_to :user
   has_many :pictures, :as => :depictable
   has_one :primary_picture, :class_name => 'Picture', :as => :depictable, :order => :position
-  has_many :entries, :order => 'created_at DESC'
+  has_many :thoughtlets, :order => 'created_at DESC'
   has_many :comments, :as => :commentable, :order => :id
     
   validates_presence_of :user_id, :name

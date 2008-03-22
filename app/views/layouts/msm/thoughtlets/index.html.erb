@@ -1,4 +1,4 @@
-<% set_meta_keywords!(@user.display_name, 'entries') -%>
+<% set_meta_keywords!(@user.display_name, 'thoughtlets') -%>
 <% set_link_author!(@user.display_name) -%>
 <% add_style_file(@layoutable.skin_file) -%>
 <div id="msm_layout" class="msm_layout">
@@ -23,48 +23,48 @@
 			</div>
 	
 			<div class="msm_main_column-a msm_main_column nopad">
-				<%= render :partial => 'entry',
+				<%= render :partial => 'thoughtlet',
 				 					 :layout => custom_partial('lead_widget'),
-				 					 :object => @entries[0] if @entries[0] %>
+				 					 :object => @thoughtlets[0] if @thoughtlets[0] %>
 			</div>
 	
 			<div class="msm_main_column-b msm_main_column">
-				<%= render :partial => 'users/latest_entries',
+				<%= render :partial => 'users/latest_thoughtlets',
 				 					 :layout => custom_partial('inner'),
-				 					 :object => @user.latest_entries,
-				 					 :locals => { :user => @user } unless @user.latest_entries.blank? %>
+				 					 :object => @user.latest_thoughtlets,
+				 					 :locals => { :user => @user } unless @user.latest_thoughtlets.blank? %>
 			</div>
 			<%= rounded_shim(:bottom) %>
 		</div>
 		
 		<div class="msm_row" id="msm_row-2">
 			<div class="msm_main_column-ab msm_main_column msm_with_reg_wid">
-				<%= render(:partial => 'entry',
+				<%= render(:partial => 'thoughtlet',
 									 :layout => custom_partial('widget'),
-									 :object => @entries[1]) if @entries[1] %>
+									 :object => @thoughtlets[1]) if @thoughtlets[1] %>
 			</div>
 		</div>
 		
 		<div class="msm_row nobg" id="msm_row-3">
 			<div class="msm_main_column-a msm_main_column msm_with_reg_wid">
-				<%= render(:partial => 'entry',
+				<%= render(:partial => 'thoughtlet',
 									 :layout => custom_partial('widget'),
-									 :object => @entries[2]) if @entries[2] %>
+									 :object => @thoughtlets[2]) if @thoughtlets[2] %>
 			</div>
 			
 			<div class="msm_main_column-b msm_main_column nopad">
-				<%= render(:partial => 'entry',
+				<%= render(:partial => 'thoughtlet',
 									 :layout => custom_partial('framed'),
-									 :object => @entries[3]) if @entries[3] %>
+									 :object => @thoughtlets[3]) if @thoughtlets[3] %>
 			</div>
 			<%= br_clear %>
 		</div>
 		
 		<div class="last msm_row" id="msm_row-4">
 			<div class="msm_main_column-ab msm_main_column msm_with_reg_wid">
-				<%= render(:partial => 'entry',
+				<%= render(:partial => 'thoughtlet',
 									 :layout => custom_partial('widget'),
-									 :object => @entries[4]) if @entries[4] %>
+									 :object => @thoughtlets[4]) if @thoughtlets[4] %>
 			</div>
 		</div>
 	</div>

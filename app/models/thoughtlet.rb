@@ -1,9 +1,9 @@
-class Entry < ActiveRecord::Base
+class Thoughtlet < ActiveRecord::Base
   include_custom_plugins  
 
   belongs_to :user
   belongs_to :event
-  # For cases where a picture taken on phone is attached to an entry...
+  # For cases where a picture taken on phone is attached to a thoughtlet...
   has_one :picture, :as => :depictable
   
   validates_presence_of :user_id
@@ -25,7 +25,7 @@ class Entry < ActiveRecord::Base
   end
   
   def path_name_prefix
-    [ self.user.path_prefix, 'entry' ].join('_')
+    [ self.user.path_prefix, 'thoughtlet' ].join('_')
   end
   
   def location_empty?; self.location.blank?; end

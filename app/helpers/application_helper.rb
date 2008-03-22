@@ -17,7 +17,7 @@ module ApplicationHelper
   end
   
   def main_record
-    @user || @group || @widget || @article || @event || @entry || @list || @item
+    @user || @group || @widget || @article || @event || @thoughtlet || @list || @item
   end
   
   def get_canvas_class

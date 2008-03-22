@@ -1,0 +1,7 @@
+<h3>Thoughtlets <%= rss_link_for(:user, formatted_user_thoughtlets_path(user.to_path(true).merge(:format => :xml)) ) %></h3>
+<ul>
+	<%= render :partial => 'thoughtlets/thoughtlet', :collection => thoughtlets %>
+</ul>
+<div class="msm_widget-footer">
+	<%= link_to 'View more thoughtlets', user_thoughtlets_path(user) %>
+</div>

@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 57) do
+ActiveRecord::Schema.define(:version => 58) do
 
   create_table "articles", :force => true do |t|
     t.string   "title"
@@ -45,15 +45,6 @@ ActiveRecord::Schema.define(:version => 57) do
     t.text     "body"
     t.datetime "created_at"
     t.datetime "updated_at"
-  end
-
-  create_table "entries", :force => true do |t|
-    t.string   "content"
-    t.string   "location"
-    t.integer  "user_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "event_id"
   end
 
   create_table "events", :force => true do |t|
@@ -209,6 +200,15 @@ ActiveRecord::Schema.define(:version => 57) do
     t.string   "kind"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "thoughtlets", :force => true do |t|
+    t.string   "content"
+    t.string   "location"
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "event_id"
   end
 
   create_table "users", :force => true do |t|

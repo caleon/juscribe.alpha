@@ -353,22 +353,22 @@ ActionController::Routing::Routes.draw do |map|
                                               :id => regex_for(:clip, :id) }
     user.resources :comments, :requirements => { :user_id => regex_for(:user, :nick),
                                                  :id => regex_for(:comment, :id) }
-    user.resources :entries, :requirements => { :user_id => regex_for(:user, :nick), :id => regex_for(:entry, :id) } do |entry|
-      entry.resources :clips, :requirements => { :user_id => regex_for(:user, :nick),
-                                                 :entry_id => regex_for(:entry, :id),
-                                                 :id => regex_for(:clip, :id) }
-      entry.resources :comments, :requirements => { :user_id => regex_for(:user, :nick),
-                                                    :entry_id => regex_for(:entry, :id),
-                                                    :id => regex_for(:comment, :id) }
-      entry.resources :pictures, :requirements => { :user_id => regex_for(:user, :nick),
-                                                    :entry_id => regex_for(:entry, :id),
-                                                    :id => regex_for(:picture, :id) } do |ep|
+    user.resources :thoughtlets, :requirements => { :user_id => regex_for(:user, :nick), :id => regex_for(:thoughtlet, :id) } do |thoughtlet|
+      thoughtlet.resources :clips, :requirements => { :user_id => regex_for(:user, :nick),
+                                                      :thoughtlet_id => regex_for(:thoughtlet, :id),
+                                                      :id => regex_for(:clip, :id) }
+      thoughtlet.resources :comments, :requirements => { :user_id => regex_for(:user, :nick),
+                                                         :thoughtlet_id => regex_for(:thoughtlet, :id),
+                                                         :id => regex_for(:comment, :id) }
+      thoughtlet.resources :pictures, :requirements => { :user_id => regex_for(:user, :nick),
+                                                         :thoughtlet_id => regex_for(:thoughtlet, :id),
+                                                         :id => regex_for(:picture, :id) } do |ep|
         ep.resources :clips, :requirements => { :user_id => regex_for(:user, :nick),
-                                                :entry_id => regex_for(:entry, :id),
+                                                :thoughtlet_id => regex_for(:thoughtlet, :id),
                                                 :picture_id => regex_for(:picture, :id),
                                                 :id => regex_for(:clip, :id) }
         ep.resources :comments, :requirements => { :user_id => regex_for(:user, :nick),
-                                                   :entry_id => regex_for(:entry, :id),
+                                                   :thoughtlet_id => regex_for(:thoughtlet, :id),
                                                    :picture_id => regex_for(:picture, :id),
                                                    :id => regex_for(:comment, :id) }
       end

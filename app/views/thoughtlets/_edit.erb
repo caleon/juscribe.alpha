@@ -1,0 +1,4 @@
+<% form_for @thoughtlet, :url => edit_user_thoughtlets_path(@user), :html => { :method => :put, :multipart => true } do |f| %>
+	<%= render :partial => 'form', :locals => { :f => f } %>
+	<%= f.submit %>
+<% end %>

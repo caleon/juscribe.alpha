@@ -11,10 +11,10 @@ class User < ActiveRecord::Base
   def all_blogs; (owned_blogs + blogs).uniq; end
   has_many :comments, :as => :commentable, :order => 'comments.id DESC'
   has_many :owned_comments, :class_name => 'Comment', :dependent => :nullify
-  with_options :class_name => 'Entry', :order => 'entries.id DESC' do |entry|
-    entry.has_many :entries, :dependent => :nullify
-    entry.has_many :latest_entries, :limit => 10
-    entry.has_one :latest_entry
+  with_options :class_name => 'Thoughtlet', :order => 'thoughtlets.id DESC' do |thoughtlet|
+    thoughtlet.has_many :thoughtlets, :dependent => :nullify
+    thoughtlet.has_many :latest_thoughtlets, :limit => 10
+    thoughtlet.has_one :latest_thoughtlet
   end
   has_many :songs, :dependent => :nullify
   has_many :events, :dependent => :nullify, :order => 'events.begins_at DESC'
