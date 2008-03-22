@@ -1,4 +1,4 @@
-<% set_meta_keywords!(@user.name_and_nick, @article.title, (@article.blog.name rescue nil)) -%>
+<% add_meta_keyword!(@user.name_and_nick) -%>
 <% set_link_author!(@user) -%>
 <% add_style_file(@layoutable.skin_file) -%>
 <div id="msm_layout" class="msm_layout">
@@ -6,11 +6,11 @@
 		<%= rounded_shim(:top) %>
 		<div class="msm_row">
 			<div class="msm_column msm_column-a">
-				<span class="timestamp">updated by <%= @user.display_name %> at <%= @article.updated_at.to_s %></span>
+				<span class="timestamp">Time: <%= Time.now.to_s %></span>
 				<h2><%= @page_title %></h2>				
 			</div>
 			<div class="msm_column msm_column-b">
-				<%= @article.tags.map(&:to_s).join(', ') %>
+
 			</div>
 		</div>
 		<%= rounded_shim(:bottom) %>
@@ -19,17 +19,15 @@
 	<div id="msm_main_column" class="msm_column">
 		<%= rounded_shim(:top) %>
 		<div class="last msm_row" id="msm_row-1">
-				<%= render :partial => 'edit' %>
+			<%= render :partial => 'new' %>
 		</div>
 		<%= rounded_shim(:bottom) %>
 	</div>
 	
 	<div id="msm_side_column" class="msm_column">
 	<% with_options :layout => :framed do |framed| %>
-		<%= framed.wrender :user %>
-		<%= framed.wrender :pictures %>
+		<%# TODO: SHOW attachments framed.wrender :pictures if @article.primary_picture %>
 		<%= framed.wrender :google_ads %>
-		<%= framed.wrender 'blogs/latest_articles', :blog => @article.blog if @article.blog %>
 	<% end %>
 	</div>
 </div>

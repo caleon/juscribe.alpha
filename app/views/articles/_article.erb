@@ -1,3 +1,6 @@
+<% if article.blog %>
+	<h4>From <%= link_to article.user.nick, article.user %>'s <%= link_to article.blog.short_name, blog_path_for(article.blog) %> Blog</h4>
+<% end %>
 <h3><%= link_to article.title, article_path_for(article) %></h3>
 <p class="articleContent">
 <% if !(without_picture ||= false) && article.primary_picture %>

@@ -1,11 +1,1 @@
-<% form_for @user, :html => { :multipart => true, :class => 'userForm'} do |f| %>
-	<%= error_messages_for :user %>
-	<fieldset>
-		<legend>Edit Profile</legend>
-		
-		<%= render :partial => 'form', :layout => 'edit_form', :locals => { :f => f } %>
-		<%= submit_tag "Update", :disable_with => "Please wait..." %>
-	</fieldset>
-<% end %>
-
-<%= render :partial => 'edit_password' %>
+<%= render :partial => 'edit' %>

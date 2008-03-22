@@ -1,4 +1,0 @@
-<% if article.blog %>
-	<h4>From <%= link_to article.user.nick, article.user %>'s <%= link_to article.blog.short_name, blog_path_for(article.blog) %> Blog</h4>
-<% end %>
-	<%= render :partial => 'articles/article', :object => article %>

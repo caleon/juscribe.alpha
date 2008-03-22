@@ -1,7 +1,0 @@
-<% # setup
-title ||= nil
-%>
-<h4><%= title || 'Featured User' %></h4>
-<h3><%= link_to user.name_and_nick, user %></h3>
-<%= picture_for(user) if user.primary_picture %>
-<%# TODO: Should widgets have comments that appear with clips? %>

@@ -19,17 +19,7 @@
 	<div id="msm_main_column" class="msm_column">
 		<%= rounded_shim(:top) %>
 		<div class="last msm_row" id="msm_row-1">
-			<% form_for @user, :html => { :multipart => true, :class => 'userForm'} do |f| %>
-				<%= error_messages_for :user %>
-				<fieldset>
-					<legend>Edit Profile</legend>
-
-					<%= render :partial => 'users/form', :layout => 'edit_form', :locals => { :f => f } %>
-					<%= submit_tag "Update", :disable_with => "Please wait..." %>
-				</fieldset>
-			<% end %>
-
-			<%= render :partial => 'users/edit_password' %>
+			<%= render :partial => 'edit' %>
 		</div>
 		<%= rounded_shim(:bottom) %>
 	</div>

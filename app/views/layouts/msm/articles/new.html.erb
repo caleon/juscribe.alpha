@@ -7,7 +7,7 @@
 		<div class="msm_row">
 			<div class="msm_column msm_column-a">
 				<span class="timestamp">Time: <%= Time.now.to_s %></span>
-				<h2><%= @article.title %></h2>				
+				<h2><%= @page_title %></h2>				
 			</div>
 			<div class="msm_column msm_column-b">
 
@@ -19,16 +19,7 @@
 	<div id="msm_main_column" class="msm_column">
 		<%= rounded_shim(:top) %>
 		<div class="last msm_row" id="msm_row-1">
-			<% form_for @article, :html => { :class => 'articleForm', :method => :post, :multipart => true } do |f| %>
-				<fieldset>
-					<legend>Post a new article</legend>
-					<%= f.label :title %>
-					<%= error_message_on @article, :title %>
-					<%= f.text_field :title %>
-					<br />
-					<%= render :partial => 'articles/form', :locals => { :f => f } %>
-				</fieldset>
-			<% end %>
+			<%= render :partial => 'new' %>
 		</div>
 		<%= rounded_shim(:bottom) %>
 	</div>

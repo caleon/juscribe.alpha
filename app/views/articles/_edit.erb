@@ -1,0 +1,6 @@
+<% form_for :article, @article, :html => { :class => 'articleForm', :method => :put, :multipart => true } do |f| %>
+	<fieldset>
+		<legend>Edit your article</legend>
+		<%= render :partial => 'articles/form', :locals => { :f => f } %>
+	</fieldset>
+<% end %>

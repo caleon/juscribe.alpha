@@ -6,7 +6,7 @@
 		<%= rounded_shim(:top) %>
 		<div class="msm_row">
 			<div class="msm_column msm_column-a">
-				<h2>Blogs by <%= @bloggable.display_name %></h2>
+				<h2><%= @page_title %></h2>
 			</div>
 			<div class="msm_column msm_column-b">
 				
@@ -23,7 +23,7 @@
 			</div>
 	
 			<div class="msm_main_column-a msm_main_column nopad">
-				<%= render :partial => custom_partial('blogs/blog'),
+				<%= render :partial => 'blogs/blog',
 				 					 :layout => custom_partial('lead_widget'),
 				 					 :locals => { :blog => @blogs[0] } %>
 			</div>
@@ -40,7 +40,7 @@
 		
 		<div class="msm_row" id="msm_row-2">
 			<div class="msm_main_column-ab msm_main_column msm_with_reg_wid">
-				<%= render(:partial => custom_partial('blogs/blog'),
+				<%= render(:partial => 'blogs/blog',
 									 :layout => custom_partial('widget'),
 									 :object => @blogs[1]) if @blogs[1] %>
 			</div>
@@ -48,13 +48,13 @@
 		
 		<div class="msm_row nobg" id="msm_row-3">
 			<div class="msm_main_column-a msm_main_column msm_with_reg_wid">
-				<%= render(:partial => custom_partial('blogs/blog'),
+				<%= render(:partial => 'blogs/blog',
 									 :layout => custom_partial('widget'),
 									 :object => @blogs[2]) if @blogs[2] %>
 			</div>
 			
 			<div class="msm_main_column-b msm_main_column nopad">
-				<%= render(:partial => custom_partial('blogs/blog'),
+				<%= render(:partial => 'blogs/blog',
 									 :layout => custom_partial('framed'),
 									 :object => @blogs[3]) if @blogs[3] %>
 			</div>
@@ -63,7 +63,7 @@
 		
 		<div class="last msm_row" id="msm_row-4">
 			<div class="msm_main_column-ab msm_main_column msm_with_reg_wid">
-				<%= render(:partial => custom_partial('blogs/blog'),
+				<%= render(:partial => 'blogs/blog',
 									 :layout => custom_partial('widget'),
 									 :object => @blogs[4]) if @blogs[4] %>
 			</div>
@@ -73,7 +73,7 @@
 	<div id="msm_side_column" class="msm_column">
 	<% with_options :layout => custom_partial('framed') do |framed| %>
 		<%= framed.render :partial => custom_partial('ads/google_ads') %>
-		<%= framed.render :partial => custom_partial("blogs/bloggable"), :object => @bloggable %>
+		<%= framed.render :partial => 'blogs/bloggable', :object => @bloggable %>
 		<%# framed.render :partial => custom_partial('blogs/comments') %>
 		<%= framed.render :partial => custom_partial('ads/google_ads') %>
 	<% end %>

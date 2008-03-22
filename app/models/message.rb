@@ -1,4 +1,5 @@
 class Message < ActiveRecord::Base
+  include ActiveRecord::Acts::Layoutable
   belongs_to :recipient, :class_name => 'User', :foreign_key => 'recipient_id'#, :include => :primary_picture
   belongs_to :sender, :class_name => 'User', :foreign_key => 'sender_id'#, :include => :primary_picture
   

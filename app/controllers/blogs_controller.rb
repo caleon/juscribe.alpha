@@ -26,6 +26,7 @@ class BlogsController < ApplicationController
     return unless setup([:permission, :primary_article])
     find_opts = get_find_opts
     @articles = @blog.articles.find(:all, find_opts)
+    @page_title = @blog.display_name
     @layoutable = @blog
     respond_to do |format|
       format.html do
@@ -43,8 +44,14 @@ class BlogsController < ApplicationController
   def new
     return unless get_bloggable && authorize(@bloggable, :editable => true)
     @blog = @bloggable.blogs.new
+    @page_title = "New Blog"
+    @layoutable = @blog
     respond_to do |format|
-      format.html
+      format.html do
+        if @blog.layout
+          render :template => @blog.layout_file(:new)          
+        end
+      end
       format.js
     end
   end
@@ -71,8 +78,13 @@ class BlogsController < ApplicationController
   def edit
     return unless setup(:permission) && authorize(@blog, :editable => true)
     @page_title = "#{@blog.display_name} - Edit"
+    @layoutable = @blog
     respond_to do |format|
-      format.html
+      format.html do
+        if @blog.layout
+          render :template => @blog.layout_file(:edit)
+        end
+      end
       format.js
     end
   end

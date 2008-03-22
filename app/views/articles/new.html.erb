@@ -1,10 +1,1 @@
-<% form_for @article, :html => { :class => 'articleForm', :method => :post, :multipart => true } do |f| %>
-	<fieldset>
-		<legend>Post a new article</legend>
-		<%= f.label :title %>
-		<%= error_message_on @article, :title %>
-		<%= f.text_field :title %>
-		<br />
-		<%= render :partial => 'form', :locals => { :f => f } %>
-	</fieldset>
-<% end %>
+<%= render :partial => 'articles/new' %>

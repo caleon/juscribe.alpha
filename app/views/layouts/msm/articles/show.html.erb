@@ -7,7 +7,7 @@
 		<div class="msm_row">
 			<div class="msm_column msm_column-a">
 				<span class="timestamp">updated by <%= @user.display_name %> at <%= @article.updated_at.to_s %></span>
-				<h2><%= @article.title %></h2>				
+				<h2><%= @page_title %></h2>				
 			</div>
 			<div class="msm_column msm_column-b">
 				<%= @article.tags.map(&:to_s).join(', ') %>
@@ -19,19 +19,7 @@
 	<div id="msm_main_column" class="msm_column">
 		<%= rounded_shim(:top) %>
 		<div class="last msm_row" id="msm_row-1">
-		<% if @article.primary_picture %>
-			<a href="#" class="article_picture_link">
-				<%= picture_for(@article) %>
-				<%= caption_for(@article.primary_picture) %>
-			</a>
-		<% end %>
-			<%= format_article(@article) %>
-			<%= byline_for(@article) %>
-			
-			<%= render :partial => 'actions', :locals => { :article => @article } %>
-			<% if @article.published? %><em>Published at <%= @article.published_at %></em><% end %>
-			
-			<%= wrender :comments, :layout => :none if @article.published? %>
+			<%= render :partial => 'show' %>
 		</div>
 		<%= rounded_shim(:bottom) %>
 	</div>

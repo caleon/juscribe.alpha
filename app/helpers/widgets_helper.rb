@@ -63,7 +63,7 @@ module WidgetsHelper
   alias_method :wrender, :widget_render
   
   def wrender_symbol(sym, opts={})
-    return wrender_unauthorized(opts) unless @layoutable.accessible_by?(viewer)
+    return wrender_unauthorized(opts) unless (@layoutable.new_record? || @layoutable.accessible_by?(viewer))
     instance_name = @layoutable.class.class_name.underscore
     obj = @layoutable.respond_to?(sym) ? @layoutable.send(sym) : nil
     wrender_vacant unless obj

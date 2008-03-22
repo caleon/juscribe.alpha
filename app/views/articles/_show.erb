@@ -1,0 +1,13 @@
+<% if @article.primary_picture %>
+	<a href="#" class="article_picture_link">
+		<%= picture_for(@article) %>
+		<%= caption_for(@article.primary_picture) %>
+	</a>
+<% end %>
+	<%= format_article(@article) %>
+	<%= byline_for(@article) %>
+	
+	<%= render :partial => 'articles/actions', :locals => { :article => @article } %>
+	<% if @article.published? %><em>Published at <%= @article.published_at %></em><% end %>
+		
+	<%= render :partial => 'articles/comments' if @article.published? %>

@@ -15,25 +15,42 @@ class MessagesController < ApplicationController
     else
       @messages = Message.find(:all, find_opts.merge(:conditions => ["recipient_id = ?", get_viewer.id]))
     end
+    @page_title = "My Inbox"
+    @user = get_viewer
+    @layoutable = get_viewer
     respond_to do |format|
-      format.html
+      format.html do
+        render :template => Message.find(:first).layout_file(:index) if get_viewer.layout # FIXME WOW.
+      end
       format.js
       format.xml
     end
-  rescue ArgumentError, NoMethodError
-    display_error(:message => 'Invalid option for mailbox view. Please check the address.')
   end
   
   def show    
     return unless setup#([ :sender, :recipient ])
     @message.read_it! if @message.recipient == get_viewer
+    @page_title = @message.subject
+    @user = get_viewer
+    @layoutable = @message
     respond_to do |format|
-      format.html
+      format.html { render :template => @message.layout_file(:show) if @message.layout }
       format.js
       format.xml
     end
   end
     
+  def new
+    @page_title = "Compose new message"
+    @message = get_viewer.sent_messages.new
+    @user = get_viewer
+    @layoutable = @message
+    respond_to do |format|
+      format.html { render :template => @message.layout_file(:new) if @message.layout }
+      format.js
+    end
+  end  
+  
   def create
     @message = Message.new(params[:message].merge(:sender => get_viewer))
     if @message.save
