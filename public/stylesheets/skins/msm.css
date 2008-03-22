@@ -32,7 +32,8 @@
 	font-size: 88%;
 }
 
-.sub.navigation li a:hover {
+.sub.navigation li a:hover,
+.sub.navigation li.current a {
 	background-color: #CA0002;
 	color: #fff;
 }

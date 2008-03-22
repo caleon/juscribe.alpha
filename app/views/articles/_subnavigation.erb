@@ -1,12 +1,13 @@
 <div class="sub navigation">
 	<ul class="navigationList">
-		<%= navi_el @user.nick, @user %>
+		<%= bread_el @user.nick, @user %>
+		<%= bread_el "Articles", articles_path(@user), :current => !@articles.blank? %>
+		<%= bread_el truncate(@article.title, 20), article_path_for(@article), :current => true if @article %>
 <% if @user && !@user.new_record? %>
-	<%= navi_el "Articles", articles_path(@user) %>
 	<% if logged_in? && this_is_viewer? %>
-		<%= navi_el "New Article...", new_article_path(@user) %>
+		<%= navi_el "New Article ...", new_article_path(@user), :first => true %>
 	<% end %>
 <% end %>
-	<%= navi_skin_info %>
+		<%= navi_skin_info %>
 	</ul>
 </div>

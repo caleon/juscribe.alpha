@@ -33,19 +33,28 @@ module ApplicationHelper
   end
   
   def navi_el(text, path, opts={})
+    opts[:style] = [ opts[:style], "z-index: -1;" ].compact.join(' ')
     conditions = opts[:conditions].nil? ? true : opts.delete(:conditions)
-    right = opts.delete(:right)
-    content_tag(:li, link_to(text, path, opts), :class => "navigationEl#{' right' if right}") if conditions
+    right, first = opts.delete(:right), opts.delete(:first)
+    content_tag(:li, link_to(text, path, opts), :class => "navigationEl#{' right' if right}#{' first' if first}", :style => "z-index: -1;") if conditions
   end
-  
- #<%= navi_el "Skin: <span class=\"skin_name\">#{@layoutable.skin}</span>",
- #						(@user.editable_by?(viewer) ? edit_user_path(@user) : '#'),
- #						:right => true if @layoutable %>
+
+  def bread_el(text, path, opts={})
+    z_index = 10 - (@bread_count ||= 0)
+    @bread_count += 1
+    opts[:style] = [ opts[:style], "z-index: #{z_index};" ].compact.join(' ')
+    current, first = opts.delete(:current), opts.delete(:first)
+    content_tag(:li, link_to(text, path, opts), :class => "navigationEl breadcrumbEl#{' current' if current}#{' first' if first}", :style => "z-index: #{z_index};")
+  end
 								
   def navi_skin_info
     navi_el "Layout: <span class=\"layout_name\">#{@layoutable.layout}</span> - Skin: <span class=\"skin_name\">#{@layoutable.skin}</span>",
             (@user && @user.editable_by?(viewer) ? edit_user_path(@user) : '#'),
             :right => true if @layoutable
+  end
+  
+  def navi_customize(path)
+    navi_el 'Customize', path, :right => true if @layoutable && @layoutable.editable_by?(viewer)
   end
   
   def byline_for(record)
