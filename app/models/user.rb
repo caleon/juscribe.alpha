@@ -30,7 +30,7 @@ class User < ActiveRecord::Base
   end
   
   def editable_by?(user)
-    user.admin? || self == user
+    (user && user.admin?) || self == user
   end
   
   def wants_notifications_for?(arg)

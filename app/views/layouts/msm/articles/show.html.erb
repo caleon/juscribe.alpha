@@ -31,7 +31,7 @@
 			<%= render :partial => 'actions', :locals => { :article => @article } %>
 			<% if @article.published? %><em>Published at <%= @article.published_at %></em><% end %>
 			
-			<%= wrender :comments, :layout => :none %>
+			<%= wrender :comments, :layout => :none if @article.published? %>
 		</div>
 		<%= rounded_shim(:bottom) %>
 	</div>

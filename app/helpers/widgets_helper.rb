@@ -1,12 +1,10 @@
 module WidgetsHelper
+  def check_layoutable
+    raise LayoutError, "@layoutable instance variable not set." unless @layoutable; true
+  end
   
   def layout_base_path(layout_name=nil)
     [ '/layouts', layout_name || @layoutable.layout ].compact.join('/')
-  end
-  
-  def custom_partial(path) # Is this used? I think I'll need it.
-    check_layoutable
-    [ layout_base_path, path ].join('/')
   end
   
   def widget_layout(layout=nil)
@@ -14,53 +12,7 @@ module WidgetsHelper
     layout ||= 'widget'
     [ layout_base_path, layout.to_s ].join('/')
   end
-  
-  def increment_skippables
-    [ :motd_message, :rss_item, :google_ads ]
-  end
-  
-  def widget_render(*args)
-    check_layoutable
-    @wcount ||= 0
-    @widgets ||= []
-
-    opts = args.extract_options!
-    kind = opts[:kind] ? "_#{opts[:kind]}" : ""
-    sym_or_wid = args.shift
-
-    case sym_or_wid
-    when Widget
-      @wcount += 1
-      instance_name = sym_or_wid.widgetable_type.underscore
-      render :partial => "#{instance_name.pluralize}/#{instance_name}#{kind}",
-             :object => sym_or_wid.widgetable,
-             :locals => { :widget => sym_or_wid }.merge(opts),
-             :layout => widget_layout(opts[:layout])
-    when Symbol
-      @wcount += 1 unless increment_skippables.include?(sym_or_wid)
-      instance_name = @layoutable.class.class_name.underscore
-      render :partial => path_from_sym(sym_or_wid, opts[:kind]),
-             :object => params[:object] ||
-                        (@layoutable.send(sym_or_wid) if @layoutable.respond_to?(sym_or_wid)),
-             :locals => { :"#{instance_name}" => @layoutable  }.merge(opts),
-             :layout => widget_layout(opts[:layout])
-    when String
-      @wcount += 1
-      render :partial => sym_or_wid, :locals => opts, :layout => widget_layout(opts[:layout])
-    when nil
-      if @widgets[@wcount]
-        wrender(@widgets[@wcount], opts)
-      elsif @layoutable.is_a?(User)
-        render :partial => "widgets/vacant", :layout => widget_layout(opts[:layout]),
-               :locals => { :user => @layoutable, :position => (@wcount + 1) }
-      else
-        render :partial => path_from_sym(:google_ad), :layout => widget_layout
-      end
-    else
-      raise "Invalid argument to #wrender. Expected Widget or Symbol or nil" if RAILS_ENV == 'development'
-    end  
-  end
-  alias_method :wrender, :widget_render
+  alias_method :wayout, :widget_layout
   
   def path_from_sym(sym, kind=nil)
     instance_name = @layoutable.class.class_name.underscore
@@ -76,7 +28,55 @@ module WidgetsHelper
     end
   end
   
-  def check_layoutable
-    raise LayoutError, "@layoutable instance variable not set." unless @layoutable; true
+  def widget_render(*args)
+    check_layoutable
+    @wcount ||= 0; @widgets ||= []
+
+    opts = args.extract_options!
+    kind = opts[:kind] ? "_#{opts[:kind]}" : ""
+    arg = args.shift
+    @wcount += 1
+    
+    with_options :layout => wayout(opts.delete(:layout)) do |wid|
+      case arg
+      when Widget
+        return wid.wrender_unauthorized unless arg.widgetable.accessible_by?(viewer)
+        instance_name = arg.widgetable_type.underscore
+        wid.render :partial => "#{instance_name.pluralize}/#{instance_name}#{kind}",
+                   :object => arg.widgetable, :locals => { :widget => arg }.merge(opts)
+      when Symbol
+        wid.wrender_symbol(arg, opts)
+      when String
+        wid.render :partial => arg, :locals => opts
+      when nil
+        return wid.wrender_vacant unless widget = @widgets[@wcount - 1]
+        return wid.wrender_unauthorized unless widget.widgetable.accessible_by?(viewer)
+        @wcount -= 1 and return wrender(widget, opts)
+      end  
+    end
+  end
+  alias_method :wrender, :widget_render
+  
+  def wrender_symbol(sym, opts={})
+    return wrender_unauthorized(opts) unless @layoutable.accessible_by?(viewer)
+    instance_name = @layoutable.class.class_name.underscore
+    obj = @layoutable.respond_to?(sym) ? @layoutable.send(sym) : nil
+    wrender_vacant unless obj
+    render :partial => path_from_sym(sym, opts[:kind]),
+           :object => params[:object] || obj,
+           :layout => opts.delete(:layout),
+           :locals => { :"#{instance_name}" => @layoutable }
+  end
+  
+  def wrender_vacant(opts={})
+    render :partial => "widgets/vacant", :layout => opts[:layout], :locals => opts
+  end
+  
+  def wrender_unauthorized(opts={})
+    render :partial => "widgets/unauthorized", :layout => opts[:layout], :locals => opts
+  end
+  
+  def wrender_default_ad(opts={})
+    render :partial => path_from_sym(:google_ad), :layout => opts[:layout], :Locals => opts
   end
 end

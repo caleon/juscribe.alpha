@@ -26,7 +26,7 @@
 			<div class="msm_main_column-a msm_main_column nopad">
 				<%= render :partial => 'articles/article_lead',
 				 					 :layout => custom_partial('lead_widget'),
-				 					 :locals => { :article_lead => @articles[0] } %>
+				 					 :locals => { :article_lead => @articles[0] } if @articles[0] %>
 			</div>
 	
 			<div class="msm_main_column-b msm_main_column">

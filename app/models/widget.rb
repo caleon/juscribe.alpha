@@ -40,6 +40,10 @@ class Widget < ActiveRecord::Base
     self.place!(pos, true)
   end
   
+  def editable_by?(user)
+    self.user = user
+  end
+  
   def place!(pos=nil, without_save=false)
     if other_wid = Widget.find(:first, :conditions => ["user_id = ? AND position = ?", self.user_id, pos])
       other_wid.unplace!

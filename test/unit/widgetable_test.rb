@@ -32,14 +32,14 @@ class WidgetableTest < ActiveSupport::TestCase
     assert_equal clip.widgetable_id, acc1.id
     assert_equal clip.widgetable_type, 'WidgetableMixin'
     assert clip.reload.widgetable == acc1
-    assert_equal acc1.title, clip.wid_name
-    assert_equal clip.wid_name, clip.full_name
+    assert_equal acc1.title, clip.widgetable.title
+#    assert_equal clip.wid_name, clip.full_name
     clip.name = 'Headliner'
     assert_equal "Headliner: untitled", clip.full_name
-    assert_equal acc1.content, clip.wid_content
-    WidgetableMixin.class_eval %{ undef :content }
-    assert_nil clip.wid_content
-    assert_equal acc1.user, clip.wid_user
+    #assert_equal acc1.content, clip.wid_content
+    #WidgetableMixin.class_eval %{ undef :content }
+    #assert_nil clip.wid_content
+    #assert_equal acc1.user, clip.wid_user
 #    assert_equal "/widgetable_mixin_default", clip.wid_partial('', 'default')
   end
   
@@ -94,12 +94,6 @@ class WidgetableTest < ActiveSupport::TestCase
     assert_nil clip.reload.position
     assert @user.widgets.unplaced.include?(clip)
     assert_equal position, clip2.position
-  end
-
-  def test_picture
-    acc1 = @acc[1]
-    assert clip = acc1.clip!(:user => @user)
-    assert_nil acc1.picture
   end
 
 end
