@@ -54,6 +54,8 @@ class MessagesController < ApplicationController
   
   def create
     @message = Message.new(params[:message].merge(:sender => get_viewer))
+    @page_title = "Compose new message"
+    @layoutable = get_viewer
     if @message.save
       msg = "You have sent your message to #{params[:message][:recipient]}."
       respond_to do |format|
@@ -63,7 +65,13 @@ class MessagesController < ApplicationController
     else
       flash.now[:warning] = "There was an error creating your message."
       respond_to do |format|
-        format.html { render :action => "new" }
+        format.html do
+          if get_viewer.layout
+            render :template => Message.find(:first).layout_file(:new)
+          else
+            render :action => 'new'
+          end
+        end
         format.js { render :action => 'create_error' }
       end
     end

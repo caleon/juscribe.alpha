@@ -7,8 +7,10 @@ class PicturesController < ApplicationController
     return unless get_depictable(:message => "Unable to find the object specified. Please check the address.") && authorize(@depictable)
     find_opts = get_find_opts(:order => 'pictures.id DESC')
     @pictures = @depictable.pictures.find(:all, find_opts)
+    @page_title = "#{@depictable}'s Pictures"
+    @layoutable = @depictable
     respond_to do |format|
-      format.html
+      format.html { render :template => Picture.find(:first).layout_file(:index) if @depictable.layout }
       format.js
       format.xml
     end
@@ -16,8 +18,10 @@ class PicturesController < ApplicationController
   
   def show
     return unless setup(:permission)
+    @page_title = @picture.display_name
+    @layoutable = @picture
     respond_to do |format|
-      format.html
+      format.html { render :template => @picture.layout_file(:show) if @picture.layout }
       format.js
       format.xml
     end
@@ -26,14 +30,28 @@ class PicturesController < ApplicationController
   def new
     return unless get_depictable(:message => "Unable to find the object to depict. Please check the address.") && authorize(@depictable)
     @picture = @depictable.pictures.new
+    @page_title = "New Picture for #{@depictable.display_name}"
+    @layoutable = @picture
+    respond_to do |format|
+      format.html { render :template => @picture.layout_file(:new) if @picture.layout }
+      format.js
+    end
   end
   
   def create
     return unless get_depictable(:message => "Unable to find_the_object to depict. Please check the address.") && authorize(@depictable)
+    @page_title = "New Picture for #{@depictable.display_name}"
     @picture = create_uploaded_picture_for(@depictable, :save => true, :respond => true)
+    @layoutable = @picture
     return if @picture.errors.empty?
     respond_to do |format|
-      format.html { render :action => 'new' }
+      format.html do
+        if @picture.layout
+          render :template => @picture.layout_file(:new)
+        else
+          render :action => 'new'
+        end
+      end
       format.js { render :action => 'create_error' }
     end
   end
@@ -41,15 +59,19 @@ class PicturesController < ApplicationController
   def edit
     return unless setup(:permission) && authorize(@picture, :editable => true)
     @use_kropper = true
+    @page_title = "Edit #{@picture.display_name}"
+    @layoutable = @picture
     respond_to do |format|
-      format.html
+      format.html { render :template => @picture.layout_file(:edit) if @picture.layout }
       format.js
     end
   end
   
   def update
     return unless setup(:permission) && authorize(@picture, :editable => true)
+    @page_title = "Edit #{@picture.display_name}"
     @use_kropper = true
+    @layoutable = @picture
     if params[:picture].delete(:crop_cancel) == "true"
       msg = "Image editing canceled."
       respond_to do |format|
@@ -72,7 +94,13 @@ class PicturesController < ApplicationController
       rescue Picture::InvalidCropRect, ActiveRecord::RecordInvalid => e
         flash.now[:warning] = "There was an error editing your picture: #{e.message}"
         respond_to do |format|
-          format.html { render :action => 'edit' }
+          format.html do
+            if @picture.layout
+              render :template => @picture.layout_file(:edit)
+            else
+              render :action => 'edit'
+            end
+          end
           format.js { render :action => 'update_error' }
         end
       end

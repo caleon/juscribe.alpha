@@ -6,6 +6,7 @@ class GroupsController < ApplicationController
   def index
     find_opts = get_find_opts(:include => :primary_picture, :order => 'groups.name ASC')
     @groups = Group.find(:all, find_opts)
+    @page_title = "Groups on #{APP[:name]}"
     respond_to do |format|
       format.html
       format.js
@@ -17,8 +18,10 @@ class GroupsController < ApplicationController
     return unless setup([:permission, :primary_picture])
     find_opts = get_find_opts(:order => 'memberships.id DESC')
     @users = @group.users.find(:all, find_opts)
+    @page_title = @group.display_name
+    @layoutable = @group
     respond_to do |format|
-      format.html
+      format.html { render :template => @group.layout_file(:show) if @group.layout }
       format.js
       format.xml
     end
@@ -26,14 +29,18 @@ class GroupsController < ApplicationController
   
   def new
     @group = Group.new
+    @page_title = "New Group"
+    @layoutable = @group
     respond_to do |format|
-      format.html
+      format.html { render :template => @group.layout_file(:new) if @group.layout }
       format.js
     end
   end
   
   def create
     @group = get_viewer.found(params[:group], :without_save => true)
+    @page_title = "New Group"
+    @layoutable = @group
     if @group.save
       @group.join(get_viewer, :rank => Membership::RANKS[:founder])
       msg = "You have successfully founded your group."
@@ -44,7 +51,13 @@ class GroupsController < ApplicationController
     else
       flash.now[:warning] = "There was an error founding your group."
       respond_to do |format|
-        format.html { render :action => 'new' }
+        format.html do
+          if @group.layout
+            render :template => @group.layout_file(:new)
+          else
+            render :action => 'new'
+          end
+        end
         format.js { render :action => 'create_error' }
       end
     end
@@ -53,14 +66,17 @@ class GroupsController < ApplicationController
   def edit
     return unless setup(:permission) && authorize(@group, :editable => true)
     @page_title = "#{@group.display_name} - Edit"
+    @layoutable = @group
     respond_to do |format|
-      format.html
+      format.html { render :template => @group.layout_file(:edit) if @group.layout }
       format.js
     end
   end
   
   def update
     return unless setup(:permission) && authorize(@group, :editable => true)
+    @page_title = "#{@group.display_name} - Edit"
+    @layoutable = @group
     if @group.update_attributes(params[:group])
       msg = "You have successfully updated #{@group.display_name}."
       respond_to do |format|
@@ -70,7 +86,13 @@ class GroupsController < ApplicationController
     else
       flash.now[:warning] = "There was an error updating your #{@blog.display_name}."
       respond_to do |format|
-        format.html { render :action => 'edit' }
+        format.html do
+          if @group.layout
+            render :template => @group.layout_file(:edit)
+          else
+            render :action => 'edit'
+          end
+        end
         format.js { render :actin => 'update_error' }
       end
     end
@@ -88,6 +110,8 @@ class GroupsController < ApplicationController
   
   def join
     return unless setup
+    @page_title = @group.display_name
+    @layoutable = @group
     if @group.join(get_viewer)
       msg = "You have successfully joined #{@group.display_name}."
       respond_to do |format|

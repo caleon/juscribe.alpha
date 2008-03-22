@@ -1,35 +1,43 @@
 class PermissionsController < ApplicationController
   # TODO: view lets you MERGE parts of each of the rules. Need to feed model attrs hash.
-  use_shared_options :permission_rule
+  use_shared_options :permission_rule, :collection_layoutable => :get_viewer
   verify_login_on :index, :show, :new, :create, :edit, :update, :destroy
   authorize_on :index, :show, :new, :create, :edit, :update, :destroy
   
   def index
-    @permission_rules = get_viewer.permission_rules
+    @permission_rules = @user.permission_rules
+    @page_title = "#{@user.display_name}'s Permission Rules"
+    set_layoutable
     respond_to do |format|
-      format.html
+      format.html { trender }
       format.js
     end
   end
   
   def show
     return unless setup(:permissions)
+    @page_title = @permission_rule.display_name
+    set_layoutable
     respond_to do |format|
-      format.html
+      format.html { trender }
       format.js
     end
   end
   
   def new
     @permission_rule = get_viewer.permission_rules.new
+    @page_title = "New Permission Rule"
+    set_layoutable
     respond_to do |format|
-      format.html
+      format.html { trender }
       format.js
     end
   end
   
   def create
     @permission_rule = PermissionRule.new(params[:permission_rule].merge(:user => get_viewer))
+    @page_title = "New Permission Rule"
+    set_layoutable
     if @permission_rule.save
       msg = "You have successfully created a permission rule."
       respond_to do |format|
@@ -39,7 +47,7 @@ class PermissionsController < ApplicationController
     else
       flash.now[:warning] = "There was an error creating your permission rule."
       respond_to do |format|
-        format.html { render :action => 'show' }
+        format.html { trender :new }
         format.js { render :action => 'create_error' }
       end
     end
@@ -48,14 +56,17 @@ class PermissionsController < ApplicationController
   def edit
     return unless setup
     @page_title = "#{@permission_rule.display_name} - Edit"
+    set_layoutable
     respond_to do |format|
-      format.html
+      format.html { trender }
       format.js
     end
   end
   
   def update
     return unless setup
+    @page_title = "#{@permission_rule.display_name} - Edit"
+    set_layoutable
     if @permission_rule.update_attributes(params[:permission_rule])
       msg = "You have successfully updated #{@permission_rule.display_name}."
       respond_to do |format|
@@ -65,7 +76,7 @@ class PermissionsController < ApplicationController
     else
       flash.now[:warning] = "There was an error updating #{@permission_rule.display_name}."
       respond_to do |format|
-        format.html { render :action => 'edit' }
+        format.html { trender :edit }
         format.js { render :action => 'update_error' }
       end
     end

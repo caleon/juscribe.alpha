@@ -23,7 +23,9 @@ module ActionController::CommonMethods
               :instance_name    =>  instance_name,
               :instance_var     =>  instance_var,
               :plural_sym       =>  plural_sym,
-              :custom_finder    =>  :find
+              :custom_finder    =>  :find,
+              :collection_layoutable => opts[:collection_layoutable] || "@user",
+              :object_layoutable    => opts[:object_layoutable] || instance_var
       }.merge(opts))
       
       class_inheritable_reader :shared_setup_options
@@ -64,7 +66,6 @@ module ActionController::CommonMethods
         false
       end
     end
-    
     
     def index
       instance_variable_set("@#{shared_setup_options[:plural_sym]}", shared_setup_options[:model_class].find(:all, get_find_opts(:order => 'id DESC')) )
@@ -170,6 +171,33 @@ module ActionController::CommonMethods
         format.js { flash.now[:notice] = msg }
       end
     end
+    
+    #################
+    # L A Y O U T S #
+    #################
+    
+    def set_layoutable
+      @layoutable = if instance_variable_get("#{shared_setup_options[:instance_var]}")
+        instance_eval %{ #{shared_setup_options[:object_layoutable]} }
+      else
+        instance_eval %{ #{shared_setup_options[:collection_layoutable]} }
+      end      
+    end
+    
+    def theme_render(*args)
+      opts = args.extract_options!
+      method_sym = args.shift || action_name.intern
+      if @layoutable.layout
+        render opts.merge(:template => @layoutable.layout_file(shared_setup_options[:plural_sym], method_sym))
+      else
+        render opts.merge(:action => method_sym.to_s)
+      end
+    end
+    alias_method :trender, :theme_render
+    
+    #################
+    # F I L T E R S #
+    #################
     
     # verify_logged_in is called from before_filter
     def verify_logged_in

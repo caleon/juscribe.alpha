@@ -9,8 +9,10 @@ class ClipsController < ApplicationController
     return unless get_widgetable(:message => "Unable to find the object specified. Please check the address.") && authorize(@widgetable)
     find_opts = get_find_opts(:order => 'id DESC')
     @clips = @widgetable.clips.find(:all, find_opts)
+    @page_title = "Clips for #{@widgetable.display_name}"
+    @layoutable = @widgetable
     respond_to do |format|
-      format.html
+      format.html { render :template => @layoutable.layout_file(:index) if @layoutable.layout }
       format.js
       format.xml
     end
@@ -18,8 +20,10 @@ class ClipsController < ApplicationController
   
   def show
     return unless setup # Widget does not associate with Permission.
+    @page_title = @clip.display_name
+    @layoutable = @clip
     respond_to do |format|
-      format.html
+      format.html { render :template => @clip.layout_file(:show) if @clip.layout }
       format.js
       format.xml
     end
@@ -28,10 +32,18 @@ class ClipsController < ApplicationController
   def new
     return unless get_widgetable(:message => "Unable to find object to clip. Please check the address.") && authorize(@widgetable)
     @clip = Widget.new
+    @page_title = "New Clip for #{@widgetable.display_name}"
+    @layoutable = @clip
+    respond_to do |format|
+      format.html { render :template => @clip.layout_file(:new) if @clip.layout }
+      format.js
+    end
   end
   
   def create
     return unless get_widgetable(:message => "Unable to find object to clip. Please check the address.") && authorize(@widgetable)
+    @page_title = "New Clip for #{@widgetable.display_name}"
+    @layoutable = @clip
     if @clip = @widgetable.clip!(params[:clip].merge(:user => get_viewer)) # TODO: Error messaging for already being clipped.
       msg = "You have clipped #{@widgetable.display_name}."
       respond_to do |format|
@@ -41,7 +53,13 @@ class ClipsController < ApplicationController
     else
       flash.now[:warning] = "There was an error clipping #{@widgetable.display_name}. #{@clip.errors.inspect}"
       respond_to do |format|
-        format.html { render :action => 'show' }
+        format.html do
+          if @clip.layout
+            render :template => @clip.layout_file(:new)
+          else
+            render :action => 'new'
+          end
+        end
         format.js { render :action => 'create_error' }
       end
     end
@@ -50,14 +68,17 @@ class ClipsController < ApplicationController
   def edit
     return unless setup && authorize(@clip, :editable => true)
     @page_title = "#{@clip.display_name} - Edit"
+    @layoutable = @clip
     respond_to do |format|
-      format.html
+      format.html { render :template => @clip.layout_file(:edit) if @clip.layout }
       format.js
     end
   end
   
   def update
     return unless setup && authorize(@clip, :editable => true)
+    @page_title = "#{@clip.display_name} - Edit"
+    @layoutable = @clip
     if @clip.update_attributes(params[:clip])
       msg = "You have successfully updated #{@clip.display_name}."
       respond_to do |format|
@@ -67,7 +88,13 @@ class ClipsController < ApplicationController
     else
       flash.now[:warning] = "There was an error updating your #{@clip.display_name}."
       respond_to do |format|
-        format.html { render :action => 'edit' }
+        format.html do
+          if @clip.layout
+            render :template => @clip.layout_file(:edit)
+          else
+            render :action => 'edit'
+          end
+        end
         format.js { render :action => 'update_error' }
       end
     end

@@ -14,7 +14,7 @@ class Event < ActiveRecord::Base
   alias_attribute :description, :content
   
   def to_s; self.name; end
-  def display_name, self.name; end
+  def display_name; self.name; end
   
   def to_path(for_associated=false)
     if self.user.nil?

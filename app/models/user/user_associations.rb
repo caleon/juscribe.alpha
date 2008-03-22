@@ -6,7 +6,7 @@ class User < ActiveRecord::Base
   has_many :drafts, :class_name => 'Article', :dependent => :nullify,
                     :conditions => "published_date IS NULL"
   has_many :all_articles, :class_name => 'Article', :order => 'articles.id DESC'
-  has_many :owned_blogs, :class_name => 'Blog', :dependent => :nullify
+  has_many :owned_blogs, :class_name => 'Blog', :dependent => :nullify # What is the point?
   has_many :blogs, :as => :bloggable, :dependent => :nullify
   def all_blogs; (owned_blogs + blogs).uniq; end
   has_many :comments, :as => :commentable, :order => 'comments.id DESC'

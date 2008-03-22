@@ -7,10 +7,10 @@ class Article < ActiveRecord::Base
   has_one :primary_picture, :class_name => 'Picture', :as => :depictable, :order => :position
   has_many :comments, :as => :commentable
     
-  validates_presence_of :user_id, :title, :permalink, :content
+  validates_presence_of :blog_id, :user_id, :title, :permalink, :content
   validates_length_of :title, :in => (3..70)
   validate do |article|
-    errors.add(:publish_at, "must be in the future") unless article.publish_at > Time.now
+    article.errors.add(:publish_at, "must be in the future") unless (article.published? || article.publish_at.nil? || article.publish_at > Time.now)
   end
   validates_uniqueness_of :permalink, :scope => :user_id # Hm this, or published_date?
   validates_with_regexp :permalink, :title, :message => "uses an incorrect format: please edit your title"

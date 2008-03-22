@@ -43,6 +43,8 @@ class EventsController < ApplicationController
     return unless get_user
     # get_viewer should not be nil since verify_login_on handles filter.
     @event = get_viewer.events.new(params[:event])
+    @page_title = "New Event"
+    @layoutable = @event
     if @event.save
       create_uploaded_picture_for(@event, :save => true) if picture_uploaded?
       msg = "You have successfully created your event."
@@ -53,7 +55,13 @@ class EventsController < ApplicationController
     else
       flash.now[:warning] = "There was an error creating your event."
       respond_to do |format|
-        format.html { render :action => 'new' }
+        format.html do
+          if @event.layout
+            render :template => @event.layout_file(:new)
+          else
+            render :action => 'new'
+          end
+        end
         format.js { render :action => 'create_error' }
       end
     end
@@ -71,6 +79,8 @@ class EventsController < ApplicationController
   
   def update
     return unless setup(:permission) && authorize(@event, :editable => true)
+    @page_title = "#{@event.display_name} - Edit"
+    @layoutable = @event
     if @event.update_attributes(params[:event])
       create_uploaded_picture_for(@event, :save => true) if picture_uploaded?
       msg = "You have successfully updated #{@event.display_name}."
@@ -81,7 +91,13 @@ class EventsController < ApplicationController
     else
       flash.now[:warning] = "There was an error updating your #{@event.display_name}."
       respond_to do |format|
-        format.html { render :action => 'edit' }
+        format.html do
+          if @event.layout
+            render :template => @event.layout_file(:edit)
+          else
+            render :action => 'edit'
+          end
+        end
         format.js { render :action => 'update_error' }
       end
     end
@@ -89,6 +105,8 @@ class EventsController < ApplicationController
   
   def begin_event
     return unless setup(:permission) && authorize(@event, :editable => true)
+    @page_title = "#{@event.display_name} - Edit"
+    @layoutable = @event
     if @event.begin!
       msg = "Your event #{@event.display_name} has officially begun!"
       respond_to do |format|
@@ -98,7 +116,13 @@ class EventsController < ApplicationController
     else
       flash.now[:warning] = "There was an error commencing your event #{@event.display_name}."
       respond_to do |format|
-        format.html { render :action => 'edit' }
+        format.html do
+          if @event.layout
+            render :template => @event.layout_file(:edit)
+          else
+            render :action => 'edit'
+          end
+        end
         format.js { render :action => 'begin_event_error' }
       end
     end
@@ -106,6 +130,8 @@ class EventsController < ApplicationController
   
   def end_event
     return unless setup(:permission) && authorize(@event, :editable => true)
+    @page_title = "#{@event.display_name} - Edit"
+    @layoutable = @event
     if @event.end!
       msg = "Your event #{@event.display_name} has officially ended!"
       respond_to do |format|
@@ -115,7 +141,13 @@ class EventsController < ApplicationController
     else
       flash.now[:warning] = "There was an error ending your event #{@event.display_name}."
       respond_to do |format|
-        format.html { render :action => 'edit' }
+        format.html do
+          if @event.layout
+            render :template => @event.layout_file(:edit)
+          else
+            render :action => 'edit'
+          end
+        end
         format.js { render :action => 'end_event_error' }
       end
     end

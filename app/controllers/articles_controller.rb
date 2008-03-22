@@ -13,10 +13,10 @@ class ArticlesController < ApplicationController
     else
       @articles = @user.articles.find(:all, find_opts)
     end
-    @layoutable = @user
+    @layoutable = @blog || @user
     @page_title = "Articles by #{@user.display_name}"
     respond_to do |format|
-      format.html { render :template => Article.find(:first).layout_file(:index) if @user.layout } # FIXME TOO: icky
+      format.html { trender }
       format.js
       format.xml
     end
@@ -28,7 +28,7 @@ class ArticlesController < ApplicationController
       return unless authorize(@article, :editable => true)
     end
     @page_title = "#{@article.display_name}"
-    @layoutable = @article
+    set_layoutable
     respond_to do |format|
       format.html do
         if @article.layout
@@ -67,6 +67,8 @@ class ArticlesController < ApplicationController
   def create
     return unless get_user
     @article = Article.new(params[:article].merge(:user => get_viewer))
+    @page_title = "New Article"
+    @layoutable = @article
     if @article.save
       create_uploaded_picture_for(@article, :save => true) if picture_uploaded?
       msg = "You have successfully created your article."
@@ -77,7 +79,13 @@ class ArticlesController < ApplicationController
     else
       flash.now[:warning] = "There was an error creating your article."
       respond_to do |format|
-        format.html { render :action => 'new' }
+        format.html do
+          if @picture.layout
+            render :template => @picture.layout_file(:new)
+          else
+            render :action => 'new'
+          end
+        end
         format.js { render :action => 'create_error' }
       end
     end
@@ -102,20 +110,24 @@ class ArticlesController < ApplicationController
   def update
     return unless setup(:permission) && authorize(@article, :editable => true)
     title = params[:article].delete(:title)
+    @page_title = "#{@article.display_name} - Edit"
     if @article.update_attributes(params[:article])
       create_uploaded_picture_for(@article, :save => true) if picture_uploaded?
       msg = "You have successfully updated #{@article.display_name}."
       respond_to do |format|
-        format.html do
-          flash[:notice] = msg
-          redirect_to article_url_for(@article)
-        end
+        format.html { flash[:notice] = msg; redirect_to article_url_for(@article) }
         format.js { flash.now[:notice] = msg }
       end
     else
       flash.now[:warning] = "There was an error updating your article."
       respond_to do |format|
-        format.html { render :action => 'edit' }
+        format.html do
+          if @picture.layout
+            render :template => @picture.layout_file(:edit)
+          else
+            render :action => 'edit'
+          end
+        end
         format.js { render :action => 'update_error' }
       end
     end
