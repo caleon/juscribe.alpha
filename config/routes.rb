@@ -323,6 +323,7 @@ ActionController::Routing::Routes.draw do |map|
     end
   end
   map.resources :messages, :requirements => { :id => regex_for(:message, :id) }
+  # TODO: Allow a param to specify who message is to.
   map.resources :permissions, :requirements => { :id => regex_for(:permission_rule, :id) }
   map.resources :users, :member => { :friends => :get, :befriend => :put, :unfriend => :put,
                         :about => :get, :edit_password => :get, :update_password => :put },

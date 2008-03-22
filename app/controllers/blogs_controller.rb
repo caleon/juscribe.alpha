@@ -12,7 +12,7 @@ class BlogsController < ApplicationController
     respond_to do |format|
       format.html do
         if @bloggable.layout
-          render :template => @blogs.first.layout_file(:index) # FIXME: icky.
+          render :template => Blog.find(:first).layout_file(:index) # FIXME: icky.
         else
           render :action => 'show'
         end

@@ -16,13 +16,7 @@ class ArticlesController < ApplicationController
     @layoutable = @user
     @page_title = "Articles by #{@user.display_name}"
     respond_to do |format|
-      format.html do
-        if @user.layout
-          render :template => @articles.first.layout_file(:index) # FIXME TOO: icky
-        else
-          render :action => 'show'
-        end
-      end
+      format.html { render :template => Article.find(:first).layout_file(:index) if @user.layout } # FIXME TOO: icky
       format.js
       format.xml
     end
