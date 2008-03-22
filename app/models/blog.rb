@@ -58,8 +58,8 @@ class Blog < ActiveRecord::Base
     { :"#{for_associated ? 'blog_id' : 'id'}" => self.to_param }.merge(self.bloggable.to_path(true))
   end
   
-  def path_name_prefix
-    [ self.bloggable.path_name_prefix, 'blog' ].join('_')
+  def path_name_prefix(skip_self=false)
+    [ self.bloggable.path_name_prefix, skip_self ? nil : 'blog' ].compact.join('_')
   end
   
   def self.permalink_for(name)

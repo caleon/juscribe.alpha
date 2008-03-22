@@ -7,7 +7,6 @@
 	<% if @user && !@user.new_record? %>
 		<%= subnavi_el "Friends", friends_user_path(@user) unless controller.action_name == 'friends' %>
 		<%= subnavi_el "Blogs", user_blogs_path(@user) %>	
-		<%= subnavi_el "Articles", articles_path(@user) %>
 		<%= subnavi_el "Thoughtlets", user_thoughtlets_path(@user) %>
 		<%= subnavi_el "Events", user_events_path(@user) %>
 		<%= subnavi_el "Galleries", user_galleries_path(@user) %>

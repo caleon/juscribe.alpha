@@ -12,8 +12,13 @@ module ActiveRecord::Acts::Layoutable # included when PluginPackage is included
     'msm'
   end
   
-  def layout_file(file=layout)
-    [ '/layouts', self.layout, self.class.class_name.pluralize.underscore, file.to_s ].join('/')
+  def layout_file(*args)
+    file = args.pop
+    if view_dir = args.shift
+      [ '/layouts', self.layout, view_dir.to_s, file.to_s ].join('/')
+    else
+      [ '/layouts', self.layout, self.class.class_name.pluralize.underscore, file.to_s ].join('/')
+    end
   end
   
   def skin_file

@@ -1,10 +1,10 @@
 module ArticlesHelper
   def article_path_for(article, opts={})
-    if article.published?
-      instance_eval %{ #{opts[:prefix] ? "#{opts[:prefix]}_" : ''}article_path(article.to_path) }
-    else
-      instance_eval %{ #{opts[:prefix] ? "#{opts[:prefix]}_" : ''}draft_path(article.to_path) }      
-    end
+    instance_eval %{ #{opts[:prefix] ? "#{opts[:prefix]}_" : ''}#{article.path_name_prefix}_path(article.to_path) }      
+  end
+  
+  def articles_path_from_blog(blog, opts={})
+    instance_eval %{ #{opts[:prefix] ? "#{opts[:prefix]}_" : ''}#{blog.path_name_prefix(true)_path(blog.to_path(true))} }
   end
   
   def article_intro
