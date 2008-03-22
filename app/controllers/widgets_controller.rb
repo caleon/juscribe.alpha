@@ -8,7 +8,6 @@ class WidgetsController < ApplicationController
     find_opts = get_find_opts(:order => 'id DESC')
     @widgets = @user.widgets.find(:all, find_opts)
     @page_title = "Customize Widgets"
-    set_layoutable
     respond_to do |format|
       format.html { trender }
       format.js
@@ -19,7 +18,6 @@ class WidgetsController < ApplicationController
   def show
     return unless setup
     @page_title = @widget.display_name
-    set_layoutable
     respond_to do |format|
       format.html { trender }
       format.js
@@ -38,7 +36,6 @@ class WidgetsController < ApplicationController
   def edit
     return unless setup && authorize(@widget, :editable => true)
     @page_title = "#{@widget.display_name} - Edit"
-    set_layoutable
     respond_to do |format|
       format.html { trender }
       format.js
@@ -48,7 +45,6 @@ class WidgetsController < ApplicationController
   def update
     return unless setup && authorize(@widget, :editable => true)
     @page_title = "#{@widget.display_name} - Edit"
-    set_layoutable
     if @widget.update_attributes(params[:widget])
       msg = "You have successfully updated #{@widget.display_name}."
       respond_to do |format|

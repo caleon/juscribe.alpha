@@ -13,7 +13,6 @@ class ArticlesController < ApplicationController
     else
       @articles = @blog.articles.find(:all, find_opts)
     end
-    @layoutable = @blog
     @page_title = "Articles from #{@bloggable.display_name}'s blog: #{@blog.display_name}"
     respond_to do |format|
       format.html { trender }
@@ -28,7 +27,6 @@ class ArticlesController < ApplicationController
       return unless authorize(@article, :editable => true)
     end
     @page_title = "#{@article.display_name}"
-    set_layoutable
     respond_to do |format|
       format.html { trender }
       format.js
@@ -38,23 +36,16 @@ class ArticlesController < ApplicationController
   
   def new
     return unless get_blog
-    if @user == get_viewer
+    if @blog.editable_by?(get_viewer)
       @article = Article.new
       @page_title = "New Article"
-      @layoutable = @user
       respond_to do |format|
-        format.html do
-          if @article.layout
-            render :template => @article.layout_file(:new)
-          else
-            render :action => 'show'
-          end
-        end
+        format.html { trender }
         format.js
         format.xml
       end
     else
-      redirect_to new_article_url(get_viewer) and return if @user != get_viewer
+      redirect_to new_user_article_url(get_viewer) and return
     end
   end
   
@@ -62,7 +53,6 @@ class ArticlesController < ApplicationController
     return unless get_blog
     @article = Article.new(params[:article].merge(:user => get_viewer))
     @page_title = "New Article"
-    @layoutable = @article
     if @article.save
       create_uploaded_picture_for(@article, :save => true) if picture_uploaded?
       msg = "You have successfully created your article."
@@ -73,13 +63,7 @@ class ArticlesController < ApplicationController
     else
       flash.now[:warning] = "There was an error creating your article."
       respond_to do |format|
-        format.html do
-          if @picture.layout
-            render :template => @picture.layout_file(:new)
-          else
-            render :action => 'new'
-          end
-        end
+        format.html { trender :new }
         format.js { render :action => 'create_error' }
       end
     end
@@ -88,15 +72,8 @@ class ArticlesController < ApplicationController
   def edit
     return unless setup(:permission) && authorize(@article, :editable => true)
     @page_title = "#{@article.display_name} - Edit"
-    @layoutable = @article
     respond_to do |format|
-      format.html do
-        if @article.layout
-          render :template => @article.layout_file(:edit)
-        else
-          render :action => 'edit'
-        end
-      end
+      format.html { trender }
       format.js
     end
   end
@@ -115,13 +92,7 @@ class ArticlesController < ApplicationController
     else
       flash.now[:warning] = "There was an error updating your article."
       respond_to do |format|
-        format.html do
-          if @article.layout
-            render :template => @article.layout_file(:edit)
-          else
-            render :action => 'edit'
-          end
-        end
+        format.html { trender :edit }
         format.js { render :action => 'update_error' }
       end
     end

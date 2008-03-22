@@ -185,6 +185,7 @@ module ActionController::CommonMethods
     end
     
     def theme_render(*args)
+      set_layoutable
       opts = args.extract_options!
       method_sym = args.shift || action_name.intern
       if @layoutable.layout

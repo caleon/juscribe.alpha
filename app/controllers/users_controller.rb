@@ -14,19 +14,14 @@ class UsersController < ApplicationController
     @thoughtlets = @user.thoughtlets.sort_by{|tl| -tl.created_at.to_i }
     @events = @user.events.sort_by {|ev| -ev.begins_at.to_i }
     @skin_file = @user.skin_file
-    @layoutable = @user
     respond_to do |format|
-      format.html do
-        if @user.layout
-          render :template => @user.layout_file(:show)
-        else
-          render :action => 'show'
-        end
-      end
+      format.html { trender }
       format.js
       format.xml
     end
   end
+  
+  # TODO: quit borrowing normal methods from common and set titles for actions
   
   def create
     @user = User.new(params[:user])
@@ -37,16 +32,13 @@ class UsersController < ApplicationController
       create_uploaded_picture_for(@user, :save => true) if picture_uploaded?
       msg = "You are now a registered user! Welcome!"
       respond_to do |format|
-        format.html do
-          flash[:notice] = msg
-          redirect_to @user
-        end
+        format.html { flash[:notice] = msg; redirect_to @user }
         format.js { flash.now[:notice] = msg }
       end
     else
       flash.now[:warning] = "There was an issue with the registration form."
       respond_to do |format|
-        format.html { render :action => 'new' }
+        format.html { trender :new }
         format.js { render :action => 'create_error' }
       end
     end
@@ -55,21 +47,15 @@ class UsersController < ApplicationController
   def edit
     return unless setup(:permission) && authorize(@user, :editable => true)
     @page_title = "#{@user.display_name} - Edit"
-    @layoutable = @user
     respond_to do |format|
-      format.html do
-        if @user.layout
-          render :template => @user.layout_file(:edit)
-        else
-          render :action => 'edit'
-        end
-      end
+      format.html { trender }
       format.js
     end
   end
   
   def update    
     return unless setup && authorize(@user, :editable => true)
+    @page_title = "#{@user.display_name} - Edit"
     if @user.update_attributes(params[:user])
       create_uploaded_picture_for(@user, :save => true) if picture_uploaded?
       msg = "You have successfully updated your profile."
@@ -80,7 +66,7 @@ class UsersController < ApplicationController
     else
       flash.now[:warning] = "There was an error updating your profile."
       respond_to do |format|
-        format.html { render :action => 'edit' }
+        format.html { trender :edit }
         format.js { render :action => 'update_error' }
       end
     end
@@ -88,11 +74,16 @@ class UsersController < ApplicationController
   
   def edit_password
     return unless setup(:permission) && authorize(@user, :editable => true)
-    @page_title = "#{@user.nick} - Edit Password"
+    @page_title = "#{@user.display_name} - Edit Password"
+    respond_to do |format|
+      format.html { trender }
+      format.js
+    end
   end
   
   def update_password
     return unless setup(:permission) && authorize(@user, :editable => true)
+    @page_title = "#{@user.display_name} - Edit Password"
     if @user.update_attributes(params[:user])
       msg = "You have successfully changed your password."
       respond_to do |format|
@@ -102,7 +93,7 @@ class UsersController < ApplicationController
     else
       flash.now[:warning] = "There was an issue with the change password form."
       respond_to do |format|
-        format.html { render :action => 'edit_password' }
+        format.html { trender :edit_password }
         format.js { render :action => 'update_password_error' }
       end
     end      
@@ -168,9 +159,8 @@ class UsersController < ApplicationController
     return unless setup
     @friends = @user.friends(:include => [ :primary_picture, :permission ])
     @page_title = "#{@user.display_name}'s Friends"
-    @layoutable = @user
     respond_to do |format|
-      format.html { render :template => @user.layout_file(:friends) if @user.layout }
+      format.html { trender }
       format.js
       format.xml
     end
@@ -178,23 +168,18 @@ class UsersController < ApplicationController
   
   def befriend
     return unless setup
+    @page_title = get_viewer.display_name
     if res = get_viewer.befriend(@user) # This sends out notifier in model.
       @notice = [ "You have requested friendship with #{@user.display_name}.",
                   "You are now friends with #{@user.display_name}." ][res]
       respond_to do |format|
-        format.html do
-          flash[:notice] = @notice
-          redirect_to @user
-        end
+        format.html { flash[:notice] = @notice; redirect_to @user }
         format.js          
       end
     else
       flash.now[:warning] = "There was an error friending #{@user.display_name}."
       respond_to do |format|
-        format.html do
-          params[:id] = get_viewer.nick
-          show
-        end
+        format.html { params[:id] = get_viewer.nick; show }
         format.js { render :action => 'befriend_error' }
       end
     end
@@ -222,5 +207,10 @@ class UsersController < ApplicationController
   
   def about
     return unless setup
+    @page_title = "About #{@user.display_name}"
+    respond_to do |format|
+      format.html { trender }
+      format.js
+    end
   end
 end

@@ -1,5 +1,5 @@
 class ThoughtletsController < ApplicationController
-  use_shared_options
+  use_shared_options :collection_layoutable => :@user
   verify_login_on :new, :create, :edit, :update, :destroy
   authorize_on :show, :edit, :update, :destroy
   
@@ -8,9 +8,8 @@ class ThoughtletsController < ApplicationController
     find_opts = get_find_opts(:order => 'id DESC')
     @thoughtlets = @user.thoughtlets.find(:all, find_opts)
     @page_title = "#{@user.display_name}'s Thoughtlets"
-    @layoutable = @user
     respond_to do |format|
-      format.html { render :template => Thoughtlet.find(:first).layout_file(:index) if @user.layout }
+      format.html { trender }
       format.js
       format.xml
     end
@@ -19,9 +18,8 @@ class ThoughtletsController < ApplicationController
   def show
     return unless setup(:permission)
     @page_title = @thoughtlet.display_name
-    @layoutable = @thoughtlet
     respond_to do |format|
-      format.html { render :template => @thoughtlet.layout_file(:show) if @thoughtlet.layout }
+      format.html { trender }
       format.js
       format.xml
     end
@@ -31,10 +29,9 @@ class ThoughtletsController < ApplicationController
     return unless get_user
     redirect_to new_user_thoughtlet_url(get_viewer) and return if @user != get_viewer
     @thoughtlet = @user.thoughtlets.new
-    @layoutable = @thoughtlet
     @page_title = "New Thoughtlet"
     respond_to do |format|
-      format.html { render :template => @thoughtlet.layout_file(:new) if @thoughtlet.layout }
+      format.html { trender }
       format.js
     end
   end
@@ -52,7 +49,7 @@ class ThoughtletsController < ApplicationController
     else
       flash.now[:warning] = "There was an error creating your Thoughtlet."
       respond_to do |format|
-        format.html { render :action => 'new' }
+        format.html { trender :new }
         format.js { render :action => 'create_error' }
       end
     end
@@ -61,15 +58,15 @@ class ThoughtletsController < ApplicationController
   def edit
     return unless setup(:permission) && authorize(@thoughtlet, :editable => true)
     @page_title = "#{@thoughtlet.display_name} - Edit"
-    @layoutable = @thoughtlet
     respond_to do |format|
-      format.html { render :template => @thoughtlet.layout_file(:edit) if @thoughtlet.layout }
+      format.html { trender }
       format.js
     end
   end
   
   def update
     return unless setup(:permission) && authorize(@thoughtlet, :editable => true)
+    @page_title = "#{@thoughtlet.display_name} - Edit"
     if @thoughtlet.update_attributes(params[:thoughtlet])
       msg = "You have successfully updated #{@thoughtlet.display_name}."
       respond_to do |format|
@@ -79,7 +76,7 @@ class ThoughtletsController < ApplicationController
     else
       flash.now[:warning] = "There was an error updating your #{@thoughtlet.display_name}."
       respond_to do |format|
-        format.html { render :action => 'edit' }
+        format.html { trender :edit }
         format.js { render :action => 'update_error' }
       end
     end

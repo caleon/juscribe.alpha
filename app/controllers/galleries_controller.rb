@@ -1,5 +1,5 @@
 class GalleriesController < ApplicationController
-  use_shared_options
+  use_shared_options :collection_layoutable => :@user
   verify_login_on :new, :create, :edit, :update, :destroy
   authorize_on :show, :edit, :update, :destroy
   
@@ -8,9 +8,8 @@ class GalleriesController < ApplicationController
     find_opts = get_find_opts
     @galleries = @user.galleries.find(:all, find_opts.merge(:include => :primary_picture))
     @page_title = "#{@user.display_name}'s Galleries"
-    @layoutable = @user
     respond_to do |format|
-      format.html { render :template => Gallery.find(:first).layout_file(:index) if @user.layout }
+      format.html { trender }
       format.js
       format.xml
     end
@@ -21,9 +20,8 @@ class GalleriesController < ApplicationController
     find_opts = get_find_opts
     @pictures = @gallery.pictures.find(:all, find_opts)
     @page_title = @gallery.display_name
-    @layoutable = @gallery
     respond_to do |format|
-      format.html { render :template => @gallery.layout_file(:show) if @gallery.layout }
+      format.html { trender }
       format.js
       format.xml
     end
@@ -34,9 +32,8 @@ class GalleriesController < ApplicationController
     redirect_to new_user_gallery_url(get_viewer) and return if @user != get_viewer
     @gallery = @user.galleries.new
     @page_title = "New Gallery for #{@user.display_name}"
-    @layoutable = @gallery
     respond_to do |format|
-      format.html { render :template => @gallery.layout_file(:new) if @gallery.layout }
+      format.html { trender }
       format.js
     end
   end
@@ -45,7 +42,6 @@ class GalleriesController < ApplicationController
     return unless get_user
     @gallery = get_viewer.galleries.new(params[:gallery])
     @page_title = "New Gallery for #{@user.display_name}"
-    @layoutable = @gallery
     if @gallery.save
       msg = "You have successfully created your gallery."
       respond_to do |format|
@@ -55,13 +51,7 @@ class GalleriesController < ApplicationController
     else
       flash.now[:warning] = "There was an error creating your gallery."
       respond_to do |format|
-        format.html do
-          if @gallery.layout
-            render :template => @gallery.layout_file(:new)
-          else
-            render :action => 'new'
-          end
-        end
+        format.html { trender :new }
         format.js { render :action => 'create_error' }
       end
     end
@@ -70,9 +60,8 @@ class GalleriesController < ApplicationController
   def edit
     return unless setup(:permission) && authorize(@gallery, :editable => true)
     @page_title = "#{@gallery.display_name} - Edit"
-    @layoutable = @gallery
     respond_to do |format|
-      format.html { render :template => @gallery.layout_file(:edit) if @gallery.layout }
+      format.html { trender }
       format.js
     end
   end
@@ -80,7 +69,6 @@ class GalleriesController < ApplicationController
   def update
     return unless setup(:permission) && authorize(@gallery, :editable => true)
     @page_title = "#{@galery.display_name} - Edit"
-    @layoutable = @gallery
     if @gallery.update_attributes(params[:gallery])
       msg = "You have successfully updated #{@gallery.display_name}."
       respond_to do |format|
@@ -90,13 +78,7 @@ class GalleriesController < ApplicationController
     else
       flash.now[:warning] = "There was an error updating your #{@gallery.display_name}."
       respond_to do |format|
-        format.html do
-          if @gallery.layout
-            render :template => @gallery.layout_file(:edit)
-          else
-            render :action => 'edit'
-          end
-        end
+        format.html { trender :edit }
         format.js { render :action => 'update_error' }
       end
     end

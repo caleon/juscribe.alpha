@@ -1,5 +1,5 @@
 class BlogsController < ApplicationController
-  use_shared_options
+  use_shared_options :collection_layoutable => :@bloggable
   verify_login_on :new, :create, :edit, :update, :destroy
   authorize_on :show, :new, :create, :edit, :update, :destroy
   
@@ -7,10 +7,9 @@ class BlogsController < ApplicationController
     return unless get_bloggable
     find_opts = get_find_opts
     @blogs = @bloggable.blogs.find(:all, find_opts.merge(:include => :primary_article))
-    @layoutable = @bloggable
     @page_title = "Blogs by #{@bloggable.display_name}"
     respond_to do |format|
-      format.html { render :template => Blog.find(:first).layout_file(:index) if @bloggable.layout }
+      format.html { trender }
       format.js
       format.xml
     end
@@ -25,9 +24,8 @@ class BlogsController < ApplicationController
       @blog.articles.find(:all, find_opts)
     end
     @page_title = @blog.display_name
-    @layoutable = @blog
     respond_to do |format|
-      format.html { render :template => @blog.layout_file(:show) if @blog.layout }
+      format.html { trender }
       format.js
       format.xml
     end
@@ -37,9 +35,8 @@ class BlogsController < ApplicationController
     return unless get_bloggable && authorize(@bloggable, :editable => true)
     @blog = @bloggable.blogs.new
     @page_title = "New Blog"
-    @layoutable = @blog
     respond_to do |format|
-      format.html { render :template => @blog.layout_file(:new) if @blog.layout }
+      format.html { trender }
       format.js
     end
   end
@@ -48,7 +45,6 @@ class BlogsController < ApplicationController
     return unless get_bloggable && authorize(@bloggable, :editable => true)
     @blog = @bloggable.blogs.new(params[:blog].merge(:user => get_viewer))
     @page_title = "New Blog"
-    @layoutable = @blog
     if @blog.save
       create_uploaded_picture_for(@blog, :save => true) if picture_uploaded?
       msg = "You have successfully created your blog."
@@ -59,13 +55,7 @@ class BlogsController < ApplicationController
     else
       flash.now[:warning] = "There was an error creating your blog."
       respond_to do |format|
-        format.html do
-          if @blog.layout
-            render :template => @blog.layout_file(:new)
-          else
-            render :action => 'new'
-          end
-        end
+        format.html { trender :new }
         format.js { render :action => 'create_error' }
       end
     end
@@ -74,9 +64,8 @@ class BlogsController < ApplicationController
   def edit
     return unless setup(:permission) && authorize(@blog, :editable => true)
     @page_title = "#{@blog.display_name} - Edit"
-    @layoutable = @blog
     respond_to do |format|
-      format.html {  render :template => @blog.layout_file(:edit) if @blog.layout }
+      format.html { trender }
       format.js
     end
   end
@@ -84,7 +73,6 @@ class BlogsController < ApplicationController
   def update
     return unless setup(:permission) && authorize(@blog, :editable => true)
     @page_title = "#{@blog.display_name} - Edit"
-    @layoutable = @blog
     if @blog.update_attributes(params[:blog])
       create_uploaded_picture_for(@blog, :save => true) if picture_uploaded?
       msg = "You have successfully updated #{@blog.display_name}."
@@ -95,13 +83,7 @@ class BlogsController < ApplicationController
     else
       flash.now[:warning] = "There was an error updating your #{@blog.display_name}."
       respond_to do |format|
-        format.html do
-          if @blog.layout
-            render :template => @blog.layout_file(:edit)
-          else
-            render :action => 'edit'
-          end
-        end
+        format.html { trender :edit }
         format.js { render :action => 'update_error' }
       end
     end

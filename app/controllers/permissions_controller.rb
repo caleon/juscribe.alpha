@@ -7,7 +7,6 @@ class PermissionsController < ApplicationController
   def index
     @permission_rules = @user.permission_rules
     @page_title = "#{@user.display_name}'s Permission Rules"
-    set_layoutable
     respond_to do |format|
       format.html { trender }
       format.js
@@ -17,7 +16,6 @@ class PermissionsController < ApplicationController
   def show
     return unless setup(:permissions)
     @page_title = @permission_rule.display_name
-    set_layoutable
     respond_to do |format|
       format.html { trender }
       format.js
@@ -27,7 +25,6 @@ class PermissionsController < ApplicationController
   def new
     @permission_rule = get_viewer.permission_rules.new
     @page_title = "New Permission Rule"
-    set_layoutable
     respond_to do |format|
       format.html { trender }
       format.js
@@ -37,7 +34,6 @@ class PermissionsController < ApplicationController
   def create
     @permission_rule = PermissionRule.new(params[:permission_rule].merge(:user => get_viewer))
     @page_title = "New Permission Rule"
-    set_layoutable
     if @permission_rule.save
       msg = "You have successfully created a permission rule."
       respond_to do |format|
@@ -56,7 +52,6 @@ class PermissionsController < ApplicationController
   def edit
     return unless setup
     @page_title = "#{@permission_rule.display_name} - Edit"
-    set_layoutable
     respond_to do |format|
       format.html { trender }
       format.js
@@ -66,7 +61,6 @@ class PermissionsController < ApplicationController
   def update
     return unless setup
     @page_title = "#{@permission_rule.display_name} - Edit"
-    set_layoutable
     if @permission_rule.update_attributes(params[:permission_rule])
       msg = "You have successfully updated #{@permission_rule.display_name}."
       respond_to do |format|

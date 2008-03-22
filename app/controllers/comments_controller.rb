@@ -1,5 +1,5 @@
 class CommentsController < ApplicationController
-  use_shared_options
+  use_shared_options :collection_layoutable => :@commentable
   verify_login_on :new, :create, :edit, :update, :destroy
   authorize_on :index, :show, :new, :create, :edit, :update, :destroy
   
@@ -8,9 +8,8 @@ class CommentsController < ApplicationController
     find_opts = get_find_opts(:order => 'id DESC')
     @comments = @commentable.comments.find(:all, find_opts)
     @page_title = "Comments on #{@commentable.display_name}"
-    @layoutable = @commentable
     respond_to do |format|
-      format.html { render :template => Comment.find(:first).layout_file(:index) if @layoutable.layout }
+      format.html { trender }
       format.js
       format.xml
     end
@@ -19,9 +18,8 @@ class CommentsController < ApplicationController
   def show
     return unless setup
     @page_title = @comment.display_name
-    @layoutable = @comment
     respond_to do |format|
-      format.html { render :template => @comment.layout_file(:show) if @comment.layout }
+      format.html { trender }
       format.js
       format.xml
     end
@@ -31,9 +29,8 @@ class CommentsController < ApplicationController
     return unless get_commentable(:message => "Unable to find object to comment. Please check the address.") && authorize(@commentable)
     @comment = Comment.new
     @page_title = "New Comment on #{@commentable.display_name}"
-    @layoutable = @comment
     respond_to do |format|
-      format.html { render :template => @comment.layout_file(:new) if @comment.layout }
+      format.html { trender }
       format.js
     end
   end
@@ -41,7 +38,6 @@ class CommentsController < ApplicationController
   def create
     return unless get_commentable(:message => "Unable to find object to comment. Please check the address.") && authorize(@commentable)
     @page_title = "New Comment on #{@commentable.display_name}"
-    @layoutable = @comment
     if @comment = @commentable.comments.create(params[:comment].merge(:user => get_viewer))
       msg = "You have commented on #{@commentable.display_name}."
       respond_to do |format|
@@ -51,13 +47,7 @@ class CommentsController < ApplicationController
     else
       flash.now[:warning] = "There was an error commenting on #{@commentable.display_name}."
       respond_to do |format|
-        format.html do
-          if @comment.layout
-            render :template => @comment.layout_file(:new)
-          else
-            render :action => 'new'
-          end
-        end
+        format.html { trender :new }
         format.js { render :action => 'create_error' }
       end
     end
@@ -66,9 +56,8 @@ class CommentsController < ApplicationController
   def edit
     return unless setup && authorize(@comment, :editable => true)
     @page_title = "#{@comment.display_name} - Edit"
-    @layoutable = @comment
     respond_to do |format|
-      format.html { render :template => @comment.layout_file(:edit) if @comment.layout }
+      format.html { trender }
       format.js
     end
   end
@@ -76,7 +65,6 @@ class CommentsController < ApplicationController
   def update
     return unless setup && authorize(@comment, :editable => true)
     @page_title = "#{@comment.display_name} - Edit"
-    @layoutable = @comment
     if @comment.update_attributes(params[:comment])
       msg = "You have successfully updated #{@comment.display_name}."
       respond_to do |format|
@@ -86,13 +74,7 @@ class CommentsController < ApplicationController
     else
       flash.now[:warning] = "There was an error updating your #{@comment.display_name}."
       respond_to do |format|
-        format.html do
-          if @comment.layout
-            render :template => @comment.layout_file(:edit)
-          else
-            render :action => 'edit'
-          end
-        end
+        format.html { trender :edit }
         format.js { render :action => 'update_error' }
       end
     end

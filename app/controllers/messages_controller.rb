@@ -16,7 +16,6 @@ class MessagesController < ApplicationController
       @messages = Message.find(:all, find_opts.merge(:conditions => ["recipient_id = ?", get_viewer.id]))
       @page_title = "My Inbox"
     end
-    set_layoutable
     respond_to do |format|
       format.html { trender }
       format.js
@@ -28,7 +27,6 @@ class MessagesController < ApplicationController
     return unless setup#([ :sender, :recipient ])
     @message.read_it! if @message.recipient == get_viewer
     @page_title = @message.subject
-    set_layoutable
     respond_to do |format|
       format.html { trender }
       format.js
@@ -39,7 +37,6 @@ class MessagesController < ApplicationController
   def new
     @page_title = "Compose new message"
     @message = get_viewer.sent_messages.new
-    set_layoutable
     respond_to do |format|
       format.html { trender }
       format.js
@@ -49,7 +46,6 @@ class MessagesController < ApplicationController
   def create
     @message = Message.new(params[:message].merge(:sender => get_viewer))
     @page_title = "Compose new message"
-    set_layoutable
     if @message.save
       msg = "You have sent your message to #{params[:message][:recipient]}."
       respond_to do |format|
