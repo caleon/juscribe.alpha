@@ -15,6 +15,8 @@ class User < ActiveRecord::Base
   alias_attribute :name, :nick
   alias_attribute :content, :full_name
   
+  def display_name; self.nick; end
+  
   def self.primary_find(*args)
     find_by_nick(*args)
   end

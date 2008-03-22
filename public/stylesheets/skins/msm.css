@@ -38,6 +38,16 @@
 	color: #fff;
 }
 
+.sub.navigation li.breadcrumbEl > a {
+	background: transparent url(/images/skins/msm/bread_bg.png) no-repeat right top;
+}
+
+.sub.navigation li.breadcrumbEl > a:hover,
+.sub.navigation li.breadcrumbEl.current > a {
+	background-image: url(/images/skins/msm/bread_bg-hover.png);
+	background-color: transparent;
+}
+
 .flashBox {
 	width: 893px;
 	margin-bottom: 0;
