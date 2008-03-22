@@ -1,6 +1,7 @@
 <div class="sub navigation">
 	<ul class="navigationList">
-		<%= bread_el @user.nick, @user, :current => %w(show).include?(controller.action_name) %>
+		<%= bread_el "Users", users_path, :current => true if @user.nil? || @user.new_record? %>
+		<%= bread_el @user.nick, @user, :current => %w(show).include?(controller.action_name) unless @user.nil? || @user.new_record? %>
 		<%= bread_el "Preferences", edit_user_path(@user), :current => true if controller.action_name == 'edit' %>
 		<%= bread_el "Friends", friends_user_path(@user), :current => true if controller.action_name == 'friends' %>
 	<% if @user && !@user.new_record? %>
@@ -18,8 +19,8 @@
 	<% elsif @viewer != @user && !@viewer.kinda_friends_with?(@user) %>
 		<%= subnavi_el "Request Friendship", befriend_user_path(@user), { :method => :put } %>
 	<% end %>
-		<%= navi_skin_info %>
-		<%= navi_customize(user_widgets_path(@user.to_path(true))) %>
 <% end %>
+	<%= navi_skin_info %>
+	<%= navi_customize(user_widgets_path(@user.to_path(true))) if @user && @user.editable_by?(viewer) %>
 	</ul>
 </div>
