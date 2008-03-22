@@ -9,12 +9,14 @@ class Article < ActiveRecord::Base
     
   validates_presence_of :user_id, :title, :permalink, :content
   validates_length_of :title, :in => (3..70)
+  validate do |article|
+    errors.add(:publish_at, "must be in the future") unless article.publish_at > Time.now
+  end
   validates_uniqueness_of :permalink, :scope => :user_id # Hm this, or published_date?
-  
   validates_with_regexp :permalink, :title, :message => "uses an incorrect format: please edit your title"
   validates_with_regexp :content
   
-  attr_protected :permalink, :published_date, :published_time
+  attr_protected :permalink, :published_date, :published_at
   alias_attribute :name, :title # Content is already correct for widget
   
   before_save :verify_non_empty_permalink
@@ -45,8 +47,8 @@ class Article < ActiveRecord::Base
     self.published? ? 'article' : 'draft'
   end
   
-  def draft?; !self.published_time? && !self.published_date?; end
-  def published?; self.published_time? && self.published_date?; end
+  def draft?; !self.published_at? && !self.published_date?; end
+  def published?; self.published_at? && self.published_date?; end
   def publish!
     unless self.published?
       publish
@@ -54,23 +56,19 @@ class Article < ActiveRecord::Base
     end
   end
   def publish
-    self.published_date, self.published_time = [ Date.today, Time.now ] unless self.published?
+    self.published_date, self.published_at = [ Date.today, Time.now ] unless self.published?
   end
   def unpublish!
     unless self.draft?
-      self.published_date, self.published_time = [ nil, nil ]
+      self.published_date, self.published_at = [ nil, nil ]
       self.save!
     end
   end
   def publish_at
-    self.published_time
+    self.published_at
   end
   def publish_at=(datetime)
-    self.published_date, self.published_time = datetime.to_date, datetime
-  end
-  def published_at
-    return nil unless self.published?
-    self.published_date.to_formatted_s(:rfc822) + ', ' + self.published_time.to_s(:time)
+    self.published_date, self.published_at = datetime.to_date, datetime
   end
   def publish=(val) # This is for automatically setting published fields from form data.
     self.publish if [ "Publish", "yes", "Yes", "y", "Y", "1", 1, "true", true].include?(val)

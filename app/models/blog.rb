@@ -3,7 +3,7 @@ class Blog < ActiveRecord::Base
   
   belongs_to :user # creator
   belongs_to :bloggable, :polymorphic => true
-  with_options :class_name => 'Article', :order => 'articles.id DESC', :conditions => "articles.published_time IS NOT NULL AND articles.published_time < NOW()" do |art|
+  with_options :class_name => 'Article', :order => 'articles.id DESC', :conditions => "articles.published_at IS NOT NULL AND articles.published_at < NOW()" do |art|
     art.has_many :articles
     art.has_many :latest_articles, :limit => 10
     art.has_one :primary_article
