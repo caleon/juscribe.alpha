@@ -1,0 +1,83 @@
+<% set_meta_keywords!(@user.display_name, 'events') -%>
+<% set_link_author!(@user.display_name) -%>
+<% add_style_file(@layoutable.skin_file) -%>
+<div id="msm_layout" class="msm_layout">
+	<div id="msm_header">
+		<%= rounded_shim(:top) %>
+		<div class="msm_row">
+			<div class="msm_column msm_column-a">
+				<h2><%= @page_title %></h2>
+			</div>
+			<div class="msm_column msm_column-b">
+				
+			</div>
+		</div>
+		<%= rounded_shim(:bottom) %>
+	</div>
+	
+	<div id="msm_main_column" class="msm_column">
+		<div class="msm_row" id="msm_row-1">
+			<%= rounded_shim(:top) %>
+			<div id="msm_main_header">
+				<span class="timestamp">Timestamp: <%= Time.now.to_s %></span>
+			</div>
+	
+			<div class="msm_main_column-a msm_main_column nopad">
+				<%= render :partial => 'event',
+				 					 :layout => custom_partial('lead_widget'),
+				 					 :object => @events[0] if @events[0] %>
+			</div>
+	
+			<div class="msm_main_column-b msm_main_column">
+				<%= render :partial => 'users/upcoming_events',
+				 					 :layout => custom_partial('inner'),
+				 					 :object => @user.upcoming_events,
+				 					 :locals => { :user => @user } unless @user.upcoming_events.blank? %>
+			</div>
+			<%= rounded_shim(:bottom) %>
+		</div>
+		
+		<div class="msm_row" id="msm_row-2">
+			<div class="msm_main_column-ab msm_main_column msm_with_reg_wid">
+				<%= render(:partial => 'event',
+									 :layout => custom_partial('widget'),
+									 :object => @events[1]) if @events[1] %>
+			</div>
+		</div>
+		
+		<div class="msm_row nobg" id="msm_row-3">
+			<div class="msm_main_column-a msm_main_column msm_with_reg_wid">
+				<%= render(:partial => 'event',
+									 :layout => custom_partial('widget'),
+									 :object => @events[2]) if @events[2] %>
+			</div>
+			
+			<div class="msm_main_column-b msm_main_column nopad">
+				<%= render(:partial => 'event',
+									 :layout => custom_partial('framed'),
+									 :object => @events[3]) if @events[3] %>
+			</div>
+			<%= br_clear %>
+		</div>
+		
+		<div class="last msm_row" id="msm_row-4">
+			<div class="msm_main_column-ab msm_main_column msm_with_reg_wid">
+				<%= render(:partial => 'event',
+									 :layout => custom_partial('widget'),
+									 :object => @events[4]) if @events[4] %>
+			</div>
+		</div>
+	</div>
+	
+	<div id="msm_side_column" class="msm_column">
+	<% with_options :layout => custom_partial('framed') do |framed| %>
+		<%= framed.render :partial => custom_partial('ads/google_ads') %>
+		<%= framed.render :partial => custom_partial('ads/google_ads') %>
+	<% end %>
+	</div>
+	<div id="msm_footer">
+		<%= rounded_shim(:top) %>
+		<br /><br /><br />
+		<%= rounded_shim(:bottom) %>
+	</div>
+</div>

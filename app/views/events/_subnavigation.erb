@@ -1,6 +1,11 @@
 <div class="sub navigation">
 	<ul class="navigationList">
-		<%= navi_el "New Event", new_user_event_path(@user) %>
-		<%= navi_el "List", user_events_path(@user) %>
+		<%= bread_el @user.display_name, @user %>
+		<%= bread_el "Events", user_events_path(@user), :current => @event.nil? || @event.new_record? %>
+		<%= bread_el truncate(@event.display_name, 20), user_event_path(@event.to_path), :current => true if @event && !@event.new_record? %>
+		<%= subnavi_el "New Event", new_user_event_path(@user), :current => controller.action_name == 'new' if this_is_viewer? %>
+		<%= subnavi_el "Edit", edit_user_event_path(@event.to_path), :current => controller.action_name == 'edit' if @event && !@event.new_record? && @event.editable_by?(viewer) %>
+		<%= subnavi_el "Clip", new_user_event_clip_path(@event.to_path(true)) if @event && !@event.new_record? %>
+		<%= navi_skin_info %>
 	</ul>
 </div>

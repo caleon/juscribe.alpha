@@ -4,24 +4,38 @@ class EntriesController < ApplicationController
   authorize_on :show, :edit, :update, :destroy
   
   def index
+    return unless get_user
     find_opts = get_find_opts(:order => 'id DESC')
-    if @user = User.primary_find(params[:user_id])
-      @entries = @user.entries.find(:all, find_opts)
-    else
-      display_error(:message => "That User entry could not be found. Please check the address.")
+    @entries = @user.entries.find(:all, find_opts)
+    @page_title = "#{@user.display_name}'s Events"
+    @layoutable = @user
+    respond_to do |format|
+      format.html { render :template => Entry.find(:first).layout_file(:index) if @user.layout }
+      format.js
+      format.xml
     end
   end
   
   def show
-    super(:include => :permission)
+    return unless setup(:permission)
+    @page_title = @entry.display_name
+    @layoutable = @entry
+    respond_to do |format|
+      format.html { render :template => @entry.layout_file(:show) if @entry.layout }
+      format.js
+      format.xml
+    end
   end
   
   def new
     return unless get_user
-    if @user == get_viewer
-      @entry = @user.entries.new
-    else
-      redirect_to new_user_entry_url(get_viewer) and return
+    redirect_to new_user_entry_url(get_viewer) and return if @user != get_viewer
+    @entry = @user.entries.new
+    @layoutable = @entry
+    @page_title = "New Entry"
+    respond_to do |format|
+      format.html { render :template => @entry.layout_file(:new) if @entry.layout }
+      format.js
     end
   end
   
@@ -47,8 +61,9 @@ class EntriesController < ApplicationController
   def edit
     return unless setup(:permission) && authorize(@entry, :editable => true)
     @page_title = "#{@entry.display_name} - Edit"
+    @layoutable = @entry
     respond_to do |format|
-      format.html
+      format.html { render :template => @entry.layout_file(:edit) if @entry.layout }
       format.js
     end
   end

@@ -1,0 +1,7 @@
+<h3>Latest Thoughtlet Entries <%= rss_link_for(:user, formatted_user_entries_path(user.to_path(true).merge(:format => :xml)) ) %></h3>
+<ul>
+	<%= render :partial => 'entries/entry', :collection => latest_entries %>
+</ul>
+<div class="msm_widget-footer">
+	<%= link_to 'View more entries', user_entries_path(user) %>
+</div>

@@ -167,6 +167,13 @@ class UsersController < ApplicationController
   def friends
     return unless setup
     @friends = @user.friends(:include => [ :primary_picture, :permission ])
+    @page_title = "#{@user.display_name}'s Friends"
+    @layoutable = @user
+    respond_to do |format|
+      format.html { render :template => @user.layout_file(:friends) if @user.layout }
+      format.js
+      format.xml
+    end
   end
   
   def befriend

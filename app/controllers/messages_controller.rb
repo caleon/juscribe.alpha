@@ -12,10 +12,11 @@ class MessagesController < ApplicationController
     find_opts = get_find_opts(:order => 'messages.id DESC')
     if params[:show] == 'sent'
       @messages = Message.find(:all, find_opts.merge(:conditions => ["sender_id = ?", get_viewer.id]))
+      @page_title = "My Outbox"
     else
       @messages = Message.find(:all, find_opts.merge(:conditions => ["recipient_id = ?", get_viewer.id]))
+      @page_title = "My Inbox"
     end
-    @page_title = "My Inbox"
     @user = get_viewer
     @layoutable = get_viewer
     respond_to do |format|

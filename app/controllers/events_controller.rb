@@ -7,16 +7,36 @@ class EventsController < ApplicationController
     return unless get_user
     find_opts = get_find_opts(:order => 'id DESC')
     @events = Event.find(:all, find_opts.merge(:conditions => ["user_id = ?", @user.id]))
+    @page_title = "#{@user.display_name}'s Events"
+    @layoutable = @user
+    respond_to do |format|
+      format.html { render :template => Event.find(:first).layout_file(:index) if @user.layout }
+      format.js
+      format.xml
+    end
   end
   
   def show
-    super(:include => :permission)
+    return unless setup(:permission)
+    @page_title = @event.display_name
+    @layoutable = @event
+    respond_to do |format|
+      format.html { render :template => @event.layout_file(:show) if @event.layout }
+      format.js
+      format.xml
+    end
   end
   
   def new # TODO: extend ActiveRecord's association collection to be able to do user.events.accessible_by?
     return unless get_user
     redirect_to new_user_event_url(get_viewer) and return if @user != get_viewer
     @event = @user.events.new
+    @layoutable = @event
+    @page_title = "New Event"
+    respond_to do |format|
+      format.html { render :template => @event.layout_file(:new) if @event.layout }
+      format.js
+    end
   end
   
   def create
@@ -42,8 +62,9 @@ class EventsController < ApplicationController
   def edit
     return unless setup(:permission) && authorize(@event, :editable => true)
     @page_title = "#{@event.display_name} - Edit"
+    @layoutable = @event
     respond_to do |format|
-      format.html
+      format.html { render :template => @event.layout_file(:new) if @event.layout }
       format.js
     end
   end

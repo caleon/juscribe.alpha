@@ -1,7 +1,11 @@
 <div class="sub navigation">
 	<ul class="navigationList">
-		<%= navi_el "Inbox", messages_path %>
-		<%= navi_el "Sent", messages_path(:show => 'sent') %>
-		<%= navi_el "Compose", new_message_path %>
+		<%= bread_el @user.display_name, @user %>
+		<%= bread_el 'Messages', messages_path, :current => @message.nil? || @message.new_record? %>
+		<%= bread_el truncate(@message.subject, 20), message_path(@message), :current => true if @message && !@message.new_record? %>
+		<%= subnavi_el "Inbox", messages_path, :current => controller.action_name == 'index' && params[:show] != 'sent' %>
+		<%= subnavi_el "Sent", messages_path(:show => 'sent'), :current => controller.action_name == 'index' && params[:show] == 'sent' %>
+		<%= subnavi_el "Compose", new_message_path, :current => controller.action_name == 'new' %>
+		<%= navi_skin_info %>
 	</ul>
 </div>

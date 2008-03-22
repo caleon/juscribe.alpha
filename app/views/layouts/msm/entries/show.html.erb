@@ -1,0 +1,32 @@
+<% set_meta_keywords!(@user.name_and_nick, @entry.name) -%>
+<% set_link_author!(@user) -%>
+<% add_style_file(@layoutable.skin_file) -%>
+<div id="msm_layout" class="msm_layout">
+	<div id="msm_header">
+		<%= rounded_shim(:top) %>
+		<div class="msm_row">
+			<div class="msm_column msm_column-a">
+				<span class="timestamp">updated by <%= @user.display_name %> at <%= @event.updated_at.to_s %></span>
+				<h2><%= @page_title %></h2>				
+			</div>
+			<div class="msm_column msm_column-b">
+				
+			</div>
+		</div>
+		<%= rounded_shim(:bottom) %>
+	</div>
+	
+	<div id="msm_main_column" class="msm_column">
+		<%= rounded_shim(:top) %>
+		<div class="last msm_row" id="msm_row-1">
+			<%= render :partial => 'show' %>
+		</div>
+		<%= rounded_shim(:bottom) %>
+	</div>
+	
+	<div id="msm_side_column" class="msm_column">
+	<% with_options :layout => :framed do |framed| %>
+		<%= framed.wrender :google_ads %>
+	<% end %>
+	</div>
+</div>
