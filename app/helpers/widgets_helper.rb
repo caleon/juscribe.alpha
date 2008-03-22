@@ -7,6 +7,12 @@ module WidgetsHelper
     [ '/layouts', layout_name || @layoutable.layout ].compact.join('/')
   end
   
+  def custom_partial(path) # Needed for now for stuff like blogs-index
+    check_layoutable
+    [ layout_base_path, path ].join('/')
+  end
+  
+  
   def widget_layout(layout=nil)
     return nil if layout == :none
     layout ||= 'widget'

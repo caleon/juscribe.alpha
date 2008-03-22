@@ -41,7 +41,7 @@ class Widget < ActiveRecord::Base
   end
   
   def editable_by?(user)
-    self.user = user
+    self.user == user || self.widgetable.editable_by?(user)
   end
   
   def place!(pos=nil, without_save=false)
