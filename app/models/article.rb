@@ -67,6 +67,9 @@ class Article < ActiveRecord::Base
   def publish_at
     self.published_at
   end
+  def future_publication?
+    !self.published_at.nil? && self.published_at > Time.now
+  end
   def publish_at=(datetime)
     self.published_date, self.published_at = datetime.to_date, datetime
   end
@@ -77,7 +80,7 @@ class Article < ActiveRecord::Base
   def widgetable?; self.published?; end
   
   def accessible_by?(user)
-    self.user == user || (self.draft? && (self.editable_by?(user) || self.blog.editable_by?(user))) || (!self.draft? && super)
+    self.user == user || (self.draft? && (self.editable_by?(user) || self.blog.editable_by?(user))) || (!self.draft? && !future_publication? && super)
   end
   
   def self.primary_find(*args); find_by_params(*args); end

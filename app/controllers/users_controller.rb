@@ -47,6 +47,7 @@ class UsersController < ApplicationController
   def edit
     return unless setup(:permission) && authorize(@user, :editable => true)
     @page_title = "#{@user.display_name} - Edit"
+    set_layoutable
     respond_to do |format|
       format.html { trender }
       format.js

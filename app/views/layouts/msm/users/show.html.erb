@@ -1,63 +1,56 @@
 <% add_meta_keyword!(@user.name_and_nick) -%>
 <% set_link_author!(@user) -%>
 <% add_style_file(@layoutable.skin_file) -%>
-<div id="msm_layout" class="msm_layout">
-	<div id="msm_main_column" class="msm_column">
-		<div class="msm_row" id="msm_row-1">
-			<%= rounded_shim(:top) %>
-			<div id="msm_main_header">
-				<span class="timestamp">updated by colin at 9:00am PST</span>
-			</div>
-	
-			<div class="msm_main_column-a msm_main_column nopad">
-				<%= wrender :kind => :lead, :layout => :lead_widget %>
-			</div>
-	
-			<div class="msm_main_column-b msm_main_column">
-				<%= wrender :latest_articles, :layout => :inner %>
-				<%= wrender :upcoming_events, :layout => :inner %>
-			</div>
-			<%= rounded_shim(:bottom) %>
-		</div>
-		
-		<div class="msm_row" id="msm_row-2">
-			<div class="msm_main_column-ab msm_main_column msm_with_reg_wid">
-				<%= wrender :rss_item,
-										:url => 'http://cdmjimmy.blogspot.com/feeds/posts/default?alt=rss' %>
-			</div>
-		</div>
-		
-		<div class="msm_row nobg" id="msm_row-3">
-			<div class="msm_main_column-a msm_main_column msm_with_reg_wid">
-				<%= wrender :without_picture => true %>
-			</div>
-			
-			<div class="msm_main_column-b msm_main_column nopad">
-				<%= wrender :thoughtlets, :layout => :framed %>
-			</div>
-			<%= br_clear %>
-		</div>
-		
-		<div class="last msm_row" id="msm_row-4">
-			<div class="msm_main_column-ab msm_main_column msm_with_reg_wid">
-				<%= wrender %>
-			</div>
-		</div>
+<% @no_bottom_shim = true -%>
+<div class="msm_row" id="msm_row-1">
+	<div id="msm_main_header">
+		<span class="timestamp">updated by colin at 9:00am PST</span>
 	</div>
-	
-	<div id="msm_side_column" class="msm_column">
-	<% with_options :layout => :framed do |framed| %>
-		<%= framed.wrender :motd_message if this_is_viewer? %>
-		<%= framed.wrender :friends %>
-		<%= framed.wrender %>
-		<%= framed.wrender :google_ads %>
-		<%= framed.wrender :latest_pictures %>
-		<%= framed.wrender :comments %>		
-	<% end %>
+
+	<div class="msm_main_column-a msm_main_column nopad">
+		<%= wrender :kind => :lead, :layout => :lead_widget %>
+		<%= %>
 	</div>
-	<div id="msm_footer">
-		<%= rounded_shim(:top) %>
-		<br /><br /><br />
-		<%= rounded_shim(:bottom) %>
+
+	<div class="msm_main_column-b msm_main_column">
+		<%= wrender :latest_articles, :layout => :inner %>
+		<%= wrender :upcoming_events, :layout => :inner %>
+	</div>
+	<%= rounded_shim(:bottom) %>
+</div>
+
+<div class="msm_row" id="msm_row-2">
+	<div class="msm_main_column-ab msm_main_column msm_with_reg_wid">
+		<%= wrender :rss_item,
+								:url => 'http://cdmjimmy.blogspot.com/feeds/posts/default?alt=rss' %>
 	</div>
 </div>
+
+<div class="msm_row nobg" id="msm_row-3">
+	<div class="msm_main_column-a msm_main_column msm_with_reg_wid">
+		<%= wrender :without_picture => true %>
+	</div>
+	
+	<div class="msm_main_column-b msm_main_column nopad">
+		<%= wrender :thoughtlets, :layout => :framed %>
+	</div>
+	<%= br_clear %>
+</div>
+
+<div class="last msm_row" id="msm_row-4">
+	<div class="msm_main_column-ab msm_main_column msm_with_reg_wid">
+		<%= wrender %>
+	</div>
+</div>
+	
+<% content_for :side_column do -%>
+	<% with_options :layout => :framed do |framed| %>
+		<%= framed.wrender :motd_message if this_is_viewer? && controller.action_name == 'show' %>
+		<%= framed.wrender :pictures if controller.action_name == 'edit' %>
+		<%= framed.wrender :friends if @user && !@user.new_record? %>
+		<%= framed.wrender %>
+		<%= framed.wrender :google_ads %>
+		<%= framed.wrender :latest_pictures if @user && !@user.new_record? %>
+		<%= framed.wrender :comments if @user && !@user.new_record? %>
+	<% end %>
+<% end -%>

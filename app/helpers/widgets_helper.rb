@@ -1,4 +1,21 @@
 module WidgetsHelper
+  class PageWidget
+    def initialize(*args)
+      @opts = args.extract_options!
+      @arg = args.shift
+    end
+    attr_accessor :opts, :arg
+    
+    def for_widget?; arg.is_a?(Widget); end
+    def for_special?; arg.is_a?(Symbol); end
+    def for_path?; arg.is_a?(String); end
+    
+    def display; wrender(@opts, @opts);  end
+  end
+  
+  def widget_args=(array); array.map{|arr| PageWidget.new(*arr) }; end
+  alias_method :wargs=, :widget_args=
+  
   def check_layoutable
     raise LayoutError, "@layoutable instance variable not set." unless @layoutable; true
   end
@@ -17,6 +34,9 @@ module WidgetsHelper
     return layout if !(layout.nil? || layout.is_a?(Symbol))
     layout ||= :widget
     [ layout_base_path, layout.to_s ].join('/')
+  # pointless:
+  #rescue
+  #  [ layout_base_path, 'shared', layout.to_s ].join('/')
   end
   alias_method :wayout, :widget_layout
   

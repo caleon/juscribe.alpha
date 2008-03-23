@@ -1,6 +1,7 @@
 /* @override 
 	http://localhost:3000/stylesheets/users/msm.css?1206045027
 	http://localhost:3000/stylesheets/skins/msm.css?1206077030
+	http://localhost:3000/stylesheets/skins/msm.css?1206180586
 */
 
 #canvas {
@@ -133,6 +134,19 @@
 	
 	.msm_layout form.commentForm textarea {
 		height: 100px;
+	}
+	
+	.msm_layout form.articleForm input#article_title {
+		font-size: 16pt;
+		line-height: 1em;
+		padding: 4px;
+	}
+	
+	.msm_layout form.articleForm textarea {
+		width: 500px;
+		height: 300px;
+		padding: 9px;
+		line-height: 1.2em;
 	}
 	
 	/* This can be made to specify an article pic */

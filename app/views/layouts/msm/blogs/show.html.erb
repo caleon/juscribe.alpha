@@ -1,9 +1,9 @@
 <% set_meta_keywords!(@blog.name, 'blog', 'articles') -%>
 <% set_link_author!(@blog.bloggable.display_name) -%>
 <% add_style_file(@layoutable.skin_file) -%>
-<div id="msm_layout" class="msm_layout">
-	<div id="msm_header">
-		<%= rounded_shim(:top) %>
+<% @no_bottom_shim = true %>
+
+<% content_for :header do -%>
 		<div class="msm_row">
 			<div class="msm_column msm_column-a">
 				<h2><%= @page_title %></h2>
@@ -13,61 +13,58 @@
 				
 			</div>
 		</div>
-		<%= rounded_shim(:bottom) %>
+<% end -%>
+	
+<div class="msm_row" id="msm_row-1">
+	<div id="msm_main_header">
+		<span class="timestamp">updated at <%= @blog.updated_at.to_s %></span>
+	</div>
+
+	<div class="msm_main_column-a msm_main_column nopad">
+		<%= render :partial => 'articles/article_lead',
+		 					 :layout => custom_partial('lead_widget'),
+		 					 :locals => { :article_lead => @articles[0] } if @articles[0] %>
+	</div>
+
+	<div class="msm_main_column-b msm_main_column">
+		<%= wrender :latest_articles, :layout => :inner %>
+	</div>
+	<%= rounded_shim(:bottom) %>
+</div>
+
+<div class="msm_row" id="msm_row-2">
+	<div class="msm_main_column-ab msm_main_column msm_with_reg_wid">
+		<%= render(:partial => 'articles/article',
+							 :layout => custom_partial('widget'),
+							 :object => @articles[1]) if @articles[1] %>
+	</div>
+</div>
+
+<div class="msm_row nobg" id="msm_row-3">
+	<div class="msm_main_column-a msm_main_column msm_with_reg_wid">
+		<%= render(:partial => 'articles/article',
+							 :layout => custom_partial('widget'),
+							 :object => @articles[2]) if @articles[2] %>
 	</div>
 	
-	<div id="msm_main_column" class="msm_column">
-		<div class="msm_row" id="msm_row-1">
-			<%= rounded_shim(:top) %>
-			<div id="msm_main_header">
-				<span class="timestamp">updated at <%= @blog.updated_at.to_s %></span>
-			</div>
-	
-			<div class="msm_main_column-a msm_main_column nopad">
-				<%= render :partial => 'articles/article_lead',
-				 					 :layout => custom_partial('lead_widget'),
-				 					 :locals => { :article_lead => @articles[0] } if @articles[0] %>
-			</div>
-	
-			<div class="msm_main_column-b msm_main_column">
-				<%= wrender :latest_articles, :layout => :inner %>
-			</div>
-			<%= rounded_shim(:bottom) %>
-		</div>
-		
-		<div class="msm_row" id="msm_row-2">
-			<div class="msm_main_column-ab msm_main_column msm_with_reg_wid">
-				<%= render(:partial => 'articles/article',
-									 :layout => custom_partial('widget'),
-									 :object => @articles[1]) if @articles[1] %>
-			</div>
-		</div>
-		
-		<div class="msm_row nobg" id="msm_row-3">
-			<div class="msm_main_column-a msm_main_column msm_with_reg_wid">
-				<%= render(:partial => 'articles/article',
-									 :layout => custom_partial('widget'),
-									 :object => @articles[2]) if @articles[2] %>
-			</div>
-			
-			<div class="msm_main_column-b msm_main_column nopad">
-				<%= render(:partial => 'articles/article',
-									 :layout => custom_partial('framed'),
-									 :object => @articles[3]) if @articles[3] %>
-			</div>
-			<%= br_clear %>
-		</div>
-		
-		<div class="last msm_row" id="msm_row-4">
-			<div class="msm_main_column-ab msm_main_column msm_with_reg_wid">
-				<%= render(:partial => 'articles/article',
-									 :layout => custom_partial('widget'),
-									 :object => @articles[4]) if @articles[4] %>
-			</div>
-		</div>
+	<div class="msm_main_column-b msm_main_column nopad">
+		<%= render(:partial => 'articles/article',
+							 :layout => custom_partial('framed'),
+							 :object => @articles[3]) if @articles[3] %>
 	</div>
+	<%= br_clear %>
+</div>
+
+<div class="last msm_row" id="msm_row-4">
+	<div class="msm_main_column-ab msm_main_column msm_with_reg_wid">
+		<%= render(:partial => 'articles/article',
+							 :layout => custom_partial('widget'),
+							 :object => @articles[4]) if @articles[4] %>
+	</div>
+</div>
+
 	
-	<div id="msm_side_column" class="msm_column">
+<% content_for :side_column do -%>
 	<% with_options :layout => :framed do |framed| %>
 		<%= framed.wrender :google_ads %>
 		<%= framed.wrender :description %>
@@ -75,10 +72,4 @@
 		<%= framed.wrender :comments, :blog => @blog %>
 		<%= framed.wrender :google_ads %>
 	<% end %>
-	</div>
-	<div id="msm_footer">
-		<%= rounded_shim(:top) %>
-		<br /><br /><br />
-		<%= rounded_shim(:bottom) %>
-	</div>
-</div>
+<% end -%>

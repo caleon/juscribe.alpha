@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+	"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<%= render :partial => 'shared/head' %>
+<% body_tag_for(main_record, :onload => @onloads) do %>
+	<% content_tag(:div, :id => 'wrapper') do %>
+		<%= render :partial => 'shared/header' %>
+		<% content_tag(:div, :id => 'canvas', :class => get_canvas_class) do %>
+			<%= warning_field %>
+			<%= notice_field %>
+			<%= render :partial => flash[:warning] ? 'shared/subnavigation_error' : 'subnavigation' %>	
+			<div id="msm_layout" class="msm_layout">
+			<% if @content_for_header %>
+				<div id="msm_header">
+					<%= rounded_shim(:top) %>
+					<div class="msm_row">
+						<%= yield :header %>
+					</div>
+					<%= rounded_shim(:bottom) %>
+				</div>
+			<% end %>
+	
+				<div id="msm_main_column" class="msm_column">
+					<%= rounded_shim(:top) %>
+					<%= yield %>
+					<%= rounded_shim(:bottom) unless @no_bottom_shim || controller.action_name == 'index' %>
+				</div>
+	
+				<div id="msm_side_column" class="msm_column">
+					<%= yield :side_column %>
+				</div>
+	
+				<div id="msm_footer">
+					<%= rounded_shim(:top) %><br />
+					<%= yield :footer %><br /><br />
+					<%= rounded_shim(:bottom) %>
+				</div>
+			</div>
+
+		<% end %>
+		<%= render :partial => 'shared/footer' %>
+	<% end %>
+	<%= render :partial => 'shared/foot' %>
+<% end %>
+</html>

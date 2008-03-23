@@ -177,7 +177,7 @@ module ActionController::CommonMethods
     #################
     
     def set_layoutable
-      @layoutable = if instance_variable_get("#{shared_setup_options[:instance_var]}")
+      @layoutable ||= if instance_variable_get("#{shared_setup_options[:instance_var]}")
         instance_eval %{ #{shared_setup_options[:object_layoutable]} }
       else
         instance_eval %{ #{shared_setup_options[:collection_layoutable]} }

@@ -6,7 +6,7 @@ module CssHelper
   def link_style_files
     (@style_files ||= []).map do |style|
       stylesheet_link_tag style
-    end.join('\r\n')
+    end.compact.uniq.join('\r\n')
   end
   
   def br_clear

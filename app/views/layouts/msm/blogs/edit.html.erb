@@ -1,30 +1,23 @@
 <% set_meta_keywords!(@blog.name, 'blog', 'articles') -%>
 <% set_link_author!(@blog.bloggable.display_name) -%>
 <% add_style_file(@layoutable.skin_file) -%>
-<div id="msm_layout" class="msm_layout">
-	<div id="msm_header">
-		<%= rounded_shim(:top) %>
-		<div class="msm_row">
-			<div class="msm_column msm_column-a">
-				<h2><%= @page_title %></h2>
-				<h4>by <%= @blog.bloggable.display_name %></h4>				
-			</div>
-			<div class="msm_column msm_column-b">
-				<%= @blog.tags.map(&:to_s).join(', ') %>
-			</div>
-		</div>
-		<%= rounded_shim(:bottom) %>
+
+<% content_for :header do -%>
+	<div class="msm_column msm_column-a">
+		<h2><%= @page_title %></h2>
+		<h4>by <%= @blog.bloggable.display_name %></h4>				
 	</div>
-	
-	<div id="msm_main_column" class="msm_column">
-		<%= rounded_shim(:top) %>
-		<div class="msm_row" id="msm_row-1">
-			<%= render :partial => 'edit' %>
-		</div>
-		<%= rounded_shim(:bottom) %>
+	<div class="msm_column msm_column-b">
+		<%= @blog.tags.map(&:to_s).join(', ') %>
 	</div>
+<% end -%>	
+
+<div class="msm_row" id="msm_row-1">
+	<%= render :partial => 'edit' %>
+</div>
 	
-	<div id="msm_side_column" class="msm_column">
+
+<% content_for :side_column do -%>
 	<% with_options :layout => :framed do |framed| %>
 		<%= framed.wrender :google_ads %>
 		<%= framed.wrender :description %>
@@ -32,10 +25,4 @@
 		<%= framed.wrender :comments, :blog => @blog %>
 		<%= framed.wrender :google_ads %>
 	<% end %>
-	</div>
-	<div id="msm_footer">
-		<%= rounded_shim(:top) %>
-		<br /><br /><br />
-		<%= rounded_shim(:bottom) %>
-	</div>
-</div>
+<% end -%>

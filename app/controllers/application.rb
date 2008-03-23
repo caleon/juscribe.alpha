@@ -11,8 +11,9 @@ class ApplicationController < ActionController::Base
   protect_from_forgery# :secret => 'a241500281274090ecdf656d5074d028'
   filter_parameter_logging :password, :password_confirmation
   before_filter :load_config, :get_viewer
+  layout :get_layout
+  #layout 'standard'
   helper :all  
-  layout 'standard'
   
   private
   def load_config
@@ -29,9 +30,7 @@ class ApplicationController < ActionController::Base
   end
   
   def get_user(error_opts={})
-    @user = User.primary_find(params[:user_id])
-    raise ActiveRecord::RecordNotFound if @user.nil?
-    @user
+    @user = User.primary_find(params[:user_id]) || (raise ActiveRecord::RecordNotFound)
   rescue ActiveRecord::RecordNotFound
     display_error(:message => error_opts[:message] || "That User could not be found. Please check the address.")
     return false
@@ -42,6 +41,13 @@ class ApplicationController < ActionController::Base
     limit, page = 20, params[:page].to_i
     offset = (page -1) * limit
     return { :limit => limit, :offset => offset }.merge(hash)
+  end
+  
+  def get_layout
+    set_layoutable
+    @layoutable.layout || 'standard'
+  rescue NoMethodError
+    'standard'
   end
 
   

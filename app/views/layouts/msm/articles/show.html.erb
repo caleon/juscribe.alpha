@@ -1,9 +1,8 @@
 <% set_meta_keywords!(@author.display_name, @article.title, @article.blog.name) -%>
 <% set_link_author!(@author) -%>
 <% add_style_file(@layoutable.skin_file) -%>
-<div id="msm_layout" class="msm_layout">
-	<div id="msm_header">
-		<%= rounded_shim(:top) %>
+
+<% content_for :header do -%>
 		<div class="msm_row">
 			<div class="msm_column msm_column-a">
 				<span class="timestamp">updated by <%= @author.display_name %> at <%= @article.updated_at.to_s %></span>
@@ -13,23 +12,17 @@
 				<%= @article.tags.map(&:to_s).join(', ') %>
 			</div>
 		</div>
-		<%= rounded_shim(:bottom) %>
-	</div>
+<% end -%>	
+
+<div class="last msm_row" id="msm_row-1">
+	<%= render :partial => 'show' %>
+</div>
 	
-	<div id="msm_main_column" class="msm_column">
-		<%= rounded_shim(:top) %>
-		<div class="last msm_row" id="msm_row-1">
-			<%= render :partial => 'show' %>
-		</div>
-		<%= rounded_shim(:bottom) %>
-	</div>
-	
-	<div id="msm_side_column" class="msm_column">
+<% content_for :side_column do -%>
 	<% with_options :layout => :framed do |framed| %>
 		<%= framed.wrender :user %>
 		<%= framed.wrender :pictures if @article.primary_picture %>
 		<%= framed.wrender :google_ads %>
 		<%= framed.wrender 'blogs/latest_articles', :blog => @article.blog if @article.blog %>
 	<% end %>
-	</div>
-</div>
+<% end -%>
