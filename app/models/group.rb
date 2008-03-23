@@ -25,6 +25,10 @@ class Group < ActiveRecord::Base
   attr_protected :rank
   alias_attribute :content, :description
   
+  class << self
+    def primary_find(*args); self.find_by_permalink(*args); end
+  end
+  
   def to_param; self.permalink; end
   def permalink
     self[:permalink] ||= make_permalink

@@ -3,8 +3,12 @@ module ArticlesHelper
     instance_eval %{ #{opts[:prefix] ? "#{opts[:prefix]}_" : ''}#{article.path_name_prefix}_path(article.to_path) }      
   end
   
+  def article_path_from_blog(blog, opts={})
+    instance_eval %{ #{opts[:prefix] ? "#{opts[:prefix]}_" : ''}#{blog.path_name_prefix(true)}_article_path(blog.to_path(true)) }
+  end
+  
   def articles_path_from_blog(blog, opts={})
-    instance_eval %{ #{opts[:prefix] ? "#{opts[:prefix]}_" : ''}#{blog.path_name_prefix(true)}_path(blog.to_path(true)) }
+    instance_eval %{ #{opts[:prefix] ? "#{opts[:prefix]}_" : ''}#{blog.path_name_prefix(true)}_articles_path(blog.to_path(true)) }
   end
   
   def article_intro

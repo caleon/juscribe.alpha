@@ -1,7 +1,7 @@
 # This controller is only accessible within the scope of a widgetable model's
 # controller. See routes.rb.
 class ClipsController < ApplicationController  
-  use_shared_options :widget, :collection_layoutable => :@widgetable, :object_layoutable => :@clip
+  use_shared_options :widget, :collection_layoutable => :@widgetable, :object_layoutable => :@clip, :plural_sym => :clips
   verify_login_on :new, :create, :edit, :update, :destroy
   authorize_on :index, :show, :new, :create, :edit, :update, :destroy
   
@@ -105,7 +105,7 @@ class ClipsController < ApplicationController
   end
   
   def get_widgetable(opts={})
-    unless request.path.match(/\/([_a-zA-Z]+)\/([^\/]+)\/clips/)
+    unless request.path.match(/\/([_a-zA-Z0-9]+)\/([^\/]+)\/clips/)
       display_error(:message => "Unable to process the request. Please check the address.")
       return false
     end

@@ -342,18 +342,21 @@ ActionController::Routing::Routes.draw do |map|
   
   
   ########### NORMAL STUFF #################
-  map.resources :groups, :requirements => { :id => regex_for(:group, :id) }, :member => { :join => :put, :leave => :put, :kick => :put, :invite => :put } do |grp|
-    grp.resources :clips,    :requirements => { :group_id => regex_for(:group, :id), :id => regex_for(:clip, :id) }
-    grp.resources :comments, :requirements => { :group_id => regex_for(:group, :id), :id => regex_for(:comment, :id) }
-    grp.resources :pictures, :requirements => { :group_id => regex_for(:group, :id), :id => regex_for(:picture, :id) } do |gpic|
-      gpic.resources :clips,    :requirements => { :group_id => regex_for(:group, :id), :picture_id => regex_for(:picture, :id), :id => regex_for(:clip, :id) }
-      gpic.resources :comments, :requirements => { :group_id => regex_for(:group, :id), :picture_id => regex_for(:picture, :id), :id => regex_for(:comment, :id) }
+  map.resources :groups, :requirements => { :id => regex_for(:group, :name) }, :member => { :join => :put, :leave => :put, :kick => :put, :invite => :put } do |grp|
+    grp.resources :clips,    :requirements => { :group_id => regex_for(:group, :name), :id => regex_for(:clip, :id) }
+    grp.resources :comments, :requirements => { :group_id => regex_for(:group, :name), :id => regex_for(:comment, :id) }
+    grp.resources :pictures, :requirements => { :group_id => regex_for(:group, :name), :id => regex_for(:picture, :id) } do |gpic|
+      gpic.resources :clips,    :requirements => { :group_id => regex_for(:group, :name), :picture_id => regex_for(:picture, :id), :id => regex_for(:clip, :id) }
+      gpic.resources :comments, :requirements => { :group_id => regex_for(:group, :name), :picture_id => regex_for(:picture, :id), :id => regex_for(:comment, :id) }
     end
   end
   map.resources :messages, :requirements => { :id => regex_for(:message, :id) }
   map.resources :permissions, :requirements => { :id => regex_for(:permission_rule, :id) }
-  map.resources :users, :member => { :friends => :get, :befriend => :put, :unfriend => :put, :about => :get, :edit_password => :get, :update_password => :put },
-                        :requirements => { :id => regex_for(:user, :nick) } do |user|
+  
+  
+  
+  
+  map.resources :users, :member => { :friends => :get, :befriend => :put, :unfriend => :put, :about => :get, :edit_password => :get, :update_password => :put }, :requirements => { :id => regex_for(:user, :nick) } do |user|
     user.resources :blogs, :requirements => { :user_id => regex_for(:user, :nick), :id => regex_for(:blog, :permalink) } do |bg|
       bg.resources :clips,    :requirements => { :blog_id => regex_for(:blog, :permalink), :id => regex_for(:clip, :id) }
       bg.resources :comments, :requirements => { :blog_id => regex_for(:blog, :permalink), :id => regex_for(:comment, :id) }
@@ -418,4 +421,13 @@ ActionController::Routing::Routes.draw do |map|
                                            :requirements => { :topic => regex_for(:main, :topic) }
   map.copyright 'copyright', :controller => 'main', :action => 'copyright'
   map.formatted_copyright 'copyright.:format', :controller => 'main', :action => 'copyright'
+  
+  #map.with_options :path_prefix => 'a/b/c' do |test|
+  #  test.resources :widgets, :name_prefix => 'abc_'
+  #end
+  #
+  #map.resources :u, :controller => 'users', :member => { :friends => :get, :befriend => :put, :unfriend => :put, :about => :get, :edit_password => :get, :update_password => :put }, :requirements => { :id => regex_for(:user, :nick) } do |user|
+  #  user.resources :blogs, :name_prefix => 'user_'
+  #end
+  
 end

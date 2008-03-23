@@ -1,5 +1,5 @@
-<% set_meta_keywords!(@user.display_name, 'articles') -%>
-<% set_link_author!(@user.display_name) -%>
+<% set_meta_keywords!(@author.display_name, 'articles') -%>
+<% set_link_author!(@author.display_name) -%>
 <% add_style_file(@layoutable.skin_file) -%>
 <div id="msm_layout" class="msm_layout">
 	<div id="msm_header">
@@ -29,9 +29,9 @@
 			</div>
 	
 			<div class="msm_main_column-b msm_main_column">
-				<%= render :partial => 'users/latest_articles',
+				<%= render :partial => 'users/latest_articles', # FIXME: Faulty.
 				 					 :layout => custom_partial('inner'),
-				 					 :object => @user.articles.find(:all, :limit => 5),
+				 					 :object => @author.articles.find(:all, :limit => 5),
 				 					 :locals => { :user => @user } %>
 			</div>
 			<%= rounded_shim(:bottom) %>
@@ -72,7 +72,7 @@
 	<div id="msm_side_column" class="msm_column">
 	<% with_options :layout => custom_partial('framed') do |framed| %>
 		<%= framed.render :partial => custom_partial('ads/google_ads') %>
-		<%= framed.render :partial => "user", :object => @user %>
+		<%# framed.render :partial => "user", :object => @user %>
 		<%= framed.render :partial => custom_partial('ads/google_ads') %>
 	<% end %>
 	</div>

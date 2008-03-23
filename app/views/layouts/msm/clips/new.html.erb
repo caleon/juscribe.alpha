@@ -1,16 +1,15 @@
-<% set_meta_keywords!(@author.display_name, @article.title, (@article.blog rescue nil)) -%>
-<% set_link_author!(@author) -%>
+<% set_meta_keywords!(@widgetable.display_name, @widgetable.class.class_name) -%>
 <% add_style_file(@layoutable.skin_file) -%>
 <div id="msm_layout" class="msm_layout">
 	<div id="msm_header">
 		<%= rounded_shim(:top) %>
 		<div class="msm_row">
 			<div class="msm_column msm_column-a">
-				<span class="timestamp">Time: <%= Time.now.to_s %></span>
+				<span class="timestamp">blah</span>
 				<h2><%= @page_title %></h2>				
 			</div>
 			<div class="msm_column msm_column-b">
-
+				
 			</div>
 		</div>
 		<%= rounded_shim(:bottom) %>
@@ -26,8 +25,6 @@
 	
 	<div id="msm_side_column" class="msm_column">
 	<% with_options :layout => :framed do |framed| %>
-		<%# set to author instead framed.wrender :user %>
-		<%= framed.wrender :pictures if @article.primary_picture %>
 		<%= framed.wrender :google_ads %>
 	<% end %>
 	</div>

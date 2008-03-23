@@ -1,4 +1,4 @@
-<% form_for :comment, comment, :url => article_comments_path(article.to_path(true)), :html => { :class => 'commentForm', :method => 'post' } do |f| %>
+<% form_for :comment, comment, :url => comments_path_from_commentable(article), :html => { :class => 'commentForm', :method => 'post' } do |f| %>
 	<fieldset>
 		<legend>Comment on this article</legend>
 		<%= render :partial => 'comments/form', :locals => { :f => f } %>

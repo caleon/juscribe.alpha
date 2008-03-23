@@ -1,13 +1,14 @@
 <div class="sub navigation">
 	<ul class="navigationList">
-		<%= bread_el @user.nick, @user %>
-		<%= bread_el "Articles", articles_path(@user), :current => @article.nil? || @article.new_record? %>
+		<%= bread_el @author.display_name, @author %>
+		<%= bread_el 'Blogs', blogs_path_from_bloggable(@author) %>
+		<%= bread_el @blog.display_name, blog_path_for(@blog) %>
 		<%= bread_el truncate(@article.title, 20), article_path_for(@article), :current => true if @article && !@article.new_record? %>
-<% if @user && !@user.new_record? %>
-		<%= subnavi_el "New Article", new_article_path(@user), :current => controller.action_name == 'new' if this_is_viewer? %>
-		<%= subnavi_el "Edit", edit_article_path(@article.to_path), :current => controller.action_name == 'edit' if @article && !@article.new_record? && @article.editable_by?(viewer) %>
-		<%= subnavi_el "Clip", new_article_clip_path(@article.to_path(true)) if @article && !@article.new_record? && @article.published? %>
-<% end %>
+
+		<%= subnavi_el "New Article", article_path_from_blog(@blog, :prefix => :new), :current => controller.action_name == 'new' if @blog.editable_by?(viewer) %>
+		<%= subnavi_el "Edit", article_path_for(@article, :prefix => :edit), :current => controller.action_name == 'edit' if @article && !@article.new_record? && @article.editable_by?(viewer) %>
+		<%= subnavi_el "Clip", clip_path_from_widgetable(@article, :prefix => :new) if @article && !@article.new_record? && @article.published? %>
+
 		<%= navi_skin_info %>
 	</ul>
 </div>

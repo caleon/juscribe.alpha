@@ -1,4 +1,4 @@
-<% set_meta_keywords!(@user.name_and_nick, @article.title, (@article.blog.name rescue nil)) -%>
+<% set_meta_keywords!(@author.display_name, @article.title, @article.blog.name) -%>
 <% set_link_author!(@user) -%>
 <% add_style_file(@layoutable.skin_file) -%>
 <div id="msm_layout" class="msm_layout">
@@ -6,7 +6,7 @@
 		<%= rounded_shim(:top) %>
 		<div class="msm_row">
 			<div class="msm_column msm_column-a">
-				<span class="timestamp">updated by <%= @user.display_name %> at <%= @article.updated_at.to_s %></span>
+				<span class="timestamp">updated by <%= @author.display_name %> at <%= @article.updated_at.to_s %></span>
 				<h2><%= @page_title %></h2>				
 			</div>
 			<div class="msm_column msm_column-b">
@@ -26,7 +26,6 @@
 	
 	<div id="msm_side_column" class="msm_column">
 	<% with_options :layout => :framed do |framed| %>
-		<%= framed.wrender :user %>
 		<%= framed.wrender :pictures %>
 		<%= framed.wrender :google_ads %>
 		<%= framed.wrender 'blogs/latest_articles', :blog => @article.blog if @article.blog %>

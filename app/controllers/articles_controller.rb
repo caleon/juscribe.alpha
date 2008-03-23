@@ -1,5 +1,5 @@
 class ArticlesController < ApplicationController
-  use_shared_options :collection_layoutable => :blog
+  use_shared_options :collection_layoutable => :@blog
   # setup will handle authorization. as well as defaults from common_methods.rb
   verify_login_on :new, :create, :edit, :update, :destroy, :publish, :unpublish
   authorize_on :edit, :update, :publish, :unpublish, :destroy
@@ -13,7 +13,7 @@ class ArticlesController < ApplicationController
     else
       @articles = @blog.articles.find(:all, find_opts)
     end
-    @page_title = "Articles from #{@bloggable.display_name}'s blog: #{@blog.display_name}"
+    @page_title = "Articles from #{@author.display_name}'s blog: #{@blog.display_name}"
     respond_to do |format|
       format.html { trender }
       format.js
@@ -120,6 +120,7 @@ class ArticlesController < ApplicationController
   
   private
   def setup(includes=nil, error_opts={})
+    return unless get_blog
     if @article = Article.primary_find(params, :include => includes, :viewer => get_viewer)
       if params[:month] !~ /\d\d/ || params[:day] !~ /\d\d/
         redirect_to article_url(@article.to_path), :status => 301 and return false

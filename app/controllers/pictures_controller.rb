@@ -111,7 +111,7 @@ class PicturesController < ApplicationController
   end
   
   def get_depictable(opts={})
-    unless request.path.match(/\/([_a-zA-Z]+)\/([^\/]+)\/pictures/)
+    unless request.path.match(/\/([_a-zA-Z0-9]+)\/([^\/]+)\/pictures/)
       display_error(:message => "Unable to process the request. Please check the address.")
       return false
     end

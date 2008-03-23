@@ -3,6 +3,7 @@ class Blog < ActiveRecord::Base
   
   belongs_to :user # creator
   belongs_to :bloggable, :polymorphic => true
+  has_many :all_articles, :class_name => 'Article', :order => 'articles.id DESC'
   with_options :class_name => 'Article', :order => 'articles.id DESC', :conditions => "articles.published_at IS NOT NULL AND articles.published_at < NOW()" do |art|
     art.has_many :articles
     art.has_many :latest_articles, :limit => 10
@@ -36,6 +37,7 @@ class Blog < ActiveRecord::Base
     end
   end
   
+  def display_name; self.name; end
   def to_param; self.permalink; end
   def permalink
     self[:permalink] ||= make_permalink
