@@ -1,7 +1,7 @@
 include ActiveRecord::Validations::RoutingHelper
 
 class ActionController::Resources::Resource #:nodoc:
-  def path; @path ||= "#{path_prefix}/#{@options[:custom_path] || plural}"; end
+  def path; @path ||= @options[:special_path] || "#{path_prefix}/#{@options[:custom_path] || plural}"; end
 end
 
 ActionController::Routing::Routes.draw do |map|
@@ -106,4 +106,8 @@ ActionController::Routing::Routes.draw do |map|
                                            :requirements => { :topic => regex_for(:main, :topic) }
   map.copyright 'copyright', :controller => 'main', :action => 'copyright'
   map.formatted_copyright 'copyright.:format', :controller => 'main', :action => 'copyright'
+  
+  
+  #### PREMIUM URLS
+  #map.resources :blogs, :special_path => ''
 end
