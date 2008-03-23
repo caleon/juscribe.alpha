@@ -8,6 +8,7 @@
 	<%= stylesheet_link_tag 'setup', 'main', 'modalbox', 'lightbox', :cache => 'base' %>
 	<%= stylesheet_link_tag kropper_css if @use_kropper %>
 	<%= yield :extra_stylesheets %>
+	<% add_style_file(@layoutable.skin_file) if @layoutable -%>
 	<%= link_style_files %>
 
 	<%= render :partial => 'shared/javascripts' unless @config[:scripts_at_bottom] %>

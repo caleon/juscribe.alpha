@@ -1,0 +1,11 @@
+<% collection ||= user.galleries.find(:all, :order => 'id DESC', :limit => 5) -%>
+<h3>Latest News <%= user ? rss_link_for(:galleries, formatted_user_galleries_path(user, :format => :xml)) : nil %></h3>
+<% content_tag(:ul, :id => 'msm_other_main_widgets') do -%>
+	<% collection.each do |gal| %>
+		<li>
+			<span>
+				<%= link_to gal.name, user_gallery_path(gal.to_path) %> <span class="timeago"><%= time_ago_in_words(gal.updated_at) %></span>
+			</span>
+		</li>
+	<% end %>
+<% end -%>

@@ -1,9 +1,9 @@
 <div class="sub navigation">
 	<ul class="navigationList">
-		<%= bread_el @user.display_name, @user, if @user %>
-		<%= bread_el 'Galleries', user_galleries_path?(@user), :current => @gallery.nil? || @gallery.new_record? %>
+		<%= bread_el @user.display_name, @user if @user %>
+		<%= bread_el 'Galleries', user_galleries_path(@user), :current => @gallery.nil? || @gallery.new_record? %>
 		<%= bread_el(truncate(@gallery.name, 20), user_gallery_path(@gallery.to_path), :current => true) if @gallery && !@gallery.new_record? %>
-		<%= bread_el 'Pictures', user_gallery_pictures_path(@user), %>
+		<%= bread_el 'Pictures', user_gallery_pictures_path(@user) if @gallery && !@gallery.new_record? %>
 		<%= subnavi_el 'New Gallery', new_user_gallery_path(@user), :current => controller.action_name == 'new' if @user %>
 		<%= subnavi_el 'Edit', edit_user_gallery_path(@gallery.to_path), :current => controller.action_name == 'edit' if @gallery && !@gallery.new_record? && @blog.editable_by?(viewer) %>
 		<%= subnavi_el 'Clip', clip_path_from_widgetable(@gallery, :prefix => :new) if @gallery && !@gallery.new_record? %>
