@@ -4,7 +4,7 @@ module ArticlesHelper
   end
   
   def articles_path_from_blog(blog, opts={})
-    instance_eval %{ #{opts[:prefix] ? "#{opts[:prefix]}_" : ''}#{blog.path_name_prefix(true)_path(blog.to_path(true))} }
+    instance_eval %{ #{opts[:prefix] ? "#{opts[:prefix]}_" : ''}#{blog.path_name_prefix(true)}_path(blog.to_path(true)) }
   end
   
   def article_intro
