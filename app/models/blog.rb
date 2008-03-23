@@ -9,6 +9,7 @@ class Blog < ActiveRecord::Base
     art.has_many :latest_articles, :limit => 10
     art.has_one :primary_article
   end
+  has_many :drafts, :class_name => 'Article', :order => 'articles.id DESC', :conditions => "articles.published_at IS NULL"
   has_many :pictures, :as => :depictable, :order => 'pictures.position'
   has_one :primary_picture, :class_name => 'Picture', :order => 'pictures.position'
   has_many :comments, :as => :commentable, :order => 'comments.id DESC'

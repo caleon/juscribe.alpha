@@ -229,7 +229,7 @@ class ClipsControllerTest < ActionController::TestCase
     assert !widgets(:article_clip).reload.accessible_by?(users(:nana)), widgets(:article_clip).inspect
     
     delete :destroy, widgets(:article_clip).to_path, as(:colin)
-    assert_redirected_to article_url(articles(:blog).to_path), articles(:blog).to_path.inspect
+    assert_redirected_to user_blog_article_url(articles(:blog).to_path), articles(:blog).to_path.inspect
     assert_equal "You have unclipped #{articles(:blog).display_name}.", flash[:notice]
   end
 end

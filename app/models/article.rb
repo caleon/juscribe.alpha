@@ -76,6 +76,10 @@ class Article < ActiveRecord::Base
     
   def widgetable?; self.published?; end
   
+  def accessible_by?(user)
+    self.user == user || (self.draft? && (self.editable_by?(user) || self.blog.editable_by?(user))) || (!self.draft? && super)
+  end
+  
   def self.primary_find(*args); find_by_params(*args); end
   
   #def self.find_by_params(params, opts={})
@@ -92,16 +96,15 @@ class Article < ActiveRecord::Base
   #end
   
   def self.find_by_params(params, opts={})
+    params.symbolize_keys!
     for_association = opts.delete(:for_association)
-    viewer = opts.delete(:viewer)
     if params[:year].blank?
       if params[:user_id]
         author = User.primary_find(params[:user_id])
       elsif params[:group_id]
         author = Group.primary_find(params[:group_id])
       end
-      drafts = author.blogs.primary_find(params[:blog_id]).drafts.find(:all, opts) rescue []
-      viewer ? drafts.detect{|dr| dr.editable_by?(viewer) } : drafts.first
+      author.blogs.primary_find(params[:blog_id]).drafts.find_by_permalink(params[:article_id] || params[:id])
     else
       date = Date.new(params[:year].to_i, params[:month].to_i, params[:day].to_i) rescue (raise params.inspect)
       return nil unless (author = User.primary_find(params[:user_id]) || Group.primary_find(params[:group_id])) and blog = author.blogs.primary_find(params[:blog_id])

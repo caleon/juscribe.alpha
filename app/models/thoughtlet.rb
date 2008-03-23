@@ -16,11 +16,11 @@ class Thoughtlet < ActiveRecord::Base
   def name; self.content[0..10]; end
   def to_s; self.name; end
   
-  def to_path
+  def to_path(for_associated=false)
     if self.user.nil?
-      { :id => self.to_param }
+      { :"#{for_associated ? 'thoughtlet_id' : 'id'}" => self.to_param }
     else
-      { :user_id => self.user.to_param, :id => self.to_param }
+      { :user_id => self.user.to_param, :"#{for_associated ? 'thoughtlet_id' : 'id'}" => self.to_param }
     end
   end
   

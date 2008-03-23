@@ -3,7 +3,7 @@
 		<%= navi_el "Home", root_path %>
 		<%= navi_el "Mine", user_path(viewer) if logged_in? %>
 	<% if logged_in? -%>
-		<%= navi_el "Inbox#{viewer.messages.unread.size > 0 ? " (#{@user.messages.unread.size})" : ''}", messages_path %>
+		<%= navi_el "Inbox#{viewer.messages.unread.size > 0 ? " (#{viewer.messages.unread.size})" : ''}", messages_path %>
 		<%= navi_el 'Preferences', edit_user_path(viewer) %>
 	<% end %>
 		<%= navi_el "About", about_path %>

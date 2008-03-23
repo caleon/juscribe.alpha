@@ -2,16 +2,21 @@ DEFAULTS: &DEFAULTS
   user: colin
 friends:
   name: $LABEL
+  permalink: friends
   <<: *DEFAULTS
 company:
   name: $LABEL
+  permalink: company
   <<: *DEFAULTS
 team:
   name: $LABEL
+  permalink: team
   <<: *DEFAULTS
 party:
   name: $LABEL
+  permalink: party
   <<: *DEFAULTS
 clan:
   name: $LABEL
+  permalink: clan
   <<: *DEFAULTS

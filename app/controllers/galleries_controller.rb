@@ -68,7 +68,7 @@ class GalleriesController < ApplicationController
   
   def update
     return unless setup(:permission) && authorize(@gallery, :editable => true)
-    @page_title = "#{@galery.display_name} - Edit"
+    @page_title = "#{@gallery.display_name} - Edit"
     if @gallery.update_attributes(params[:gallery])
       msg = "You have successfully updated #{@gallery.display_name}."
       respond_to do |format|

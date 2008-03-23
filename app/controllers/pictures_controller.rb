@@ -41,7 +41,7 @@ class PicturesController < ApplicationController
     @picture = create_uploaded_picture_for(@depictable, :save => true, :respond => true)
     return if @picture.errors.empty?
     respond_to do |format|
-      format.html { trender }
+      format.html { trender :new }
       format.js { render :action => 'create_error' }
     end
   end
@@ -111,12 +111,13 @@ class PicturesController < ApplicationController
   end
   
   def get_depictable(opts={})
-    unless request.path.match(/\/([_a-zA-Z0-9]+)\/([^\/]+)\/pictures/)
+    unless request.path.match(/\/([-_a-zA-Z0-9]+)\/([^\/]+)\/pictures/)
       display_error(:message => "Unable to process the request. Please check the address.")
       return false
     end
     begin      
-      klass, id = $1.singularize.classify.constantize, $2
+      klass_name = $1.size == 1 ? {'u' => 'users', 'g' => 'groups'}[$1] : $1
+      klass, id = klass_name.singularize.classify.constantize, $2
       @depictable = klass.primary_find(id, :include => :permission)
     rescue NameError
       klass, id = Article, nil

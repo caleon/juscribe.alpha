@@ -113,7 +113,7 @@ class GroupsControllerTest < ActionController::TestCase
   
   def test_update
     put :update, groups(:company).to_path.merge(:group => { :name => 'blah blah' }), as(:colin)
-    assert_redirected_to group_url(groups(:company))
+    assert_redirected_to group_url(groups(:company).reload)
     assert_equal "You have successfully updated #{groups(:company).display_name}.", flash[:notice]
     assert_equal 'blah blah', groups(:company).reload.name
   end
@@ -135,7 +135,7 @@ class GroupsControllerTest < ActionController::TestCase
     groups(:company).rule.add_boss!(:user, users(:nana))
     assert groups(:company).editable_by?(users(:nana))
     put :update, groups(:company).to_path.merge(:group => { :name => 'blah blah' }), as(:nana)
-    assert_redirected_to group_url(groups(:company))
+    assert_redirected_to group_url(groups(:company).reload)
     assert_equal "You have successfully updated #{groups(:company).display_name}.", flash[:notice]
   end
   

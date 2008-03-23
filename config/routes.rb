@@ -28,8 +28,11 @@ ActionController::Routing::Routes.draw do |map|
       end
       blog.resources :clips, :requirements => { :blog_id => regex_for(:blog, :permalink) }
       blog.resources :comments, :requirements => { :blog_id => regex_for(:blog, :permalink) }
-      blog.resources :drafts, :member => { :publish => :put }, :has_many => [ :pictures ],
-                              :requirements => { :blog_id => regex_for(:blog, :permalink), :id => regex_for(:article, :permalink) }
+      blog.resources :drafts, :controller => 'articles', :member => { :publish => :put },
+                              :requirements => { :blog_id => regex_for(:blog, :permalink), :id => regex_for(:article, :permalink) } do |draft|
+        draft.resources :pictures, :path_prefix => 'u/:user_id/blogs/:blog_id/drafts/:article_id',
+                                   :requirements => { :blog_id => regex_for(:blog, :permalink), :article_id => regex_for(:article, :permalink) }
+      end
       blog.resources :pictures, :requirements => { :blog_id => regex_for(:blog, :permalink)} do |picture|
         picture.resources :clips, :requirements => { :blog_id => regex_for(:blog, :permalink) }
         picture.resources :comments, :requirements => { :blog_id => regex_for(:blog, :permalink) }
@@ -37,7 +40,7 @@ ActionController::Routing::Routes.draw do |map|
     end
     user.resources :clips
     user.resources :comments
-    user.resources :events, :has_many => [ :clips, :comments ] do |event|
+    user.resources :events, :has_many => [ :clips, :comments ], :member => { :begin_event => :put, :end_event => :put } do |event|
       event.resources :pictures, :has_many => [ :clips, :comments ]
     end
     user.resources :galleries, :has_many => [ :clips, :comments ] do |gallery|
@@ -47,8 +50,15 @@ ActionController::Routing::Routes.draw do |map|
     user.resources :thoughtlets, :has_many => [ :clips, :comments ] do |thought|
       thought.resources :pictures, :has_many => [ :clips, :comments ]
     end
-    user.resources :widgets, :has_many => [ :comments ]
+    user.resources :widgets, :has_many => [ :comments ], :member => { :place => :put, :unplace => :put }
   end
+  
+  map.user_blog_articles 'u/:user_id/blogs/:blog_id/articles', :controller => 'articles', :action => 'index', :requirements => { :blog_id => regex_for(:blog, :permalink) }, :conditions => { :method => :get }
+  map.formatted_user_blog_articles 'u/:user_id/blogs/:blog_id/articles.:format', :controller => 'articles', :action => 'index', :requirements => { :blog_id => regex_for(:blog, :permalink) }, :conditions => { :method => 'get' }
+  map.connect 'u/:user_id/blogs/:blog_id/articles', :controller => 'articles', :action => 'create', :requirements => { :blog_id => regex_for(:blog, :permalink) }, :conditions => { :method => :post }
+  map.connect 'u/:user_id/blogs/:blog_id/articles.:format', :controller => 'articles', :action => 'create', :requirements => { :blog_id => regex_for(:blog, :permalink) }, :conditions => { :method => :post }
+  map.new_user_blog_article 'u/:user_id/blogs/:blog_id/articles/new', :controller => 'articles', :action => 'new', :requirements => { :blog_id => regex_for(:blog, :permalink) }, :conditions => { :method => :get }
+  map.formatted_new_user_blog_article 'u/:user_id/blogs/:blog_id/articles/new.:format', :controller => 'articles', :action => 'new', :requirements => { :blog_id => regex_for(:blog, :permalink) }, :conditions => { :method => :get }
   
   #################################################### GROUPS
   map.resources :groups, :custom_path => 'g', :member => { :join => :put, :leave => :put, :kick => :put, :invite => :put } do |group|
@@ -70,8 +80,11 @@ ActionController::Routing::Routes.draw do |map|
       end
       blog.resources :clips, :requirements => { :blog_id => regex_for(:blog, :permalink) }
       blog.resources :comments, :requirements => { :blog_id => regex_for(:blog, :permalink) }
-      blog.resources :drafts, :member => { :publish => :put }, :has_many => [ :pictures ],
-                              :requirements => { :blog_id => regex_for(:blog, :permalink), :id => regex_for(:article, :permalink) }
+      blog.resources :drafts, :controller => 'articles', :member => { :publish => :put },
+                              :requirements => { :blog_id => regex_for(:blog, :permalink), :id => regex_for(:article, :permalink) } do |draft|
+        draft.resources :pictures, :path_prefix => 'g/:group_id/blogs/:blog_id/drafts/:article_id',
+                                   :requirements => { :blog_id => regex_for(:blig, :permalink), :article_id => regex_for(:article, :permalink) }
+      end
       blog.resources :pictures, :requirements => { :blog_id => regex_for(:blog, :permalink)} do |picture|
         picture.resources :clips, :requirements => { :blog_id => regex_for(:blog, :permalink) }
         picture.resources :comments, :requirements => { :blog_id => regex_for(:blog, :permalink) }
@@ -81,6 +94,13 @@ ActionController::Routing::Routes.draw do |map|
     group.resources :comments
     group.resources :pictures, :has_many => [ :clips, :comments ]
   end
+  
+  map.group_blog_articles 'g/:group_id/blogs/:blog_id/articles', :controller => 'articles', :action => 'index', :requirements => { :blog_id => regex_for(:blog, :permalink) }, :conditions => { :method => :get }
+  map.formatted_group_blog_articles 'g/:group_id/blogs/:blog_id/articles.:format', :controller => 'articles', :action => 'index', :requirements => { :blog_id => regex_for(:blog, :permalink) }, :conditions => { :method => :get }
+  map.connect 'g/:group_id/blogs/:blog_id/articles', :controller => 'articles', :action => 'create', :requirements => { :blog_id => regex_for(:blog, :permalink) }, :conditions => { :method => :post }
+  map.connect 'g/:group_id/blogs/:blog_id/articles.:format', :controller => 'articles', :action => 'create', :requirements => { :blog_id => regex_for(:blog, :permalink) }, :conditions => { :method => :post }
+  map.new_group_blog_article 'g/:group_id/blogs/:blog_id/articles/new', :controller => 'articles', :action => 'new', :requirements => { :blog_id => regex_for(:blog, :permalink) }, :conditions => { :method => :get }
+  map.formatted_new_group_blog_article 'g/:group_id/blogs/:blog_id/articles/new.:format', :controller => 'articles', :action => 'new', :requirements => { :blog_id => regex_for(:blog, :permalink) }, :conditions => { :method => :get }
   
   map.resources :messages, :requirements => { :id => regex_for(:message, :id) }
   map.resources :permissions, :requirements => { :id => regex_for(:permission_rule, :id) }

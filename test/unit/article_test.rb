@@ -55,14 +55,15 @@ class ArticleTest < ActiveSupport::TestCase
     art = Article.create(:user => users(:colin), :title => 'Welcome to Maryland', :content => 'blah blah blah', :blog => blogs(:first))
     assert art.valid? && !art.new_record?
     assert_equal 'Welcome-to-Maryland', art.permalink
-    assert_equal 2, art.to_path.keys.size
+    assert_equal 3, art.to_path.keys.size
     assert art.to_path.keys.include?(:id)
     assert art.to_path.keys.include?(:user_id)
+    assert art.to_path.keys.include?(:blog_id)
     
     art.publish!
     assert art.published? && !art.draft?
-    assert_equal 5, art.to_path.keys.size
-    assert_equal 5, (art.to_path.keys & [:year, :month, :day, :user_id, :id]).size
+    assert_equal 6, art.to_path.keys.size
+    assert_equal 6, (art.to_path.keys & [:blog_id, :year, :month, :day, :user_id, :id]).size
   end
   
   def test_find_by_params

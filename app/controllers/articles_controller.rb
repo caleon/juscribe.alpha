@@ -2,7 +2,7 @@ class ArticlesController < ApplicationController
   use_shared_options :collection_layoutable => :@blog
   # setup will handle authorization. as well as defaults from common_methods.rb
   verify_login_on :new, :create, :edit, :update, :destroy, :publish, :unpublish
-  authorize_on :edit, :update, :publish, :unpublish, :destroy
+  authorize_on :show, :edit, :update, :publish, :unpublish, :destroy
   
   def index
     # Articles#index is for articles on a user. Blogs#show has articles on a blog ----- NO. Routes redone
@@ -45,7 +45,7 @@ class ArticlesController < ApplicationController
         format.xml
       end
     else
-      redirect_to new_user_article_url(get_viewer) and return
+      redirect_to new_user_blog_article_url(get_viewer, @blog) and return
     end
   end
   
@@ -121,9 +121,9 @@ class ArticlesController < ApplicationController
   private
   def setup(includes=nil, error_opts={})
     return unless get_blog
-    if @article = Article.primary_find(params, :include => includes, :viewer => get_viewer)
-      if params[:month] !~ /\d\d/ || params[:day] !~ /\d\d/
-        redirect_to article_url(@article.to_path), :status => 301 and return false
+    if @article = Article.primary_find(params, :include => includes)
+      if @article.published? && (params[:month] !~ /\d\d/ || params[:day] !~ /\d\d/)
+        redirect_to article_url_for(@article), :status => 301 and return false
       else
         authorize(@article)
       end
@@ -146,7 +146,7 @@ class ArticlesController < ApplicationController
   end
   
   def article_url_for(article)
-    prefix = article.blog.bloggable_type.underscore
+    prefix = article.blog.path_name_prefix
     prefix += article.published? ? '_article' : '_draft'
     instance_eval %{ #{prefix}_url(article.to_path) }
   end

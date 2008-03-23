@@ -17,7 +17,7 @@ class ThoughtletsControllerTest < ActionController::TestCase
   def test_index_with_wrong_nick
     get :index, { :user_id => users(:colin).nick.chop }
     assert_nil assigns(:thoughtlets)
-    assert_flash_equal "That User entry could not be found. Please check the address.", :warning
+    assert_flash_equal "That User could not be found. Please check the address.", :warning
   end
   
   def test_show

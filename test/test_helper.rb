@@ -3,6 +3,10 @@ require File.expand_path(File.dirname(__FILE__) + "/../config/environment")
 
 require 'test_help'
 
+class ActionController::Resources::Resource #:nodoc:
+  def path; @path ||= @options[:special_path] || "#{path_prefix}/#{@options[:custom_path] || plural}"; end
+end
+
 class Test::Unit::TestCase
   # Transactional fixtures accelerate your tests by wrapping each test method
   # in a transaction that's rolled back on completion.  This ensures that the

@@ -1,9 +1,7 @@
 module ActionController
   module Resources
     class Resource #:nodoc:
-      def path
-        @path ||= @options[:custom_path] || "#{path_prefix}/#{plural}"
-      end
+      def path; @path ||= @options[:special_path] || "#{path_prefix}/#{@options[:custom_path] || plural}"; end
     end
   end
   

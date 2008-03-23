@@ -8,7 +8,7 @@
 		<% content_tag(:div, :id => 'canvas', :class => get_canvas_class) do %>
 			<%= warning_field %>
 			<%= notice_field %>
-			<%= render :partial => 'subnavigation' %>
+			<%= render :partial => flash[:warning] ? 'shared/subnavigation_error' : 'subnavigation' %>
 			<%= yield %>
 		<% end %>
 		<%= render :partial => 'shared/footer' %>

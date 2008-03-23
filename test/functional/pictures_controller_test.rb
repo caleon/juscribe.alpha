@@ -212,6 +212,7 @@ class PicturesControllerTest < ActionController::TestCase
     pictures(:for_blog).rule.toggle_privacy!
     assert !pictures(:for_blog).editable_by?(users(:keira))
     assert_equal articles(:blog), pictures(:for_blog).depictable
+    articles(:blog).send(:make_permalink, :with_save => true)
     assert_not_nil pictures(:for_blog).depictable.pictures.find('for_blog'.hash.abs)
     assert !articles(:blog).editable_by?(users(:keira))
     articles(:blog).rule.add_boss!(:user, users(:keira))
@@ -219,7 +220,7 @@ class PicturesControllerTest < ActionController::TestCase
     assert pictures(:for_blog).reload.editable_by?(users(:keira))
     assert pictures(:for_blog).accessible_by?(users(:keira))
     get :edit, pictures(:for_blog).to_path, as(:keira)
-    assert_equal articles(:blog), assigns(:depictable)
+    assert_equal articles(:blog), assigns(:depictable), pictures(:for_blog).to_path
     assert_response :success
     assert_template 'edit'
     assert_equal pictures(:for_blog), assigns(:picture)
@@ -237,6 +238,7 @@ class PicturesControllerTest < ActionController::TestCase
   end
   
   def test_just_update
+    articles(:blog).send(:make_permalink, :with_save => true)
     assert_not_equal 300, pictures(:for_blog).width
     orig_width = pictures(:for_blog).width
     crop_params = { :crop_left => 0, :crop_top => 0, :crop_width => 300, :crop_height => 300, :stencil_width => 300, :stencil_height => 300, :resize_to_stencil => 'false', :crop_cancel => 'false' }
@@ -247,6 +249,7 @@ class PicturesControllerTest < ActionController::TestCase
   end
   
   def test_just_update_with_wrong_params
+    articles(:blog).send(:make_permalink, :with_save => true)
     put :update, pictures(:for_blog).to_path.merge(:picture => { :caption => '1' }), as(:colin)
     assert_template 'edit'
     assert_flash_equal "There was an error editing your picture: Validation failed: Caption is too short (minimum is 3 characters), Caption is invalid", :warning
@@ -262,6 +265,10 @@ class PicturesControllerTest < ActionController::TestCase
   end
   
   def test_destroy
+    pictures(:for_blog).depictable.send(:make_permalink, :with_save => true)
+    assert_equal articles(:blog), pictures(:for_blog).depictable
+    assert_not_nil articles(:blog)[:permalink]
+#    flunk pictures(:for_blog).to_path.inspect
     delete :destroy, pictures(:for_blog).to_path, as(:colin)
     assert_redirected_to articles(:blog).to_path
     assert_equal "You have deleted a picture on #{articles(:blog).display_name}.", flash[:notice]

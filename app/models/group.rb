@@ -145,6 +145,8 @@ class Group < ActiveRecord::Base
     str.strip!
     str.chop! if str.last == '-'
     str
+  rescue
+    nil
   end
   
   private

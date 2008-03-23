@@ -105,12 +105,13 @@ class ClipsController < ApplicationController
   end
   
   def get_widgetable(opts={})
-    unless request.path.match(/\/([_a-zA-Z0-9]+)\/([^\/]+)\/clips/)
+    unless request.path.match(/\/([-_a-zA-Z0-9]+)\/([^\/]+)\/clips/)
       display_error(:message => "Unable to process the request. Please check the address.")
       return false
     end
     begin      
-      klass, id = $1.singularize.classify.constantize, $2
+      klass_name = $1.size == 1 ? {'u' => 'users', 'g' => 'groups'}[$1] : $1
+      klass, id = klass_name.singularize.classify.constantize, $2
       @widgetable = klass.primary_find(id, :include => :permission)
     rescue NameError
       klass, id = Article, nil

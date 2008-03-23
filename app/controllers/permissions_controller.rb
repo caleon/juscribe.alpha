@@ -5,6 +5,7 @@ class PermissionsController < ApplicationController
   authorize_on :index, :show, :new, :create, :edit, :update, :destroy
   
   def index
+    @user = get_viewer
     @permission_rules = @user.permission_rules
     @page_title = "#{@user.display_name}'s Permission Rules"
     respond_to do |format|

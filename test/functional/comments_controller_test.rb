@@ -75,7 +75,7 @@ class CommentsControllerTest < ActionController::TestCase
   def test_show_without_login_but_private_commentable
     articles(:blog).publish!
     articles(:blog).rule.toggle_privacy!
-    assert articles(:blog).private?
+    assert articles(:blog).reload.private?
     assert articles(:blog).accessible_by?(users(:colin))
     get :show, comments(:blog_comment).to_path
     assert_redirected_to login_url
@@ -85,7 +85,7 @@ class CommentsControllerTest < ActionController::TestCase
   def test_show_with_diff_login_but_private_commentable
     articles(:blog).publish!
     articles(:blog).rule.toggle_privacy!
-    assert articles(:blog).private?
+    assert articles(:blog).reload.private?
     get :show, comments(:blog_comment).to_path, as(:nana)
     assert_redirected_to user_url(users(:nana))
     assert_equal "You are not authorized for that action.", flash[:warning]
@@ -93,10 +93,10 @@ class CommentsControllerTest < ActionController::TestCase
   
   def test_show_with_private_commentable_as_owner_of_comment
     assert comments(:blog_comment).accessible_by?(users(:keira))
-    assert articles(:blog).accessible_by?(users(:keira))
+    assert !articles(:blog).accessible_by?(users(:keira))
     articles(:blog).publish!
     articles(:blog).rule.toggle_privacy!
-    assert !articles(:blog).accessible_by?(users(:keira))
+    assert !articles(:blog).reload.accessible_by?(users(:keira))
     assert_equal articles(:blog), comments(:blog_comment).commentable
     assert comments(:blog_comment).accessible_by?(users(:keira))
     get :show, comments(:blog_comment).to_path, as(:keira)
@@ -138,7 +138,7 @@ class CommentsControllerTest < ActionController::TestCase
   def test_new_with_diff_user_but_private
     articles(:blog).publish!
     articles(:blog).rule.toggle_privacy!
-    assert articles(:blog).private?
+    assert articles(:blog).reload.private?
     assert !articles(:blog).accessible_by?(users(:nana))
     get :new, articles(:blog).to_path(true), as(:nana)
     assert_redirected_to user_url(users(:nana))
@@ -148,7 +148,7 @@ class CommentsControllerTest < ActionController::TestCase
   def test_new_as_owner_but_private
     articles(:blog).publish!
     articles(:blog).rule.toggle_privacy!
-    assert articles(:blog).private?
+    assert articles(:blog).reload.private?
     assert_equal users(:colin), articles(:blog).user
     assert articles(:blog).accessible_by?(users(:colin))
     get :new, articles(:blog).to_path(true), as(:colin)
@@ -157,11 +157,12 @@ class CommentsControllerTest < ActionController::TestCase
   end
   
   def test_create
+    articles(:blog).send(:make_permalink, :with_save => true)
     articles(:blog).publish!
     post :create, articles(:blog).to_path(true).merge(:comment => { :body => 'blah blah' }), as(:nana)
     assert_not_nil assigns(:comment)
     assert assigns(:comment).valid?
-    assert_redirected_to article_url(articles(:blog).to_path)
+    assert_redirected_to user_blog_article_url(articles(:blog).to_path)
     assert_equal "You have commented on #{articles(:blog).display_name}.", flash[:notice]
   end
   
@@ -176,7 +177,7 @@ class CommentsControllerTest < ActionController::TestCase
   def test_create_with_diff_user_but_private
     articles(:blog).publish!
     articles(:blog).rule.toggle_privacy!
-    assert articles(:blog).private?
+    assert articles(:blog).reload.private?
     assert !articles(:blog).accessible_by?(users(:nana))
     post :create, articles(:blog).to_path(true).merge(:comment => { :body => 'blah blah' }), as(:nana)
     assert_redirected_to user_url(users(:nana))
@@ -186,11 +187,11 @@ class CommentsControllerTest < ActionController::TestCase
   def test_create_with_same_user_but_private
     articles(:blog).publish!
     articles(:blog).rule.toggle_privacy!
-    assert articles(:blog).private?
+    assert articles(:blog).reload.private?
     assert_equal users(:colin), articles(:blog).user
     assert articles(:blog).accessible_by?(users(:colin))
     post :create, articles(:blog).to_path(true).merge(:comment => { :body => 'blah blah' }), as(:colin)
-    assert_redirected_to article_url(articles(:blog).to_path)
+    assert_redirected_to user_blog_article_url(articles(:blog).to_path)
     assert_equal "You have commented on #{articles(:blog).display_name}.", flash[:notice]
   end
   
@@ -225,7 +226,7 @@ class CommentsControllerTest < ActionController::TestCase
   def test_update_as_comment_owner
     articles(:blog).publish!
     put :update, comments(:blog_comment).to_path.merge(:comment => { :body => 'blah blah' }), as(:keira)
-    assert_redirected_to article_url(articles(:blog).to_path)
+    assert_redirected_to user_blog_article_url(articles(:blog).to_path)
     assert_equal "You have successfully updated #{comments(:blog_comment).display_name}.", flash[:notice]
     assert_equal 'blah blah', comments(:blog_comment).reload.body
   end
@@ -240,7 +241,7 @@ class CommentsControllerTest < ActionController::TestCase
   def test_update_as_commentable_owner
     articles(:blog).publish!
     put :update, comments(:blog_comment).to_path.merge(:comment => { :body => 'blah blah' }), as(:colin)
-    assert_redirected_to article_url(articles(:blog).to_path)
+    assert_redirected_to user_blog_article_url(articles(:blog).to_path)
     assert_equal "You have successfully updated #{comments(:blog_comment).display_name}.", flash[:notice]
   end
   
@@ -254,7 +255,7 @@ class CommentsControllerTest < ActionController::TestCase
   def test_destroy_as_comment_owner
     articles(:blog).publish!
     delete :destroy, comments(:blog_comment).to_path, as(:keira)
-    assert_redirected_to article_url(articles(:blog).to_path)
+    assert_redirected_to user_blog_article_url(articles(:blog).to_path)
     assert_equal "You have deleted a comment on #{articles(:blog).display_name}.", flash[:notice]
   end
   
@@ -268,7 +269,7 @@ class CommentsControllerTest < ActionController::TestCase
   def test_destroy_as_commentable_owner
     articles(:blog).publish!
     delete :destroy, comments(:blog_comment).to_path, as(:colin)
-    assert_redirected_to article_url(articles(:blog).to_path)
+    assert_redirected_to user_blog_article_url(articles(:blog).to_path)
     assert_equal "You have deleted a comment on #{articles(:blog).display_name}.", flash[:notice]
   end
 end

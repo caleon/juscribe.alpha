@@ -103,12 +103,13 @@ class CommentsController < ApplicationController
   end
   
   def get_commentable(opts={})
-    unless request.path.match(/\/([_a-zA-Z]+)\/([^\/]+)\/comments/)
+    unless request.path.match(/\/([-_a-zA-Z0-9]+)\/([^\/]+)\/comments/)
       display_error(:message => "Unable to process the request. Please check the address.")
       return false
     end
     begin
-      klass, id = $1.singularize.classify.constantize, $2
+      klass_name = $1.size == 1 ? {'u' => 'users', 'g' => 'groups'}[$1] : $1
+      klass, id = klass_name.singularize.classify.constantize, $2
       @commentable = klass.primary_find(id, :include => :permission)
     rescue
       klass, id = Article, nil
