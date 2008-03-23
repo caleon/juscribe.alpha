@@ -44,7 +44,7 @@ class Article < ActiveRecord::Base
   end
   
   def path_name_prefix
-    [ self.blog.path_name_prefix(true), self.published? ? 'article' : 'draft' ].join('_')
+    [ self.blog.path_name_prefix, self.published? ? 'article' : 'draft' ].join('_')
   end
   
   def draft?; !self.published_at? && !self.published_date?; end
