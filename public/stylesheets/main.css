@@ -1,6 +1,7 @@
 /* @override 
 	http://localhost:3000/stylesheets/main.css?1206057809
 	http://localhost:3000/stylesheets/main.css?1206178781
+	http://localhost:3000/stylesheets/main.css?1206187976
 */
 
 #wrapper {
@@ -12,6 +13,7 @@
 	position: relative;
 	height: 87px;
 	padding: 13px 0 13px 13px;
+	border-top: 12px solid #003B92;
 }
 
 #logo_link {
