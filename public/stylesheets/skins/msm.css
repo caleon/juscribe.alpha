@@ -462,7 +462,9 @@
 	#canvas.users-show form.commentForm fieldset,
 	#canvas.blogs-index form.commentForm fieldset,
 	#canvas.blogs-show form.commentForm fieldset {
-		margin: 0 9px 9px;
+		margin: 18px -9px -9px;
+		border-width: 1px 0 0;
+		border-color: #ccc;
 	}
 	#canvas.users-show form.commentForm textarea,
 	#canvas.blogs-index form.commentForm textarea,

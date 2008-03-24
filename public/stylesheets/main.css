@@ -11,20 +11,20 @@
 
 #header {
 	position: relative;
-	height: 87px;
+	height: 50px;
 	padding: 13px 0 13px 13px;
 	border-top: 12px solid #003B92;
 }
 
 #logo_link {
 	display: block;
-	width: 357px;
-	height: 87px;
+	width: 200px;
+	height: 49px;
 }
 
 #logo {
-	width: 357px;
-	height: 87px;
+	width: 200px;
+	height: 49px;
 }
 
 #header h1 {
@@ -51,6 +51,9 @@
 	padding: 0.5em;
 	height: 2em;
 	line-height: 2em;
+	text-shadow: #a6a6a6 1px 1px 2px;
+	opacity: 1;
+	color: #000;
 }
 
 #header .navigation {
@@ -69,8 +72,7 @@
 }
 
 #header .navigation li.navigationEl a {
-	font-weight: bold;
-	color: #000;
+
 }
 
 .navigation li.navigationEl a:hover {

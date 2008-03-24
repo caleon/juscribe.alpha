@@ -38,6 +38,8 @@ ActionController::Routing::Routes.draw do |map|
         picture.resources :comments, :requirements => { :blog_id => regex_for(:blog, :permalink) }
       end
     end
+    user.latest_articles 'latest-articles', :controller => 'articles', :action => 'latest_articles'
+    user.latest_articles 'latest-articles.:format', :controller => 'articles', :action => 'latest_articles', :name_prefix => 'formatted_user_'
     user.resources :clips
     user.resources :comments
     user.resources :events, :has_many => [ :clips, :comments ], :member => { :begin_event => :put, :end_event => :put } do |event|

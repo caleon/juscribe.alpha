@@ -21,6 +21,26 @@ class ArticlesController < ApplicationController
     end
   end
   
+  def latest_articles
+    if params[:blog_id].blank?
+      if params[:user_id]
+        @author = User.primary_find(params[:user_id])
+      elsif params[:group_id]
+        @author = Group.primary_find(params[:group_id])
+      end
+    else
+      return unless setup(:permission)
+    end
+    @articles = @author.latest_articles
+    @page_title = "Latest articles by #{@author.display_name}"
+    respond_to do |format|
+      format.html
+      format.rss { render :layout => false }
+    end
+  rescue ActiveRecord::RecordNotFound, NoMethodError
+    display_error(:message => 'That author could not be found. Please check the address.')
+  end
+  
   def show
     return unless setup(:permission)
     if @article.draft?

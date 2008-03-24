@@ -32,8 +32,8 @@ module RssHelper
     return rss_item
   end
   
-  def rss_link_for(model_sym, path, opts={})
-    str = "RSS Feed for #{model_sym.to_s.humanize}"
+  def rss_link_for(kind, path, opts={})
+    str = "RSS Feed for #{kind}"
     link_to image_tag('feed-icon-14x14.png', :class => 'rss_image', :width => 14, :height => 14, :alt => 'RSS Icon'), path, :class => 'rss_link', :title => str
   end
 end

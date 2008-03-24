@@ -11,6 +11,10 @@ module ArticlesHelper
     instance_eval %{ #{opts[:prefix] ? "#{opts[:prefix]}_" : ''}#{blog.path_name_prefix}_articles_path(blog.to_path(true)) }
   end
   
+  def latest_article_url_for(author, opts={})
+    instance_eval %{ #{opts[:prefix] ? "#{opts[:prefix]}_" : ''}#{author.path_name_prefix}_latest_articles_url(author) }
+  end
+  
   def article_intro
     content_tag :strong, "(#{APP[:name].upcase}) --", :class => 'articleIntro'
   end
