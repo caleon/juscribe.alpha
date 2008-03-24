@@ -27,7 +27,7 @@
 		<%= render :partial => 'users/latest_articles', # FIXME: Faulty.
 		 					 :layout => custom_partial('inner'),
 		 					 :object => @author.articles.find(:all, :limit => 5),
-		 					 :locals => { :user => @user } %>
+		 					 :locals => { :user => @user } if false %>
 	</div>
 	<%= rounded_shim(:bottom) %>
 </div>

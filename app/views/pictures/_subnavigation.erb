@@ -1,6 +1,6 @@
 <% bare ||= nil -%>
 <% if @depictable %>
-	<%= render :partial => "#{@depictable.class.class_name.pluralize.underscore}/subnavigation", :locals => { :bare => true } %>
+	<%# render :partial => "#{@depictable.class.class_name.pluralize.underscore}/subnavigation", :locals => { :bare => true } %>
 	<%= bread_el 'Pictures', pictures_path_from_depictable(@depictable), :current => @picture.nil? || @picture.new_record? %>
 	<%= subnavi_el 'New Picture', picture_path_from_depictable(@depictable, :prefix => 'new') unless bare %>
 <% end %>

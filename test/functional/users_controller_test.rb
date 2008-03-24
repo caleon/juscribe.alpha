@@ -48,12 +48,12 @@ class UsersControllerTest < ActionController::TestCase
     get :new
     assert_response :success
     assert_template 'new'
-    assert_equal 'Create user', assigns(:page_title)
+    assert_equal 'Become a new Juscribe member!', assigns(:page_title)
     assert_not_nil assigns(:user)
     xhr :get, :new
     assert_response :success
     assert_template 'new'
-    assert_equal 'Create user', assigns(:page_title)
+    assert_equal 'Become a new Juscribe member!', assigns(:page_title)
   end
   
   def test_create_with_invalid_entries
