@@ -8,7 +8,13 @@
 		<% content_tag(:div, :id => 'canvas', :class => get_canvas_class) do %>
 			<%= warning_field %>
 			<%= notice_field %>
-			<%= render :partial => flash[:warning] ? 'shared/subnavigation_error' : 'subnavigation' %>
+			<div class="sub navigation">
+				<ul class="navigationList">
+					<%= render :partial => flash[:warning] ? 'shared/subnavigation_error' : 'subnavigation' %>
+					<%= navi_skin_info %>
+					<%= navi_customize(user_widgets_path(@user.to_path(true))) if @user && @user.editable_by?(viewer) %>
+				</ul>
+			</div>
 			<%= yield %>
 		<% end %>
 		<%= render :partial => 'shared/footer' %>

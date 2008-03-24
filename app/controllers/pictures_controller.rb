@@ -124,8 +124,13 @@ class PicturesController < ApplicationController
       @depictable = Article.primary_find(params, :for_association => true, :include => :permission)
     end
     raise ActiveRecord::RecordNotFound if @depictable.nil?
+    setup_depictable_vars
     @depictable
   rescue ActiveRecord::RecordNotFound
     display_error(:message => opts[:message] || "That #{klass.to_s.humanize} could not be found. Please check the address.")
+  end
+  
+  def setup_depictable_vars
+    
   end
 end

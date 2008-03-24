@@ -21,7 +21,24 @@ class UsersController < ApplicationController
     end
   end
   
-  # TODO: quit borrowing normal methods from common and set titles for actions
+  def latest_articles
+    @user = User.primary_find(params[:user_id], :include => :latest_articles)
+    @articles = @user.latest_articles
+    @page_title = "Latest Articles by #{@user.display_name}"
+    respond_to do |format|
+      format.rss { render :layout => false }
+    end
+  end
+  
+  # TODO: quit borrowing normal methods from common and set titles for actions  
+  def new
+    @page_title = "Become a new Juscribe member!"
+    @user = User.new
+    respond_to do |format|
+      format.html { trender }
+      format.js
+    end
+  end
   
   def create
     @user = User.new(params[:user])

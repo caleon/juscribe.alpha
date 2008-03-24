@@ -26,6 +26,8 @@ ActionController::Routing::Routes.draw do |map|
                                                           :article_id => regex_for(:article, :permalink) }
         end
       end
+      blog.latest_articles 'latest-articles', :controller => 'articles', :action => 'latest_articles'
+      blog.latest_articles 'latest-articles.:format', :controller => 'articles', :action => 'latest_articles', :name_prefix => 'formatted_user_blog_'
       blog.resources :clips, :requirements => { :blog_id => regex_for(:blog, :permalink) }
       blog.resources :comments, :requirements => { :blog_id => regex_for(:blog, :permalink) }
       blog.resources :drafts, :controller => 'articles', :member => { :publish => :put },
@@ -80,6 +82,9 @@ ActionController::Routing::Routes.draw do |map|
                                                           :article_id => regex_for(:article, :permalink) }
         end
       end
+      blog.latest_articles 'latest-articles', :controller => 'articles', :action => 'latest_articles'
+      blog.latest_articles 'latest-articles.:format', :controller => 'articles', :action => 'latest_articles', :name_prefix => 'formatted_group_blog_'
+      
       blog.resources :clips, :requirements => { :blog_id => regex_for(:blog, :permalink) }
       blog.resources :comments, :requirements => { :blog_id => regex_for(:blog, :permalink) }
       blog.resources :drafts, :controller => 'articles', :member => { :publish => :put },
@@ -92,6 +97,8 @@ ActionController::Routing::Routes.draw do |map|
         picture.resources :comments, :requirements => { :blog_id => regex_for(:blog, :permalink) }
       end
     end
+    group.latest_articles 'latest-articles', :controller => 'articles', :action => 'latest_articles'
+    group.latest_articles 'latest-articles.:format', :controller => 'articles', :action => 'latest_articles', :name_prefix => 'formatted_group_'
     group.resources :clips
     group.resources :comments
     group.resources :pictures, :has_many => [ :clips, :comments ]
@@ -108,6 +115,8 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :permissions, :requirements => { :id => regex_for(:permission_rule, :id) }
   
   map.search 'search/:query', :controller => 'search', :action => 'index', :query => nil
+  
+  map.registration 'register', :controller => 'users', :action => 'new'
   map.login 'login', :controller => 'users', :action => 'login'
   map.formatted_login 'login.:format', :controller => 'users', :action => 'login'
   map.logout 'logout', :controller => 'users', :action => 'logout'

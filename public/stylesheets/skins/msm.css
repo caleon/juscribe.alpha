@@ -2,6 +2,7 @@
 	http://localhost:3000/stylesheets/users/msm.css?1206045027
 	http://localhost:3000/stylesheets/skins/msm.css?1206077030
 	http://localhost:3000/stylesheets/skins/msm.css?1206180586
+	http://localhost:3000/stylesheets/skins/msm.css?1206322095
 */
 
 #canvas {
@@ -126,6 +127,15 @@
 	.msm_layout .msm_column li > span {
 		display: block;
 		padding-left: 6px;
+	}
+	
+	.msm_layout fieldset {
+		border: 1px solid #ccc;
+	}
+	
+	.msm_layout legend {
+		font-weight: bold;
+		color: #999;
 	}
 	
 	.msm_layout form.commentForm fieldset {
@@ -462,14 +472,17 @@
 	#canvas.users-show form.commentForm fieldset,
 	#canvas.blogs-index form.commentForm fieldset,
 	#canvas.blogs-show form.commentForm fieldset {
+		border: 1px 0 0;
 		margin: 18px -9px -9px;
-		border-width: 1px 0 0;
-		border-color: #ccc;
 	}
 	#canvas.users-show form.commentForm textarea,
 	#canvas.blogs-index form.commentForm textarea,
 	#canvas.blogs-show form.commentForm textarea {
 		width: 200px;
+	}
+	
+	#canvas.users-edit form {
+		padding: 18px;
 	}
 	
 

@@ -6,12 +6,12 @@ class EventsController < ApplicationController
   def index
     return unless get_user
     find_opts = get_find_opts(:order => 'id DESC')
-    @events = Event.find(:all, find_opts.merge(:conditions => ["user_id = ?", @user.id]))
+    @events = @user.events.find(:all, find_opts)
     @page_title = "#{@user.display_name}'s Events"
     respond_to do |format|
       format.html { trender }
       format.js
-      format.xml
+      format.rss { render :layout => false }
     end
   end
   

@@ -1,2 +1,2 @@
-<h3>Latest Articles from<br /><%= link_to blog.name, blog_path_for(blog) %></h3>
+<h3>Latest Articles <%= rss_link_for("Latest Articles from #{@blog.display_name}", formatted_user_blog_latest_articles_path(blog.to_path(true).merge(:format => :rss)) ) %></h3>
 <%= render :partial => 'articles/article_line', :collection => blog.latest_articles %>

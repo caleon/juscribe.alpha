@@ -50,7 +50,7 @@ module ApplicationHelper
     end
     navi_el(text, path, opts)
   end
-
+  
   def bread_el(text, path, opts={})
     z_index = 10 - (@bread_count ||= 0)
     css_class = [ 'navigationEl', 'breadcrumbEl' ]
@@ -62,7 +62,7 @@ module ApplicationHelper
   end
 								
   def navi_skin_info
-    navi_el "Layout: <span class=\"layout_name\">#{@layoutable.layout}</span> - Skin: <span class=\"skin_name\">#{@layoutable.skin}</span>",
+    navi_el "Skin: #{@layoutable.skin}",
             (@user && @user.editable_by?(viewer) ? edit_user_path(@user) : '#'),
             :right => true if @layoutable
   end

@@ -39,6 +39,7 @@ class MessagesController < ApplicationController
   def new
     @page_title = "Compose new message"
     @user = get_viewer
+    @recipient = User.primary_find(params[:recipient])
     @message = get_viewer.sent_messages.new
     respond_to do |format|
       format.html { trender }

@@ -1,14 +1,11 @@
-<div class="sub navigation">
-	<ul class="navigationList">
-		<%= bread_el @author.display_name, @author %>
-		<%= bread_el 'Blogs', blogs_path_from_bloggable(@author) %>
-		<%= bread_el @blog.display_name, blog_path_for(@blog) %>
-		<%= bread_el truncate(@article.title, 20), article_path_for(@article), :current => true if @article && !@article.new_record? %>
+<% set_subnav_article %>
+<%= bread_el @subnav_author.display_name, @subnav_author %>
+<%= bread_el 'Blogs', blogs_path_from_bloggable(@subnav_author) %>
+<%= bread_el @subnav_blog.display_name, blog_path_for(@subnav_blog) %>
+<%= bread_el truncate(@subnav_article.title, 20), article_path_for(@subnav_article), :current => controller.controller_name == 'articles' if @subnav_article && !@subnav_article.new_record? %>
 
-		<%= subnavi_el "New Article", article_path_from_blog(@blog, :prefix => :new), :current => controller.action_name == 'new' if @blog.editable_by?(viewer) %>
-		<%= subnavi_el "Edit", article_path_for(@article, :prefix => :edit), :current => controller.action_name == 'edit' if @article && !@article.new_record? && @article.editable_by?(viewer) %>
-		<%= subnavi_el "Clip", clip_path_from_widgetable(@article, :prefix => :new) if @article && !@article.new_record? && @article.published? %>
-
-		<%= navi_skin_info %>
-	</ul>
-</div>
+<% unless bare ||= false %>
+<%= subnavi_el "New Article", article_path_from_blog(@subnav_article.blog, :prefix => :new), :current => controller.action_name == 'new' if @subnav_blog.editable_by?(viewer) %>
+<%= subnavi_el "Edit", article_path_for(@subnav_article, :prefix => :edit), :current => controller.action_name == 'edit' if @subnav_article && !@subnav_article.new_record? && @subnav_article.editable_by?(viewer) %>
+<%= subnavi_el "Clip", clip_path_from_widgetable(@subnav_article, :prefix => :new) if @subnav_article && !@subnav_article.new_record? && @subnav_article.published? %>
+<% end %>

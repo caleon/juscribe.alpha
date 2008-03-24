@@ -15,6 +15,20 @@ class BlogsController < ApplicationController
     end
   end
   
+  def latest_articles
+    return unless get_bloggable
+    @blog = @bloggable.blogs.primary_find(params[:blog_id], :include => [:permission, :latest_articles])
+    raise ActiveRecord::RecordNotFound if @blog.nil? || !authorize(@blog)
+    @articles = @blog.latest_articles
+    @page_title = "Latest Articles from #{@blog.name}"
+    respond_to do |format|
+      format.html
+      format.rss { render :layout => false }
+    end
+  rescue ActiveRecord::RecordNotFound
+    display_error(:message => "That Blog could not be found. Please check the address.")
+  end
+  
   def show
     return unless setup([:permission, :primary_article])
     find_opts = get_find_opts

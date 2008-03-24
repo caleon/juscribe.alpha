@@ -1,6 +1,16 @@
 module ArticlesHelper
+  def set_subnav_article
+    @subnav_article = @article || @depictable || @widgetable || @commentable
+    @subnav_blog = @blog || @subnav_article.blog
+    @subnav_author = @author || @subnav_blog.bloggable
+  end
+  
   def article_path_for(article, opts={})
-    instance_eval %{ #{opts[:prefix] ? "#{opts[:prefix]}_" : ''}#{article.path_name_prefix}_path(article.to_path) }      
+    instance_eval %{ #{opts[:prefix] ? "#{opts[:prefix]}_" : ''}#{article.path_name_prefix}_#{opts[:url] ? 'url' : 'path'}(article.to_path) }      
+  end
+  
+  def article_url_for(article, opts={})
+    article_path_for(article, opts.merge(:url => true))
   end
   
   def article_path_from_blog(blog, opts={})
@@ -11,8 +21,8 @@ module ArticlesHelper
     instance_eval %{ #{opts[:prefix] ? "#{opts[:prefix]}_" : ''}#{blog.path_name_prefix}_articles_path(blog.to_path(true)) }
   end
   
-  def latest_article_url_for(author, opts={})
-    instance_eval %{ #{opts[:prefix] ? "#{opts[:prefix]}_" : ''}#{author.path_name_prefix}_latest_articles_url(author) }
+  def latest_articles_url_for(object, opts={})
+    instance_eval %{ #{opts[:prefix] ? "#{opts[:prefix]}_" : ''}#{object.path_name_prefix}_latest_articles_url(object.to_path(true)) }
   end
   
   def article_intro

@@ -12,7 +12,6 @@ class ApplicationController < ActionController::Base
   filter_parameter_logging :password, :password_confirmation
   before_filter :load_config, :get_viewer
   layout :get_layout
-  #layout 'standard'
   helper :all  
   
   private
@@ -44,7 +43,6 @@ class ApplicationController < ActionController::Base
   end
   
   def get_layout
-    set_layoutable
     @layoutable.layout || 'standard'
   rescue NoMethodError
     'standard'

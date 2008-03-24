@@ -1,4 +1,4 @@
-<h3>Upcoming Events</h3>
+<h3>Upcoming Events<%= rss_link_for("#{@user}'s Upcoming Events", formatted_user_events_path(user.to_path(true).merge(:format => :rss)) ) %></h3>
 <ul>
 	<%= render :partial => 'events/event_line', :collection => upcoming_events %>
 </ul>

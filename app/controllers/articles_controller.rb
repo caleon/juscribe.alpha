@@ -28,17 +28,18 @@ class ArticlesController < ApplicationController
       elsif params[:group_id]
         @author = Group.primary_find(params[:group_id])
       end
+      @articles = @author.latest_articles
     else
-      return unless setup(:permission)
+      return unless get_blog
+      @articles = @blog.articles.find(:all, :order => 'id DESC', :limit => 10)
+      raise
     end
-    @articles = @author.latest_articles
     @page_title = "Latest articles by #{@author.display_name}"
     respond_to do |format|
-      format.html
       format.rss { render :layout => false }
     end
   rescue ActiveRecord::RecordNotFound, NoMethodError
-    display_error(:message => 'That author could not be found. Please check the address.')
+    display_error(:message => 'That author/blog could not be found. Please check the address.')
   end
   
   def show
