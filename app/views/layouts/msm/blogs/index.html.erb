@@ -26,7 +26,7 @@
 
 	<div class="msm_main_column-b msm_main_column">
 		<% collection = @blogs[1..7].map{|bl| bl.primary_article}.compact rescue [] %>
-		<%= render :partial => custom_partial('latest_blogs'),
+		<%= render :partial => custom_partial('blogs/latest_blogs'),
 		 					 :layout => custom_partial('inner'),
 		 					 :locals => { :bloggable => @bloggable,
 														:collection => collection } unless collection.blank? %>

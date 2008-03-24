@@ -10,7 +10,7 @@ class Article < ActiveRecord::Base
   validates_presence_of :blog_id, :user_id, :title, :permalink, :content
   validates_length_of :title, :in => (3..70)
   validate do |article|
-    article.errors.add(:publish_at, "must be in the future") unless (article.published? || article.publish_at.nil? || article.publish_at > Time.now)
+    article.errors.add(:published_at, "must be in the future") unless (article.published? || article.published_at.nil? || article.published_at > Time.now)
   end
   validates_uniqueness_of :permalink, :scope => :blog_id
   validates_with_regexp :permalink, :title, :message => "uses an incorrect format: please edit your title"
@@ -47,6 +47,7 @@ class Article < ActiveRecord::Base
     [ self.blog.path_name_prefix, self.published? ? 'article' : 'draft' ].join('_')
   end
   
+  def import?; self.imported_at?; end
   def draft?; !self.published_at? && !self.published_date?; end
   def published?; self.published_at? && self.published_date?; end
   def publish!
@@ -74,13 +75,15 @@ class Article < ActiveRecord::Base
     self.published_date, self.published_at = datetime.to_date, datetime
   end
   def publish=(val) # This is for automatically setting published fields from form data.
-    self.publish if [ "Publish", "yes", "Yes", "y", "Y", "1", 1, "true", true].include?(val)
+    self.publish if [ "Publish Now", "yes", "Yes", "y", "Y", "1", 1, "true", true].include?(val)
   end
     
   def widgetable?; self.published?; end
   
   def accessible_by?(user)
-    self.user == user || (self.draft? && (self.editable_by?(user) || self.blog.editable_by?(user))) || (!self.draft? && !future_publication? && super)
+    (user && user.admin?) || self.user == user ||
+    (self.draft? && (self.editable_by?(user) || self.blog.editable_by?(user))) ||
+    (!self.draft? && !future_publication? && super)
   end
   
   def self.primary_find(*args); find_by_params(*args); end

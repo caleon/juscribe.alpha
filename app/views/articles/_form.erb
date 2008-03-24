@@ -8,12 +8,12 @@
 	<%= f.label :blog_id, 'Publish to blog:'%>
 	<%= f.select :blog_id, @author.all_blogs.map{|b| [ b.name, b[:id] ] } %>
 	<br />
-	<%= f.label :publish_at, 'Schedule publication for:' %>
-	<%= f.datetime_select :publish_at, :start_year => Time.now.year, :include_blank => true %>
+	<%= f.label :published_at, 'Schedule publication for:' %>
+	<%= f.datetime_select :published_at, :start_year => Time.now.year, :include_blank => true %>
 	<br />
 <% end %>
 <% if @article.new_record? || @article.draft? %>
 <input type="submit" name="article[publish]" value="Publish Now" />
 <% end %>
 
-<input type="submit" name="article[publish]" value="Save as Draft" />
+<input type="submit" name="article[publish]" value="Save<% unless @article.published? %> as Draft<% end %>" />
