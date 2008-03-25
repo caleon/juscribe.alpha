@@ -62,6 +62,9 @@
 	z-index: 50;
 	top: 0px;
 	left: 0px;
+}
+
+#crop_overlay {
 	background: url(/images/kropper/crop_stencil.png);
 }
 
@@ -74,6 +77,19 @@
 	z-index: 40;
 	top: 100px;
 	left: 100px;
+}
+
+#article-picture_crop #crop_overlay,
+#blog-picture_crop #crop_overlay {
+	background: url(/images/kropper/article_crop_stencil.png);
+}
+
+#article-picture_crop #crop_stencil,
+#blog-picture_crop #crop_stencil {
+	width: 250px;
+	height: 200px;
+	top: 100px;
+	left: 75px;
 }
 
 #image_dragger {

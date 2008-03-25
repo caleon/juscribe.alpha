@@ -1,3 +1,1 @@
-<% @pictures.each do |pic| %>
-	<%= link_to pic.display_name, picture_path_for(pic, :prefix => 'edit') %>
-<% end %>
+<%= render :partial => 'index' %>

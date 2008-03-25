@@ -88,19 +88,6 @@ class Article < ActiveRecord::Base
   
   def self.primary_find(*args); find_by_params(*args); end
   
-  #def self.find_by_params(params, opts={})
-  #  params.symbolize_keys!
-  #  for_association = opts.delete(:for_association)
-  #  if !params.keys.include?('year') && params.keys.include?('article_id') && params.keys.include?('user_id')
-  #    arts = find_any_by_permalink_and_nick(params[:permalink], params[:user_id], opts)
-  #    arts.detect{|art| art.draft? } || nil
-  #  else
-  #    date = Date.new(params[:year].to_i, params[:month].to_i, params[:day].to_i) rescue (raise params.inspect)
-  #    return nil unless user = User.find_by_nick(params[:user_id])
-  #    find(:first, { :conditions => [ "articles.user_id = ? AND published_date = ? AND permalink = ?", user.id, date.to_formatted_s(:db), for_association ? params[:article_id] : params[:id] ] }.merge(opts))
-  #  end
-  #end
-  
   def self.find_by_params(params, opts={})
     params.symbolize_keys!
     for_association = opts.delete(:for_association)

@@ -2,6 +2,7 @@
 	http://localhost:3000/stylesheets/main.css?1206057809
 	http://localhost:3000/stylesheets/main.css?1206178781
 	http://localhost:3000/stylesheets/main.css?1206187976
+	http://localhost:3000/stylesheets/main.css?1206320100
 */
 
 #wrapper {
@@ -132,6 +133,12 @@
 
 #canvas {
 	
+}
+
+p.spaceMessaging {
+	display: block;
+	padding: 4em;
+	border: 12px dashed #eee;
 }
 
 .flashBox {

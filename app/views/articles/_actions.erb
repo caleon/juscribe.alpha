@@ -1,4 +1,4 @@
-<% content_tag :ul, :id => "#{dom_id(@article)}-actions" do %>
+<% content_tag :ul, :id => "#{dom_id(@article)}-actions", :class => 'article-actions' do %>
 	<%= content_tag :li, (link_to 'Publish', article_path_for(@article, :prefix => 'publish'), :method => :put) if !@article.published? && @article.editable_by?(viewer) %>
 	<%= content_tag :li, (link_to 'Clip', clip_path_from_widgetable(@article, :prefix => 'new')) if @article.published? %>
 	<%= content_tag :li, (link_to 'Edit', article_path_for(@article, :prefix => 'edit')) if @article.editable_by?(viewer) %>

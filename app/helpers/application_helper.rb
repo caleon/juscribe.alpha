@@ -21,7 +21,7 @@ module ApplicationHelper
   end
   
   def get_canvas_class
-    "#{controller.controller_name}-#{controller.action_name}"
+    "#{controller.controller_name}-#{controller.action_name} #{controller.action_name}"
   end
   
   def warning_field

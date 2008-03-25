@@ -3,6 +3,8 @@
 	http://localhost:3000/stylesheets/skins/msm.css?1206077030
 	http://localhost:3000/stylesheets/skins/msm.css?1206180586
 	http://localhost:3000/stylesheets/skins/msm.css?1206322095
+	http://localhost:3000/stylesheets/skins/msm.css?1206327300
+	http://localhost:3000/stylesheets/skins/msm.css?1206403946
 */
 
 #canvas {
@@ -153,10 +155,10 @@
 	}
 	
 	.msm_layout form.articleForm textarea {
-		width: 500px;
-		height: 300px;
+		width: 525px;
+		height: 700px;
 		padding: 9px;
-		line-height: 1.2em;
+		line-height: 2em;
 	}
 	
 	/* This can be made to specify an article pic */
@@ -249,6 +251,20 @@
 		clear: both;
 		min-height: 50px;
 		background-color: #fff;
+	}
+	
+	#msm_main_column .msm_row {
+		padding: 18px;
+	}
+	
+	#canvas.users-show #msm_main_column .msm_row,
+	#canvas.articles-index #msm_main_column .msm_row,
+	#canvas.blogs-index #msm_main_column .msm_row,
+	#canvas.blogs-show #msm_main_column .msm_row,
+	#canvas.events-index #msm_main_column .msm_row,
+	#canvas.thoughtlets-index #msm_main_column .msm_row,
+	#canvas.galleries-index #msm_main_column .msm_row {
+		padding: 0;
 	}
 	
 	.msm_main_column {
@@ -472,19 +488,18 @@
 	#canvas.users-show form.commentForm fieldset,
 	#canvas.blogs-index form.commentForm fieldset,
 	#canvas.blogs-show form.commentForm fieldset {
-		border: 1px 0 0;
+		border-width: 1px 0 0;
 		margin: 18px -9px -9px;
 	}
 	#canvas.users-show form.commentForm textarea,
 	#canvas.blogs-index form.commentForm textarea,
 	#canvas.blogs-show form.commentForm textarea {
-		width: 200px;
+		width: 300px;
 	}
 	
-	#canvas.users-edit form {
-		padding: 18px;
+	#canvas.articles-show form.commentForm textarea {
+		width: 550px;
 	}
-	
 
 /* @end */
 
@@ -493,10 +508,6 @@
 	#canvas.articles-show span.timestamp {
 		color: #CA0002;
 		font-size: 88%;
-	}
-	
-	#canvas.articles-show .msm_row {
-		padding: 18px;
 	}
 	
 	#canvas.articles-show a.article_picture_link {
@@ -523,5 +534,13 @@
 		margin: 0 0 17px;
 		line-height: 1.3em;
 	}
+	
+	.msm_layout .article-actions {
+		clear: both;
+	}
 
 /* @end */
+
+.msm_layout img.pictureShow {
+	width: 580px;
+}

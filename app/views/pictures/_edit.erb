@@ -1,0 +1,65 @@
+<%= error_messages_for :picture -%>
+
+<!-- This sets up the cropping UI when the document loads (@onload is referenced in the layout file).
+The param passed is the max zoom level for the cropping UI. -->
+<% add_onload('setup_image_cropper(6)') -%>
+
+<!-- alternate css for IE6 to get around its goddamned lack of support for png transparency. -->
+<!--[if IE 6]>
+	<style type="text/css">
+		#crop_canvas{
+			background: url(/images/kropper/crop_stencil.png);
+		}
+		#crop_overlay{
+			background: url(/images/kropper/crop_stencil.gif);
+		}
+		#zoom_slider_handle{
+			background: url(/images/kropper/slider.gif);
+		}
+	</style>
+<![endif]-->
+
+<div id="<%= @picture.depictable_type.underscore %>-picture_crop">
+	<% form_for :picture, @picture, :url => picture_path_for(@picture), :html => { :method => :put } do |f| %>
+			<%= hidden_field_tag 'picture_crop[crop_left]', '0', :id => "picture_crop_crop_left" %>
+			<%= hidden_field_tag 'picture_crop[crop_top]', "0", :id => 'picture_crop_crop_top' %>
+			<%= hidden_field_tag "picture_crop[crop_width]", "1", :id => 'picture_crop_crop_width' %>
+			<%= hidden_field_tag "picture_crop[crop_height]", "1", :id => 'picture_crop_crop_height' %>
+			<%= hidden_field_tag "picture_crop[stencil_width]", "1", :id => 'picture_crop_stencil_width' %>
+			<%= hidden_field_tag "picture_crop[stencil_height]", "1", :id => 'picture_crop_stencil_height' %>
+			<%= hidden_field_tag "picture_crop[resize_to_stencil]", "1", :id => 'picture_crop_resize_to_stencil' %>
+			<%= hidden_field_tag "crop_cancel", "1" %>
+
+		<!-- The dimensions and appearance of these elements are all defined in kropper.css -->
+		<div id="image_cropper">
+		    <div id="crop_header">Crop your image</div>
+		    <div id="crop_canvas">
+		        <div id="crop_loading_overlay">
+					<h2>loading...</h2>
+					<p>(If this message doesn't disappear automatically, please make sure your browser has Javascript turned on.)</p>
+				</div>
+		        <div id="crop_overlay"></div>
+		        <div id="crop_stencil"></div>
+		        <div id="image_dragger"></div>
+				<%= image_tag(@picture.public_filename, :id => "uncropped_image" ) %>
+		    </div>
+		    <div id="crop_footer">
+		    	<div id="zoom_slider">
+		        	<div id="zoom_slider_handle"></div>
+		    	</div>
+				<div id="crop_buttons">
+					<%= f.submit "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Crop and Update&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", :id => "crop_submit_btn" %>
+					<input type="submit" name="picture[do_crop]" value="Crop" id="do_crop_btn_crop" />
+					<input type="submit" name="picture[do_crop]" value="Update" id="do_crop_btn_update" />
+					<input type="button" value="Cancel" id="crop_cancel_btn" onclick="this.form.crop_cancel.value='true';this.form.submit();" />
+					<input type="button" value="&nbsp;Reset&nbsp;" id="crop_reset_btn" />
+				</div>
+			</div>
+		    <div id="crop_subfooter">
+		        	<a href="http://kropper.captchr.com">kropper v1.0: an open-source image cropper for Rails apps</a>
+			</div>
+		</div>
+
+	<% end -%>
+	
+</div>
