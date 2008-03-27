@@ -1,7 +1,6 @@
 set :application, "juscribe.com"
 set :port, 2600
 
-set :mongrel_conf, "#{current_path}/config/mongrel_cluster.yml"
 ssh_options[:paranoid] = false
 set :user, "colin"
 set :runner, user # user that strts up the mongrel instances. change later.
@@ -12,6 +11,7 @@ set :user_sudo, false
 # via the :deploy_to variable:
 # set :deploy_to, "/var/www/#{application}"
 set :deploy_to, "/home/colin/public_html/#{application}"
+set :mongrel_conf, "#{current_path}/config/mongrel_cluster.yml" # Moved down here to fix a capistrano bug
 
 # If you aren't using Subversion to manage your source code, specify
 # your SCM below:
@@ -29,7 +29,7 @@ role :web, application
 role :db,  application, :primary => true
 
 # moves over config files after deploying the code
-task :update_config, :roles => [ :app ] do
-  run "cp -Rf #{shared_path}/config/* #{release_path}/config/"
-end
-after "deploy:update_code", :update_config
+#task :update_config, :roles => [ :app ] do
+#  run "cp -Rf #{shared_path}/config/* #{release_path}/config/"
+#end
+#after "deploy:update_code", :update_config
