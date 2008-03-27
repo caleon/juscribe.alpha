@@ -1,6 +1,6 @@
 ---
 user: colin
-group: ~
+group: colin
 log_file: log/mongrel.log
 cwd: /home/colin/public_html/juscribe.com/current/
 port: 3000
