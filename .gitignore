@@ -1,9 +1,5 @@
 .DS_Store
 attachment_fu_plugin.sqlite3.db
-config/amazon_s3.yml
-config/database.yml
-config/mongrel_cluster.yml
-config/nginx.conf
 coverage/*
 log/*.log
 public/images/uploads/*

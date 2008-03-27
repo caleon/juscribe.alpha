@@ -1,5 +1,6 @@
 set :application, "juscribe.com"
 set :port, 2600
+set(:mongrel_conf) { "#{current_path}/config/mongrel_cluster.yml" } # Reformatted to fix a capistrano bug
 
 ssh_options[:paranoid] = false
 set :user, "colin"
@@ -11,7 +12,6 @@ set :user_sudo, false
 # via the :deploy_to variable:
 # set :deploy_to, "/var/www/#{application}"
 set :deploy_to, "/home/colin/public_html/#{application}"
-set :mongrel_conf, "#{current_path}/config/mongrel_cluster.yml" # Moved down here to fix a capistrano bug
 
 # If you aren't using Subversion to manage your source code, specify
 # your SCM below:
