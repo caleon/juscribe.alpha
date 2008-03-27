@@ -1,8 +1,8 @@
 ---
-user: ~
+user: colin
 group: ~
 log_file: log/mongrel.log
-cwd: /home/colin/public_html/juscribe.com/
+cwd: /home/colin/public_html/juscribe.com/current/
 port: 3000
 environment: production
 pid_file: tmp/pids/mongrel.pid
