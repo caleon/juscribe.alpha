@@ -1,5 +1,6 @@
 .DS_Store
 attachment_fu_plugin.sqlite3.db
+config/database.yml
 coverage/*
 log/*.log
 public/images/uploads/*

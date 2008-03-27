@@ -29,7 +29,7 @@ role :web, application
 role :db,  application, :primary => true
 
 # moves over config files after deploying the code
-#task :update_config, :roles => [ :app ] do
-#  run "cp -Rf #{shared_path}/config/* #{release_path}/config/"
-#end
-#after "deploy:update_code", :update_config
+task :update_config, :roles => [ :app ] do
+  run "cp -Rf #{shared_path}/config/* #{release_path}/config/"
+end
+after "deploy:update_code", :update_config
