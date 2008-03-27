@@ -19,6 +19,7 @@ The param passed is the max zoom level for the cropping UI. -->
 	</style>
 <![endif]-->
 
+
 <div id="<%= @picture.depictable_type.underscore %>-picture_crop">
 	<% form_for :picture, @picture, :url => picture_path_for(@picture), :html => { :method => :put } do |f| %>
 			<%= hidden_field_tag 'picture_crop[crop_left]', '0', :id => "picture_crop_crop_left" %>
@@ -29,6 +30,7 @@ The param passed is the max zoom level for the cropping UI. -->
 			<%= hidden_field_tag "picture_crop[stencil_height]", "1", :id => 'picture_crop_stencil_height' %>
 			<%= hidden_field_tag "picture_crop[resize_to_stencil]", "1", :id => 'picture_crop_resize_to_stencil' %>
 			<%= hidden_field_tag "crop_cancel", "1" %>
+			<%# f.text_field :filename No. changing this doesn't change filenames of thumbnails... %>
 
 		<!-- The dimensions and appearance of these elements are all defined in kropper.css -->
 		<div id="image_cropper">

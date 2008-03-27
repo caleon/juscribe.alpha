@@ -3,8 +3,6 @@ class Article < ActiveRecord::Base
   
   belongs_to :user # creator
   belongs_to :blog
-  has_many :pictures, :as => :depictable
-  has_one :primary_picture, :class_name => 'Picture', :as => :depictable, :order => :position
   has_many :comments, :as => :commentable
     
   validates_presence_of :blog_id, :user_id, :title, :permalink, :content

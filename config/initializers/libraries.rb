@@ -6,6 +6,7 @@
 require 'image_science'
 ActiveRecord::Base.send(:include, ActiveRecord::Validations::FormatValidations)
 ActiveRecord::Base.send(:include, ActiveRecord::Acts::Accessible)
+ActiveRecord::Base.send(:include, ActiveRecord::Acts::Depictable)
 ActiveRecord::Base.send(:include, ActiveRecord::Acts::Itemizable)
 ActiveRecord::Base.send(:include, ActiveRecord::Acts::Taggable)
 ActiveRecord::Base.send(:include, ActiveRecord::Acts::Widgetable)

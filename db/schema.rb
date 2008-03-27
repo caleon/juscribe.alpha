@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 62) do
+ActiveRecord::Schema.define(:version => 63) do
 
   create_table "articles", :force => true do |t|
     t.string   "title"
@@ -161,6 +161,7 @@ ActiveRecord::Schema.define(:version => 62) do
     t.integer  "width"
     t.integer  "height"
     t.string   "source"
+    t.integer  "parent_id"
   end
 
   create_table "projects", :force => true do |t|

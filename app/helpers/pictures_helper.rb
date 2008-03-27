@@ -33,7 +33,14 @@ module PicturesHelper
     includes.push(record) if includes.last != record
     with = opts.delete(:with) || {}
     
-    picture = record.primary_picture rescue record.pictures.first
+    case opts[:type]
+    when nil
+      picture = record.full_primary_picture
+    when :thumb
+      picture = record.thumbs.first
+    when :feature
+      picture = record.primary_picture
+    end
     if picture
       dom_class_str = [ dom_class(picture, :include => includes), with[:class] ].compact.join(' ')
       dom_id_str = dom_id(picture, :include => includes)

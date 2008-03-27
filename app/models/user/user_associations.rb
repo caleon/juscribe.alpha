@@ -32,8 +32,6 @@ class User < ActiveRecord::Base
   has_many :latest_pictures, :class_name => 'Picture', :order => 'pictures.id DESC', :limit => 10
   has_many :galleries, :order => 'galleries.id DESC'
   has_many :permission_rules, :order => 'permission_rules.id DESC'
-  has_many :pictures, :as => :depictable, :order => :position, :dependent => :nullify
-  has_one :primary_picture, :class_name => 'Picture', :as => :depictable, :order => :position
   has_many :memberships, :dependent => :destroy
   has_many :groups, :through => :memberships
   has_many :owned_groups, :class_name => 'Group', :dependent => :nullify
