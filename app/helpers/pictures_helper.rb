@@ -35,7 +35,7 @@ module PicturesHelper
     
     case opts[:type]
     when nil
-      picture = record.full_primary_picture
+      picture = record.primary_picture.thumbnails.find_by_thumbnail('feature')
     when :thumb
       picture = record.thumbs.first
     when :feature

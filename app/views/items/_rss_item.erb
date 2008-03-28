@@ -14,7 +14,7 @@
 <%# FIXME WHEN READY %>
 <% else %>
 
-<% rss_item = parseFeed(url) -%>
+<% rss_item = parseFeed('http://cdmjimmy.blogspot.com/feeds/posts/default?alt=rss') -%>
 <h3><span class="articleBlog">RSS:</span>From <%= link_to rss_item.feed_title, rss_item.feed_link %> by <%= rss_item.item_author %></h3>
 <h4><%= link_to rss_item.item_title, rss_item.item_link %></h4>
 <p class="articleContent">
