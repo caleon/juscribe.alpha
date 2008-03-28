@@ -2,3 +2,4 @@
 <% if motd_message ||= Article.motd %>
 <%= format_article(motd_message, :without_intro => true) %>
 <%= byline_for(motd_message) %>
+<% end %>
