@@ -9,6 +9,7 @@ module ActiveRecord::Acts::Depictable
         pic.has_many :pictures, :dependent => :nullify, :conditions => 'pictures.thumbnail IS NULL'
         pic.has_one :primary_picture, :conditions => 'pictures.thumbnail IS NULL'
         pic.has_many :thumbs, :conditions => ["pictures.thumbnail = ?", 'thumb']
+        pic.has_many :latest_pictures, :order => 'pictures.id DESC', :limit => 10, :conditions => 'pictures.thumbnail IS NULL'
       end   
       
       include ActiveRecord::Acts::Depictable::InstanceMethods

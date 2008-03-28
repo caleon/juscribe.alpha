@@ -29,7 +29,6 @@ class User < ActiveRecord::Base
            :order => 'messages.id DESC'
   has_many :owned_taggings, :class_name => 'Tagging', :dependent => :nullify
   has_many :owned_pictures, :class_name => 'Picture', :dependent => :nullify
-  has_many :latest_pictures, :class_name => 'Picture', :order => 'pictures.id DESC', :limit => 10
   has_many :galleries, :order => 'galleries.id DESC'
   has_many :permission_rules, :order => 'permission_rules.id DESC'
   has_many :memberships, :dependent => :destroy
