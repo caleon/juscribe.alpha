@@ -204,11 +204,4 @@ class ArticlesController < ApplicationController
   rescue ActiveRecord::RecordNotFound
     display_error(:message => 'That blog could not be found. Please check the address.') and return false
   end
-  
-  def article_url_for(article)
-    prefix = article.blog.path_name_prefix
-    prefix += article.published? ? '_article' : '_draft'
-    instance_eval %{ #{prefix}_url(article.to_path) }
-  end
-  
 end

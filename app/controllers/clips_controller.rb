@@ -122,12 +122,4 @@ class ClipsController < ApplicationController
   rescue ActiveRecord::RecordNotFound
     display_error(:message => opts[:message] || "That #{klass.to_s.humanize} could not be found. Please check the address.")
   end
-  
-  def clip_url_for(clip, acshun=nil)
-    instance_eval %{ #{acshun ? "#{acshun}_" : ''}#{clip.path_name_prefix}_url(clip.to_path) }
-  end
-  
-  def widgetable_url_for(widgetable, acshun=nil)
-    instance_eval %{ #{acshun ? "#{acshun}_" : ''}#{widgetable.path_name_prefix}_url(widgetable.to_path) }
-  end
 end

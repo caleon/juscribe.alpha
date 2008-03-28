@@ -131,6 +131,6 @@ class PicturesController < ApplicationController
   end
   
   def setup_depictable_vars
-    
+    # TODO: Huh?
   end
 end

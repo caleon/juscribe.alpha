@@ -93,6 +93,12 @@ class ApplicationController < ActionController::Base
     instance_eval %{ #{acshun ? "#{acshun}_" : ''}#{depictable.path_name_prefix}_url(depictable.to_path) }
   end
   
+  def article_url_for(article)
+    prefix = article.blog.path_name_prefix
+    prefix += article.published? ? '_article' : '_draft'
+    instance_eval %{ #{prefix}_url(article.to_path) }
+  end
+  
   def blog_url_for(blog, acshun=nil)
     instance_eval %{ #{acshun ? "#{acshun}_" : ''}#{blog.path_name_prefix}_url(blog.to_path) }
   end
@@ -107,6 +113,14 @@ class ApplicationController < ActionController::Base
   
   def commentable_url_for(commentable, acshun=nil)
     instance_eval %{ #{acshun ? "#{acshun}_" : ''}#{commentable.path_name_prefix}_url(commentable.to_path) }
+  end
+  
+  def clip_url_for(clip, acshun=nil)
+    instance_eval %{ #{acshun ? "#{acshun}_" : ''}#{clip.path_name_prefix}_url(clip.to_path) }
+  end
+  
+  def widgetable_url_for(widgetable, acshun=nil)
+    instance_eval %{ #{acshun ? "#{acshun}_" : ''}#{widgetable.path_name_prefix}_url(widgetable.to_path) }
   end
   
   ######################################################################
