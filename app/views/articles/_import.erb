@@ -1,0 +1,7 @@
+<% form_tag articles_path_from_blog(@blog, :prefix => :bulk_create), :method => :post do %>
+	<label for="import_url">URL of source</labe>
+	<%= text_field_tag 'import_url', 'http://', :id => 'import_url', :size => 55 %>
+	<label for="import_limit">Number of latest posts to import</label>
+	<%= text_field_tag 'import_limit', nil, :id => 'import_limit', :size => 2, :max_length => 3 %>
+	<%= submit_tag %>
+<% end %>

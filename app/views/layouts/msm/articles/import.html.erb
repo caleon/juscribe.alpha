@@ -1,0 +1,25 @@
+<% set_meta_keywords!(@author.display_name, @blog.name) -%>
+<% set_link_author!(@author) -%>
+
+<% content_for :header do -%>
+	<div class="msm_row">
+		<div class="msm_column msm_column-a">
+			<span class="timestamp">Time: <%= Time.now.to_s %></span>
+			<h2><%= @page_title %></h2>				
+		</div>
+		<div class="msm_column msm_column-b">
+
+		</div>
+	</div>
+<% end -%>
+	
+<div class="last msm_row" id="msm_row-1">
+	<%= render :partial => 'import' %>
+</div>
+	
+<% content_for :side_column do -%>
+	<% with_options :layout => :framed do |framed| %>
+		<%# set to author instead framed.wrender :user %>
+		<%= framed.wrender :google_ads %>
+	<% end %>
+<% end -%>

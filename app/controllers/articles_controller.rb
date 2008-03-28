@@ -1,3 +1,6 @@
+require 'rss/2.0'
+require 'open-uri'
+
 class ArticlesController < ApplicationController
   use_shared_options :collection_layoutable => :@blog
   # setup will handle authorization. as well as defaults from common_methods.rb
@@ -102,8 +105,29 @@ class ArticlesController < ApplicationController
   def bulk_create
     return unless get_blog && authorize(@blog, :editable => true)
     @page_title = "Import blog entries"
+    # Check for the latest article with a post that has special marking
+    # regex check param for import_url
+    limit = params[:import_limit].to_i
+    # This is just for blogspot at moment
+    @imported_count = 0
+    open(params[:import_url]) do |http|
+      response = http.read
+      result = RSS::Parser.parse(response, false)
+      result.items[0..limit].each do |itm|
+        day, month, year = item.pubDate.match(/(\d{1,2})\s([a-zA-Z]{3})\s(\d{4})/).to_a[1..-1]
+        published_at = Date.new(year.to_i, Date::ABBR_MONTHNAMES.index(month), day.to_i)
+        # adjust for time zone
+        imported_article = Article.new(:title => itm.title, :user => get_viewer, :content => itm.description,
+                                       :published_at => published_at, :imported_at => Time.now, :blog => @blog)
+        @imported_count += 1 if imported_article.save
+      end
+    end if limit > 0
     
-    # TODO: Stub
+    msg = "Of the posts found, #{@imported_count} were successfully imported."
+    respond_to do |format|
+      format.html { flash[:notice] = msg; redirect_to blog_url_for(@blog) }
+      format.js { flash.now[:notice] = msg }
+    end
   end
   
   def edit

@@ -79,12 +79,26 @@ class ApplicationController < ActionController::Base
     params[:picture] && !params[:picture][:uploaded_data].blank?
   end
   
+  ######################################################################
+  ##                                                                  ##
+  ##    U R L   F O Rs                                                ##
+  ##                                                                  ##
+  ######################################################################
+  
   def picture_url_for(picture, acshun=nil)
     instance_eval %{ #{acshun ? "#{acshun}_" : ''}#{picture.path_name_prefix}_url(picture.to_path) }
   end
   
   def depictable_url_for(depictable, acshun=nil)
     instance_eval %{ #{acshun ? "#{acshun}_" : ''}#{depictable.path_name_prefix}_url(depictable.to_path) }
+  end
+  
+  def blog_url_for(blog, acshun=nil)
+    instance_eval %{ #{acshun ? "#{acshun}_" : ''}#{blog.path_name_prefix}_url(blog.to_path) }
+  end
+  
+  def bloggable_url_for(bloggable, acshun=nil)
+    instance_eval %{ #{acshun ? "#{acshun}_" : ''}#{bloggable.path_name_prefix}_url(bloggable.to_path) }
   end
   
   ######################################################################

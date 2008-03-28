@@ -138,12 +138,5 @@ class BlogsController < ApplicationController
     display_error(:message => opts[:message] || "That #{bloggable_class} could not be found. Please check the address.")
     false
   end
-  
-  def blog_url_for(blog, acshun=nil)
-    instance_eval %{ #{acshun ? "#{acshun}_" : ''}#{blog.path_name_prefix}_url(blog.to_path) }
-  end
-  
-  def bloggable_url_for(bloggable, acshun=nil)
-    instance_eval %{ #{acshun ? "#{acshun}_" : ''}#{bloggable.path_name_prefix}_url(bloggable.to_path) }
-  end
+
 end
