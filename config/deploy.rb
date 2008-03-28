@@ -33,3 +33,8 @@ task :update_config, :roles => [ :app ] do
   run "cp -Rf #{shared_path}/config/* #{release_path}/config/"
 end
 after "deploy:update_code", :update_config
+
+task :symlink_shared_media, :roles => [ :app ] do
+  run "ln -s #{shared_path}/uploads #{release_path}/public/images/uploads"
+end
+after "deploy:update_code", :symlink_shared_media

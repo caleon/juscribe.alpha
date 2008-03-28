@@ -16,6 +16,8 @@ class User < ActiveRecord::Base
     User.find(:all, :conditions => ["admin = ?", true], :select => :id).map(&:id)
   end
   
+  def user; self; end
+  
   def display_name; self.nick; end
   
   def self.primary_find(*args)
@@ -62,7 +64,7 @@ class User < ActiveRecord::Base
   
   def full_name #test
     self.first_name.to_s + " " +
-    (self.middle_initial ? "#{self.middle_initial}. " : " ") +
+    (self.middle_initial.blank? ? "" : "#{self.middle_initial}. ") +
     self.last_name.to_s
   end
   
