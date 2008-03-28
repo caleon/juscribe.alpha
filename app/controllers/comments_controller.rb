@@ -52,7 +52,7 @@ class CommentsController < ApplicationController
       end
     else
       flash.now[:warning] = "There was an error commenting on #{@commentable.display_name}." +
-                            is_comment_spam ? " Our system thinks your comment was a spam. If you think this is a mistake, please contact the site administrator." : ""
+                            (is_comment_spam ? " Our system thinks your comment was a spam. If you think this is a mistake, please contact the site administrator." : "")
       respond_to do |format|
         format.html { trender :new }
         format.js { render :action => 'create_error' }
