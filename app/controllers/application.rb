@@ -101,6 +101,14 @@ class ApplicationController < ActionController::Base
     instance_eval %{ #{acshun ? "#{acshun}_" : ''}#{bloggable.path_name_prefix}_url(bloggable.to_path) }
   end
   
+  def comment_url_for(comment, acshun=nil)
+    instance_eval %{ #{acshun ? "#{acshun}_" : ''}#{comment.path_name_prefix}_url(comment.to_path) }
+  end
+  
+  def commentable_url_for(commentable, acshun=nil)
+    instance_eval %{ #{acshun ? "#{acshun}_" : ''}#{commentable.path_name_prefix}_url(commentable.to_path) }
+  end
+  
   ######################################################################
   ##                                                                  ##
   ##    E R R O R    H A N D L I N G                                  ##

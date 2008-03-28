@@ -1,6 +1,3 @@
-require 'rss/2.0'
-require 'open-uri'
-
 class ArticlesController < ApplicationController
   use_shared_options :collection_layoutable => :@blog
   # setup will handle authorization. as well as defaults from common_methods.rb
@@ -104,6 +101,8 @@ class ArticlesController < ApplicationController
   
   def bulk_create
     return unless get_blog && authorize(@blog, :editable => true)
+    require 'rss/2.0'
+    require 'open-uri'
     @page_title = "Import blog entries"
     # Check for the latest article with a post that has special marking
     # regex check param for import_url

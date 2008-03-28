@@ -3,6 +3,8 @@ class CommentsController < ApplicationController
   verify_login_on :new, :create, :edit, :update, :destroy
   authorize_on :index, :show, :new, :create, :edit, :update, :destroy
   
+  include Akismet
+  
   def index
     return unless get_commentable(:message => "Unable to find the object specified. Please check the address.") && authorize(@commentable)
     find_opts = get_find_opts(:order => 'id DESC')
@@ -38,14 +40,19 @@ class CommentsController < ApplicationController
   def create
     return unless get_commentable(:message => "Unable to find object to comment. Please check the address.") && authorize(@commentable)
     @page_title = "New Comment on #{@commentable.display_name}"
-    if @comment = @commentable.comments.create(params[:comment].merge(:user => get_viewer))
+
+    @comment = @commentable.comments.new(params[:comment].merge(:user => get_viewer))
+    is_comment_spam = is_spam?(:comment_content => @comment.body, :permalink => commentable_url_for(@commentable),
+                               :comment_type => 'comment')
+    if !is_comment_spam && @comment.save
       msg = "You have commented on #{@commentable.display_name}."
       respond_to do |format|
         format.html { flash[:notice] = msg; redirect_to commentable_url_for(@commentable) }
         format.js { flash.now[:notice] = msg }
       end
     else
-      flash.now[:warning] = "There was an error commenting on #{@commentable.display_name}."
+      flash.now[:warning] = "There was an error commenting on #{@commentable.display_name}." +
+                            is_comment_spam ? " Our system thinks your comment was a spam. If you think this is a mistake, please contact the site administrator." : ""
       respond_to do |format|
         format.html { trender :new }
         format.js { render :action => 'create_error' }
@@ -119,13 +126,5 @@ class CommentsController < ApplicationController
     @commentable
   rescue ActiveRecord::RecordNotFound
     display_error(:message => opts[:message] || "That #{klass.to_s.humanize} could not be found. Please check the address.")
-  end
-  
-  def comment_url_for(comment, acshun=nil)
-    instance_eval %{ #{acshun ? "#{acshun}_" : ''}#{comment.path_name_prefix}_url(comment.to_path) }
-  end
-  
-  def commentable_url_for(commentable, acshun=nil)
-    instance_eval %{ #{acshun ? "#{acshun}_" : ''}#{commentable.path_name_prefix}_url(commentable.to_path) }
   end
 end
