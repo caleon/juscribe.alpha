@@ -41,10 +41,10 @@ class User < ActiveRecord::Base
   end
   
   def deliver_pw_change_notification
-    Notifier.deliver_password_change_notification(self) if self.password_changed?
+    Notifier.deliver_password_change_notification(self) if APP[:mailer_on] && self.password_changed?
   end
   
   def deliver_email_change_notification
-    Notifier.deliver_email_change_notification(self) if self.email_changed?
+    Notifier.deliver_email_change_notification(self) if APP[:mailer_on] && self.email_changed?
   end
 end

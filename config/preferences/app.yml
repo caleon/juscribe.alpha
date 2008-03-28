@@ -2,6 +2,7 @@
 :name: juscribe
 :mailer_from: noreply@juscribe.com
 :contact: colin@juscribe.com
+:mailer_on: false
 :rating_increment: 1
 :limits:
   :memberships: 30
