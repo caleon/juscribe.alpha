@@ -1,5 +1,7 @@
 <% if !@messages.blank? %>
-	<%= render :partial => 'message', :collection => @messages %>
+	<% content_tag :ul, :class => 'user-messages messages', :id => "user-#{viewer.id}-messages" do %>
+		<%= render :partial => 'message', :collection => @messages %>
+	<% end %>
 <% else %>
 	<p class="spaceMessaging">
 		You have no messages in your inbox.
