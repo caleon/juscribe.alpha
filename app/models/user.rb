@@ -12,6 +12,10 @@ class User < ActiveRecord::Base
   attr_protected :nick, :email, :password_salt, :password_hash, :type
   attr_accessor :tos_agreement
   
+  def self.admin_ids
+    User.find(:all, :conditions => ["admin = ?", true], :select => :id).map(&:id)
+  end
+  
   def display_name; self.nick; end
   
   def self.primary_find(*args)

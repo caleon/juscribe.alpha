@@ -1,8 +1,4 @@
 <h3>A word from the creator of Juscribe</h3>
-<p class="articleContent">
-	Hello.
-</p>
-<p class="articleContent">
-	I'm pleased to announce the grand release of Juscribe.com. This is a project I briefly started 5 years ago that finally found the opportune time to re-emerge this year. I hope you enjoy the social blogging platform and hope that it'll be as functional as it is amusing.
-</p>
-<%= byline_for(Article.find(:first)) rescue '' %>
+<% if motd_message ||= Article.motd %>
+<%= format_article(motd_message, :without_intro => true) %>
+<%= byline_for(motd_message) %>

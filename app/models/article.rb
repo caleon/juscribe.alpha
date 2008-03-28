@@ -83,7 +83,7 @@ class Article < ActiveRecord::Base
     (self.draft? && (self.editable_by?(user) || self.blog.editable_by?(user))) ||
     (!self.draft? && !future_publication? && super)
   end
-  
+    
   def self.primary_find(*args); find_by_params(*args); end
   
   def self.find_by_params(params, opts={})
@@ -109,6 +109,10 @@ class Article < ActiveRecord::Base
     else
       []
     end
+  end
+  
+  def self.motd
+    find(:first, :conditions => ["articles.user_id IN (#{User.admin_ids.join(', ')})"], :order => 'articles.id DESC')
   end
   
   def self.permalink_for(name)
