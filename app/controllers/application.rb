@@ -10,7 +10,7 @@ class ApplicationController < ActionController::Base
   # Uncomment the :secret if you're not using the cookie session store
   protect_from_forgery# :secret => 'a241500281274090ecdf656d5074d028'
   filter_parameter_logging :password, :password_confirmation
-  before_filter :load_config, :get_viewer
+  before_filter :load_config, :authenticate, :get_viewer
   layout :get_layout
   helper :all  
   
@@ -121,6 +121,13 @@ class ApplicationController < ActionController::Base
     else
       flash.now[:warning] = msg
       render error_pathing || { :template => 'shared/error' }
+    end
+  end
+  
+  def authenticate
+    return true unless SITE[:defcon] == 0
+    authenticate_or_request_with_http_basic do |user_name, password| 
+      user_name == 'juscriber' && password == 'makunouchi'
     end
   end
   
