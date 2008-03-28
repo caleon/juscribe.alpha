@@ -24,6 +24,8 @@ class Picture < ActiveRecord::Base
   # Needs more validations for kropper
   alias_attribute :content, :caption
   
+  after_create :save_original_copy
+  
   DEFAULT_CROP = { :crop_left         =>  0,
                    :crop_top          =>  0,
                    :crop_width        =>  100,
@@ -129,5 +131,14 @@ class Picture < ActiveRecord::Base
       end
     end
     save!
+  end
+  
+  def save_original_copy
+    if self.thumbnail.nil?
+      FileUtils.mkdir_p(File.dirname(full_filename))
+      orig_name = full_filename.gsub(/(.+)(\.[a-z]+)$/, '\1_original\2')
+      File.cp(temp_path, orig_name)
+      File.chmod(attachment_options[:chmod] || 0644, orig_name)
+    end
   end
 end
