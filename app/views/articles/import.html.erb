@@ -1,0 +1,4 @@
+<% form_tag articles_path_from_blog(@blog, :prefix => :bulk_create), :method => :post do |f| %>
+	<%= text_field_tag 'import_url' %>
+	<%= submit_tag %>
+<% end %>

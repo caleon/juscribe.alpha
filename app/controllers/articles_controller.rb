@@ -2,7 +2,7 @@ class ArticlesController < ApplicationController
   use_shared_options :collection_layoutable => :@blog
   # setup will handle authorization. as well as defaults from common_methods.rb
   verify_login_on :new, :create, :edit, :update, :destroy, :publish, :unpublish
-  authorize_on :show, :edit, :update, :publish, :unpublish, :destroy
+  authorize_on :show, :import, :bulk_create, :edit, :update, :publish, :unpublish, :destroy
   
   def index
     # Articles#index is for articles on a user. Blogs#show has articles on a blog ----- NO. Routes redone
@@ -88,6 +88,22 @@ class ArticlesController < ApplicationController
         format.js { render :action => 'create_error' }
       end
     end
+  end
+  
+  def import
+    return unless get_blog && authorize(@blog, :editable => true)
+    @page_title = "Import blog entries"
+    respond_to do |format|
+      format.html { trender }
+      format.js
+    end
+  end
+  
+  def bulk_create
+    return unless get_blog && authorize(@blog, :editable => true)
+    @page_title = "Import blog entries"
+    
+    # TODO: Stub
   end
   
   def edit

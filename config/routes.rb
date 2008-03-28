@@ -63,6 +63,10 @@ ActionController::Routing::Routes.draw do |map|
   map.connect 'u/:user_id/blogs/:blog_id/articles.:format', :controller => 'articles', :action => 'create', :requirements => { :blog_id => regex_for(:blog, :permalink) }, :conditions => { :method => :post }
   map.new_user_blog_article 'u/:user_id/blogs/:blog_id/articles/new', :controller => 'articles', :action => 'new', :requirements => { :blog_id => regex_for(:blog, :permalink) }, :conditions => { :method => :get }
   map.formatted_new_user_blog_article 'u/:user_id/blogs/:blog_id/articles/new.:format', :controller => 'articles', :action => 'new', :requirements => { :blog_id => regex_for(:blog, :permalink) }, :conditions => { :method => :get }
+  map.import_user_blog_articles 'u/:user_id/blogs/:blog_id/articles/import', :controller => 'articles', :action => 'import', :requirements => { :blog_id => regex_for(:blog, :permalink) }, :conditions => { :method => :get }
+  map.formatted_import_user_blog_articles 'u/:user_id/blogs/:blog_id/articles/import.:format', :controller => 'articles', :action => 'import', :requirements => { :blog_id => regex_for(:blog, :permalink) }, :conditions => { :method => :get }
+  map.bulk_create_user_blog_articles 'u/:user_id/blogs/:blog_id/articles/bulk_create', :controller => 'articles', :action => 'bulk_create', :requirements => { :blog_id => regex_for(:blog, :permalink) }, :conditions => { :method => :get }
+  map.formatted_bulk_create_user_blog_articles 'u/:user_id/blogs/:blog_id/articles/bulk_create.:format', :controller => 'articles', :action => 'bulk_create', :requirements => { :blog_id => regex_for(:blog, :permalink) }, :conditions => { :method => :get }
   
   #################################################### GROUPS
   map.resources :groups, :custom_path => 'g', :member => { :join => :put, :leave => :put, :kick => :put, :invite => :put } do |group|
@@ -110,6 +114,10 @@ ActionController::Routing::Routes.draw do |map|
   map.connect 'g/:group_id/blogs/:blog_id/articles.:format', :controller => 'articles', :action => 'create', :requirements => { :blog_id => regex_for(:blog, :permalink) }, :conditions => { :method => :post }
   map.new_group_blog_article 'g/:group_id/blogs/:blog_id/articles/new', :controller => 'articles', :action => 'new', :requirements => { :blog_id => regex_for(:blog, :permalink) }, :conditions => { :method => :get }
   map.formatted_new_group_blog_article 'g/:group_id/blogs/:blog_id/articles/new.:format', :controller => 'articles', :action => 'new', :requirements => { :blog_id => regex_for(:blog, :permalink) }, :conditions => { :method => :get }
+  map.import_group_blog_articles 'g/:group_id/blogs/:blog_id/articles/import', :controller => 'articles', :action => 'import', :requirements => { :blog_id => regex_for(:blog, :permalink) }, :conditions => { :method => :get }
+  map.formatted_import_group_blog_articles 'g/:group_id/blogs/:blog_id/articles/import.:format', :controller => 'articles', :action => 'import', :requirements => { :blog_id => regex_for(:blog, :permalink) }, :conditions => { :method => :get }
+  map.bulk_create_group_blog_articles 'g/:group_id/blogs/:blog_id/articles/bulk_create', :controller => 'articles', :action => 'bulk_create', :requirements => { :blog_id => regex_for(:blog, :permalink) }, :conditions => { :method => :post }
+  map.formatted_bulk_create_group_blog_articles 'g/:group_id/blogs/:blog_id/articles/bulk_create.:format', :controller => 'articles', :action => 'bulk_create', :requirements => { :blog_id => regex_for(:blog, :permalink) }, :conditions => { :method => :post }
   
   map.resources :messages, :requirements => { :id => regex_for(:message, :id) }
   map.resources :permissions, :requirements => { :id => regex_for(:permission_rule, :id) }
