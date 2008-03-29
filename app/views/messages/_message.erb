@@ -1,4 +1,4 @@
-<% content_tag_for(html_tag ||= :li, message) do %>
+<% content_tag_for(html_tag ||= :li, message, :class => (message.read? ? 'message-read' : 'message-unread')) do %>
 	<% unless (no_title ||= false) %>
 		<%= link_to message.subject, message %><br />
 	<% end %>

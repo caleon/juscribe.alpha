@@ -62,7 +62,7 @@ module ApplicationHelper
   end
 								
   def navi_skin_info
-    navi_el "Skin: #{@layoutable.skin}",
+    navi_el "Skin: #{@layoutable.skin_name}",
             (@user && @user.editable_by?(viewer) ? edit_user_path(@user) : '#'),
             :right => true if @layoutable
   end

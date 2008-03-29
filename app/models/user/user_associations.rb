@@ -23,7 +23,7 @@ class User < ActiveRecord::Base
   has_many :projects, :dependent => :nullify
   has_many :messages, :foreign_key => 'recipient_id', :dependent => :nullify,
            :order => 'messages.id DESC' do
-             def unread; find(:all, :conditions => [ "`read` = ?", false ]); end
+             def unread; find(:all, :conditions => [ "`read_at` IS NULL" ]); end
            end
   has_many :sent_messages, :class_name => 'Message', :foreign_key => 'sender_id',
            :order => 'messages.id DESC'

@@ -1,0 +1,6 @@
+class Layout < ActiveRecord::Base
+  belongs_to :layoutable, :polymorphic => true
+  belongs_to :user
+  
+  validates_presence_of :user_id, :layoutable_type, :layoutable_id
+end

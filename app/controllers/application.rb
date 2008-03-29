@@ -43,7 +43,7 @@ class ApplicationController < ActionController::Base
   end
   
   def get_layout
-    @layoutable.layout || 'standard'
+    @layoutable.layout_name || 'standard'
   rescue NoMethodError
     'standard'
   end

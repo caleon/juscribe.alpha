@@ -9,6 +9,10 @@ class Message < ActiveRecord::Base
   validates_with_regexp :body
   
   after_create :deliver_message_notification
+  
+  def read?
+    self.read_at?
+  end
     
   def subject
     self[:subject] || "(no subject)"
@@ -21,8 +25,8 @@ class Message < ActiveRecord::Base
     raise ArgumentError, "Expected User or nick: got #{user_or_nick.class} instead."
   end
   
-  def read_it!; self.update_attribute(:read, true) unless self.read?; end
-  def unread_it!; self.update_attribute(:read, false) unless !self.read?; end
+  def read_it!; self.update_attribute(:read_at, Time.now) unless self.read?; end
+  def unread_it!; self.update_attribute(:read_at, nil) unless !self.read?; end
     
   def accessible_by?(user) # This class does not acts_as_accessible. These are totally custom.
     user.admin? || [ self.sender, self.recipient ].include?(user)

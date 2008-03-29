@@ -1,0 +1,4 @@
+<%= f.label :layout, 'Layout (if not default)' %>
+<%= f.error_message_on :layout %>
+<%= f.select :layout_name, Layout.find(:all).map {|lo| [ lo.name, lo.name ] }, :include_blank => true %>
+<br />
