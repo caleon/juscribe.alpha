@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 65) do
+ActiveRecord::Schema.define(:version => 66) do
 
   create_table "articles", :force => true do |t|
     t.string   "title"
@@ -87,7 +87,7 @@ ActiveRecord::Schema.define(:version => 65) do
     t.string   "uri"
   end
 
-  create_table "layouts", :force => true do |t|
+  create_table "layoutings", :force => true do |t|
     t.integer  "user_id"
     t.integer  "layoutable_id"
     t.string   "layoutable_type"

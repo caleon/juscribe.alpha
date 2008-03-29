@@ -8,7 +8,7 @@ module ActiveRecord::Acts::Layoutable # included when PluginPackage is included
   
   module ClassMethods
     def acts_as_layoutable(options={})
-      has_one :layout, :as => :layoutable
+      has_one :layouting, :as => :layoutable
       
       include ActiveRecord::Acts::Layoutable::InstanceMethods
     end
@@ -16,15 +16,15 @@ module ActiveRecord::Acts::Layoutable # included when PluginPackage is included
   
   module InstanceMethods
     def layout_name=(str)
-      if self.layout
-        self.layout.update_attribute(:name => str)
+      if self.layouting
+        self.layouting.choose(str)
       else
-        self.create_layout(:name => str, :user => self.user)
+        self.create_layouting(:name => str, :user => self.user)
       end
     end
     
     def layout_name
-      self.layout.name rescue nil
+      self.layouting.name rescue nil
     end
   
     def layout_file(*args)
@@ -37,7 +37,7 @@ module ActiveRecord::Acts::Layoutable # included when PluginPackage is included
     end
 
     def skin_name
-      self.layout.skin || self.layout_name
+      self.layouting.skin || self.layout_name
     rescue
       nil
     end

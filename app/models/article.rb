@@ -46,11 +46,11 @@ class Article < ActiveRecord::Base
   end
   
   def layout
-    self.blog.layout
+    self.blog.layouting
   end
 
   def skin_name
-    self.blog.layout.skin || layout_name
+    self.blog.layouting.skin || layout_name
   rescue
     layout_name
   end
