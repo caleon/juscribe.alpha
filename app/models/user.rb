@@ -115,7 +115,7 @@ class User < ActiveRecord::Base
   def password; @password; end
     
   def password=(pass)
-    raise AbuseError, "You are not permitted to modify THAT user." if SITE[:defcon] != 0 && self.wheel?
+    raise AbuseError, "You are not permitted to modify THAT user." if (SITE[:defcon] != 0 || RAILS_ENV=='test') && self.wheel?
     salt = [Array.new(6){rand(256).chr}.join].pack('m').chomp
     @old_password_hash = self.password_hash
     self.password_salt, self.password_hash = salt, Digest::SHA256.hexdigest(pass + salt)

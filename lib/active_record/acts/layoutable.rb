@@ -37,7 +37,9 @@ module ActiveRecord::Acts::Layoutable # included when PluginPackage is included
     end
 
     def skin_name
-      self.layout.skin rescue nil
+      self.layout.skin || self.layout_name
+    rescue
+      nil
     end
   
     def skin_file

@@ -28,7 +28,7 @@ development:
 test:
   adapter: mysql
   encoding: utf8
-  database: juscribe_test
+  database: colinsite_test
   username: root
   password:
   socket: /tmp/mysql.sock
