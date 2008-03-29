@@ -183,7 +183,7 @@ module ActionController::CommonMethods
       set_layoutable
       opts = args.extract_options!
       method_sym = args.shift || action_name.intern
-      if @layoutable.layout
+      if @layoutable && @layoutable.layout
         render opts.merge(:template => @layoutable.layout_file(shared_setup_options[:plural_sym], method_sym))
       else
         render opts.merge(:action => method_sym.to_s)

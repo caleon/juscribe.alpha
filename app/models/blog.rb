@@ -1,6 +1,5 @@
 class Blog < ActiveRecord::Base
   include_custom_plugins
-  acts_as_layoutable
   
   belongs_to :user # creator
   belongs_to :bloggable, :polymorphic => true

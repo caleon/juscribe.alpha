@@ -34,7 +34,7 @@ class UsersController < ApplicationController
   def new
     @page_title = "Become a new Juscribe member!"
     @user = User.new
-    @registration_closed = SITE[:defcon] == 0 || SITE[:disable_registration]
+    @registration_closed = registration_closed?
     respond_to do |format|
       format.html { trender }
       format.js
@@ -44,7 +44,7 @@ class UsersController < ApplicationController
   def create
     @user = User.new(params[:user])
     @user.nick, @user.email = params[:user][:nick], params[:user][:email]
-    if SITE[:defcon] == 0 || SITE[:disable_registration]
+    if registration_closed?
       flash.now[:warning] = "We're sorry. Registration is not open right now."
       respond_to do |format|
         format.html { trender :new }

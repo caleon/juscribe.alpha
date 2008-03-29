@@ -161,10 +161,14 @@ class ApplicationController < ActionController::Base
   end
   
   def authenticate
-    return true unless SITE[:defcon] == 0
+    return true unless SITE[:defcon] == 0 && RAILS_ENV != 'test'
     authenticate_or_request_with_http_basic do |user_name, password| 
       user_name == 'juscriber' && password == 'makunouchi'
     end
+  end
+  
+  def registration_closed?
+    RAILS_ENV != 'test' && ((SITE[:defcon] == 0) || SITE[:disable_registration])
   end
   
 end

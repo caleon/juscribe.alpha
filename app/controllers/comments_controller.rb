@@ -1,5 +1,5 @@
 class CommentsController < ApplicationController
-  use_shared_options :layoutable => :@commentable
+  use_shared_options :layoutable => :commentable
   verify_login_on :new, :create, :edit, :update, :destroy
   authorize_on :index, :show, :new, :create, :edit, :update, :destroy
   
@@ -42,8 +42,10 @@ class CommentsController < ApplicationController
     @page_title = "New Comment on #{@commentable.display_name}"
 
     @comment = @commentable.comments.new(params[:comment].merge(:user => get_viewer))
-    is_comment_spam = is_spam?(:comment_content => @comment.body, :permalink => commentable_url_for(@commentable),
-                               :comment_type => 'comment')
+    # FIXME: Akismet broken or something.
+    #is_comment_spam = is_spam?(:comment_content => @comment.body, :permalink => commentable_url_for(@commentable),
+    #                           :comment_type => 'comment')
+    is_comment_spam = false
     if !is_comment_spam && @comment.save
       msg = "You have commented on #{@commentable.display_name}."
       respond_to do |format|
