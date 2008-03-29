@@ -42,10 +42,8 @@ class CommentsController < ApplicationController
     @page_title = "New Comment on #{@commentable.display_name}"
 
     @comment = @commentable.comments.new(params[:comment].merge(:user => get_viewer))
-    # FIXME: Akismet broken or something.
-    #is_comment_spam = is_spam?(:comment_content => @comment.body, :permalink => commentable_url_for(@commentable),
-    #                           :comment_type => 'comment')
-    is_comment_spam = false
+    is_comment_spam = is_spam?(:comment_content => @comment.body, :permalink => commentable_url_for(@commentable),
+                               :comment_type => 'comment', :comment_author => get_viewer.nick, :comment_author_email => get_viewer.email)
     if !is_comment_spam && @comment.save
       msg = "You have commented on #{@commentable.display_name}."
       respond_to do |format|
