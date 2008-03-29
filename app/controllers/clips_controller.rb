@@ -1,7 +1,7 @@
 # This controller is only accessible within the scope of a widgetable model's
 # controller. See routes.rb.
 class ClipsController < ApplicationController  
-  use_shared_options :widget, :collection_layoutable => :@widgetable, :object_layoutable => :@clip, :plural_sym => :clips
+  use_shared_options :widget, :layoutable => :widgetable, :plural_sym => :clips
   verify_login_on :new, :create, :edit, :update, :destroy
   authorize_on :index, :show, :new, :create, :edit, :update, :destroy
   

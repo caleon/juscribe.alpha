@@ -1,5 +1,5 @@
 class MessagesController < ApplicationController  
-  use_shared_options :collection_layoutable => :get_viewer
+  use_shared_options :layoutable => :viewer
   verify_login_on :index, :show, :new, :create, :edit, :update, :destroy, :send
   authorize_on :show, :edit, :update, :destroy, :send
   

@@ -1,5 +1,5 @@
 class ArticlesController < ApplicationController
-  use_shared_options :collection_layoutable => :@blog
+  use_shared_options :layoutable => :blog
   # setup will handle authorization. as well as defaults from common_methods.rb
   verify_login_on :new, :create, :edit, :update, :destroy, :publish, :unpublish
   authorize_on :show, :import, :bulk_create, :edit, :update, :publish, :unpublish, :destroy

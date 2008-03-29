@@ -1,5 +1,5 @@
 class BlogsController < ApplicationController
-  use_shared_options :collection_layoutable => :@bloggable
+  use_shared_options :layoutable => :blog, :collection_layoutable => :bloggable
   verify_login_on :new, :create, :edit, :update, :destroy
   authorize_on :show, :new, :create, :edit, :update, :destroy
   

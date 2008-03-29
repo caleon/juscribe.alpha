@@ -1,5 +1,5 @@
 class WidgetsController < ApplicationController
-  use_shared_options :collection_layoutable => :@user
+  use_shared_options
   verify_login_on :new, :create, :edit, :update, :destroy, :place, :unplace
   authorize_on :index, :show, :edit, :update, :destroy, :place, :unplace
 
