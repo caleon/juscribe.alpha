@@ -3,7 +3,10 @@
 	<p id="debugger-inner">
 		Class of main object: <%= main_object.class.class_name %>: <%= main_object.display_name %>
 		<br />
-		Layoutable object: <%= @layoutable.class.class_name %>: <%= @layoutable.display_name %>
+		Main object's layout: <%= main_object.layout_name %>
+		<br />
+		Main object's skin: <%= main_object.skin_file %>
+		<br />
 		<%= yield :debugger %>
 	</p>
 	<%= rounded_shim(:bottom) %>

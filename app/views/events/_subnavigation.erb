@@ -4,6 +4,6 @@
 
 <% unless bare ||= false %>
 <%= subnavi_el "New Event", new_user_event_path(@user), :current => controller.action_name == 'new' if this_is_viewer? %>
-<%= subnavi_el "Edit", edit_user_event_path(@event.to_path), :current => controller.action_name == 'edit' if @event && !@event.new_record? && @event.editable_by?(viewer) %>
+<%= subnavi_el "Edit", edit_user_event_path(@event.to_path), :current => controller.action_name == 'edit' if @event && !@event.new_record? && @event.editable_by?(get_viewer) %>
 <%= subnavi_el "Clip", new_user_event_clip_path(@event.to_path(true)) if @event && !@event.new_record? %>
 <% end %>

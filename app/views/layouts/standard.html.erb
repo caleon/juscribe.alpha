@@ -12,11 +12,11 @@
 				<ul class="navigationList">
 					<%= render :partial => flash[:warning] ? 'shared/subnavigation_error' : 'subnavigation' %>
 					<%= navi_skin_info %>
-					<%= navi_customize(user_widgets_path(@user.to_path(true))) if @user && @user.editable_by?(viewer) %>
+					<%= navi_customize(user_widgets_path(@user.to_path(true))) if @user && @user.editable_by?(get_viewer) %>
 				</ul>
 			</div>
 			<div id="standard_layout" class="standard_layout">
-				<%= render :partial => 'shared/debugger' if RAILS_ENV != 'production' %>
+				<%= debug_module %>
 				<%= yield %>
 			</div>
 		<% end %>

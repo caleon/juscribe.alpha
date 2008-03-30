@@ -5,7 +5,7 @@
 <%= bread_el truncate(@subnav_article.title, 20), article_path_for(@subnav_article), :current => controller.controller_name == 'articles' if @subnav_article && !@subnav_article.new_record? %>
 
 <% unless bare ||= false %>
-<%= subnavi_el "New Article", article_path_from_blog(@subnav_blog, :prefix => :new), :current => controller.action_name == 'new' if @subnav_blog.editable_by?(viewer) && @article.nil? %>
-<%= subnavi_el "Edit", article_path_for(@subnav_article, :prefix => :edit), :current => controller.action_name == 'edit' if @subnav_article && !@subnav_article.new_record? && @subnav_article.editable_by?(viewer) %>
+<%= subnavi_el "New Article", article_path_from_blog(@subnav_blog, :prefix => :new), :current => controller.action_name == 'new' if @subnav_blog.editable_by?(get_viewer) && @article.nil? %>
+<%= subnavi_el "Edit", article_path_for(@subnav_article, :prefix => :edit), :current => controller.action_name == 'edit' if @subnav_article && !@subnav_article.new_record? && @subnav_article.editable_by?(get_viewer) %>
 <%= subnavi_el "Clip", clip_path_from_widgetable(@subnav_article, :prefix => :new) if @subnav_article && !@subnav_article.new_record? && @subnav_article.published? %>
 <% end %>

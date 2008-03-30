@@ -16,20 +16,20 @@ module WidgetsHelper
   def widget_args=(array); array.map{|arr| PageWidget.new(*arr) }; end
   alias_method :wargs=, :widget_args=
   
-  def check_layoutable
-    raise LayoutError, "@layoutable instance variable not set." unless @layoutable; true
-  end
+  #def check_layoutable
+  #  raise LayoutError, "@layoutable instance variable not set." unless @layoutable; true
+  #end
   
   def layout_base_path(layout_name=nil)
-    if @layoutable.layouting
-      [ '/layouts', layout_name || @layoutable.layouting.name ].compact.join('/')
+    if main_object.layouting
+      [ '/layouts', layout_name || main_object.layouting.name ].compact.join('/')
     else
       ''
     end
   end
   
   def custom_partial(path) # Needed for now for stuff like blogs-index
-    check_layoutable
+    #check_layoutable
     [ layout_base_path, path ].join('/')
   end
   
@@ -59,7 +59,7 @@ module WidgetsHelper
   end
   
   def widget_render(*args)
-    check_layoutable
+    #check_layoutable
     @wcount ||= 0; @widgets ||= []
     opts = args.extract_options!
     kind = opts[:kind] ? "_#{opts[:kind]}" : ""
@@ -69,7 +69,7 @@ module WidgetsHelper
     with_options :layout => wayout(opts.delete(:layout)) do |wid|
       case arg
       when Widget
-        return wid.wrender_unauthorized unless arg.widgetable.accessible_by?(viewer)
+        return wid.wrender_unauthorized unless arg.widgetable.accessible_by?(get_viewer)
         instance_name = arg.widgetable_type.underscore
         wid.render :partial => "#{instance_name.pluralize}/#{instance_name}#{kind}",
                    :object => arg.widgetable, :locals => { :widget => arg }.merge(opts)
@@ -79,7 +79,7 @@ module WidgetsHelper
         wid.render :partial => arg, :locals => opts
       when nil
         return wid.wrender_vacant unless widget = @widgets[@wcount - 1]
-        return wid.wrender_unauthorized unless widget.widgetable.accessible_by?(viewer)
+        return wid.wrender_unauthorized unless widget.widgetable.accessible_by?(get_viewer)
         @wcount -= 1 and return wid.wrender(widget, opts)
       end  
     end
@@ -87,7 +87,7 @@ module WidgetsHelper
   alias_method :wrender, :widget_render
   
   def wrender_symbol(sym, opts={})
-    return wrender_unauthorized(opts) unless (main_object.new_record? || main_object.accessible_by?(viewer))
+    return wrender_unauthorized(opts) unless (main_object.new_record? || main_object.accessible_by?(get_viewer))
     instance_name = main_object.class.class_name.underscore
     obj = main_object.respond_to?(sym) ? main_object.send(sym) : nil
     wrender_vacant unless obj

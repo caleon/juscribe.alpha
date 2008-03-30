@@ -1,5 +1,4 @@
 class PermissionRule < ActiveRecord::Base
-  include ActiveRecord::Acts::Layoutable
   
   # data will be a serialized hash in the form of:
   #   { :allowed => {:user => [1, 2, 3], :group => [34, 5]},

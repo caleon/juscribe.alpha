@@ -39,8 +39,9 @@ module ActiveRecord
     # LAYOUTABLE WORK. In model set belongs_to :blog, :inherits_layout => true   
     def layoutable; nil; end
 
+    # FIXME: this is ugly
     def layouting
-      self.layoutable ? self.layoutable.layouting : self.layouting
+      self.layoutable ? self.layoutable.layouting : Layouting.find_by_layoutable_type_and_layoutable_id(self.class.class_name, self.id)
     end
     
     def layout_name=(str)

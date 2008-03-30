@@ -67,10 +67,11 @@ module ActionController::CommonMethods
     # Same as in applicationhelper
     def main_object
       instance_variable_get("#{shared_setup_options[:instance_var]}") || instance_variable_get("#{shared_setup_options[:collection_owner_var]}")
+    rescue
+      nil
     end
     
     def theme_render(*args)
-      set_layoutable
       opts = args.extract_options!
       method_sym = args.shift || action_name.intern
       if main_object && main_object.layouting

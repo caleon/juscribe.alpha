@@ -13,9 +13,9 @@
 	<% end %>
 <% if logged_in? && @user && !@user.new_record? %>
 		<%= subnavi_el "Message", new_message_path(:recipient => @user), :conditions => !this_is_viewer? %>		
-	<% if viewer.friends_with?(@user) %>
+	<% if get_viewer.friends_with?(@user) %>
 		<%= subnavi_el "Unfriend", unfriend_user_path(@user), { :method => :put } %>
-	<% elsif @viewer != @user && !@viewer.kinda_friends_with?(@user) %>
+	<% elsif get_viewer != @user && !get_viewer.kinda_friends_with?(@user) %>
 		<%= subnavi_el "Request Friendship", befriend_user_path(@user), { :method => :put } %>
 	<% end %>
 <% end %>

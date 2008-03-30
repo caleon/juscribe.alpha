@@ -45,16 +45,6 @@ class Article < ActiveRecord::Base
     [ self.blog.path_name_prefix, self.published? ? 'article' : 'draft' ].join('_')
   end
   
-  def layouting
-    self.blog.layouting
-  end
-
-  def skin_name
-    self.blog.layouting.skin || layout_name
-  rescue
-    layout_name
-  end
-  
   def import?; self.imported_at?; end
   def draft?; !self.published_at? && !self.published_date?; end
   def published?; self.published_at? && self.published_date?; end

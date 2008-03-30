@@ -1,11 +1,13 @@
 # Methods added to this helper will be available to all templates in the application.
 module ApplicationHelper
-  def viewer; @viewer; end
-  def logged_in?; !viewer.nil?; end
-  def this_is_viewer?; @user && !@user.new_record? && logged_in? && @user == viewer; end
+  def get_viewer; @viewer; end
+  def logged_in?; !get_viewer.nil?; end
+  def this_is_viewer?; @user && !@user.new_record? && logged_in? && @user == get_viewer; end
   
   def main_object
     instance_variable_get("#{controller.class.shared_setup_options[:instance_var]}") || instance_variable_get("#{controller.class.shared_setup_options[:collection_owner_var]}")
+  rescue
+    nil
   end
     
   ### Refer to config/initializers/action_controller_tweaks.rb
@@ -67,17 +69,21 @@ module ApplicationHelper
 								
   def navi_skin_info
     navi_el "Skin: #{@layoutable.skin_name}",
-            (@user && @user.editable_by?(viewer) ? edit_user_path(@user) : '#'),
+            (@user && @user.editable_by?(get_viewer) ? edit_user_path(@user) : '#'),
             :right => true if @layoutable
   end
   
   def navi_customize(path)
-    navi_el 'Customize', path, :right => true if @layoutable && @layoutable.editable_by?(viewer)
+    navi_el 'Customize', path, :right => true if @layoutable && @layoutable.editable_by?(get_viewer)
   end
   
   def byline_for(record)
     render :partial => "#{record.class.class_name.pluralize.underscore}/byline",
                        :locals => { :"#{record.class.class_name.underscore}" => record }
+  end
+  
+  def debug_module
+    render :partial => 'shared/debugger' if RAILS_ENV != 'production' && get_viewer && get_viewer.admin?
   end
   
 end

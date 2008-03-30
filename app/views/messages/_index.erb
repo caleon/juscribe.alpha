@@ -1,5 +1,5 @@
 <% if !@messages.blank? %>
-	<% content_tag :ul, :class => 'user-messages messages', :id => "user-#{viewer.id}-messages" do %>
+	<% content_tag :ul, :class => 'user-messages messages', :id => "user-#{get_viewer.id}-messages" do %>
 		<%= render :partial => 'message', :collection => @messages %>
 	<% end %>
 <% else %>

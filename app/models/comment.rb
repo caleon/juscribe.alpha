@@ -1,5 +1,4 @@
 class Comment < ActiveRecord::Base
-  include ActiveRecord::Acts::Layoutable
   acts_as_accessible
 
   belongs_to :user

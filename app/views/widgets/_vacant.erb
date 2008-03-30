@@ -2,4 +2,4 @@
 	The editor(s) of this page ha(s|ve) not filled in this slot.
 </p>
 <%# This needs to be set so that layoutable isn't just a user. %>
-<%= link_to 'edit', '#' if @layoutable && @layoutable.editable_by?(viewer) %>
+<%= link_to 'edit', '#' if @layoutable && @layoutable.editable_by?(get_viewer) %>
