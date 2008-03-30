@@ -21,7 +21,11 @@ module WidgetsHelper
   end
   
   def layout_base_path(layout_name=nil)
-    [ '/layouts', layout_name || @layoutable.layout ].compact.join('/')
+    if @layoutable.layouting
+      [ '/layouts', layout_name || @layoutable.layouting.name ].compact.join('/')
+    else
+      ''
+    end
   end
   
   def custom_partial(path) # Needed for now for stuff like blogs-index
@@ -31,9 +35,9 @@ module WidgetsHelper
   
   def widget_layout(layout=nil)
     return nil if layout == :none
-    return layout if !(layout.nil? || layout.is_a?(Symbol))
+    return layout unless layout.nil? || layout.is_a?(Symbol)
     layout ||= :widget
-    [ layout_base_path, layout.to_s ].join('/')
+    [ layout_base_path, 'widgets', layout.to_s ].join('/')
   # pointless:
   #rescue
   #  [ layout_base_path, 'shared', layout.to_s ].join('/')

@@ -24,7 +24,8 @@ module ActionController::CommonMethods
               :instance_var     =>  instance_var,
               :plural_sym       =>  plural_sym,
               :custom_finder    =>  :find,
-              :layoutable       =>  opts[:layoutable] || :user
+              :layoutable       =>  opts[:layoutable] || :user,
+              :collection_layoutable => opts[:collection_layoutable] || :user
       }.merge(opts))
       
       class_inheritable_reader :shared_setup_options
@@ -175,8 +176,10 @@ module ActionController::CommonMethods
     # L A Y O U T S #
     #################
     
-    def set_layoutable   
-      @layoutable ||= instance_variable_get("@#{shared_setup_options[:layoutable]}") || instance_variable_get("@#{shared_setup_options[:collection_layoutable]}")
+    def set_layoutable
+      it = instance_variable_get("@#{shared_setup_options[:layoutable]}")
+      it = nil if it.new_record?
+      @layoutable ||= it || instance_variable_get("@#{shared_setup_options[:collection_layoutable]}") || @user
     end
     
     def theme_render(*args)
