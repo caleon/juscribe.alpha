@@ -19,8 +19,8 @@
 	
 <% content_for :side_column do -%>
 	<% with_options :layout => :framed do |framed| %>
-		<%= framed.wrender :bloggable %>
-		<%= framed.wrender :pictures %>
+		<%# framed.wrender :bloggable  this checks if @layoutable (user) is bloggable. had expected @layoutable to be @blog %>
+		<%# framed.wrender :pictures %>
 		<%= framed.wrender :google_ads %>
 	<% end %>
 <% end -%>
