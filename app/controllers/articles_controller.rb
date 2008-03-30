@@ -32,7 +32,6 @@ class ArticlesController < ApplicationController
     else
       return unless get_blog
       @articles = @blog.articles.find(:all, :order => 'id DESC', :limit => 10)
-      raise
     end
     @page_title = "Latest articles by #{@author.display_name}"
     respond_to do |format|
