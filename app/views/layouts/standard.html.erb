@@ -15,7 +15,10 @@
 					<%= navi_customize(user_widgets_path(@user.to_path(true))) if @user && @user.editable_by?(viewer) %>
 				</ul>
 			</div>
-			<%= yield %>
+			<div id="standard_layout" class="standard_layout">
+				<%= render :partial => 'shared/debugger' if RAILS_ENV != 'production' %>
+				<%= yield %>
+			</div>
 		<% end %>
 		<%= render :partial => 'shared/footer' %>
 	<% end %>

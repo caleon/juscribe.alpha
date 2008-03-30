@@ -1,5 +1,5 @@
 class GalleriesController < ApplicationController
-  use_shared_options
+  use_shared_options :collection_owner => :user
   verify_login_on :new, :create, :edit, :update, :destroy
   authorize_on :show, :edit, :update, :destroy
   

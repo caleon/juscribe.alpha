@@ -3,7 +3,7 @@ class Comment < ActiveRecord::Base
   acts_as_accessible
 
   belongs_to :user
-  belongs_to :commentable, :polymorphic => true
+  belongs_to :commentable, :polymorphic => true, :inherits_layout => true
   belongs_to :original, :class_name => "Comment", :foreign_key => :secondary_id
   has_many :followups, :class_name => "Comment", :as => :original, :foreign_key => :secondary_id
   validates_presence_of :user_id

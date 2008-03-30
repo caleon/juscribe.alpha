@@ -2,7 +2,7 @@ class Picture < ActiveRecord::Base
   include_custom_plugins  
   
   belongs_to :user
-  belongs_to :depictable, :polymorphic => true
+  belongs_to :depictable, :polymorphic => true, :inherits_layout => true
   acts_as_list :scope => 'depictable_id = #{depictable_id} AND depictable_type = \'#{depictable_type}\''
   has_attachment  :content_type => :image,
                   :storage => :file_system, #(RAILS_ENV != 'production' ? :file_system : :s3),

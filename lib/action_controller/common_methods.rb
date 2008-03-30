@@ -16,16 +16,18 @@ module ActionController::CommonMethods
       instance_sym = klass.class_name.underscore
       instance_name = instance_sym.to_s.gsub('_', ' ')
       instance_var = "@#{instance_sym}"
+      collection_owner_var = opts[:collection_owner] ? "@#{opts[:collection_owner]}" : nil
       plural_sym = :"#{instance_sym.to_s.pluralize}"
       write_inheritable_attribute(:shared_setup_options, {
-              :model_class      =>  klass,
-              :instance_sym     =>  instance_sym,
-              :instance_name    =>  instance_name,
-              :instance_var     =>  instance_var,
-              :plural_sym       =>  plural_sym,
-              :custom_finder    =>  :find,
-              :layoutable       =>  opts[:layoutable] || :user,
-              :collection_layoutable => opts[:collection_layoutable] || :user
+              :model_class          =>  klass,
+              :instance_sym         =>  instance_sym,
+              :instance_name        =>  instance_name,
+              :instance_var         =>  instance_var,
+              :plural_sym           =>  plural_sym,
+              :custom_finder        =>  :find,
+              :collection_owner_var =>  collection_owner_var
+              #:layoutable       =>  opts[:layoutable] || :user,
+              #:collection_layoutable => opts[:collection_layoutable] || :user
       }.merge(opts))
       
       class_inheritable_reader :shared_setup_options
@@ -50,6 +52,36 @@ module ActionController::CommonMethods
   end
 
   module InstanceMethods
+    
+    
+    #################
+    # L A Y O U T S #
+    #################
+    
+    #def set_layoutable
+    #  it = instance_variable_get("@#{shared_setup_options[:layoutable]}")
+    #  it = nil if it && it.new_record?
+    #  @layoutable ||= it || instance_variable_get("@#{shared_setup_options[:collection_layoutable]}") || @user
+    #end
+    
+    # Same as in applicationhelper
+    def main_object
+      instance_variable_get("#{shared_setup_options[:instance_var]}") || instance_variable_get("#{shared_setup_options[:collection_owner_var]}")
+    end
+    
+    def theme_render(*args)
+      set_layoutable
+      opts = args.extract_options!
+      method_sym = args.shift || action_name.intern
+      if main_object && main_object.layouting
+        render opts.merge(:template => main_object.layout_file(shared_setup_options[:plural_sym], method_sym))
+      else
+        render opts.merge(:action => method_sym.to_s)
+      end
+    end
+    alias_method :trender, :theme_render
+    
+    
     
     def setup(includes=nil, error_opts={})
       klass = shared_setup_options[:model_class]
@@ -171,28 +203,7 @@ module ActionController::CommonMethods
         format.js { flash.now[:notice] = msg }
       end
     end
-    
-    #################
-    # L A Y O U T S #
-    #################
-    
-    def set_layoutable
-      it = instance_variable_get("@#{shared_setup_options[:layoutable]}")
-      it = nil if it.new_record?
-      @layoutable ||= it || instance_variable_get("@#{shared_setup_options[:collection_layoutable]}") || @user
-    end
-    
-    def theme_render(*args)
-      set_layoutable
-      opts = args.extract_options!
-      method_sym = args.shift || action_name.intern
-      if @layoutable && @layoutable.layouting
-        render opts.merge(:template => @layoutable.layout_file(shared_setup_options[:plural_sym], method_sym))
-      else
-        render opts.merge(:action => method_sym.to_s)
-      end
-    end
-    alias_method :trender, :theme_render
+
     
     #################
     # F I L T E R S #

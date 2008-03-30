@@ -2,7 +2,7 @@ class Article < ActiveRecord::Base
   include_custom_plugins  
   
   belongs_to :user # creator
-  belongs_to :blog
+  belongs_to :blog, :inherits_layout => true
   has_many :comments, :as => :commentable
     
   validates_presence_of :blog_id, :user_id, :title, :permalink, :content
@@ -45,7 +45,7 @@ class Article < ActiveRecord::Base
     [ self.blog.path_name_prefix, self.published? ? 'article' : 'draft' ].join('_')
   end
   
-  def layout
+  def layouting
     self.blog.layouting
   end
 

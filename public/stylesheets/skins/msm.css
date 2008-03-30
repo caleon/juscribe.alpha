@@ -16,6 +16,16 @@
 	border-bottom: 6px solid #c00;
 }
 
+#debugger {
+	width:  965px;
+	background-color:  #fff;
+	margin: 0 auto 7px;
+}
+
+#debugger p {
+	padding: 18px;
+}
+
 .sub.navigation {
 	margin: 0 auto;
 	background-color: #fff;
@@ -542,5 +552,9 @@
 /* @end */
 
 .msm_layout img.pictureShow {
+	display: block;
+	margin: 0 auto;
+}
+.msm_layout img.pictureShow.large {
 	width: 580px;
 }

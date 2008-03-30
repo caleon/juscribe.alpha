@@ -1,4 +1,4 @@
 <%= f.label :layout_name, 'Layout (if not default)' %>
 <%= f.error_message_on :layout_name %>
-<%= f.select :layout_name, Layouting.find(:all).map {|lo| [ lo.name, lo.name ] }, :include_blank => true %>
+<%= f.select :layout_name, Layouting::LAYOUTS, :include_blank => true %>
 <br />

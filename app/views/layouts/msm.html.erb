@@ -16,6 +16,7 @@
 				</ul>
 			</div>
 			<div id="msm_layout" class="msm_layout">
+				<%= render :partial => 'shared/debugger' if RAILS_ENV != 'production' %>
 			<% if @content_for_header %>
 				<div id="msm_header">
 					<%= rounded_shim(:top) %>

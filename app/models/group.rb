@@ -1,5 +1,6 @@
 class Group < ActiveRecord::Base
   include_custom_plugins  
+  has_one :layouting, :as => :layoutable
   
   belongs_to :user
   has_many :memberships

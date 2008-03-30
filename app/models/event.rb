@@ -1,7 +1,7 @@
 class Event < ActiveRecord::Base
   include_custom_plugins  
   
-  belongs_to :user
+  belongs_to :user, :inherits_layout => true
   has_many :pictures, :as => :depictable
   has_one :primary_picture, :class_name => 'Picture', :as => :depictable, :order => :position
   has_many :thoughtlets, :order => 'created_at DESC'

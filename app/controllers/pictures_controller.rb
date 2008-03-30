@@ -1,5 +1,5 @@
 class PicturesController < ApplicationController
-  use_shared_options :layoutable => :depictable
+  use_shared_options :collection_owner => :depictable
   verify_login_on :new, :create, :edit, :update, :destroy
   authorize_on :index, :show, :new, :create, :edit, :update, :destroy
   
