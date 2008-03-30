@@ -1,5 +1,5 @@
 class GroupsController < ApplicationController
-  use_shared_options :layoutable => :group
+  use_shared_options
   verify_login_on :new, :create, :edit, :update, :destroy, :join, :leave, :kick, :invite
   authorize_on :show, :edit, :update, :destroy, :kick
   

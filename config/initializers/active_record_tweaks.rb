@@ -1,5 +1,5 @@
 module ActiveRecord
-  class Base
+  class Base    
     def self.primary_find(*args); find(*args); end
     
     # The following is to allow either a model or its ID to be supplied as
@@ -34,6 +34,55 @@ module ActiveRecord
         respond_to?(col) && self[col] = DB[:garbage_id]
       end).empty?
     end
+    
+    
+    # LAYOUTABLE WORK. In model set belongs_to :blog, :inherits_layout => true   
+    def layoutable; nil; end
+
+    def layouting
+      self.layoutable ? self.layoutable.layouting : self.layouting
+    end
+    
+    def layout_name=(str)
+      if self.layouting
+        self.layouting.choose(str)
+      else
+        self.create_layouting(:name => str, :user => self.user)
+      end
+    end
+    
+    def layout_name
+      self.layouting.name rescue nil
+    end
+  
+    def layout_file(*args)
+      file = args.pop
+      arr = if view_dir = args.shift
+        [ view_dir.to_s, file.to_s ]
+      else
+        [ self.class.class_name.pluralize.underscore, file.to_s ]
+      end
+      arr.unshift("/layouts/#{self.layout_name}") if self.layouting
+      arr.join('/')
+    end
+
+    def skin_name
+      self.layouting.skin || self.layout_name
+    rescue
+      nil
+    end
+  
+    def skin_file
+      "skins/" + skin_name if skin_name
+    end
+  end
+  
+  module Associations::ClassMethods
+    def belongs_to_with_layout_inheritance(association_id, options = {})
+      self.class_eval %{ def layoutable; #{association_id}; end } if options.delete(:inherits_layout)
+      belongs_to_without_layout_inheritance(association_id, options)
+    end
+    alias_method_chain :belongs_to, :layout_inheritance
   end
   
   ## acts_as_list fix For Widgetable

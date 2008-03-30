@@ -1,5 +1,5 @@
 class CommentsController < ApplicationController
-  use_shared_options :layoutable => :commentable
+  use_shared_options :collection_owner => :commentable
   verify_login_on :new, :create, :edit, :update, :destroy
   authorize_on :index, :show, :new, :create, :edit, :update, :destroy
   

@@ -1,7 +1,7 @@
 class Project < ActiveRecord::Base
   acts_as_itemizable :scope => :portfolio
   include_custom_plugins  
-  belongs_to :user
+  belongs_to :user, :inherits_layout => true
   
   validates_presence_of :name, :user_id
   validates_with_regexp :name

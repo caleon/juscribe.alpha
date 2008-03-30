@@ -1,6 +1,6 @@
 class PermissionsController < ApplicationController
   # TODO: view lets you MERGE parts of each of the rules. Need to feed model attrs hash.
-  use_shared_options :permission_rule, :collection_layoutable => :get_viewer
+  use_shared_options :permission_rule, :collection_owner => :get_viewer
   verify_login_on :index, :show, :new, :create, :edit, :update, :destroy
   authorize_on :index, :show, :new, :create, :edit, :update, :destroy
   

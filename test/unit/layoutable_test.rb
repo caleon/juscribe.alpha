@@ -22,4 +22,8 @@ class LayoutableTest < ActiveSupport::TestCase
     #assert_equal 'msm', users(:colin).skin
     #assert_equal 'users/msm', users(:colin).skin_file
   end
+  
+  def test_setting_layoutable_chain
+    assert_not_nil Article.layoutable_association
+  end
 end

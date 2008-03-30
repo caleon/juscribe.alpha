@@ -45,9 +45,9 @@ module WidgetsHelper
   alias_method :wayout, :widget_layout
   
   def path_from_sym(sym, kind=nil)
-    instance_name = @layoutable.class.class_name.underscore
+    instance_name = main_object.class.class_name.underscore
     kind = "_#{kind}" if kind
-    if @layoutable.respond_to?(sym)
+    if main_object.respond_to?(sym)
       "#{instance_name.pluralize}/#{sym}#{kind}"
     elsif (sym.to_s.singularize.classify.constantize rescue false)
       "#{sym.to_s.pluralize}/#{sym.to_s}#{kind}"
@@ -87,14 +87,14 @@ module WidgetsHelper
   alias_method :wrender, :widget_render
   
   def wrender_symbol(sym, opts={})
-    return wrender_unauthorized(opts) unless (@layoutable.new_record? || @layoutable.accessible_by?(viewer))
-    instance_name = @layoutable.class.class_name.underscore
-    obj = @layoutable.respond_to?(sym) ? @layoutable.send(sym) : nil
+    return wrender_unauthorized(opts) unless (main_object.new_record? || main_object.accessible_by?(viewer))
+    instance_name = main_object.class.class_name.underscore
+    obj = main_object.respond_to?(sym) ? main_object.send(sym) : nil
     wrender_vacant unless obj
     render :partial => path_from_sym(sym, opts[:kind]),
            :object => params[:object] || obj,
            :layout => opts[:layout],
-           :locals => { :"#{instance_name}" => @layoutable }
+           :locals => { :"#{instance_name}" => main_object }
   end
   
   def wrender_vacant(opts={})

@@ -3,6 +3,10 @@ module ApplicationHelper
   def viewer; @viewer; end
   def logged_in?; !viewer.nil?; end
   def this_is_viewer?; @user && !@user.new_record? && logged_in? && @user == viewer; end
+  
+  def main_object
+    instance_variable_get("#{controller.class.shared_setup_options[:instance_var]}") || instance_variable_get("#{controller.class.shared_setup_options[:collection_owner_var]}")
+  end
     
   ### Refer to config/initializers/action_controller_tweaks.rb
   def responding_types; @responding_types ||= [:html]; end

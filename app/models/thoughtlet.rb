@@ -1,7 +1,7 @@
 class Thoughtlet < ActiveRecord::Base
   include_custom_plugins  
 
-  belongs_to :user
+  belongs_to :user, :inherits_layout => true
   belongs_to :event
   # For cases where a picture taken on phone is attached to a thoughtlet...
   has_one :picture, :as => :depictable
