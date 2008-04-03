@@ -1,4 +1,6 @@
+<% unless @blog -%>
 <h3><%= blog_lead.name %></h3>
 <blockquote><%= blog_lead.description || "No description set." %></blockquote>
 <h5>Latest from <%= blog_lead.name %></h5>
+<% end -%>
 <%= render :partial => 'articles/article_lead', :object => blog_lead.primary_article if blog_lead.primary_article %>
