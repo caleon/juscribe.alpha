@@ -63,7 +63,8 @@ module ActiveRecord
       else
         [ self.class.class_name.pluralize.underscore, file.to_s ]
       end
-      arr.unshift("/layouts/#{self.layout_name}") if self.layouting
+      return nil unless self.layouting
+      arr.unshift("/layouts/#{self.layout_name}")
       arr.join('/')
     end
 

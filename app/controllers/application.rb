@@ -161,7 +161,7 @@ class ApplicationController < ActionController::Base
   end
   
   def authenticate
-    return true unless SITE[:defcon] == 0 && RAILS_ENV != 'test'
+    return true unless SITE[:defcon] == 0 && RAILS_ENV == 'production'
     authenticate_or_request_with_http_basic do |user_name, password| 
       user_name == 'juscriber' && password == 'makunouchi'
     end
