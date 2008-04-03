@@ -114,7 +114,7 @@ class Article < ActiveRecord::Base
   end
   
   def self.motd
-    find(:first, :conditions => ["articles.user_id IN (#{User.admin_ids.join(', ')})"], :order => 'articles.id DESC')
+    find(:first, :conditions => ["articles.user_id IN (#{User.admin_ids.join(', ')}) AND articles.published_at IS NOT NULL AND articles.published_at > ?", 1.week.ago], :order => 'articles.id DESC')
   end
   
   def self.permalink_for(name)
