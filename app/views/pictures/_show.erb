@@ -1,2 +1,2 @@
-<%= link_to image_tag(@picture.public_filename, :class => [ 'pictureShow', ((@picture.width.nil? || @picture.width > 500) ? 'large' : nil) ].compact.join(' ')),
+<%= link_to_if @picture.editable_by?(get_viewer), image_tag(@picture.public_filename, :class => [ 'pictureShow', ((@picture.width.nil? || @picture.width > 500) ? 'large' : nil) ].compact.join(' ')),
 						picture_path_for(@picture, :prefix => 'edit') %>
