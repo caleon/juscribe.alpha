@@ -1,0 +1,24 @@
+<% if @user && !@user.new_record? %>
+	<% content_tag :ul do -%>
+		<%= render :partial => 'blogs', :object => @user.blogs[0..4], :locals => { :bloggable => @user } %>
+	<% end -%>
+
+	<% content_tag :ul do -%>
+		<%= render :partial => 'latest_articles', :object => @user.latest_articles[0..4] %>
+	<% end -%>
+
+	<% content_tag :ul do -%>
+		<%= render :partial => 'upcoming_events', :object => @user.upcoming_events[0..4] %>
+	<% end -%>
+
+	<%= br_clear %>
+
+	<% content_tag :ul do -%>
+		<%= render :partial => 'thoughtlets', :object => @user.thoughtlets.find(:all, :limit => 5) %>
+	<% end -%>
+
+	<% content_tag :ul do -%>
+		<%= render :partial => 'friends', :object => @user.friends[0..4] %>
+	<% end -%>
+
+<% end %>

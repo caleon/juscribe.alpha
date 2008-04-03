@@ -38,8 +38,10 @@
 				</div>
 	
 				<div id="msm_footer">
-					<%= rounded_shim(:top) %><br />
-					<%= yield :footer %><br /><br />
+					<%= rounded_shim(:top) %>
+					<div id="msm_footer-inner">
+						<%= render :partial => 'footer' %>
+					</div>
 					<%= rounded_shim(:bottom) %>
 				</div>
 			</div>
