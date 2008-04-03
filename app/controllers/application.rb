@@ -44,7 +44,7 @@ class ApplicationController < ActionController::Base
   
   def get_layout
     main_object.layout_name || 'standard'
-  rescue NoMethodError
+  rescue
     'standard'
   end
 
