@@ -163,7 +163,7 @@ class ApplicationController < ActionController::Base
   def authenticate
     return true unless SITE[:defcon] == 0 && RAILS_ENV == 'production'
     authenticate_or_request_with_http_basic do |user_name, password| 
-      user_name == 'juscriber' && password == 'makunouchi'
+      user_name == 'juscriber' && password == Digest::SHA256.hexdigest(Time.now.beginning_of_day.to_s)[0..7]
     end
   end
   
