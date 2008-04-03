@@ -1,4 +1,4 @@
-<% if article.blog %>
+<% if @blog.blank? && article.blog %>
 	<h4>From <%= link_to article.user.nick, article.user %>'s <%= link_to article.blog.short_name, blog_path_for(article.blog) %> Blog</h4>
 <% end %>
 <h3><% unless article.published? %>DRAFT: <% end %><%= link_to article.title, article_path_for(article) %></h3>
