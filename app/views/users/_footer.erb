@@ -11,14 +11,14 @@
 		<%= render :partial => 'upcoming_events', :object => @user.upcoming_events[0..4] %>
 	<% end -%>
 
-	<%= br_clear %>
-
 	<% content_tag :ul do -%>
 		<%= render :partial => 'thoughtlets', :object => @user.thoughtlets.find(:all, :limit => 5) %>
 	<% end -%>
 
+	<%= br_clear %>
+
 	<% content_tag :ul do -%>
 		<%= render :partial => 'friends', :object => @user.friends[0..4] %>
-	<% end -%>
+	<% end if false -%>
 
 <% end %>

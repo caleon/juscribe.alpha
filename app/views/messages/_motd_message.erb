@@ -1,5 +1,5 @@
 <h3>A word from the creator of Juscribe</h3>
 <% if motd_message ||= Article.motd %>
-<%= format_article(motd_message, :without_intro => true) %>
+<%= format_article(motd_message, :without_intro => true, :truncate => 400) %>
 <%= byline_for(motd_message) %>
 <% end %>
