@@ -24,9 +24,9 @@ select, input, textarea { font:99% arial,helvetica,clean,sans-serif; }
 /**
  * Bump up !IE to get to 13px equivalent
  */
-pre { font:115% monospace;*font-size:100%;background-color: #eee;padding: 10px;overflow: auto; margin-left: 0px; margin-right: 0px; width: auto; max-width: 300px; color: #333; min-height: 3em;}
+pre { font:115% monospace;*font-size:100%;background-color: #eee;padding: 10px;overflow: auto; margin-left: 0px; margin-right: 0px; color: #333; min-height: 3em;}
 
-code { font:115% monospace;*font-size:100%;padding: 2px;overflow: auto; margin-left: 0px;, margin-right: 0px; width: auto; max-width: 300px; color: #333; }
+code { font:115% monospace;*font-size:100%;padding: 2px;overflow: auto; margin-left: 0px;, margin-right: 0px; color: #333; }
 
 /**
  * Default line-height based on font-size rather than "computed-value"
