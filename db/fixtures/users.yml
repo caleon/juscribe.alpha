@@ -1,5 +1,5 @@
 juscriber:
-  id: 0
+  id: 1
   admin: true
   nick: juscriber
   email: juscriber@juscribe.com
@@ -11,7 +11,7 @@ juscriber:
   password_salt: nTD3j1K1
   password_hash: 36b193abe2ef178baf3517dbb1cc1862c3ad598ad9a81d66d2af17b56528fcac
 colin:
-  id: 1
+  id: 2
   nick: colin
   email: colin@juscribe.com
   first_name: colin
@@ -22,7 +22,7 @@ colin:
   password_salt: BgymlDt+
   password_hash: 0aac32388a4c248e232bec68771a4dd03c4ce60466cbdfb128353998622caec0
 garbage_man:
-  id: 2
+  id: 3
   nick: GarbageMan
   email: GarbageMan@juscribe.com
   first_name: garbage

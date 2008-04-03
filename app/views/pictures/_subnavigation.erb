@@ -1,5 +1,5 @@
 <%= subnav_for(@depictable) %>
-<%= bread_el 'Pictures', pictures_path_from_depictable(@depictable), :current => @picture.nil? || @picture.new_record? %>
+<%# bread_el 'Pictures', pictures_path_from_depictable(@depictable), :current => @picture.nil? || @picture.new_record? %>
 <%= bread_el @picture.display_name, picture_path_for(@picture), :current => true if @picture && !@picture.new_record? %>
 <%= subnavi_el 'New Picture', picture_path_from_depictable(@depictable, :prefix => 'new') if @picture.nil? %>
 <%= subnavi_el 'Edit', picture_path_for(@picture, :prefix => 'edit') if @picture && !@picture.new_record? %>
