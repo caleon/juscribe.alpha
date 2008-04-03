@@ -18,7 +18,7 @@ module ActiveRecord
   
     def internal_name(opts={}); "#{self.to_param} (#{self.class}-#{self[:id]})"; end
     
-    def display_name(opts={}); "#{self.to_param} (#{self.class})"; end
+    def display_name(opts={}); "(#{self.class}) #{self.to_param}"; end
     
     def nullify!(user=nil)
       (user && user.wheel?) ? destroy! : (self.nullify if self.editable_by?(user) rescue nil)
