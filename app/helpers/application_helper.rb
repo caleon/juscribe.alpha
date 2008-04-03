@@ -82,13 +82,13 @@ module ApplicationHelper
   end
 								
   def navi_skin_info
-    navi_el "Skin: #{@layoutable.skin_name}",
+    navi_el "Skin: #{main_object.layout_name}",
             (@user && @user.editable_by?(get_viewer) ? edit_user_path(@user) : '#'),
-            :right => true if @layoutable
+            :right => true
   end
   
   def navi_customize(path)
-    navi_el 'Customize', path, :right => true if @layoutable && @layoutable.editable_by?(get_viewer)
+    navi_el 'Customize', path, :right => true if main_object && main_object.editable_by?(get_viewer)
   end
   
   def byline_for(record)

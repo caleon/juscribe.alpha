@@ -1,6 +1,8 @@
 <div id="debugger">
 	<%= rounded_shim(:top) %>
 	<p id="debugger-inner">
+		Viewing as: <%= get_viewer.display_name rescue 'Nobody' %>
+		<br />
 		Class of main object: <%= main_object.class.class_name %>: <%= main_object.display_name %>
 		<br />
 		Main object's layout: <%= main_object.layout_name %>

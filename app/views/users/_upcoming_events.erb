@@ -2,3 +2,4 @@
 <ul>
 	<%= render :partial => 'events/event_line', :collection => upcoming_events %>
 </ul>
+<%= link_to 'View all events', user_events_path(@user) %>
