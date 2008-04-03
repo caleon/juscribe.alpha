@@ -45,7 +45,7 @@
 	
 <% content_for :side_column do -%>
 	<% with_options :layout => :framed do |framed| %>
-		<%= framed.wrender :motd_message if this_is_viewer? && controller.action_name == 'show' %>
+		<%= framed.wrender :motd_message if this_is_viewer? && Article.motd && controller.action_name == 'show' %>
 		<%= framed.wrender :pictures if controller.action_name == 'edit' %>
 		<%= framed.wrender :friends if @user && !@user.new_record? %>
 		<%= framed.wrender %>
