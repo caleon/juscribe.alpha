@@ -5,4 +5,9 @@ class Layouting < ActiveRecord::Base
   validates_presence_of :user_id, :layoutable_type, :layoutable_id
   
   LAYOUTS = %w( msm )
+  
+  def choose(str)
+    self.name = str
+    self.save
+  end
 end
