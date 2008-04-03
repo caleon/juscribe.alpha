@@ -78,7 +78,7 @@ module ApplicationHelper
   end
 								
   def navi_skin_info
-    navi_el "Skin: #{main_object.layout_name}",
+    navi_el "Skin: #{main_object.layout_name rescue 'standard'}",
             (@user && @user.editable_by?(get_viewer) ? edit_user_path(@user) : '#'),
             :right => true
   end
