@@ -8,10 +8,16 @@ class ArticlesController < ApplicationController
     # Articles#index is for articles on a user. Blogs#show has articles on a blog ----- NO. Routes redone
     return unless get_blog
     find_opts = get_find_opts
-    if @blog.editable_by?(get_viewer)
-      @articles = @blog.all_articles.find(:all, find_opts)
+    if request.path.match(/\/drafts/)
+      unless (@articles = @blog.drafts.find(:all, :conditions => ["articles.user_id = ?", get_viewer.id])).empty?
+        return display_error(:message => "You do not have drafts for #{@blog.display_name}.")
+      end
     else
-      @articles = @blog.articles.find(:all, find_opts)
+      if @blog.editable_by?(get_viewer)
+        @articles = @blog.all_articles.find(:all, find_opts)
+      else
+        @articles = @blog.articles.find(:all, find_opts)
+      end      
     end
     @page_title = "Articles from #{@author.display_name}'s blog: #{@blog.display_name}"
     respond_to do |format|
@@ -71,9 +77,9 @@ class ArticlesController < ApplicationController
   
   def create
     return unless get_blog
-    @article = Article.new(params[:article].merge(:user => get_viewer))
+    @article = @blog.articles.new(params[:article].merge(:user => get_viewer))
     @page_title = "New Article"
-    if @article.save
+    if @blog.editable_by?(get_viewer) && @article.save
       create_uploaded_picture_for(@article, :save => true) if picture_uploaded?
       msg = "You have successfully created your article."
       respond_to do |format|

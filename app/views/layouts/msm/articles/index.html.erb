@@ -20,6 +20,7 @@
 	<div class="msm_main_column-a msm_main_column nopad">
 		<%= render :partial => 'article_lead',
 		 					 :layout => wayout(:lead_widget),
+							 :object => @articles[0],
 		 					 :locals => { :article => @articles[0] } if @articles[0] %>
 	</div>
 
@@ -35,7 +36,7 @@
 <div class="msm_row" id="msm_row-2">
 	<div class="msm_main_column-ab msm_main_column msm_with_reg_wid">
 		<%= render(:partial => 'article',
-							 :layout => wayout(:inner),
+							 :layout => wayout(:widget),
 							 :object => @articles[1]) if @articles[1] %>
 	</div>
 </div>
@@ -43,7 +44,7 @@
 <div class="msm_row nobg" id="msm_row-3">
 	<div class="msm_main_column-a msm_main_column msm_with_reg_wid">
 		<%= render(:partial => 'article',
-							 :layout => wayout(:inner),
+							 :layout => wayout(:widget),
 							 :object => @articles[2]) if @articles[2] %>
 	</div>
 	
