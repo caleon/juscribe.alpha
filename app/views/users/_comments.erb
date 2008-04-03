@@ -2,4 +2,4 @@
 <ul id="user-<%= user.id %>-comments" class="user-comments comments">
 	<%= render :partial => 'comments/comment', :collection => user.comments %>
 </ul>
-<%= render(:partial => 'comment_form', :locals => { :user => user, :comment => Comment.new }) if logged_in? %>
+<%= render :partial => 'comment_form', :locals => { :user => user, :comment => Comment.new } %>
