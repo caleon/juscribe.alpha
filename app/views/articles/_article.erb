@@ -7,6 +7,6 @@
 	<%= picture_for(article, :with => { :class => 'smallPic' }) %>
 	<%= caption_for(article.primary_picture) %>
 <% end %>
-	<%= format_article(article, :truncate => (!without_picture && article.primary_picture ? 500 : 600), :without_intro => true) %></p>
+	<%= format_article(article, :truncate => (!without_picture && article.primary_picture ? 500 : 700), :without_intro => true) %></p>
 </p>
 <%= byline_for article %>
