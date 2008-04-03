@@ -93,7 +93,7 @@ module ApplicationHelper
   end
   
   def debug_module
-    render :partial => 'shared/debugger' if RAILS_ENV != 'production' && get_viewer && get_viewer.admin?
+    render :partial => 'shared/debugger' if get_viewer && get_viewer.admin?
   end
   
 end
