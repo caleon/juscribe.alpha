@@ -1,5 +1,8 @@
 <% tag ||= :li -%>
 <% content_tag tag, :class => 'article_line' do %>
-	<h4><%= link_to article_line.title, article_path_for(article_line) %></h4>
+	<span>
+		<span class="articleBlog"><%= article_line.blog.short_name %></span>
+		<%= link_to article_line.title, article_path_for(article_line) %> <nobr><span class="timeago"><%= time_ago_in_words(article_line.updated_at) %></span></nobr>
+	</span>
 	<%= format_article(article_line, :without_intro => true, :truncate => 35) %>
 <% end %>

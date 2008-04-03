@@ -1,0 +1,4 @@
+<h3>Blogs by <%= @bloggable.display_name %></h3>
+<% content_tag(:ul, :id => 'msm_other_main_widgets') do -%>
+	<%= render :partial => 'blogs/blog_line', :collection => blogs %>
+<% end -%>

@@ -1,0 +1,4 @@
+<% tag ||= :li -%>
+<% content_tag tag, :class => 'blog_line' do %>
+	<span><%= link_to blog_line.name, blog_path_for(blog_line) %></span>
+<% end %>

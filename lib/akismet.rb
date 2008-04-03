@@ -23,7 +23,6 @@ module Akismet
     @verifiedKey = false
     @proxyPort = nil
     @proxyHost = nil
-    YAML.load_file("#{RAILS_ROOT}/config/preferences/site.yml")
     instance_eval do
       YAML.load_file("#{RAILS_ROOT}/config/akismet.yml").each do |k,v| #CHANGED
         instance_variable_set("@#{k}", v)

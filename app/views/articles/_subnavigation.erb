@@ -9,5 +9,5 @@
 <% if controller.controller_name == 'articles' %>
 <%= subnavi_el "New Article", article_path_from_blog(blog, :prefix => :new), :current => controller.action_name == 'new' if blog.editable_by?(get_viewer) && article.nil? %>
 <%= subnavi_el "Edit", article_path_for(article, :prefix => :edit), :current => controller.action_name == 'edit' if article && !article.new_record? && article.editable_by?(get_viewer) %>
-<%= subnavi_el "Clip", clip_path_from_widgetable(article, :prefix => :new) if article && !article.new_record? && article.published? %>
+<%= subnavi_el "Clip", clip_path_from_widgetable(article, :prefix => :new) if logged_in? && article && !article.new_record? && article.published? %>
 <% end %>
