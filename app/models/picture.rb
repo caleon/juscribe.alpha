@@ -18,7 +18,7 @@ class Picture < ActiveRecord::Base
   #                         validate :attachment_attributes_valid?
   validates_presence_of :depictable_type, :depictable_id, :user_id
   validates_length_of :name, :in => 3..50
-  validates_length_of :caption, :in => 3..200, :allow_nil => true
+  validates_length_of :caption, :in => 3..200, :allow_blank => true
   validates_with_regexp :name, :caption
   attr_protected :depictable_type, :depictable_id
   # Needs more validations for kropper
