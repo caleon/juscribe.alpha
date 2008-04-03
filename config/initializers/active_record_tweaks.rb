@@ -53,7 +53,7 @@ module ActiveRecord
     end
     
     def layout_name
-      self.layouting.name rescue nil
+      self.layouting && !self.layouting.name.blank? ? self.layouting.name : nil
     end
   
     def layout_file(*args)
@@ -63,7 +63,7 @@ module ActiveRecord
       else
         [ self.class.class_name.pluralize.underscore, file.to_s ]
       end
-      return nil unless self.layouting
+      return nil unless self.layout_name
       arr.unshift("/layouts/#{self.layout_name}")
       arr.join('/')
     end
