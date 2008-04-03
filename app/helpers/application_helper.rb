@@ -35,11 +35,7 @@ module ApplicationHelper
                        (opts.merge(record ? { :id => "#{record.class.class_name.downcase}Page" } : {:id => 'Page'}))),
            block.binding
   end
-  
-  def main_record
-    @user || @group || @widget || @article || @event || @thoughtlet || @list || @item
-  end
-  
+
   def get_canvas_class
     "#{controller.controller_name}-#{controller.action_name} #{controller.action_name}"
   end
