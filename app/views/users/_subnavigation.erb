@@ -1,3 +1,4 @@
+<%# FIXME. is this implementation even being used now, or necessary at all? %>
 <% @user ||= @depictable || @widgetable || @commentable %>
 <%= bread_el "Users", users_path, :current => controller.action_name != 'new' if controller.controller_name == 'users' && (@user.nil? || @user.new_record?) %>
 <%= bread_el @user.nick, @user, :current => %w(show).include?(controller.action_name) && controller.controller_name == 'users' unless @user.nil? || @user.new_record? %>

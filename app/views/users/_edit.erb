@@ -4,8 +4,12 @@
 		<legend>Edit Profile</legend>
 		
 		<%= render :partial => 'users/form', :layout => 'edit_form', :locals => { :f => f } %>
+
+		<%= render :partial => 'shared/layout_form', :locals => { :f => f } %>
 		<%= submit_tag "Update", :disable_with => "Please wait..." %>
+
 	</fieldset>
+	
 <% end %>
 
 <%= render :partial => 'users/edit_password' %>

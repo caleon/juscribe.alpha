@@ -19,13 +19,13 @@
 
 	<div class="msm_main_column-a msm_main_column nopad">
 		<%= render :partial => 'event',
-		 					 :layout => custom_partial('lead_widget'),
+		 					 :layout => wayout(:lead_widget),
 		 					 :object => @events[0] if @events[0] %>
 	</div>
 
 	<div class="msm_main_column-b msm_main_column">
 		<%= render :partial => 'users/upcoming_events',
-		 					 :layout => custom_partial('inner'),
+		 					 :layout => wayout(:inner),
 		 					 :object => @user.upcoming_events,
 		 					 :locals => { :user => @user } unless @user.upcoming_events.blank? %>
 	</div>
@@ -35,7 +35,7 @@
 <div class="msm_row" id="msm_row-2">
 	<div class="msm_main_column-ab msm_main_column msm_with_reg_wid">
 		<%= render(:partial => 'event',
-							 :layout => custom_partial('widget'),
+							 :layout => wayout(:widget),
 							 :object => @events[1]) if @events[1] %>
 	</div>
 </div>
@@ -43,13 +43,13 @@
 <div class="msm_row nobg" id="msm_row-3">
 	<div class="msm_main_column-a msm_main_column msm_with_reg_wid">
 		<%= render(:partial => 'event',
-							 :layout => custom_partial('widget'),
+							 :layout => wayout(:widget),
 							 :object => @events[2]) if @events[2] %>
 	</div>
 	
 	<div class="msm_main_column-b msm_main_column nopad">
 		<%= render(:partial => 'event',
-							 :layout => custom_partial('framed'),
+							 :layout => wayout(:framed),
 							 :object => @events[3]) if @events[3] %>
 	</div>
 	<%= br_clear %>
@@ -58,13 +58,13 @@
 <div class="last msm_row" id="msm_row-4">
 	<div class="msm_main_column-ab msm_main_column msm_with_reg_wid">
 		<%= render(:partial => 'event',
-							 :layout => custom_partial('widget'),
+							 :layout => wayout(:widget),
 							 :object => @events[4]) if @events[4] %>
 	</div>
 </div>
 	
 <% content_for :side_column do -%>
-	<% with_options :layout => custom_partial('framed') do |framed| %>
+	<% with_options :layout => wayout(:framed) do |framed| %>
 		<%= framed.render :partial => custom_partial('ads/google_ads') %>
 		<%= framed.render :partial => custom_partial('ads/google_ads') %>
 	<% end %>

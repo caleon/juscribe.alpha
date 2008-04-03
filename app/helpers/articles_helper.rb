@@ -1,10 +1,4 @@
 module ArticlesHelper
-  def set_subnav_article
-    @subnav_article = @article || @depictable || @widgetable || @commentable
-    @subnav_blog = @blog || @subnav_article.blog
-    @subnav_author = @author || @subnav_blog.bloggable
-  end
-  
   def article_path_for(article, opts={})
     instance_eval %{ #{opts[:prefix] ? "#{opts[:prefix]}_" : ''}#{article.path_name_prefix}_#{opts[:url] ? 'url' : 'path'}(article.to_path) }      
   end

@@ -45,6 +45,8 @@ class Article < ActiveRecord::Base
     [ self.blog.path_name_prefix, self.published? ? 'article' : 'draft' ].join('_')
   end
   
+  def author; self.blog.bloggable; end
+  
   def import?; self.imported_at?; end
   def draft?; !self.published_at? && !self.published_date?; end
   def published?; self.published_at? && self.published_date?; end

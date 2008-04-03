@@ -9,6 +9,20 @@ module ApplicationHelper
   rescue
     nil
   end
+  
+  def subnav_for(record)
+    locals = { :"#{record.class.class_name.underscore}" => record }
+    case record
+    when Article 
+      locals[:blog] = record.blog
+      locals[:author] = record.author
+    when Blog
+      locals[:bloggable] = record.bloggable
+    else
+      locals[:user] = record.user
+    end
+    render :partial => "#{record.class.table_name}/subnavigation", :locals => locals
+  end
     
   ### Refer to config/initializers/action_controller_tweaks.rb
   def responding_types; @responding_types ||= [:html]; end
