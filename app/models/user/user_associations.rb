@@ -20,7 +20,7 @@ class User < ActiveRecord::Base
   has_many :songs, :dependent => :nullify
   has_many :events, :dependent => :nullify, :order => 'events.begins_at DESC'
   has_many :upcoming_events, :class_name => 'Event', :order => 'events.begins_at DESC',
-                             :limit => 10
+                             :limit => 10, :conditions => ["events.begins_at IS NULL OR events.begins_at > ?", Time.now]
   has_many :projects, :dependent => :nullify
   has_many :messages, :foreign_key => 'recipient_id', :dependent => :nullify,
            :order => 'messages.id DESC' do
