@@ -18,14 +18,14 @@
 	</div>
 
 	<div class="msm_main_column-a msm_main_column nopad">
-		<%= render :partial => 'article',
-		 					 :layout => custom_partial('lead_widget'),
+		<%= render :partial => 'article_lead',
+		 					 :layout => wayout(:lead_widget),
 		 					 :locals => { :article => @articles[0] } if @articles[0] %>
 	</div>
 
 	<div class="msm_main_column-b msm_main_column">
-		<%= render :partial => 'users/latest_articles', # FIXME: Faulty.
-		 					 :layout => custom_partial('inner'),
+		<%= render :partial => "#{@author.class.class_name.underscore.singularize}/latest_articles",
+		 					 :layout => wayout(:inner),
 		 					 :object => @author.articles.find(:all, :limit => 5),
 		 					 :locals => { :user => @user } if false %>
 	</div>
@@ -35,7 +35,7 @@
 <div class="msm_row" id="msm_row-2">
 	<div class="msm_main_column-ab msm_main_column msm_with_reg_wid">
 		<%= render(:partial => 'article',
-							 :layout => custom_partial('widget'),
+							 :layout => wayout(:inner),
 							 :object => @articles[1]) if @articles[1] %>
 	</div>
 </div>
@@ -43,13 +43,13 @@
 <div class="msm_row nobg" id="msm_row-3">
 	<div class="msm_main_column-a msm_main_column msm_with_reg_wid">
 		<%= render(:partial => 'article',
-							 :layout => custom_partial('widget'),
+							 :layout => wayout(:inner),
 							 :object => @articles[2]) if @articles[2] %>
 	</div>
 	
 	<div class="msm_main_column-b msm_main_column nopad">
 		<%= render(:partial => 'article',
-							 :layout => custom_partial('framed'),
+							 :layout => wayout(:framed),
 							 :object => @articles[3]) if @articles[3] %>
 	</div>
 	<%= br_clear %>
@@ -58,13 +58,13 @@
 <div class="last msm_row" id="msm_row-4">
 	<div class="msm_main_column-ab msm_main_column msm_with_reg_wid">
 		<%= render(:partial => 'article',
-							 :layout => custom_partial('widget'),
+							 :layout => wayout(:widget),
 							 :object => @articles[4]) if @articles[4] %>
 	</div>
 </div>
 	
 <% content_for :side_column do -%>
-	<% with_options :layout => custom_partial('framed') do |framed| %>
+	<% with_options :layout => wayout(:framed) do |framed| %>
 		<%= framed.render :partial => custom_partial('ads/google_ads') %>
 		<%# framed.render :partial => "user", :object => @user %>
 		<%= framed.render :partial => custom_partial('ads/google_ads') %>
