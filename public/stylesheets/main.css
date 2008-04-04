@@ -14,11 +14,11 @@
 	position: relative;
 	height: 50px;
 	padding: 13px 0 13px 13px;
-	border-top: 12px solid #003B92;
+	background: #e6d7ba url(/images/juscribe-banner.jpg) no-repeat left top;
 }
 
 #logo_link {
-	display: block;
+	display: none;
 	width: 200px;
 	height: 49px;
 }
