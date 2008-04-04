@@ -395,6 +395,11 @@
 	}
 	
 	/* Why doesn't the <caption /> tag work yet? */
+	
+	.msm_widget-inner span.caption {
+		display: none;
+	}
+	
 	#msm_lead_widget span.caption,
 	#canvas.articles-show span.caption {
 		display: block;
@@ -407,6 +412,7 @@
 		font-size: 88%;
 		text-align: center;
 	}
+	
 
 /* @end */
 
