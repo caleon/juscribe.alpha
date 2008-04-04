@@ -14,7 +14,7 @@ class User < ActiveRecord::Base
   has_many :owned_comments, :class_name => 'Comment', :dependent => :nullify
   with_options :class_name => 'Thoughtlet', :order => 'thoughtlets.id DESC' do |thoughtlet|
     thoughtlet.has_many :thoughtlets, :dependent => :nullify
-    thoughtlet.has_many :latest_thoughtlets, :limit => 7
+    thoughtlet.has_many :latest_thoughtlets, :limit => 10
     thoughtlet.has_one :latest_thoughtlet
   end
   has_many :songs, :dependent => :nullify
