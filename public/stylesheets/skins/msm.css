@@ -398,6 +398,9 @@
 /* @end */
 
 /* @group Widget */
+	.msm_main_column > .msm_widget-inner {
+		margin-bottom: 18px;
+	}
 	
 	.msm_widget-inner li {
 		margin-bottom: 9px;
