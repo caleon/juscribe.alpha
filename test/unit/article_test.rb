@@ -40,7 +40,8 @@ class ArticleTest < ActiveSupport::TestCase
     assert_equal '3421-951asjdfeaj-343-41-4-asdf', art.permalink
     
     string_with_symbols_in_front_and_back = '!!! This is the weirdest shit I\'ve seen!'
-    assert art = Article.create(:content => 'blah blah', :user => users(:colin), :title => string_with_symbols_in_front_and_back, :blog => blogs(:first))
+    art = Article.create(:content => 'blah blah blah blah blah blah blah', :user => users(:colin), :title => string_with_symbols_in_front_and_back, :blog => blogs(:first))
+    assert art.errors.empty?, art.errors.inspect
     assert_equal 'This-is-the-weirdest-shit-Ive-seen', art.permalink
     orig_permalink = art.permalink
     art.title = 'New title'
@@ -52,7 +53,7 @@ class ArticleTest < ActiveSupport::TestCase
   end
   
   def test_to_path
-    art = Article.create(:user => users(:colin), :title => 'Welcome to Maryland', :content => 'blah blah blah', :blog => blogs(:first))
+    art = Article.create(:user => users(:colin), :title => 'Welcome to Maryland', :content => 'blah blah blah blah blah blah blah', :blog => blogs(:first))
     assert art.valid? && !art.new_record?
     assert_equal 'Welcome-to-Maryland', art.permalink
     assert_equal 3, art.to_path.keys.size

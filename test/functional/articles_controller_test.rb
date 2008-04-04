@@ -314,7 +314,7 @@ class ArticlesControllerTest < ActionController::TestCase
   def test_draft_update
     articles(:blog).send(:make_permalink, :with_save => true)
     assert articles(:blog).draft?
-    put :update, articles(:blog).to_path.merge(:article => { :content => "la dee la" }), as(:colin)
+    put :update, articles(:blog).to_path.merge(:article => { :content => "la dee la la dee la" }), as(:colin)
     assert_redirected_to user_blog_draft_url(articles(:blog).to_path)
     assert_equal "You have successfully updated #{articles(:blog).display_name}.", flash[:notice]
   end
