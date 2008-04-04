@@ -245,11 +245,12 @@
 	}
 	
 	#msm_header .msm_column-a {
-		width: 600px;
+		width: 598px;
+		margin-right: 18px;
 	}
 	
 	#msm_header .msm_column-b {
-		width: 329px;
+		width: 313px;
 	}
 	
 	#msm_main_column {
@@ -359,6 +360,10 @@
 	.msm_layout span.articleBlog {
 		font-weight: bold;
 		color: #999;
+	}
+	
+	.msm_layout p.articleContent {
+		line-height: 1.8em;
 	}
 	
 	/* Embedded images within a post */
@@ -566,7 +571,6 @@
 	
 	#canvas.articles-show p.articleContent {
 		margin: 0 0 17px;
-		line-height: 1.3em;
 	}
 	
 	.msm_layout .article-actions {
