@@ -31,19 +31,19 @@
 	<%= rounded_shim(:bottom) %>
 </div>
 
-<div class="msm_row" id="msm_row-2">
+<% content_tag :div, :class => 'msm_row', :id => 'msm_row-1' do -%>
 	<div class="msm_main_column-ab msm_main_column msm_with_reg_wid">
 		<%= render(:partial => 'articles/article',
 							 :layout => wayout(:widget),
-							 :object => @articles[1]) if @articles[1] %>
+							 :object => @articles[1]) %>
 	</div>
-</div>
+<% end if @articles[1] -%>
 
-<div class="msm_row<% if @articles[3] %> nobg<% end %>" id="msm_row-3">
+<% content_tag :div, :class => "msm_row#{' nobg' if @articles[3]}", :id => "msm_row-3" do -%>
 	<div class="msm_main_column-a<%= 'b' unless @articles[3] %> msm_main_column msm_with_reg_wid">
 		<%= render(:partial => 'articles/article',
 							 :layout => wayout(:widget),
-							 :object => @articles[2]) if @articles[2] %>
+							 :object => @articles[2]) %>
 	</div>
 	
 	<% content_tag :div, :class => "msm_main_column-b msm_main_column nopad" do -%>
@@ -53,16 +53,15 @@
 	<% end if @articles[3] -%>
 
 	<%= br_clear %>
-</div>
+<% end if @articles[2] -%>
 
-<div class="last msm_row" id="msm_row-4">
+<% content_tag :div, :class => 'last msm_row' :id => 'msm_row-4' do -%>
 	<div class="msm_main_column-ab msm_main_column msm_with_reg_wid">
 		<%= render(:partial => 'articles/article',
 							 :layout => wayout(:widget),
-							 :object => @articles[4]) if @articles[4] %>
+							 :object => @articles[4]) %>
 	</div>
-</div>
-
+<% end if @articles[4] -%>
 	
 <% content_for :side_column do -%>
 	<% with_options :layout => :framed do |framed| %>
