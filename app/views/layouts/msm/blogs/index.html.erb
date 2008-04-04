@@ -30,6 +30,7 @@
 		 					 :layout => wayout(:inner),
 		 					 :locals => { :bloggable => @bloggable,
 														:collection => collection } unless collection.blank? %>
+		<%= wrender :blogs, :layout => wayout(:inner) %>
 	</div>
 	<%= rounded_shim(:bottom) %>
 </div>
@@ -68,7 +69,6 @@
 	
 <% content_for :side_column do -%>
 	<% with_options :layout => wayout(:framed) do |framed| %>
-		<%= framed.wrender :blogs %>
 		<%= framed.render :partial => 'ads/google_ads' %>
 		<%= framed.render :partial => 'bloggable', :object => @bloggable %>
 		<%# framed.render :partial => custom_partial('blogs/comments') %>
