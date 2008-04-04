@@ -1,12 +1,14 @@
-<% if @blog.blank? && article.blog %>
-	<h4>From <%= link_to article.user.nick, article.user %>'s <%= link_to article.blog.short_name, blog_path_for(article.blog) %> Blog</h4>
-<% end %>
-<h3><% unless article.published? %>DRAFT: <% end %><%= link_to article.title, article_path_for(article) %></h3>
-<p class="articleContent">
-<% if !(without_picture ||= false) && article.primary_picture %>
-	<%= picture_for(article, :with => { :class => 'smallPic' }) %>
-	<%= caption_for(article.primary_picture) %>
-<% end %>
-	<%= format_article(article, :truncate => (!without_picture && article.primary_picture ? 500 : 700), :without_intro => true) %></p>
-</p>
-<%= byline_for article %>
+<% div_for article do -%>
+	<% if @blog.blank? && article.blog %>
+		<h4>From <%= link_to article.user.nick, article.user %>'s <%= link_to article.blog.short_name, blog_path_for(article.blog) %> Blog</h4>
+	<% end %>
+	<h3><% unless article.published? %>DRAFT: <% end %><%= link_to article.title, article_path_for(article) %></h3>
+	<p class="articleContent">
+	<% if !(without_picture ||= false) && article.primary_picture %>
+		<%= picture_for(article, :with => { :class => 'smallPic' }) %>
+		<%= caption_for(article.primary_picture) %>
+	<% end %>
+		<%= format_article(article, :truncate => (!without_picture && article.primary_picture ? 500 : 700), :without_intro => true) %></p>
+	</p>
+	<%= byline_for article %>
+<% end -%>

@@ -1,7 +1,7 @@
 <% user ||= @user -%>
 <h3>Thoughtlets <%= rss_link_for("#{user.display_name}'s Thoughtlets", formatted_user_thoughtlets_path(user.to_path(true).merge(:format => :rss)) ) %></h3>
 <ul>
-	<%= render :partial => 'thoughtlets/thoughtlet', :collection => thoughtlets %>
+	<%= render :partial => 'thoughtlets/thoughtlet', :collection => thoughtlets, :locals => { :prefix => prefix ||= nil } %>
 </ul>
 <div class="msm_widget-footer">
 	<%= link_to 'View more thoughtlets', user_thoughtlets_path(user) %>

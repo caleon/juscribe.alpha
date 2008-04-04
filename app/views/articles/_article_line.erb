@@ -1,4 +1,4 @@
-<% content_tag tag ||= :li, :class => 'article_line' do %>
+<% content_tag_for tag ||= :li, article_line, prefix ||= nil, :class => 'article_line' do %>
 	<span>
 		<% if with_blog ||= false %>
 			<span class="articleBlog"><%= article_line.blog.short_name %></span>

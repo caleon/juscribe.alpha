@@ -1,13 +1,15 @@
-<% if article_lead.primary_picture -%>
-	<%= link_to picture_for(article_lead, :with => { :class => 'msm_lead_picture' }) +
-													caption_for(article_lead.primary_picture),
-							widgetable_path_for(article_lead), :class => 'article_picture_link' %>
-<% end %>
-	<h2><%= link_to article_lead.name, widgetable_path_for(article_lead) %></h2>
-	<p><%= format_article(article_lead, :truncate => 300, :without_intro => true) %></p>
-	<%= byline_for article_lead %>
-	<% content_tag(:ul, :id => 'msm_lead_follow_ups') do -%>
-		<% article_lead.find_similar(3).each do |similar| -%>
-			<li><%= link_to similar.name, similar %></li>
-		<% end -%>
-	<% end if !article_lead.tags.empty? -%>
+<% div_for article_lead do -%>
+	<% if article_lead.primary_picture -%>
+		<%= link_to picture_for(article_lead, :with => { :class => 'msm_lead_picture' }) +
+														caption_for(article_lead.primary_picture),
+								widgetable_path_for(article_lead), :class => 'article_picture_link' %>
+	<% end %>
+		<h2><%= link_to article_lead.name, widgetable_path_for(article_lead) %></h2>
+		<p><%= format_article(article_lead, :truncate => 300, :without_intro => true) %></p>
+		<%= byline_for article_lead %>
+		<% content_tag(:ul, :id => 'msm_lead_follow_ups') do -%>
+			<% article_lead.find_similar(3).each do |similar| -%>
+				<li><%= link_to similar.name, similar %></li>
+			<% end -%>
+		<% end if !article_lead.tags.empty? -%>
+<% end -%>

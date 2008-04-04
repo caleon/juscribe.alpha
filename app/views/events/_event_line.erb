@@ -1,8 +1,8 @@
-<% content_tag_for(:li, event_line) do %>
+<% content_tag_for :li, event_line, prefix ||= nil, :class => 'event_line' do -%>
 	<span>
 		<%= link_to event_line.name, user_event_path(event_line.user, event_line) %> 
 	<% if event_line.begins_at %>
 		<span class="timestamp"><%= event_line.begins_at.to_s(:concise) %></span>
 	<% end %>
 	</span>
-<% end %>
+<% end -%>

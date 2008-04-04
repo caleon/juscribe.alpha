@@ -281,7 +281,7 @@
 		margin: 14px 0 14px 18px;
 	}
 	
-	#msm_footer ul {
+	#msm_footer div.footer-box {
 		display: block;
 		float: left;
 		margin: 0 18px 18px 0;
