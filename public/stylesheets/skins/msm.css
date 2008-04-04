@@ -535,6 +535,10 @@
 		padding-top: 9px;
 		font-size: 90%;
 	}
+	
+	.msm_widget-inner .widgetContent.vacant {
+		background: url(/images/widget-vacant.png) no-repeat center;
+	}
 
 /* @end */
 
