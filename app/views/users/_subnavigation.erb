@@ -9,7 +9,7 @@
 	<% if @user && !@user.new_record? && controller.action_name != 'edit' %>
 		<%= subnavi_el "Blogs", user_blogs_path(@user) %>	
 		<%= subnavi_el "Thoughtlets", user_thoughtlets_path(@user) %>
-		<%= subnavi_el "Events", user_events_path(@user) %>
+		<%# subnavi_el "Events", user_events_path(@user) %>
 		<%= subnavi_el "Galleries", user_galleries_path(@user) %>
 	<% end %>
 	<% if logged_in? && @user && !@user.new_record? %>

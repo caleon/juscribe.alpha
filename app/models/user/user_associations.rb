@@ -2,7 +2,7 @@ class User < ActiveRecord::Base
   has_one :layouting, :as => :layoutable
   with_options :class_name => 'Article', :conditions => "articles.published_at IS NOT NULL AND articles.published_at < NOW()", :order => 'articles.id DESC' do |art|
     art.has_many :articles, :dependent => :nullify
-    art.has_many :latest_articles, :limit => 10
+    art.has_many :latest_articles, :limit => 5
   end
   has_many :drafts, :class_name => 'Article', :dependent => :nullify,
                     :conditions => "published_date IS NULL"
@@ -14,7 +14,7 @@ class User < ActiveRecord::Base
   has_many :owned_comments, :class_name => 'Comment', :dependent => :nullify
   with_options :class_name => 'Thoughtlet', :order => 'thoughtlets.id DESC' do |thoughtlet|
     thoughtlet.has_many :thoughtlets, :dependent => :nullify
-    thoughtlet.has_many :latest_thoughtlets, :limit => 10
+    thoughtlet.has_many :latest_thoughtlets, :limit => 7
     thoughtlet.has_one :latest_thoughtlet
   end
   has_many :songs, :dependent => :nullify

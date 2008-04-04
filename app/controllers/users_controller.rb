@@ -11,8 +11,6 @@ class UsersController < ApplicationController
     @widgets = @user.placed_widgets.sort_by(&:position).inject([]) {|arr, wid| arr[wid.position - 1] = wid; arr }
     # TODO: write custom sql for widgetable
     @comments = @user.comments.find(:all, :limit => 5)
-    @thoughtlets = @user.thoughtlets.sort_by{|tl| -tl.created_at.to_i }
-    @events = @user.events.sort_by {|ev| -ev.begins_at.to_i }
     @skin_file = @user.skin_file
     respond_to do |format|
       format.html { trender }

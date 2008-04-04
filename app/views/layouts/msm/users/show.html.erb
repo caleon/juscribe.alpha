@@ -13,7 +13,8 @@
 
 	<div class="msm_main_column-b msm_main_column">
 		<%= wrender :latest_articles, :layout => :inner %>
-		<%= wrender :upcoming_events, :layout => :inner %>
+		<%# wrender :upcoming_events, :layout => :inner %>
+		<%= wrender :layout => :inner %>
 	</div>
 	<%= rounded_shim(:bottom) %>
 </div>
@@ -31,7 +32,7 @@
 	</div>
 	
 	<div class="msm_main_column-b msm_main_column nopad">
-		<%= wrender :thoughtlets, :layout => :framed %>
+		<%= wrender :latest_thoughtlets, :layout => :framed %>
 	</div>
 	<%= br_clear %>
 </div>

@@ -10,7 +10,7 @@
 
 		<% content_tag :div, :class => 'footer-box' do -%>
 			<%= footer.render :partial => 'upcoming_events', :object => @user.upcoming_events[0..4] %>
-		<% end -%>
+		<% end if false -%>
 
 		<% content_tag :div, :class => 'footer-box' do -%>
 			<%= footer.render :partial => 'thoughtlets', :object => @user.thoughtlets.find(:all, :limit => 5) %>
