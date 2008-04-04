@@ -6,7 +6,7 @@
 		<div class="msm_row">
 			<div class="msm_column msm_column-a">
 				<h2><%= @page_title %></h2>
-				<h4>by <%= @blog.bloggable.display_name %></h4>				
+				<h4>by <%= link_to @blog.bloggable.display_name, @blog.bloggable %></h4>
 			</div>
 			<div class="msm_column msm_column-b">
 				<%= picture_for(@blog) %>
@@ -65,8 +65,8 @@
 	
 <% content_for :side_column do -%>
 	<% with_options :layout => :framed do |framed| %>
-		<%= framed.wrender :google_ads %>
 		<%= framed.wrender :description %>
+		<%= framed.wrender :google_ads %>
 		<%= framed.wrender :bloggable %>
 		<%= framed.wrender :comments, :blog => @blog %>
 		<%= framed.wrender :google_ads %>

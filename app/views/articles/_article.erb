@@ -5,7 +5,7 @@
 	<h3><% unless article.published? %>DRAFT: <% end %><%= link_to article.title, article_path_for(article) %></h3>
 
 	<% if !(without_picture ||= false) && article.primary_picture %>
-		<a href="#" class="article_picture_link">
+		<a href="<%= @article ? '#' : article_path_for(article) %>" class="article_picture_link">
 			<%= picture_for(article, :with => { :class => 'smallPic' }) %>
 			<%= caption_for(article.primary_picture) %>
 		</a>

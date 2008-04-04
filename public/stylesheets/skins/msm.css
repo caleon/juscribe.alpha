@@ -427,11 +427,15 @@
 
 	/* @group Article Picture Set */
 	
-		.msm_layout a.article_picture_link {
+		#canvas.articles-show a.article_picture_link,
+		#msm_lead_widget a.article_picture_link {
 			display: block;
 			position: relative;
 			overflow: hidden;
-			margin-bottom: 9px;
+		}
+		
+		#msm_lead_widget a.article_picture_link {
+			margin: 0 0 9px 0;
 		}
 		
 		#msm_lead_widget img.msm_lead_picture {

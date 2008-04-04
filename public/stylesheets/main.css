@@ -160,6 +160,11 @@ p.spaceMessaging {
 }
 
 #footer {
+	min-height: 80px;
+	background: url(/images/logo-grey.png) no-repeat center center;	
+}
+
+#footer .navigation {
 	
 }
 
