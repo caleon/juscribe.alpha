@@ -355,6 +355,19 @@
 
 /* @end */
 
+/* @group Blog */
+
+	.msm_layout blockquote.blogDescription {
+		color:  #999;
+		font-size: 88%;
+	}
+	
+	.msm_layout img.blog-picture {
+		height: 80px;
+	}
+
+/* @end */
+
 /* @group Article */
 
 	.msm_layout span.articleBlog {
@@ -552,11 +565,11 @@
 		font-size: 88%;
 	}
 	
-	#canvas.articles-show a.article_picture_link {
+	.msm_layout a.article_picture_link {
 		float: left;
 		position: relative;
 		overflow: hidden;
-		margin: 0 18px 18px 0;
+		margin: 0 18px 9px 0;
 	}
 	
 	#canvas.articles-show img.article-picture {
