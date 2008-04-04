@@ -42,18 +42,19 @@
 	</div>
 </div>
 
-<div class="msm_row nobg" id="msm_row-3">
-	<div class="msm_main_column-a msm_main_column msm_with_reg_wid">
+<div class="msm_row<% if @blogs[3] %> nobg<% end %>" id="msm_row-3">
+	<div class="msm_main_column-a<%= 'b' unless @blogs[3] %> msm_main_column msm_with_reg_wid">
 		<%= render(:partial => 'blog',
 							 :layout => wayout(:widget),
 							 :object => @blogs[2]) if @blogs[2] %>
 	</div>
 	
-	<div class="msm_main_column-b msm_main_column nopad">
+	<% content_tag :div, :class => "msm_main_column-b msm_main_column nopad" do -%>
 		<%= render(:partial => 'blog',
 							 :layout => wayout(:framed),
-							 :object => @blogs[3]) if @blogs[3] %>
-	</div>
+							 :object => @blogs[3]) %>
+	<% end if @blogs[3] %>
+	
 	<%= br_clear %>
 </div>
 
