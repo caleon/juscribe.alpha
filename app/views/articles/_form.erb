@@ -1,3 +1,13 @@
+<% add_script_file('fckeditor/fckeditor') -%>
+<% add_extra_top_scripts do -%>
+window.onload = function()
+{
+var oFCKeditor = new FCKeditor( 'article[content]' ) ;
+oFCKeditor.BasePath = "/javascripts/fckeditor/" ;
+oFCKeditor.Config["CustomConfigurationsPath"] = "/javascripts/fckcustom.js" ;
+oFCKeditor.ReplaceTextarea() ;
+}
+<% end -%>
 <%= f.label :content %>
 <%= error_message_on @article, :content %>
 <%= f.text_area :content %>
