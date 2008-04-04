@@ -94,7 +94,7 @@ ActionController::Routing::Routes.draw do |map|
       blog.resources :drafts, :controller => 'articles', :member => { :publish => :put },
                               :requirements => { :blog_id => regex_for(:blog, :permalink), :id => regex_for(:article, :permalink) } do |draft|
         draft.resources :pictures, :path_prefix => 'g/:group_id/blogs/:blog_id/drafts/:article_id',
-                                   :requirements => { :blog_id => regex_for(:blig, :permalink), :article_id => regex_for(:article, :permalink) }
+                                   :requirements => { :blog_id => regex_for(:blog, :permalink), :article_id => regex_for(:article, :permalink) }
       end
       blog.resources :pictures, :requirements => { :blog_id => regex_for(:blog, :permalink)} do |picture|
         picture.resources :clips, :requirements => { :blog_id => regex_for(:blog, :permalink) }
