@@ -8,6 +8,7 @@
 				<h2><%= @page_title %></h2>				
 			</div>
 			<div class="msm_column msm_column-b">
+				<%= digg_button %>
 				<%= @article.tags.map(&:to_s).join(', ') %>
 			</div>
 		</div>

@@ -240,6 +240,18 @@
 		padding: 0;
 	}
 	
+	#msm_header .msm_column {
+		float: left;
+	}
+	
+	#msm_header .msm_column-a {
+		width: 600px;
+	}
+	
+	#msm_header .msm_column-b {
+		width: 329px;
+	}
+	
 	#msm_main_column {
 		float: left;
 		margin-right: 9px;

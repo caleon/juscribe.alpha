@@ -96,4 +96,12 @@ module ApplicationHelper
     render :partial => 'shared/debugger' if get_viewer && get_viewer.admin?
   end
   
+  def digg_button(javascript=false)
+    if javascript || RAILS_ENV == 'production'
+  		javascript_tag nil, :src => "http://digg.com/tools/diggthis.js"
+		else
+		  image_tag 'digg.png', :width => 51, :height => 79
+	  end
+  end
+  
 end

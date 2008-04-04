@@ -7,7 +7,7 @@ class Blog < ActiveRecord::Base
   has_many :all_articles, :class_name => 'Article', :order => 'articles.id DESC'
   with_options :class_name => 'Article', :order => 'articles.id DESC', :conditions => "articles.published_at IS NOT NULL AND articles.published_at < NOW()" do |art|
     art.has_many :articles
-    art.has_many :latest_articles, :limit => 10
+    art.has_many :latest_articles, :limit => 5
     art.has_one :primary_article
   end
   has_many :drafts, :class_name => 'Article', :order => 'articles.id DESC', :conditions => "articles.published_at IS NULL"

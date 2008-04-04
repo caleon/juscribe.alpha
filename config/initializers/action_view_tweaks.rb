@@ -46,7 +46,7 @@ module ActionView::Helpers
       if @config[:scripts_at_bottom]
         add_inline_scripts(content, html_options)
       else
-        orig_javascript_tag(content, html_options)
+        javascript_tag_without_flip_flop(content, html_options)
       end
     end
     alias_method_chain :javascript_tag, :flip_flop
