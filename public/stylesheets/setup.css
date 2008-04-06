@@ -51,8 +51,8 @@ pre, code { font:115% monospace;*font-size:100%;}
 body * { line-height:1.22em; }
 
 /* TODO: Set these images! */
-a.external, a[href^="http://bah"] {
-	background: url('/images/rails.png') no-repeat right top;
+a.external {
+	background: url('/images/externalLink.gif') no-repeat right top;
 	padding-right: 10px;
 }
 a.internal { background: url('/images/arrow.png') no-repeat right top; padding-right: 18px; }
