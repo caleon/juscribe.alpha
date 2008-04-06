@@ -1,6 +1,6 @@
 class User < ActiveRecord::Base
   has_one :layouting, :as => :layoutable
-  with_options :class_name => 'Article', :conditions => "articles.published_at IS NOT NULL AND articles.published_at < NOW()", :order => 'articles.id DESC' do |art|
+  with_options :class_name => 'Article', :conditions => "articles.published_at IS NOT NULL AND articles.published_at < NOW()", :order => 'articles.published_at DESC' do |art|
     art.has_many :articles, :dependent => :nullify
     art.has_many :latest_articles, :limit => 5
   end

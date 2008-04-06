@@ -157,6 +157,10 @@
 	border-right-width: 0;
 }
 
+#browser .browser-col-listing {
+	margin-bottom: 0;
+}
+
 #browser #preview_pane {
 	border-right-width: 1px;
 }
@@ -167,7 +171,7 @@
 
 #browser #preview_pane img.picture {
 	display: block;
-	width: 150px;
+	width: 100px;
 	margin: 0 auto;
 }
 

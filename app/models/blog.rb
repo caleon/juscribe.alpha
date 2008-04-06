@@ -4,8 +4,8 @@ class Blog < ActiveRecord::Base
   
   belongs_to :user # creator
   belongs_to :bloggable, :polymorphic => true
-  has_many :all_articles, :class_name => 'Article', :order => 'articles.id DESC'
-  with_options :class_name => 'Article', :order => 'articles.id DESC', :conditions => "articles.published_at IS NOT NULL AND articles.published_at < NOW()" do |art|
+  has_many :all_articles, :class_name => 'Article', :order => 'articles.published_at DESC'
+  with_options :class_name => 'Article', :order => 'articles.published_at DESC', :conditions => "articles.published_at IS NOT NULL AND articles.published_at < NOW()" do |art|
     art.has_many :articles
     art.has_many :latest_articles, :limit => 5
     art.has_one :primary_article
@@ -43,7 +43,7 @@ class Blog < ActiveRecord::Base
   
   def find_articles_by_month(year, month)
     begin_date = Date.new(year, month, 1)
-    end_date = Date.new(year, month + 1, 1)
+    end_date = Date.new(year, (month == 12 ? 1 : month + 1), 1)
     self.articles.find(:all, :order => 'articles.published_at DESC', :conditions => ["articles.published_at IS NOT NULL AND articles.published_at > ? AND articles.published_at < ?", begin_date, end_date])
   end
   
