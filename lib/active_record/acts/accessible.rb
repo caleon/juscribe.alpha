@@ -45,7 +45,7 @@ module ActiveRecord::Acts::Accessible #:nodoc:
 
     def editable_by?(user)
       (user.admin? || self.user == user rescue false) ||
-      self.rule.bosses[:user].include?(user.id) ||
+      self.rule.bosses[:user].include?(user ? user.id : nil) ||
       self.rule.bosses[:group].include?(user.group_ids) rescue false
       # FIXME: pulling user.group_ids each time will be taxing on DB. cache
       # the array of group_ids per user in a serializable array or something.
