@@ -27,7 +27,7 @@ module ArticlesHelper
     text = article.content
     text = article_intro + article.content unless opts[:without_intro]
     text = sanitize(text, :tags => %w( code blockquote pre a strong em img i b embed object ), :attributes => %w(id class rel title style href))
-    text = truncate(text, opts[:truncate]) if opts[:truncate]
+    text = truncate_html(text, opts[:truncate]) if opts[:truncate]
     formatted = Hpricot(simple_format(text, :class => 'articleContent'))
     (formatted/"a").each{|link| link.set_attribute('class', 'external') if link.attributes['href'].match(/:\/\//)}
     formatted.to_html
