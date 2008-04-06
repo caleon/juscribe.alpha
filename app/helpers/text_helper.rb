@@ -18,8 +18,12 @@ module TextHelper
     if content_length > max_length
       truncated_doc = doc.truncate(actual_length)
       last_child = truncated_doc.children.last
-      last_child.inner_html = last_child.inner_html.gsub(/\W.[^\s]+$/, "") + ellipsis if last_child.inner_html
-      truncated_doc
+      if last_child.inner_html
+        last_child.inner_html = last_child.inner_html.gsub(/\W.[^\s]+$/, "") + ellipsis
+        truncated_doc
+      else
+        truncated_doc.to_s + ellipsis
+      end
     else
       text.to_s
     end
