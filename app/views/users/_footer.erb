@@ -1,4 +1,4 @@
-<% if @user && !@user.new_record? %>
+<% if @user && !@user.new_record? && @user.valid? %>
 	<% with_options :locals => { :prefix => :footer } do |footer| %>
 		<% content_tag :div, :class => 'footer-box' do -%>
 			<%= render :partial => 'blogs', :object => @user.blogs[0..4], :locals => { :bloggable => @user, :prefix => :footer } %>

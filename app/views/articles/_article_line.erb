@@ -7,6 +7,6 @@
 		<% if with_time ||= false %> <nobr><span class="timeago"><%= time_ago_in_words(article_line.updated_at) %></span></nobr><% end %>
 	</span>
 	<% unless without_excerpt ||= false %>
-		<%= format_article(article_line, :without_intro => true, :truncate => 35) %>
+		<%= strip_tags truncate(article_line.content, 35) %>
 	<% end %>
 <% end %>

@@ -45,9 +45,9 @@ class ApplicationController < ActionController::Base
   
   # FIXME: Turning default skin to MSM for now.
   def get_layout
-    main_object.layout_name || 'msm'
+    main_object.layout_name || Layouting::DEFAULT_LAYOUT
   rescue
-    'msm'
+    Layouting::DEFAULT_LAYOUT
   end
 
   

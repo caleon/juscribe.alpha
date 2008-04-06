@@ -25,12 +25,12 @@
 	</div>
 
 	<div class="msm_main_column-b msm_main_column">
+		<%= wrender :blogs, :layout => wayout(:inner) %>
 		<% collection = @blogs[1..7].map{|bl| bl.primary_article}.compact rescue [] %>
 		<%= render :partial => 'latest_blogs',
 		 					 :layout => wayout(:inner),
 		 					 :locals => { :bloggable => @bloggable,
 														:collection => collection } unless collection.blank? %>
-		<%= wrender :blogs, :layout => wayout(:inner) %>
 	</div>
 	<%= rounded_shim(:bottom) %>
 </div>

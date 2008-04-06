@@ -58,12 +58,6 @@ module ActionController::CommonMethods
     # L A Y O U T S #
     #################
     
-    #def set_layoutable
-    #  it = instance_variable_get("@#{shared_setup_options[:layoutable]}")
-    #  it = nil if it && it.new_record?
-    #  @layoutable ||= it || instance_variable_get("@#{shared_setup_options[:collection_layoutable]}") || @user
-    #end
-    
     # Same as in applicationhelper
     def main_object
       instance_variable_get("#{shared_setup_options[:instance_var]}") || instance_variable_get("#{shared_setup_options[:collection_owner_var]}")
@@ -74,7 +68,7 @@ module ActionController::CommonMethods
     def theme_render(*args)
       opts = args.extract_options!
       method_sym = args.shift || action_name.intern
-      if main_object && main_object.layouting
+      if main_object && (main_object.layouting || !Layouting::DEFAULT_LAYOUT.nil?) # FIXME
         render opts.merge(:template => main_object.layout_file(shared_setup_options[:plural_sym], method_sym))
       else
         render opts.merge(:action => method_sym.to_s)
@@ -82,7 +76,14 @@ module ActionController::CommonMethods
     end
     alias_method :trender, :theme_render
     
-    
+    def preview
+      # TODO: setup format.html version
+      # This can be done with rjs......
+      return unless setup
+      #render :partial => "preview",
+      #       :object => instance_variable_get(shared_setup_options[:instance_var])
+      render :action => '../shared/preview.js.rjs', :layout => false
+    end
     
     def setup(includes=nil, error_opts={})
       klass = shared_setup_options[:model_class]

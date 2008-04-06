@@ -1,0 +1,1 @@
+page.replace_html 'preview_pane', :partial => 'preview', :object => instance_variable_get(controller.shared_setup_options[:instance_var])

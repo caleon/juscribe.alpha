@@ -53,7 +53,7 @@ module ActiveRecord
     end
     
     def layout_name
-      self.layouting && !self.layouting.name.blank? ? self.layouting.name : nil
+      self.layouting && !self.layouting.name.blank? ? self.layouting.name : Layouting::DEFAULT_LAYOUT
     end
   
     def layout_file(*args)
@@ -71,7 +71,7 @@ module ActiveRecord
     def skin_name
       self.layouting.skin || self.layout_name
     rescue
-      nil
+      Layouting::DEFAULT_LAYOUT
     end
   
     def skin_file

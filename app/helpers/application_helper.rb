@@ -78,7 +78,7 @@ module ApplicationHelper
   end
 								
   def navi_skin_info
-    navi_el "Skin: #{main_object.layout_name rescue 'standard'}",
+    navi_el "Skin: #{main_object.layout_name rescue Layouting::DEFAULT_LAYOUT}",
             (@user && @user.editable_by?(get_viewer) ? edit_user_path(@user) : '#'),
             :right => true
   end
@@ -102,6 +102,23 @@ module ApplicationHelper
 		else
 		  image_tag 'digg.png', :width => 51, :height => 79
 	  end
+  end
+  
+  def preview_path_for(record)
+    instance_eval %{ preview_#{record.path_name_prefix}_path(record.to_path) }
+  end
+  
+  def browser(*args)
+    # TODO: SETUP non-JS based alternative
+    # Check size of args to determine width of each column in CSS by applying class names,
+    # Render a partial for each pane, including special preview pane for last
+    content_tag :ul do
+      content_tag :li do
+        render :partial => 'shared/browser_column', :locals => { :name => args.first.to_s.humanize,
+                                                                 :sym => args.first,
+                                                                 :collection => instance_variable_get("@#{args.first}") }
+      end
+    end
   end
   
 end

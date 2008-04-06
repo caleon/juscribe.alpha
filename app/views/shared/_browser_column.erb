@@ -1,0 +1,8 @@
+<h4><%= name %></h4>
+<% content_tag :ul do -%>
+	<% collection.each do |el| -%>
+		<% content_tag :li do -%>
+			<%= link_to_remote el.display_name, :url => preview_path_for(el) %>
+		<% end %>
+	<% end -%>
+<% end -%>
