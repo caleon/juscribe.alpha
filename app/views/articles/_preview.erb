@@ -3,7 +3,7 @@
 		<%= picture_for(preview) %>
 		<h4><%= preview.title %></h4>
 		<%= format_article(preview, :truncate => 200, :without_intro => true) %>
-		<%= byline_for(preview) %>
+		<%= byline_for(preview, :link => true) %>
 	<% else %>
 		Nothing selected
 	<% end %>

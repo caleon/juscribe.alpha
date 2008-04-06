@@ -87,9 +87,9 @@ module ApplicationHelper
     navi_el 'Customize', path, :right => true if main_object && main_object.editable_by?(get_viewer)
   end
   
-  def byline_for(record)
+  def byline_for(record, locals={})
     render :partial => "#{record.class.class_name.pluralize.underscore}/byline",
-                       :locals => { :"#{record.class.class_name.underscore}" => record }
+                       :locals => { :"#{record.class.class_name.underscore}" => record }.merge(locals)
   end
   
   def debug_module
