@@ -1,3 +1,4 @@
+<% user ||= @user -%>
 <h3>Latest Thoughtlets <%= rss_link_for(:user, formatted_user_thoughtlets_path(user.to_path(true).merge(:format => :rss)) ) %></h3>
 <ul>
 	<%= render :partial => 'thoughtlets/thoughtlet', :collection => latest_thoughtlets %>
