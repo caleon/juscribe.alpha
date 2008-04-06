@@ -135,6 +135,59 @@
 	
 }
 
+#browser {
+	overflow: hidden;
+}
+
+#browser .browser-col {
+	float: left;
+	width: 200px;
+}
+
+#canvas.blogs-show #browser .browser-col {
+	width: 33%;
+}
+
+#browser .browser-col-list,
+#browser #preview_pane {
+	height: 200px;
+	overflow-x: hidden;
+	overflow-y: auto;
+	border: 1px solid #C5C5C5;
+	border-right-width: 0;
+}
+
+#browser #preview_pane {
+	border-right-width: 1px;
+}
+
+#browser #preview_pane-inner {
+	margin: 9px;
+}
+
+#browser #preview_pane img.picture {
+	display: block;
+	width: 150px;
+	margin: 0 auto;
+}
+
+#browser #preview_pane p {
+	font-size: 88%;
+	line-height: 1.2em;
+}
+
+#browser li.browser-col-listing a {
+	display: block;
+	color:  #000;
+	font-weight: normal;
+	padding: 4px;
+}
+
+#browser li.browser-col-listing a:hover {
+	color: #fff;
+	background-color: #005ED2;
+}
+
 p.spaceMessaging {
 	display: block;
 	padding: 4em;

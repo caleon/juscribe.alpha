@@ -17,4 +17,8 @@ module BlogsHelper
     opts[:params] ||= {}
     instance_eval %{ #{opts[:prefix] ? "#{opts[:prefix]}_" : ''}#{bloggable.path_name_prefix}_path(bloggable.to_path.merge(opts[:params])) }
   end
+  
+  def browse_by_month_path_for(blog, params)
+    instance_eval %{ browse_by_month_#{blog.path_name_prefix}_path(blog.to_path.merge(params)) }
+  end
 end

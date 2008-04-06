@@ -112,13 +112,13 @@ module ApplicationHelper
     # TODO: SETUP non-JS based alternative
     # Check size of args to determine width of each column in CSS by applying class names,
     # Render a partial for each pane, including special preview pane for last
-    content_tag :ul do
-      content_tag :li do
-        render :partial => 'shared/browser_column', :locals => { :name => args.first.to_s.humanize,
-                                                                 :sym => args.first,
-                                                                 :collection => instance_variable_get("@#{args.first}") }
-      end
-    end
+    content_tag :ul,
+      content_tag(:li, render(:partial => 'shared/browser_column', :locals => { :name => args.first.to_s.humanize,
+                              :sym => args.first, :collection => instance_variable_get("@#{args.first}") }),
+                       :class => 'browser-col') +
+      content_tag(:li, render(:partial => 'shared/preview_pane', :locals => { :sym => args.last }), :class => 'browser-col'),
+                      :id => 'browser'
+      
   end
   
 end

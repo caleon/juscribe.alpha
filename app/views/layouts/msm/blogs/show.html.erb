@@ -35,12 +35,31 @@
 	<%= rounded_shim(:bottom) %>
 </div>
 
-<% content_tag :div, :class => 'msm_row', :id => 'msm_row-1' do -%>
+<% content_tag :div, :class => 'msm_row', :id => 'msm_row-2' do -%>
 	<div class="msm_main_column-ab msm_main_column msm_with_reg_wid">
-		<%= browser :articles %>
-		<div id="preview_pane">
-			
-		</div>
+		<%= rounded_shim(:top) %>
+		<%# browser :articles %>
+		<ul id="browser">
+			<li class="browser-col">
+				<h4>Months</h4>
+				<ul class="browser-col-list" id="browser-col-list-a">
+				<% @blog.months_posted.each do |month_year| %>
+					<% month, year = month_year[0], month_year[1] %>
+					<li class="browser-col-listing"><%= link_to_remote "#{Date::ABBR_MONTHNAMES[month]} #{year}", :url => browse_by_month_path_for(@blog, :month => "#{year}#{sprintf("%02d", month)}") %></li>
+				<% end %>
+				</ul>
+			</li>
+			<li class="browser-col">
+				<h4>Articles</h4>
+				<ul class="browser-col-list" id="browser-col-list-b">
+					
+				</ul>
+			</li>
+			<li class="browser-col">
+				<%= render :partial => 'shared/preview_pane', :locals => { :sym => 'articles' } %>
+			</li>
+		</ul>
+		<%= rounded_shim(:bottom) %>
 	</div>
 <% end -%>
 

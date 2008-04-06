@@ -1,0 +1,1 @@
+page.replace_html 'browser-col-list-b', :partial => 'browsable_article', :collection => @articles

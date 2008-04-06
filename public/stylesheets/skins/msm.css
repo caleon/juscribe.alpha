@@ -471,7 +471,8 @@
 		margin: 0;
 	}
 	
-	.msm_widget.regular > .msm_widget-inner {
+	.msm_widget.regular > .msm_widget-inner,
+	#browser {
 		margin: 14px 18px;
 	}
 	

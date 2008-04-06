@@ -29,6 +29,21 @@ class BlogsController < ApplicationController
     display_error(:message => "That Blog could not be found. Please check the address.")
   end
   
+  def browse_by_month
+    return unless setup
+    if params[:month].blank?
+      raise "NEED MONTH"
+    else
+      year = params[:month][0..3].to_i
+      month = params[:month][4..5].to_i
+      @articles = @blog.find_articles_by_month(year, month)
+      respond_to do |format|
+        format.html
+        format.js
+      end
+    end
+  end
+  
   def show
     return unless setup([:permission, :primary_article])
     find_opts = get_find_opts
