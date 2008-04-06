@@ -4,6 +4,7 @@
 # located at lib/active_record/acts/widgetable.rb. This will prevent needing
 # to require it manually.
 require 'image_science'
+require 'hpricot'
 ActiveRecord::Base.send(:include, ActiveRecord::Validations::FormatValidations)
 ActiveRecord::Base.send(:include, ActiveRecord::Acts::Accessible)
 ActiveRecord::Base.send(:include, ActiveRecord::Acts::Depictable)

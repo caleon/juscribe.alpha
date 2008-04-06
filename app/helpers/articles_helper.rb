@@ -26,8 +26,8 @@ module ArticlesHelper
   def format_article(article, opts={})
     text = article.content
     text = article_intro + article.content unless opts[:without_intro]
-    text = sanitize(text, :tags => %w( code blockquote pre a strong em img i b embed object ))
+    text = sanitize(text, :tags => %w( code blockquote pre a strong em img i b embed object ), :attributes => %w(id class rel style href))
     text = truncate(text, opts[:truncate]) if opts[:truncate]
-    simple_format text, :class => 'articleContent'
+    Hpricot(simple_format(text, :class => 'articleContent')).to_html
   end
 end
