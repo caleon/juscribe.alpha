@@ -6,7 +6,7 @@ class BlogsController < ApplicationController
   def index
     return unless get_bloggable
     find_opts = get_find_opts
-    @blogs = @bloggable.blogs.find(:all, find_opts.merge(:include => :primary_article))
+    @blogs = @bloggable.blogs.find(:all, find_opts.merge(:include => :latest_articles))
     @page_title = "Blogs by #{@bloggable.display_name}"
     respond_to do |format|
       format.html { trender }
