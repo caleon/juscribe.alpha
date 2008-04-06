@@ -13,6 +13,7 @@
 		<%# subnavi_el "Galleries", user_galleries_path(@user) %>
 	<% end %>
 	<%= subnavi_el "Clip", clip_path_from_widgetable(@user, :prefix => :new) if logged_in? && @user && !@user.new_record? && @user != get_viewer %>
+	<%= subnavi_el "About", about_user_path(@user) if @user && !@user.new_record? %>
 	<% if logged_in? && @user && !@user.new_record? %>
 			<%= subnavi_el "Message", new_message_path(:recipient => @user), :conditions => !this_is_viewer? %>		
 		<% if get_viewer.friends_with?(@user) %>
