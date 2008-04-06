@@ -43,7 +43,7 @@ class Blog < ActiveRecord::Base
   
   def find_articles_by_month(year, month)
     begin_date = Date.new(year, month, 1)
-    end_date = Date.new(year, (month == 12 ? 1 : month + 1), 1)
+    end_date = Date.new((month == 12 ? year + 1 : year), (month == 12 ? 1 : month + 1), 1)
     self.articles.find(:all, :order => 'articles.published_at DESC', :conditions => ["articles.published_at IS NOT NULL AND articles.published_at > ? AND articles.published_at < ?", begin_date, end_date])
   end
   
