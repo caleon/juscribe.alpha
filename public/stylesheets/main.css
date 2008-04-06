@@ -183,7 +183,8 @@
 	padding: 4px;
 }
 
-#browser li.browser-col-listing a:hover {
+#browser li.browser-col-listing a:hover,
+#browser li.browser-col-listing a.over {
 	color: #fff;
 	background-color: #005ED2;
 }
