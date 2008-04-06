@@ -41,6 +41,12 @@ class Blog < ActiveRecord::Base
     self.articles.find(:all, :select => "DISTINCT articles.published_date", :conditions => "articles.published_date IS NOT NULL", :order => 'articles.published_date DESC').map {|art| [ art.published_date.month, art.published_date.year ] }.uniq
   end
   
+  def count_articles_by_month(year, month)
+    begin_date = Date.new(year, month, 1)
+    end_date = Date.new((month == 12 ? year + 1 : year), ( month == 12 ? 1 : month + 1), 1)
+    self.articles.count(:all, :conditions => ["articles.published_at IS NOT NULL AND articles.published_at > ? AND articles.published_at < ?", begin_date, end_date])
+  end
+  
   def find_articles_by_month(year, month)
     begin_date = Date.new(year, month, 1)
     end_date = Date.new((month == 12 ? year + 1 : year), (month == 12 ? 1 : month + 1), 1)
