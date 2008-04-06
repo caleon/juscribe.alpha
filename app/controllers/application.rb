@@ -43,10 +43,11 @@ class ApplicationController < ActionController::Base
     return { :limit => limit, :offset => offset }.merge(hash)
   end
   
+  # FIXME: Turning default skin to MSM for now.
   def get_layout
-    main_object.layout_name || 'standard'
+    main_object.layout_name || 'msm'
   rescue
-    'standard'
+    'msm'
   end
 
   
