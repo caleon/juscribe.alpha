@@ -121,15 +121,15 @@ DOM.Builder.fromHTML = function(html) {
   return root.childNodes[0];
 };
 
-String.prototype.toElement = function() {
+String.prototype.toElement2 = function() {
   return DOM.Builder.fromHTML(this);
 };
 
 (function() {
   var old$ = $;
   $ = function(element) {
-    if (element && element.toElement && element.match(/^<(.+)>$/)) 
-      return $(element.toElement());
+    if (element && element.toElement2 && element.match(/^<(.+)>$/)) 
+      return $(element.toElement2());
     return old$.apply(this, arguments);
   }
 })();
