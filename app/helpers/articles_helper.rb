@@ -29,6 +29,7 @@ module ArticlesHelper
     text = sanitize(text, :tags => %w( code blockquote pre a strong em img i b embed object ), :attributes => %w(id class rel title style href))
     text = truncate_html(text, opts[:truncate]) if opts[:truncate]
     formatted = Hpricot(simple_format(text, :class => 'articleContent'))
+    # TODO: make link pop up in new window
     (formatted/"a").each{|link| link.set_attribute('class', 'external') if link.attributes['href'].match(/:\/\//)}
     formatted.to_html
   end
