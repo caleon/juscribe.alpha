@@ -3,15 +3,13 @@
 <% @no_bottom_shim = true %>
 
 <% content_for :header do -%>
-		<div class="msm_row">
-			<div class="msm_column msm_column-a">
-				<h2><%= @page_title %></h2>
-				<h4>by <%= link_to @blog.bloggable.display_name, @blog.bloggable %></h4>
-			</div>
-			<div class="msm_column msm_column-b">
-				<%= picture_for(@blog) %>
-			</div>
-		</div>
+	<div class="msm_column msm_column-a">
+		<h2><%= @page_title %></h2>
+		<h4>by <%= link_to @blog.bloggable.display_name, @blog.bloggable %></h4>
+	</div>
+	<div class="msm_column msm_column-b">
+		<%= picture_for(@blog) %>
+	</div>
 <% end -%>
 	
 <div class="msm_row" id="msm_row-1">

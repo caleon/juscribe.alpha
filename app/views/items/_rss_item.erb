@@ -16,9 +16,10 @@
 	<% else %>
 
 	<% rss_item = parseFeed('http://cdmjimmy.blogspot.com/feeds/posts/default?alt=rss') -%>
-	<h3><span class="articleBlog">RSS:</span>From <%= link_to rss_item.feed_title, rss_item.feed_link %> by <%= rss_item.item_author %></h3>
+	<h3><span class="articleBlog">RSS: </span>From <%= link_to rss_item.feed_title, rss_item.feed_link %> by <%= rss_item.item_author %></h3>
 	<h4><%= link_to rss_item.item_title, rss_item.item_link %></h4>
 	<p class="articleContent">
+		<%# TODO: make this use the same formatter as articles %>
 		<%= truncate sanitize(rss_item.item_content, :tags => %w(a img code blockquote )), 1000 %>
 	</p>
 	<%= byline_for rss_item %>

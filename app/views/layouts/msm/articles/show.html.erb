@@ -2,16 +2,14 @@
 <% set_link_author!(@author) -%>
 
 <% content_for :header do -%>
-		<div class="msm_row">
-			<div class="msm_column msm_column-a">
-				<span class="timestamp">updated by <%= @author.display_name %> at <%= @article.updated_at.to_s %></span>
-				<h2><%= @page_title %></h2>				
-			</div>
-			<div class="msm_column msm_column-b">
-				<%= digg_button %>
-				<%= @article.tags.map(&:to_s).join(', ') %>
-			</div>
-		</div>
+	<div class="msm_column msm_column-a">
+		<span class="timestamp">updated by <%= @author.display_name %> at <%= @article.updated_at.to_s %></span>
+		<h2><%= @page_title %></h2>				
+	</div>
+	<div class="msm_column msm_column-b">
+		<%= digg_button %>
+		<%= @article.tags.map(&:to_s).join(', ') %>
+	</div>
 <% end -%>	
 
 <div class="last msm_row padded" id="msm_row-1">
