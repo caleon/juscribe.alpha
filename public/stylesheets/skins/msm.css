@@ -449,7 +449,10 @@
 		
 		#msm_lead_widget img.msm_lead_picture {
 			float: left;
-			width: 265px;
+			max-width: 265px;
+			_width: 265px;
+			max-height: 200px;
+			_height: 200px;
 		}
 		
 		#msm_lead_widget span.caption {
@@ -591,7 +594,9 @@
 	
 	#canvas.articles-show img.article-picture {
 		float: left;
-		width: 265px;
+		max-width: 265px;
+		_width: 265px;
+		max-height: 200px;
 		padding: 0;
 		margin: 0;
 	}

@@ -122,6 +122,7 @@ module ApplicationHelper
   end
   
   def timepiece_for(timestamp)
+    # TODO: factor in time zones
     hour = timestamp.hour
     image_tag 'shim.gif', :class => "timepiece at#{sprintf("%02d", hour)}"
   end
