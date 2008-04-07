@@ -125,6 +125,7 @@
 		position:  absolute;
 		top:  0;
 		right: 0;
+		background: transparent url(/images/skins/msm/rss-icon-27x15.png) no-repeat left top;
 	}
 		
 	.msm_layout span.timeago {

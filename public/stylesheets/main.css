@@ -295,3 +295,10 @@ form {
 strong.articleIntro {
 	margin-right: 4px;
 }
+
+.rss_link {
+	position:  absolute;
+	top:  0;
+	right: 0;
+	background: transparent url(/images/rss-icon-27x15.png) no-repeat left top;
+}
