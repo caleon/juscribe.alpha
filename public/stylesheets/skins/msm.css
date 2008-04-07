@@ -449,10 +449,9 @@
 		
 		#msm_lead_widget img.msm_lead_picture {
 			float: left;
-			max-width: 265px;
-			_width: 265px;
-			max-height: 200px;
-			_height: 200px;
+			width: 265px;
+			max-height: 300px;
+			_height: 300px;
 		}
 		
 		#msm_lead_widget span.caption {
