@@ -13,6 +13,7 @@ module CssHelper
     '<br style="clear: both;" />'
   end
   
+  # FIXME; Shit why is the layout name hardcoded?
   def rounded_shim(position=nil)
     %{<div class="msm_shim msm_shim#{position ? "_#{position}" : nil}">
   			<div>&nbsp;</div>

@@ -14,7 +14,7 @@
 	position: relative;
 	height: 50px;
 	padding: 13px 0 13px 13px;
-	background: #e6d7ba url(/images/juscribe-banner.jpg) no-repeat left top;
+	background: transparent url(/images/logo-text.png) no-repeat 50px 13px;
 }
 
 #logo_link {
@@ -236,7 +236,7 @@ p.spaceMessaging {
 
 #footer {
 	min-height: 80px;
-	background: url(/images/logo-grey.png) no-repeat center center;	
+	background: url(/images/logo-symbol-grey.png) no-repeat center center;	
 }
 
 #footer .navigation {
