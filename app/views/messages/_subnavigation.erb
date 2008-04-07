@@ -1,4 +1,4 @@
-<%= bread_el @user.display_name, @user %>
+<%= bread_el image_tag('shim.gif', :class => 'shim') + @user.display_name, @user, :class => 'bread-home' %>
 <%= bread_el 'Messages', messages_path, :current => @message.nil? || @message.new_record? %>
 <%= bread_el truncate(@message.subject, 20), message_path(@message), :current => true if @message && !@message.new_record? %>
 <%= subnavi_el "Inbox", messages_path, :current => controller.action_name == 'index' && params[:show] != 'sent' %>

@@ -1,4 +1,4 @@
-<%= bread_el @user.display_name, @user if @user %>
+<%= bread_el image_tag('shim.gif', :class => 'shim') + @user.display_name, @user, :class => 'bread-home' if @user %>
 <%= bread_el 'Galleries', user_galleries_path(@user), :current => @gallery.nil? || @gallery.new_record? %>
 <%= bread_el(truncate(@gallery.name, 20), user_gallery_path(@gallery.to_path), :current => true) if @gallery && !@gallery.new_record? %>
 
