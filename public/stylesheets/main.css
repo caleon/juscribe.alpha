@@ -292,6 +292,41 @@ form {
 	color: #999;
 }
 
+img.timepiece {
+	width: 19px;
+	height: 19px;
+	background-image: url(/images/timepiece.png);
+	background-repeat: no-repeat;
+	vertical-align: middle;
+	margin-right: 4px;
+}
+
+img.timepiece.at00 { background-position: -19px 0; }
+img.timepiece.at01 { background-position: -19px -19px; }
+img.timepiece.at02 { background-position: -19px -38px; }
+img.timepiece.at03 { background-position: -19px -57px; }
+img.timepiece.at04 { background-position: -19px -76px; }
+img.timepiece.at05 { background-position: -19px -95px; }
+img.timepiece.at06 { background-position: 0 -114px; }
+img.timepiece.at07 { background-position: 0 -133px; }
+img.timepiece.at08 { background-position: 0 -152px; }
+img.timepiece.at09 { background-position: 0 -171px; }
+img.timepiece.at10 { background-position: 0 -190px; }
+img.timepiece.at11 { background-position: 0 -209px; }
+img.timepiece.at12 { background-position: 0 0; }
+img.timepiece.at13 { background-position: 0 -19px; }
+img.timepiece.at14 { background-position: 0 -38px; }
+img.timepiece.at15 { background-position: 0 -57px; }
+img.timepiece.at16 { background-position: 0 -76px; }
+img.timepiece.at17 { background-position: 0 -95px; }
+img.timepiece.at18 { background-position: -19px -114px; }
+img.timepiece.at19 { background-position: -19px -133px; }
+img.timepiece.at20 { background-position: -19px -152px; }
+img.timepiece.at21 { background-position: -19px -171px; }
+img.timepiece.at22 { background-position: -19px -190px; }
+img.timepiece.at23 { background-position: -19px -209px; }
+
+
 strong.articleIntro {
 	margin-right: 4px;
 }

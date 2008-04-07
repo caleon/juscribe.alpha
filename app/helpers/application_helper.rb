@@ -121,4 +121,9 @@ module ApplicationHelper
       
   end
   
+  def timepiece_for(timestamp)
+    hour = timestamp.hour
+    image_tag 'shim.gif', :class => "timepiece at#{sprintf("%02d", hour)}"
+  end
+  
 end
