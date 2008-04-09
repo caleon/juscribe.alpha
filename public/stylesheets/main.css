@@ -287,6 +287,11 @@ form {
 	display: block;
 }
 
+body pre {
+	line-height: 0;
+	font-size: 88%;
+}
+
 .timestamp {
 	font-weight: bold;
 	color: #999;
