@@ -12,9 +12,9 @@
 
 #header {
 	position: relative;
-	height: 50px;
-	padding: 13px 0 13px 13px;
-	background: transparent url(/images/logo-text.png) no-repeat 50px 13px;
+	height: 25px;
+	padding: 7px 0 7px 13px;
+	background: #666 url(/images/logo-symbol-white-small.png) no-repeat 13px 7px;
 }
 
 #logo_link {
