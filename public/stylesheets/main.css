@@ -45,7 +45,7 @@
 }
 
 .search #search_button {
-	border: 0;
+	border: 1px solid #333;
 	color: #fff;
 	background-color: #666;
 }
