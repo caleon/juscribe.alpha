@@ -34,6 +34,10 @@ class Picture < ActiveRecord::Base
                    :stencil_height    =>  100,
                    :resize_to_stencil =>  false }
  
+  def display_name
+    "Picture: " + self.caption.blank? ? "for #{self.depictable.display_name}" : self.caption
+  end
+ 
   def name
     self[:name] || "Untitled"
   end
