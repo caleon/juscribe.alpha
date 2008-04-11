@@ -6,8 +6,6 @@
 	<% content_tag(:div, :id => 'wrapper') do %>
 		<%= render :partial => 'shared/header' %>
 		<% content_tag(:div, :id => 'canvas', :class => get_canvas_class) do %>
-			<%= warning_field %>
-			<%= notice_field %>
 			<div class="sub navigation">
 				<ul class="navigationList">
 					<%= render :partial => flash[:warning] ? 'shared/subnavigation_error' : 'subnavigation' %>
@@ -15,6 +13,9 @@
 					<%= navi_customize(user_widgets_path(@user.to_path(true))) if @user && @user.editable_by?(get_viewer) %>
 				</ul>
 			</div>
+			<%= warning_field %>
+			<%= notice_field %>
+
 			<div id="standard_layout" class="standard_layout">
 				<%= debug_module %>
 				<%= yield %>
