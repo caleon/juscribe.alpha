@@ -3,6 +3,6 @@
 <h4><%= bloggable.is_a?(User) ? bloggable.name_and_nick : bloggable.display_name %></h4>
 <p>
 	Blogs: <%= bloggable.blogs.count %><br />
-	Articles: <%= bloggable.blogs.inject(0) {|sum, blog| sum + blog.articles.count; sum } %>
+	Articles: <%= bloggable.blogs.inject(0) {|sum, blog| sum += blog.articles.count; sum } %>
 </p>
 <%= br_clear %>
