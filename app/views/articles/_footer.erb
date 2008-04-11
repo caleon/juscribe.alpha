@@ -1,0 +1,18 @@
+<% if @article && !@article.new_record? %>
+	<% with_options :locals => { :prefix => :footer } do |footer| %>
+		<% content_tag :div, :class => 'footer-box' do -%>
+			<%# render :partial => 'blogs', :object => @user.blogs[0..4], :locals => { :bloggable => @user, :prefix => :footer } %>
+		<% end if false -%>
+		
+		<% content_tag :div, :class => 'footer-box' do -%>
+			<%= render :partial => 'history', :locals => { :prefix => :footer_history } %>
+		<% end -%>
+
+		<% content_tag :div, :class => 'footer-box' do -%>
+			<%= footer.render :partial => 'similar_articles', :object => @article.find_similar(5) %>
+		<% end -%>
+
+		<%# br_clear %>
+
+	<% end %>
+<% end %>

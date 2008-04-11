@@ -343,3 +343,7 @@ strong.articleIntro {
 	right: 0;
 	background: transparent url(/images/rss-icon-27x15.png) no-repeat left top;
 }
+
+.tags .tag {
+	display: inline;
+}

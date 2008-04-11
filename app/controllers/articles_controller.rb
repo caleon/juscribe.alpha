@@ -53,6 +53,7 @@ class ArticlesController < ApplicationController
     if @article.draft?
       return unless authorize(@article, :editable => true)
     end
+    add_to_article_history(@article)
     @page_title = "#{@article.display_name}"
     respond_to do |format|
       format.html { trender }
@@ -209,5 +210,11 @@ class ArticlesController < ApplicationController
     @blog
   rescue ActiveRecord::RecordNotFound
     display_error(:message => 'That blog could not be found. Please check the address.') and return false
+  end
+  
+  def add_to_article_history(article)
+    (session[:articles_history] ||= []).delete(article.id)
+    session[:articles_history].unshift(article.id)
+    session[:articles_history] = session[:articles_history][0..9] if session[:articles_history].size > 10
   end
 end

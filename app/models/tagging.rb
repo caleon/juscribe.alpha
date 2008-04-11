@@ -18,6 +18,14 @@ class Tagging < ActiveRecord::Base
     [ self.taggable.path_name_prefix, 'tag' ].join('_')
   end
   
+  def name=(str)
+    self.tag = Tag.primary_find(str)
+  end
+  
+  def name
+    self.tag ? self.tag.name : nil
+  end
+  
   def to_path(for_associated=false)
     { :"#{for_associated ? 'tag_id' : 'id'}" => self.tag.to_param }.merge(self.taggable.nil? ? {} : self.taggable.to_path(true))
   end

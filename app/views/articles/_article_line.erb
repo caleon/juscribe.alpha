@@ -3,7 +3,10 @@
 		<% if with_blog ||= false %>
 			<span class="articleBlog"><%= link_to article_line.blog.short_name, blog_path_for(article_line.blog) %></span>
 		<% end %>
-		<%= link_to article_line.title, article_path_for(article_line) %>
+		<%= link_to article_line.title, article_path_for(article_line) %> 
+		<% if with_author ||= false %>
+			by <%= link_to article_line.author.display_name, article_line.author if with_author ||= false %> 
+		<% end %>
 		<% if with_time ||= false %> <nobr><span class="timeago"><%= time_ago_in_words(article_line.updated_at) %></span></nobr><% end %>
 	</span>
 	<% unless without_excerpt ||= false %>

@@ -1,0 +1,12 @@
+<h3>Similar Articles</h3>
+<% if !similar_articles.blank? %>
+	<% content_tag :ul do -%>
+		<%= render :partial => 'articles/article_line', :collection => similar_articles, :locals => { :with_blog => true, :without_excerpt => true, :prefix => prefix ||= nil } %>
+	<% end %>
+<% else %>
+	<% if @article.editable_by?(get_viewer) %>
+		You should tag your article to get more matches here.
+	<% else %>
+		No matches found.
+	<% end %>
+<% end %>

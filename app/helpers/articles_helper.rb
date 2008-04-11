@@ -32,4 +32,8 @@ module ArticlesHelper
     (formatted/"a").each{|link| link.set_attribute('class', 'external') and link.set_attribute('target', '_new') if link.attributes['href'].match(/:\/\//)}
     formatted.to_html
   end
+  
+  def articles_history(limit=10)
+    Article.find(session[:articles_history] ||= []).sort_by {|art| session[:articles_history].index(art.id) }
+  end
 end

@@ -45,8 +45,7 @@ class TagsController < ApplicationController
       display_error(:message => 'You are not authorized for that action.')
     else
       @page_title = "New Tag on #{@taggable.display_name}"
-      @tag = @taggable.tag_with(params[:tag][:name], :user => get_viewer)
-      if @tag.save
+      if @taggable.tag_with(params[:tagging][:name], :user => get_viewer)
         msg = "You have tagged #{@taggable.display_name}."
         respond_to do |format|
           format.html { flash[:notice] = msg; redirect_to taggable_url_for(@taggable) }

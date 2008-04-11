@@ -1,6 +1,6 @@
 <div class="navigation">
 	<ul class="navigationList">
-		<%# navi_el "Home", root_path %>
+		<%= navi_el "Home", root_path %>
 		<%= navi_el "Mine", user_path(get_viewer) if logged_in? %>
 	<% if logged_in? -%>
 		<%= navi_el "Inbox#{get_viewer.messages.unread.size > 0 ? " (#{get_viewer.messages.unread.size})" : ''}", messages_path %>

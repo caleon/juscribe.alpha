@@ -1,4 +1,4 @@
 <h3>Latest Articles <%= rss_link_for("#{@user}'s Latest Articles", formatted_user_latest_articles_path(@user.to_path(true).merge(:format => :rss)) ) %></h3>
-<% content_tag(:ul, :id => 'msm_other_main_widgets') do -%>
+<% content_tag :ul do -%>
 	<%= render :partial => 'articles/article_line', :collection => latest_articles, :locals => { :with_blog => true, :with_time => true, :without_excerpt => true, :prefix => prefix ||= nil } %>
 <% end -%>
