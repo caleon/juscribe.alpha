@@ -23,15 +23,36 @@
 }
 
 #logo {
+	float: left;
 	width: 18px;
 	height: 25px;
 	background: transparent url(/images/logo-symbol-white-small.png) no-repeat left top;
+	margin-right: 14px;
 }
 
 #header h1 {
 	color: #fff;
 	text-align: center;
 	margin-top: 0;
+}
+
+.search #query {
+	width: 200px;
+	background-color: #999;
+	color: #fff;
+	border: 1px solid #333;
+	padding: 2px 7px;
+}
+
+.search #search_button {
+	border: 0;
+	color: #fff;
+	background-color: #666;
+}
+
+.search #search_button:hover {
+	background-color: #000;
+	cursor: help;
 }
 
 .navigation {

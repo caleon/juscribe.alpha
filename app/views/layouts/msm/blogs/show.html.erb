@@ -62,8 +62,8 @@
 <% content_for :side_column do -%>
 	<% with_options :layout => :framed do |framed| %>
 		<%= framed.wrender :description %>
-		<%= framed.wrender :google_ads %>
 		<%= framed.wrender :bloggable %>
+		<%= framed.wrender :google_ads %>
 		<%= framed.wrender :comments, :blog => @blog %>
 		<%= framed.wrender :google_ads %>
 	<% end %>

@@ -1,7 +1,7 @@
 <%# FIXME. is this implementation even being used now, or necessary at all? %>
 <% @user ||= @depictable || @widgetable || @commentable %>
 <%= bread_el "Users", users_path, :current => controller.action_name != 'new' if controller.controller_name == 'users' && (@user.nil? || @user.new_record?) %>
-<%= bread_el image_tag('shim.gif', :class => 'shim') + @user.nick, @user, :class => 'bread-home', :current => %w(show).include?(controller.action_name) && controller.controller_name == 'users' unless @user.nil? || @user.new_record? %>
+<%= bread_el image_tag('shim.gif', :class => 'shim') + @user.nick, @user, :class => 'bread-home', :current => %w(show about).include?(controller.action_name) && controller.controller_name == 'users' unless @user.nil? || @user.new_record? %>
 <%= bread_el "Register", registration_path, :current => true if controller.controller_name == 'users' && controller.action_name == 'new' %>
 <%= bread_el "Preferences", edit_user_path(@user), :current => true if controller.controller_name == 'users' && controller.action_name == 'edit' %>
 
@@ -13,7 +13,7 @@
 		<%# subnavi_el "Galleries", user_galleries_path(@user) %>
 	<% end %>
 	<%= subnavi_el "Clip", clip_path_from_widgetable(@user, :prefix => :new) if logged_in? && @user && !@user.new_record? && @user != get_viewer %>
-	<%= subnavi_el "About", about_user_path(@user) if @user && !@user.new_record? %>
+	<%= subnavi_el "About", about_user_path(@user), :current => controller.action_name == 'about' if @user && !@user.new_record? %>
 	<% if logged_in? && @user && !@user.new_record? %>
 			<%= subnavi_el "Message", new_message_path(:recipient => @user), :conditions => !this_is_viewer? %>		
 		<% if get_viewer.friends_with?(@user) %>
