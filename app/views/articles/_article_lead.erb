@@ -1,6 +1,6 @@
 <% div_for article_lead do -%>
 	<% if article_lead.primary_picture -%>
-		<%= link_to picture_for(article_lead, :with => { :class => 'msm_lead_picture' }) +
+		<%= link_to picture_for(article_lead, :type => :feature, :with => { :class => 'msm_lead_picture' }) +
 														caption_for(article_lead.primary_picture),
 								widgetable_path_for(article_lead), :class => 'article_picture_link' %>
 	<% end %>

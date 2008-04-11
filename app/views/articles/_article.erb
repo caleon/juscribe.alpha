@@ -6,7 +6,7 @@
 
 	<% if !(without_picture ||= false) && article.primary_picture %>
 		<a href="<%= @article ? '#' : article_path_for(article) %>" class="article_picture_link">
-			<%= picture_for(article, :with => { :class => 'smallPic' }) %>
+			<%= picture_for(article, :type => :feature, :with => { :class => 'smallPic' }) %>
 			<%= caption_for(article.primary_picture) %>
 		</a>
 	<% end %>
