@@ -455,8 +455,6 @@
 		#msm_lead_widget img.msm_lead_picture {
 			float: left;
 			width: 265px;
-			max-height: 300px;
-			_height: 300px;
 		}
 		
 		#msm_lead_widget span.caption {
@@ -583,8 +581,15 @@
 /* @end */
 
 /* @group Articles-Show */
+	#canvas.articles-show span.imported_at {
+		display: block;
+		color: #444d6e;
+		font-size: 88%;
+		font-weight: bold;
+	}
 	
 	#canvas.articles-show span.timestamp {
+		display: block;
 		color: #CA0002;
 		font-size: 88%;
 	}

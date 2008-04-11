@@ -10,7 +10,7 @@ class Picture < ActiveRecord::Base
                   :min_size => 100.bytes,
                   :max_size => 2048.kilobytes,
                   :resize_to => '800x800>', # Used by RMagick, so probably not needed.
-                  :thumbnails => { :thumb => '100x100', :feature => '250x200' },
+                  :thumbnails => { :thumb => '100x100', :feature => '300x400' },
                   :processor => 'ImageScience'
   
   validates_as_attachment
