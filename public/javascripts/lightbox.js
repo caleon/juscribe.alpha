@@ -391,7 +391,7 @@ Lightbox.prototype = {
 		// if image is NOT part of a set..
 		if((imageLink.getAttribute('rel') == 'lightbox')){
 			// add single image to imageArray
-			imageArray.push(new Array(imageLink.getAttribute('href'), imageLink.getAttribute('title')));			
+			imageArray.push(new Array(imageLink.getAttribute('href') + '.js', imageLink.getAttribute('title')));			
 		} else {
 		// if image is part of a set..
 
@@ -399,11 +399,11 @@ Lightbox.prototype = {
 			for (var i=0; i<anchors.length; i++){
 				var anchor = anchors[i];
 				if (anchor.getAttribute('href') && (anchor.getAttribute('rel') == imageLink.getAttribute('rel'))){
-					imageArray.push(new Array(anchor.getAttribute('href'), anchor.getAttribute('title')));
+					imageArray.push(new Array(anchor.getAttribute('href') + '.js', anchor.getAttribute('title')));
 				}
 			}
 			imageArray.removeDuplicates();
-			while(imageArray[imageNum][0] != imageLink.getAttribute('href')) { imageNum++;}
+			while(imageArray[imageNum][0] != imageLink.getAttribute('href') + '.js') { imageNum++;}
 		}
 
 		// calculate top and left offset for the lightbox 

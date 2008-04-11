@@ -39,6 +39,8 @@ module PicturesHelper
     when :thumb
       picture = record.thumbs.first
     when :feature
+      picture = record.primary_picture.thumbnails.find_by_thumbnail('feature')
+    when :full
       picture = record.primary_picture
     end
     if picture

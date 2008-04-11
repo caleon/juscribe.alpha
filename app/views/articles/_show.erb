@@ -1,8 +1,9 @@
 <% div_for @article do -%>
 	<% if @article.primary_picture %>
-		<a href="#" class="article_picture_link">
+		<a href="<%= picture_path_for(@article.primary_picture) %>" rel="lightbox[article_<%= @article.id %>]" class="article_picture_link" title="<%= @article.primary_picture.caption %>">
 			<%= picture_for(@article) %>
 			<%= caption_for(@article.primary_picture) %>
+			<span class="zoomer">+</span>
 		</a>
 	<% end %>
 		<%= format_article(@article) %>
@@ -12,3 +13,6 @@
 <% end -%>	
 <br /><br />
 <%= render :partial => 'articles/comments' if @article.published? %>
+<% (@article.pictures - [@article.primary_picture]).each do |pic| -%>
+	<%= link_to '', picture_path_for(pic), :rel => "lightbox[article_#{@article.id}]", :style => 'display: none;', :title =>  pic.caption %>
+<% end -%>

@@ -20,7 +20,9 @@ class PicturesController < ApplicationController
     @page_title = @picture.display_name
     respond_to do |format|
       format.html { trender }
-      format.js
+      format.js do
+        send_file "#{RAILS_ROOT}/public#{@picture.public_filename}", :disposition => 'inline', :type => @picture.content_type
+      end
       format.xml
     end
   end

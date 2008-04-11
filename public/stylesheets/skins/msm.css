@@ -621,6 +621,23 @@
 		left: 1px;
 	}
 	
+	#canvas.articles-show a.article_picture_link span.zoomer {
+		display: none;
+		position: absolute;
+		top: 0;
+		right: 0;
+		width: 19px;
+		height: 19px;
+		line-height: 19px;
+		background-color: #000;
+		opacity: 0.8;
+		text-align: center;
+	}
+	
+	#canvas.articles-show a.article_picture_link:hover span.zoomer {
+		display: block;
+	}
+	
 	#canvas.articles-show p.articleContent {
 		margin: 0 0 17px;
 	}
