@@ -1,7 +1,7 @@
 <% content_tag_for tag ||= :li, article_line, prefix ||= nil, :class => 'article_line' do %>
 	<span>
 		<% if with_blog ||= false %>
-			<span class="articleBlog"><%= article_line.blog.short_name %></span>
+			<span class="articleBlog"><%= link_to article_line.blog.short_name, blog_path_for(article_line.blog) %></span>
 		<% end %>
 		<%= link_to article_line.title, article_path_for(article_line) %>
 		<% if with_time ||= false %> <nobr><span class="timeago"><%= time_ago_in_words(article_line.updated_at) %></span></nobr><% end %>

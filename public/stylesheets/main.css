@@ -303,7 +303,7 @@ img.timepiece {
 	height: 19px;
 	background-image: url(/images/timepiece.png);
 	background-repeat: no-repeat;
-	vertical-align: middle;
+	vertical-align: bottom;
 	margin-right: 4px;
 }
 
