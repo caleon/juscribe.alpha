@@ -35,11 +35,19 @@ class Picture < ActiveRecord::Base
                    :resize_to_stencil =>  false }
  
   def display_name
-    "Picture: " + self.caption.blank? ? "for #{self.depictable.display_name}" : self.caption
+    "Picture: " + (self.caption.blank? ? "for #{self.depictable.display_name}" : self.caption.to_s)
   end
  
   def name
     self[:name] || "Untitled"
+  end
+  
+  def caption
+    if self.thumbnail.blank?
+      self[:caption].blank? ? nil : self[:caption]
+    else
+      self[:caption].blank? ? self.parent.caption : self[:caption]
+    end
   end
   
   def to_path(for_associated=false)

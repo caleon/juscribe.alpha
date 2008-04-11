@@ -1,8 +1,0 @@
-<h3>Article Pictures</h3>
-<ul id="article-pictures" class="media_listing">
-<% pictures.each do |pic| %>
-	<li class="articlePicture pic">
-		<%= link_to image_tag(pic.public_filename, :class => dom_class(pic), :alt => pic.caption), picture_path_for(pic), :title => pic.caption %>
-	</li>
-<% end %>
-</ul>
