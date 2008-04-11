@@ -1,12 +1,12 @@
 <% collection ||= bloggable.blogs.find(:all, :order => 'id DESC', :limit => 5) -%>
 <% user ||= nil %>
-<h3>Latest News <%= user ? rss_link_for(:articles, formatted_articles_path(user, :format => :xml)) : nil %></h3>
+<h3>Latest Blogs <%= user ? rss_link_for(:articles, formatted_articles_path(user, :format => :xml)) : nil %></h3>
 <% content_tag(:ul, :id => 'msm_other_main_widgets') do -%>
 	<% collection.each do |art| %>
 		<li>
 			<span>
 			<% if art.blog %>
-				<span class="articleBlog"><%= art.blog.short_name %></span>
+				<span class="articleBlog"><%= link_to art.blog.short_name, blog_path_for(art.blog) %></span>
 			<% end %>
 				<%= link_to art.title, article_path_for(art) %> <nobr><span class="timeago"><%= time_ago_in_words(art.updated_at) %></span></nobr>
 			</span>
