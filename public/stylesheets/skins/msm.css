@@ -416,7 +416,7 @@
 		text-align: center;
 	}
 	
-	#canvas.articles-show a.articleAuthorLink img {
+	.msm_layout a.authorLink img {
 		float: left;
 		margin: 0 7px 7px 0;
 	}

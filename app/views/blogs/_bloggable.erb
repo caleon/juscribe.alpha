@@ -1,3 +1,8 @@
 <h3>Authoring <%= bloggable.class.to_s.humanize %></h3>
-<h4><%= link_to bloggable.display_name, bloggable %></h4>
-<%= link_to(picture_for(bloggable), bloggable, :title => bloggable.display_name) if bloggable.primary_picture %>
+<%= link_to(picture_for(bloggable), bloggable, :title => bloggable.display_name, :class => 'authorLink') if bloggable.primary_picture %>
+<h4><%= bloggable.is_a?(User) ? bloggable.name_and_nick : bloggable.display_name %></h4>
+<p>
+	Blogs: <%= bloggable.blogs.count %><br />
+	Articles: <%= bloggable.blogs.inject(0) {|sum, blog| blog.articles.count; sum } %>
+</p>
+<%= br_clear %>
