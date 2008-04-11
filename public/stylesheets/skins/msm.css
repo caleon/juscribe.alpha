@@ -584,6 +584,11 @@
 		font-size: 88%;
 	}
 	
+	#canvas.articles-show #msm_header iframe,
+	#canvas.articles-show #msm_header img.digg {
+		float: right;
+	}
+	
 	.msm_layout a.article_picture_link {
 		float: left;
 		position: relative;

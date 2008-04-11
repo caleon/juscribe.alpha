@@ -100,7 +100,7 @@ module ApplicationHelper
     if javascript || RAILS_ENV == 'production'
   		javascript_tag nil, :src => "http://digg.com/tools/diggthis.js"
 		else
-		  image_tag 'digg.png', :width => 51, :height => 79
+		  image_tag 'digg.png', :width => 51, :height => 79, :class => 'digg'
 	  end
   end
   
