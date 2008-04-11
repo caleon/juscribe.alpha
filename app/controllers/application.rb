@@ -117,6 +117,14 @@ class ApplicationController < ActionController::Base
     instance_eval %{ #{acshun ? "#{acshun}_" : ''}#{commentable.path_name_prefix}_url(commentable.to_path) }
   end
   
+  def tagging_url_for(tagging, acshun=nil)
+    instance_eval %{ #{acshun ? "#{acshun}_" : ''}#{tagging.path_name_prefix}_url(tagging.to_path) }
+  end
+  
+  def taggable_url_for(taggable, acshun=nil)
+    instance_eval %{ #{acshun ? "#{acshun}_" : ''}#{taggable.path_name_prefix}_url(taggable.to_path) }
+  end
+  
   def clip_url_for(clip, acshun=nil)
     instance_eval %{ #{acshun ? "#{acshun}_" : ''}#{clip.path_name_prefix}_url(clip.to_path) }
   end

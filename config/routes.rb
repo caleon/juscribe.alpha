@@ -24,7 +24,11 @@ ActionController::Routing::Routes.draw do |map|
                                                        :article_id => regex_for(:article, :permalink) }
           picture.resources :comments, :requirements => { :blog_id => regex_for(:blog, :permalink), :year => /\d{4}/, :month => /\d{1,2}/, :day => /\d{1,2}/,
                                                           :article_id => regex_for(:article, :permalink) }
+          picture.resources :tags, :requirements => { :blog_id => regex_for(:blog, :permalink), :year => /\d{4}/, :month => /\d{1,2}/, :day => /\d{1,2}/,
+                                                      :article_id => regex_for(:article, :permalink) }
         end
+        article.resources :tags, :requirements => { :blog_id => regex_for(:blog, :permalink), :year => /\d{4}/, :month => /\d{1,2}/, :day => /\d{1,2}/,
+                                                    :article_id => regex_for(:article, :permalink) }
       end
       blog.latest_articles 'latest-articles', :controller => 'articles', :action => 'latest_articles'
       blog.latest_articles 'latest-articles.:format', :controller => 'articles', :action => 'latest_articles', :name_prefix => 'formatted_user_blog_'
@@ -35,24 +39,26 @@ ActionController::Routing::Routes.draw do |map|
         draft.resources :pictures, :path_prefix => 'u/:user_id/blogs/:blog_id/drafts/:article_id',
                                    :requirements => { :blog_id => regex_for(:blog, :permalink), :article_id => regex_for(:article, :permalink) }
       end
-      blog.resources :pictures, :requirements => { :blog_id => regex_for(:blog, :permalink)} do |picture|
+      blog.resources :pictures, :requirements => { :blog_id => regex_for(:blog, :permalink) } do |picture|
         picture.resources :clips, :requirements => { :blog_id => regex_for(:blog, :permalink) }
         picture.resources :comments, :requirements => { :blog_id => regex_for(:blog, :permalink) }
+        picture.resources :tags, :requirements => { :blog_id => regex_for(:blog, :permalink) }
       end
+      blog.resources :tags, :requirements => { :blog_id => regex_for(:blog, :permalink) }
     end
     user.latest_articles 'latest-articles', :controller => 'articles', :action => 'latest_articles'
     user.latest_articles 'latest-articles.:format', :controller => 'articles', :action => 'latest_articles', :name_prefix => 'formatted_user_'
     user.resources :clips
     user.resources :comments
-    user.resources :events, :has_many => [ :clips, :comments ], :member => { :begin_event => :put, :end_event => :put } do |event|
-      event.resources :pictures, :has_many => [ :clips, :comments ]
+    user.resources :events, :has_many => [ :clips, :comments, :tags ], :member => { :begin_event => :put, :end_event => :put } do |event|
+      event.resources :pictures, :has_many => [ :clips, :comments, :tags ]
     end
-    user.resources :galleries, :has_many => [ :clips, :comments ] do |gallery|
-      gallery.resources :pictures, :has_many => [ :clips, :comments ]
+    user.resources :galleries, :has_many => [ :clips, :comments, :tags ] do |gallery|
+      gallery.resources :pictures, :has_many => [ :clips, :comments, :tags ]
     end
-    user.resources :pictures, :has_many => [ :clips, :comments ]
-    user.resources :thoughtlets, :has_many => [ :clips, :comments ] do |thought|
-      thought.resources :pictures, :has_many => [ :clips, :comments ]
+    user.resources :pictures, :has_many => [ :clips, :comments, :tags ]
+    user.resources :thoughtlets, :has_many => [ :clips, :comments, :tags ] do |thought|
+      thought.resources :pictures, :has_many => [ :clips, :comments, :tags ]
     end
     user.resources :widgets, :has_many => [ :comments ], :member => { :place => :put, :unplace => :put }
   end
@@ -84,7 +90,11 @@ ActionController::Routing::Routes.draw do |map|
                                                        :article_id => regex_for(:article, :permalink) }
           picture.resources :comments, :requirements => { :blog_id => regex_for(:blog, :permalink), :year => /\d{4}/, :month => /\d{1,2}/, :day => /\d{1,2}/,
                                                           :article_id => regex_for(:article, :permalink) }
+          picture.resources :comments, :requirements => { :blog_id => regex_for(:blog, :permalink), :year => /\d{4}/, :month => /\d{1,2}/, :day => /\d{1,2}/,
+                                                          :article_id => regex_for(:article, :permalink) }
         end
+        article.resources :tags, :requirements => { :blog_id => regex_for(:blog, :permalink), :year => /\d{4}/, :month => /\d{1,2}/, :day => /\d{1,2}/,
+                                                    :article_id => regex_for(:article, :permalink) }
       end
       blog.latest_articles 'latest-articles', :controller => 'articles', :action => 'latest_articles'
       blog.latest_articles 'latest-articles.:format', :controller => 'articles', :action => 'latest_articles', :name_prefix => 'formatted_group_blog_'
@@ -96,16 +106,19 @@ ActionController::Routing::Routes.draw do |map|
         draft.resources :pictures, :path_prefix => 'g/:group_id/blogs/:blog_id/drafts/:article_id',
                                    :requirements => { :blog_id => regex_for(:blog, :permalink), :article_id => regex_for(:article, :permalink) }
       end
-      blog.resources :pictures, :requirements => { :blog_id => regex_for(:blog, :permalink)} do |picture|
+      blog.resources :pictures, :requirements => { :blog_id => regex_for(:blog, :permalink) } do |picture|
         picture.resources :clips, :requirements => { :blog_id => regex_for(:blog, :permalink) }
         picture.resources :comments, :requirements => { :blog_id => regex_for(:blog, :permalink) }
+        picture.resources :tags, :requirements => { :blog_id => regex_for(:blog, :permalink) }
       end
+      blog.resources :tags, :requirements => { :blog_id => regex_for(:blog, :permalink) }
     end
     group.latest_articles 'latest-articles', :controller => 'articles', :action => 'latest_articles'
     group.latest_articles 'latest-articles.:format', :controller => 'articles', :action => 'latest_articles', :name_prefix => 'formatted_group_'
     group.resources :clips
     group.resources :comments
-    group.resources :pictures, :has_many => [ :clips, :comments ]
+    group.resources :pictures, :has_many => [ :clips, :comments, :tags ]
+    group.resources :tags
   end
   
   map.group_blog_articles 'g/:group_id/blogs/:blog_id/articles', :controller => 'articles', :action => 'index', :requirements => { :blog_id => regex_for(:blog, :permalink) }, :conditions => { :method => :get }

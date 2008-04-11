@@ -44,6 +44,7 @@ module ActiveRecord::Acts::Taggable
     def restricted_find_tagged_with(*args)
       opts = args.extract_options!
       # TODO: Stubbed. Make look like #find_similar
+      # Wait, what the hell was this supposed to be?
     end
   
     def taggable?; true; end
@@ -96,6 +97,6 @@ module ActiveRecord::Acts::Taggable
           "ORDER BY similar_count DESC LIMIT #{limit}")
     end
   
-    def taggable?; true; end
+    #def taggable?; true; end
   end
 end

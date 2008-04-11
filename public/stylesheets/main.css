@@ -14,18 +14,18 @@
 	position: relative;
 	height: 25px;
 	padding: 7px 0 7px 13px;
-	background: #888 url(/images/logo-symbol-white-small.png) no-repeat 13px 7px;
+	background: #888 url(/images/header_gradient.png) repeat-x;
 }
 
 #logo_link {
-	display: none;
-	width: 200px;
-	height: 49px;
+	width: 18px;
+	height: 25px;
 }
 
 #logo {
-	width: 200px;
-	height: 49px;
+	width: 18px;
+	height: 25px;
+	background: transparent url(/images/logo-symbol-white-small.png) no-repeat left top;
 }
 
 #header h1 {
@@ -54,7 +54,8 @@
 	line-height: 2em;
 	text-shadow: #a6a6a6 1px 1px 2px;
 	opacity: 1;
-	color: #000;
+	color: #fff;
+	
 }
 
 #header .navigation {

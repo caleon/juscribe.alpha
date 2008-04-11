@@ -13,4 +13,12 @@ class Tagging < ActiveRecord::Base
   def self.find_taggable(tagged_class, tagged_id)
     tagged_class.constantize.find(tagged_id)
   end
+  
+  def path_name_prefix
+    [ self.taggable.path_name_prefix, 'tag' ].join('_')
+  end
+  
+  def to_path(for_associated=false)
+    { :"#{for_associated ? 'tag_id' : 'id'}" => self.tag.to_param }.merge(self.taggable.nil? ? {} : self.taggable.to_path(true))
+  end
 end

@@ -7,6 +7,10 @@ class Tag < ActiveRecord::Base
   validates_uniqueness_of :name
   validates_with_regexp :name
   
+  def self.primary_find(*args)
+    find_by_name(args)
+  end
+  
   def self.parse(list)
     tag_names = []
 
@@ -26,6 +30,10 @@ class Tag < ActiveRecord::Base
     tag_names = tag_names.delete_if { |t| t.empty? }
 
     return tag_names
+  end
+  
+  def to_param
+    self.name
   end
 
   def tagged
