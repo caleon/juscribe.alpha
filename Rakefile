@@ -8,3 +8,9 @@ require 'rake/testtask'
 require 'rake/rdoctask'
 
 require 'tasks/rails'
+
+
+task(:grab_daily_password => :environment) do
+  require 'digest/sha2'
+  puts Digest::SHA256.hexdigest(Time.now.utc.beginning_of_day.to_s)[0..7]
+end
