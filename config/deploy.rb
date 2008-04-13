@@ -38,3 +38,7 @@ task :symlink_shared_media, :roles => [ :app ] do
   run "ln -s #{shared_path}/uploads #{release_path}/public/images/uploads"
 end
 after "deploy:update_code", :symlink_shared_media
+
+task :grab_daily_password, :roles => [ :app ] do
+  run %{ ./script/runner "require 'digest/sha2'; puts Digest::SHA256.hexdigest(Time.now.beginning_of_day.utc.to_s)[0..7]" }
+end

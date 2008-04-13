@@ -33,6 +33,7 @@ module ArticlesHelper
     formatted.to_html
   end
   
+  # FIXME: if the article record no longer exists, this will error out
   def articles_history(limit=10)
     Article.find(session[:articles_history] ||= []).sort_by {|art| session[:articles_history].index(art.id) }
   end
