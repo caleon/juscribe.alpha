@@ -416,7 +416,8 @@
 		text-align: center;
 	}
 	
-	.msm_layout a.authorLink img {
+	.msm_layout a.userLink img,
+	.msm_layout a.groupLink img {
 		float: left;
 		margin: 0 7px 7px 0;
 	}
@@ -654,4 +655,8 @@
 }
 .msm_layout img.pictureShow.large {
 	width: 580px;
+}
+
+#login-form {
+	background-color: #fff;
 }

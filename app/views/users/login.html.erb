@@ -1,4 +1,4 @@
-<% form_for :user, @user do |f| %>
+<% form_for :user, @user, :html => { :id => 'login-form' } do |f| %>
 	<fieldset>
 		<legend>Login</legend>
 		
@@ -10,6 +10,6 @@
 		<%= f.password_field :password %>
 		<%= error_message_on @user, 'password' %>
 		<br />
-		<%= submit_tag 'Login', :disable_with => 'Please wait...' %>
+		<%= f.submit 'Login', :disable_with => 'Please wait...' %>
 	</fieldset>
 <% end %>

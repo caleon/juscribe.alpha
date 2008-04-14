@@ -15,3 +15,12 @@
 <%= date_select :user, :birthdate, :start_year => 8.years.ago.year, :end_year => 70.years.ago.year, :default => 13.years.ago %>
 <br />
 <%= render :partial => 'pictures/form' %>
+<br />
+<%= f.label :social_networks_facebook, "Facebook ID" %>
+<%= text_field_tag 'user[social_networks][facebook]', @user.social_networks[:facebook], :id => 'user_social_networks_facebook' %>
+<br />
+<%= f.label :social_networks_myspace, "MySpace ID" %>
+<%= text_field_tag 'user[social_networks][myspace]', @user.social_networks[:myspace], :id => 'user_social_networks_myspace' %>
+<br />
+<%= f.label :social_networks_linkedin, "LinkedIn ID" %>
+<%= text_field_tag 'user[social_networks][linkedin]', @user.social_networks[:linkedin], :id => 'user_social_networks_linkedin' %>

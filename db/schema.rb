@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 66) do
+ActiveRecord::Schema.define(:version => 67) do
 
   create_table "articles", :force => true do |t|
     t.string   "title"
@@ -241,8 +241,9 @@ ActiveRecord::Schema.define(:version => 66) do
     t.date     "birthdate"
     t.integer  "sex"
     t.string   "type"
-    t.boolean  "admin",          :default => false
+    t.boolean  "admin",           :default => false
     t.text     "about"
+    t.text     "social_networks"
   end
 
   create_table "widgets", :force => true do |t|

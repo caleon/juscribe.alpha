@@ -1,0 +1,6 @@
+<%= link_to(picture_for(group), group, :title => group.display_name, :class => 'groupLink') if group.primary_picture %>
+<h4><%= group.is_a?(User) ? group.name_and_nick : group.display_name %></h4>
+<p>
+	Blogs: <%= group.blogs.count %><br />
+	Articles: <%= group.blogs.inject(0) {|sum, blog| sum += blog.articles.count; sum } %>
+</p>

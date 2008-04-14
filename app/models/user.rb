@@ -7,6 +7,7 @@ class User < ActiveRecord::Base
   include Friendship
   include_custom_plugins  
   # TODO: acts_as_cached
+  serialize :social_networks
     
   attr_protected :nick, :email, :password_salt, :password_hash, :type
   attr_accessor :tos_agreement
@@ -120,6 +121,22 @@ class User < ActiveRecord::Base
     self.password_salt, self.password_hash = salt, Digest::SHA256.hexdigest(pass + salt)
     @password = pass
     return self
+  end
+  
+  def social_networks
+    { :facebook => nil, :myspace => nil, :linkedin => nil }.merge((self[:social_networks] || {}).delete_if {|k, v| v.nil? })
+  end
+  
+  def active_social_networks
+    self.social_networks.delete_if {|k, v| v.nil? }
+  end
+  
+  def facebook?; self.active_social_networks.keys.include?(:facebook); end
+  def myspace?; self.active_social_networks.keys.include?(:myspace); end
+  def linkedin?; self.active_social_networks.keys.include?(:linkedin); end
+  
+  def social_networks=(hash={})
+    self[:social_networks] = hash.blank? ? nil : hash.symbolize_keys.delete_if {|k, v| v.blank? }
   end
   
   def accessible_by?(user=nil)

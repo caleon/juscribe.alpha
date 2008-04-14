@@ -368,3 +368,25 @@ strong.articleIntro {
 .tags .tag {
 	display: inline;
 }
+
+/* Coulda been .social_networks.facebook with styles refactored if not for IE... */
+.social_network {
+	display: inline;
+}
+
+.social_network img {
+	width: 15px;
+	height: 15px;
+	background: transparent url(/images/social_networks.gif) no-repeat 0 0;
+}
+.social_network .social_network-facebook {
+	background-position: 0 0;
+}
+
+.social_network .social_network-myspace {
+	background-position: -15px 0;
+}
+
+.social_network .social_network-linkedin {
+	background-position: -30px 0;
+}
