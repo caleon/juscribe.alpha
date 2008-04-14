@@ -137,7 +137,7 @@ class UsersController < ApplicationController
     @page_title = "Login"
     if request.post?
       user = User.find_by_nick(params[:user][:nick])
-      if user.authenticate(params[:user][:password])
+      if user && user.authenticate(params[:user][:password])
         @user = user
         session[:id] = @user.id
         msg = "You are now logged in."
@@ -148,8 +148,8 @@ class UsersController < ApplicationController
       else
         flash.now[:warning] = "There was an error logging you in."
         @user = User.new
-        @user.errors.add(:nick, "is not a user in our database.") unless user.nick
-        @user.errors.add(:password, user.errors.on(:password))
+        @user.errors.add(:nick, "is not a user in our database.") unless user && user.nick
+        @user.errors.add(:password, user.errors.on(:password)) if user
         respond_to do |format|
           format.html
           format.js { render :action => 'login_error' }

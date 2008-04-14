@@ -40,11 +40,9 @@ class ItemTest < ActiveSupport::TestCase
   def test_plugins
     [ Item, Project, Song ].each do |klass|
       assert klass.accessible?
-      assert klass.taggable?
       assert klass.widgetable?
     end
     assert items(:list_item1).accessible?
-    assert items(:list_item1).taggable?
     assert items(:list_item1).widgetable?
   end
   

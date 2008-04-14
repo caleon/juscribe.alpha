@@ -4,6 +4,9 @@ class Article < ActiveRecord::Base
   belongs_to :user # creator
   belongs_to :blog, :inherits_layout => true
   has_many :comments, :as => :commentable
+  
+  belongs_to :original, :class_name => 'Article', :foreign_key => :original_id
+  has_many :responses, :class_name => 'Article', :foreign_key => :original_id, :order => "articles.published_at DESC"
     
   validates_presence_of :blog_id, :user_id, :title, :permalink, :content
   validates_length_of :title, :in => (3..70)
@@ -52,6 +55,7 @@ class Article < ActiveRecord::Base
   def published?; self.published_at? && self.published_date?; end
   def publish!
     unless self.published?
+      was_new_record = self.new_record?
       publish
       self.save!
     end
@@ -114,7 +118,7 @@ class Article < ActiveRecord::Base
   end
   
   def self.motd
-    find(:first, :conditions => ["articles.user_id IN (#{User.admin_ids.join(', ')}) AND articles.published_at IS NOT NULL AND articles.published_at > ?", 1.week.ago], :order => 'articles.id DESC')
+    find(:first, :conditions => ["articles.user_id IN (#{User.admin_ids.join(', ')}) AND articles.published_at IS NOT NULL AND articles.published_at > ?", 1.week.ago.to_formatted_s(:db)], :order => 'articles.id DESC') rescue nil # because User.admin_ids might be empty
   end
   
   def self.permalink_for(name)

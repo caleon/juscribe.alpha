@@ -1,6 +1,11 @@
 <% form_for :article, @article, :url => articles_path_from_blog(@blog), :html => { :class => 'articleForm', :method => :post, :multipart => true } do |f| %>
 	<fieldset>
 		<legend>Post a new article</legend>
+		<% if @original %>
+			<%= f.label :original_id, "In response to: '#{@original.display_name}'" %>
+			<%= f.hidden_field :original_id, :value => params[:re] %>
+			<br />
+		<% end %>
 		<%= f.label :title %>
 		<%= error_message_on @article, :title %>
 		<%= f.text_field :title %>

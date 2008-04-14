@@ -38,6 +38,8 @@ ActionController::Routing::Routes.draw do |map|
                               :requirements => { :blog_id => regex_for(:blog, :permalink), :id => regex_for(:article, :permalink) } do |draft|
         draft.resources :pictures, :path_prefix => 'u/:user_id/blogs/:blog_id/drafts/:article_id',
                                    :requirements => { :blog_id => regex_for(:blog, :permalink), :article_id => regex_for(:article, :permalink) }
+        draft.resources :tags, :path_prefix => 'u/:user_id/blogs/:blog_id/drafts/:article_id',
+                               :requirements => { :blog_id => regex_for(:blog, :permalink), :article_id => regex_for(:article, :permalink) }
       end
       blog.resources :pictures, :requirements => { :blog_id => regex_for(:blog, :permalink) } do |picture|
         picture.resources :clips, :requirements => { :blog_id => regex_for(:blog, :permalink) }
@@ -105,6 +107,8 @@ ActionController::Routing::Routes.draw do |map|
                               :requirements => { :blog_id => regex_for(:blog, :permalink), :id => regex_for(:article, :permalink) } do |draft|
         draft.resources :pictures, :path_prefix => 'g/:group_id/blogs/:blog_id/drafts/:article_id',
                                    :requirements => { :blog_id => regex_for(:blog, :permalink), :article_id => regex_for(:article, :permalink) }
+        draft.resources :tags, :path_prefix => 'g/:group_id/blogs/:blog_id/drafts/:article_id',
+                               :requirements => { :blog_id => regex_for(:blog, :permalink), :article_id => regex_for(:article, :permalink) }
       end
       blog.resources :pictures, :requirements => { :blog_id => regex_for(:blog, :permalink) } do |picture|
         picture.resources :clips, :requirements => { :blog_id => regex_for(:blog, :permalink) }

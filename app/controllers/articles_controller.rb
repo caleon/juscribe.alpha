@@ -66,6 +66,7 @@ class ArticlesController < ApplicationController
     return unless get_blog
     if @blog.editable_by?(get_viewer)
       @article = @blog.articles.new
+      @original = Article.find(params[:re]) rescue nil
       @page_title = "New Article"
       respond_to do |format|
         format.html { trender }

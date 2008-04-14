@@ -61,6 +61,10 @@ class PermissionRule < ActiveRecord::Base
     false
   end
   
+  def editable_by?(user=nil)
+    self.user = user
+  end
+  
   def name; self[:name] || "Untitled"; end
   
   # The following prevents needing to input filler data in serialized hash

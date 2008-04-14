@@ -11,6 +11,11 @@ class Tag < ActiveRecord::Base
     find_by_name(args)
   end
   
+  def self.find_by_name_array(arr)
+    return [] if arr.blank?
+    find(:all, :conditions => ["name in (?)", arr.join(', ')]).sort_by {|tag| arr.index(tag.name) }
+  end
+  
   def self.parse(list)
     tag_names = []
 

@@ -21,6 +21,8 @@
 	<% with_options :layout => :framed do |framed| %>
 		<%= framed.wrender :user %>
 		<%= framed.wrender :thumbs if @article.primary_picture %>
+		<%= framed.wrender :original if @article.original %>
+		<%= framed.wrender :responses unless @article.responses.empty? %>
 		<%= framed.wrender :google_ads %>
 		<%= framed.wrender 'blogs/latest_articles', :blog => @article.blog if @article.blog %>
 	<% end %>

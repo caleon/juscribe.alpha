@@ -41,7 +41,6 @@ class ListTest < ActiveSupport::TestCase
   
   def test_plugin_package
     assert lists(:normal).widgetable?
-    assert lists(:normal).taggable?
     assert lists(:normal).accessible?
   end  
   

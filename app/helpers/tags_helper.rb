@@ -1,4 +1,5 @@
 module TagsHelper
+  # FIXME: This routing needs to be rethought. Why show a page for a tag on an object?
   def tagging_path_for(tagging, opts={})
     instance_eval %{ #{opts[:prefix] ? "#{opts[:prefix]}_" : ''}#{tagging.path_name_prefix}_path(tagging.to_path.merge(opts[:params] || {})) }
   end
