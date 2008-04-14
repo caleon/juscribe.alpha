@@ -625,8 +625,8 @@
 	#canvas.articles-show a.article_picture_link span.zoomer {
 		display: none;
 		position: absolute;
-		top: 1;
-		right: 1;
+		top: 1px;
+		right: 1px;
 		width: 19px;
 		height: 19px;
 		line-height: 19px;
