@@ -4,10 +4,11 @@
 <% content_for :header do -%>
 	<div class="msm_column msm_column-a">
 		<span class="timestamp">updated by <%= @author.display_name %> at <%= @article.updated_at.to_s %></span>
-		<h2><%= @page_title %></h2>				
+		<h2><%= @page_title %></h2>
+		<%= content_tag :h4, "Re: " + link_to("#{@article.original.display_name}", article_path_for(@article.original)) if @article.original %>
 	</div>
 	<div class="msm_column msm_column-b">
-		<%= @article.tags.map(&:to_s).join(', ') %>
+		<%= render :partial => 'tags/tags', :object => @article  %>
 	</div>
 <% end -%>	
 

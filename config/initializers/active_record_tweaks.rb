@@ -21,20 +21,20 @@ module ActiveRecord
     def display_name(opts={}); "(#{self.class}) #{self.to_param}"; end
     
     def nullify!(user=nil)
-      (user && user.wheel?) ? destroy! : (self.nullify if self.editable_by?(user) rescue nil)
+      self.destroy if self.editable_by?(user)
+      #(user && user.wheel?) ? destroy! : (self.nullify if self.editable_by?(user) rescue nil)
       # Wheel can destroy. Admins cannot.
     end
     
     def nullify # override this in individual models
       self.name += " (from #{self.inspect})"
       save unless ([:type, :depictable_type, :responsible_type, :permissible_type].select do |col|
-        respond_to?(col) && self[col] = 'Deleted' + self[col]
+        respond_to?(col) && self[col] = 'Deleted' + self[col].to_s
       end +
       [:user_id].select do |col|
         respond_to?(col) && self[col] = DB[:garbage_id]
       end).empty?
-    end
-    
+    end    
     
     # LAYOUTABLE WORK. In model set belongs_to :blog, :inherits_layout => true   
     def layoutable; nil; end

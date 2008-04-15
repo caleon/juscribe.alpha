@@ -4,7 +4,9 @@
 <% content_for :header do -%>
 	<div class="msm_column msm_column-a">
 		<span class="timestamp">Time: <%= Time.now.to_s %></span>
-		<h2><%= @page_title %></h2>				
+		<h2><%= @page_title %></h2>
+		<% original = Article.find(params[:re]) rescue nil %>
+		<%= content_tag :h4, "Re: " + link_to("#{original.display_name}", article_path_for(original)) if original %>		
 	</div>
 	<div class="msm_column msm_column-b">
 
