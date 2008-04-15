@@ -4,3 +4,4 @@
 		<%= render :partial => 'articles/form', :locals => { :f => f } %>
 	</fieldset>
 <% end %>
+<%= button_to 'Delete', article_path_for(@article), :method => :delete %>
