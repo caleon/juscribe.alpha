@@ -43,15 +43,17 @@ module PicturesHelper
     when :full
       picture = record.primary_picture
     end
-    if picture
-      dom_class_str = [ dom_class(picture, :include => includes), with[:class] ].compact.join(' ')
-      dom_id_str = dom_id(picture, :include => includes)
-      image_tag(picture.public_filename,
-                { :class => dom_class_str, :id => dom_id_str, :alt => picture.caption } )
-    else
-      default_picture_for(record.class.class_name,
-                          :class => dom_class(Picture, :include => includes) )
-    end
+    link_to_if opts[:with_link],
+      (if picture
+        dom_class_str = [ dom_class(picture, :include => includes), with[:class] ].compact.join(' ')
+        dom_id_str = dom_id(picture, :include => includes)
+        image_tag(picture.public_filename,
+                  { :class => dom_class_str, :id => dom_id_str, :alt => picture.caption } )
+      else
+        default_picture_for(record.class.class_name,
+                            :class => dom_class(Picture, :include => includes) )
+      end + (opts[:with_text] ? "<br />#{opts[:text] || opts[:title] || record.display_name}" : '')),
+      record, :title => opts[:title] || record.display_name, :class => "#{record.class.class_name.underscore}Link"
   rescue
     ''
   end

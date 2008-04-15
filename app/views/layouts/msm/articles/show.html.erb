@@ -1,10 +1,11 @@
 <% set_meta_keywords!(@author.display_name, @article.title, @article.blog.name) -%>
 <% set_link_author!(@author) -%>
+<% @no_top_shim, @no_bottom_shim = true, true -%>
 
 <% content_for :header do -%>
 	<div class="msm_column msm_column-a">
 		<% if @article.imported? %><span class="imported_at">imported at <%= @article.imported_at.to_s %></span><% end %>
-		<span class="timestamp">updated by <%= @author.display_name %> at <%= @article.updated_at.to_s %></span>
+		<span class="timestamp">updated at <%= @article.updated_at.to_s %></span>
 		<h2><%= @page_title %></h2>
 		<%= content_tag :h4, "Re: " + link_to("#{@article.original.display_name}", article_path_for(@article.original)) if @article.original %>
 	</div>
@@ -14,8 +15,23 @@
 	</div>
 <% end -%>	
 
-<div class="last msm_row padded" id="msm_row-1">
-	<%= render :partial => 'show' %>
+<div class="msm_row innerpad" id="msm_row-1">
+	<%= rounded_shim(:top) %>
+	<div class="msm_row-content">
+		<%= render :partial => 'show' %>
+	</div>
+	<%= rounded_shim(:bottom) %>
+</div>
+
+<div class="last msm_row innerpad" id="msm_row-2">
+	<%= rounded_shim(:top) %>
+	<div class="msm_row-content">
+		<%= render :partial => 'comments' if @article.published? %>
+		<% (@article.pictures - [@article.primary_picture]).each do |pic| -%>
+			<%= link_to '', picture_path_for(pic), :rel => "lightbox[article_#{@article.id}]", :style => 'display: none;', :title =>  pic.caption %>
+		<% end -%>
+	</div>
+	<%= rounded_shim(:bottom) %>
 </div>
 	
 <% content_for :side_column do -%>

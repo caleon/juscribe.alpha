@@ -30,7 +30,7 @@
 			<% end %>
 	
 				<div id="msm_main_column" class="msm_column">
-					<%= rounded_shim(:top) %>
+					<%= rounded_shim(:top) unless @no_top_shim %>
 					<%= yield %>
 					<%= rounded_shim(:bottom) unless @no_bottom_shim || controller.action_name == 'index' %>
 				</div>

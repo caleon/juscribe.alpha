@@ -231,6 +231,18 @@
 	.msm_row.nobg {
 		background-color: transparent;
 	}
+	
+	.msm_row.nopad {
+		padding: 0 !important;
+	}
+	
+	.msm_row.innerpad {
+		padding: 0 !important;
+	}
+	
+	.msm_row.innerpad > .msm_row-content {
+		margin: 18px;
+	}
 			
 	.msm_layout #msm_header {
 		background: #fff;
@@ -416,10 +428,12 @@
 		text-align: center;
 	}
 	
-	.msm_layout a.userLink img,
-	.msm_layout a.groupLink img {
+	.msm_layout a.userLink,
+	.msm_layout a.groupLink {
 		float: left;
-		margin: 0 7px 7px 0;
+		margin: 0 7px 0 0;
+		text-align: center;
+		font-size: 85%;
 	}
 	
 
@@ -637,6 +651,16 @@
 	
 	#canvas.articles-show a.article_picture_link:hover span.zoomer {
 		display: block;
+	}
+	
+	#canvas.articles-show a.article_picture_link span.picture-symbol {
+		display: block;
+		position: absolute;
+		width: 25px;
+		height: 21px;
+		background: transparent url(/images/camera.png) no-repeat top left;
+		top: 5px;
+		left: 5px;
 	}
 	
 	#canvas.articles-show p.articleContent {

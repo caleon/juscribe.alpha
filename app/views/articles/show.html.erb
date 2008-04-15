@@ -15,6 +15,11 @@
 
 <div class="last msm_row padded" id="msm_row-1">
 	<%= render :partial => 'show' %>
+	<br /><br />
+	<%= render :partial => 'comments' if @article.published? %>
+	<% (@article.pictures - [@article.primary_picture]).each do |pic| -%>
+		<%= link_to '', picture_path_for(pic), :rel => "lightbox[article_#{@article.id}]", :style => 'display: none;', :title =>  pic.caption %>
+	<% end -%>
 </div>
 	
 <% content_for :side_column do -%>

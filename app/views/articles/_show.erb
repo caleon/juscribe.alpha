@@ -3,6 +3,7 @@
 		<a href="<%= picture_path_for(@article.primary_picture) %>" rel="lightbox[article_<%= @article.id %>]" class="article_picture_link" title="<%= @article.primary_picture.caption %>">
 			<%= picture_for(@article) %>
 			<%= caption_for(@article.primary_picture) %>
+			<span class="picture-symbol">&nbsp;</span>
 			<span class="zoomer">+</span>
 		</a>
 	<% end %>
@@ -11,8 +12,3 @@
 		
 		<%= render :partial => 'articles/actions', :locals => { :article => @article } %>
 <% end -%>	
-<br /><br />
-<%= render :partial => 'articles/comments' if @article.published? %>
-<% (@article.pictures - [@article.primary_picture]).each do |pic| -%>
-	<%= link_to '', picture_path_for(pic), :rel => "lightbox[article_#{@article.id}]", :style => 'display: none;', :title =>  pic.caption %>
-<% end -%>

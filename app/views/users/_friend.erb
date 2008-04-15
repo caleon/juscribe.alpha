@@ -1,4 +1,5 @@
 <% tag ||= nil -%>
 <% content_tag(tag || :div, :class => 'friend') do %>
-	<%= link_to picture_for(friend) + friend.nick, friend %>	
+	<%# link_to picture_for(friend) + friend.nick, friend %>	
+	<%= picture_for(friend, :with_link => true, :with_text => true) %>	
 <% end %>
