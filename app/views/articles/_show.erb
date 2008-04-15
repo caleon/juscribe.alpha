@@ -1,6 +1,6 @@
 <% div_for @article do -%>
 	<% if @article.primary_picture %>
-		<a href="<%= picture_path_for(@article.primary_picture) %>" rel="lightbox[article_<%= @article.id %>]" class="article_picture_link" title="<%=h @article.primary_picture.caption.gsub(/\"/, "\"").gsub(/\'/, "\'") %>">
+		<a href="<%= picture_path_for(@article.primary_picture) %>" rel="lightbox[article_<%= @article.id %>]" class="article_picture_link" title="<%=h @article.primary_picture.caption.gsub(/\"/, "\"").gsub(/\'/, "\'") if @article.primary_picture.caption %>">
 			<%= picture_for(@article) %>
 			<%= caption_for(@article.primary_picture) %>
 			<span class="picture-symbol">&nbsp;</span>

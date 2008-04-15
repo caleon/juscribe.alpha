@@ -1,0 +1,12 @@
+<h3>Latest Pictures</h3>
+<ul id="blog-latest_pictures" class="media_listing">
+<%# The following compact added in case thumbnails dont exist for some reason. %>
+<% latest_pictures[0..5].map{|pic| pic.thumbnails.find_by_thumbnail('thumb') }.compact.each do |pic| %>
+	<li class="pic">
+		<%= link_to image_tag(pic.public_filename, :class => dom_class(pic)), picture_path_for(pic) %>
+	</li>
+<% end %>
+</ul>
+<div class="msm_widget-footer">
+	<%= link_to 'View all pictures', pictures_path_from_depictable(blog) %>
+</div>
