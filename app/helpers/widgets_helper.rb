@@ -92,6 +92,7 @@ module WidgetsHelper
     obj = main_object.respond_to?(sym) ? main_object.send(sym) : nil
     wrender_vacant unless obj
     render :partial => path_from_sym(sym, opts[:kind]),
+            # FIXME: Huh? params?
            :object => params[:object] || obj,
            :layout => opts[:layout],
            :locals => { :"#{instance_name}" => main_object }

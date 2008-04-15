@@ -66,6 +66,14 @@ class Picture < ActiveRecord::Base
     self.depictable.editable_by?(user) || super
   end
   
+  def other_pictures
+    self.depictable.pictures - [self]
+  end
+  
+  def other_picture_thumbs
+    other_pictures.map{|pic| pic.thumbnails.find_by_thumbnail('thumb') }
+  end
+  
   ### IMAGE PROCESSING METHODS
   
   # Overwriting for depictable_type

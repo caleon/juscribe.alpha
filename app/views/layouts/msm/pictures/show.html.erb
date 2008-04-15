@@ -17,6 +17,7 @@
 	
 <% content_for :side_column do -%>
 	<% with_options :layout => :framed do |framed| %>
+		<%= framed.wrender :other_pictures unless @picture.other_pictures.empty? %>
 		<%# TODO: SHOW attachments framed.wrender :pictures if @article.primary_picture %>
 		<%= framed.wrender :google_ads %>
 	<% end %>
