@@ -96,6 +96,10 @@ module ApplicationHelper
     navi_el 'Customize', path, :right => true if main_object && main_object.editable_by?(get_viewer)
   end
   
+  def cancel_button
+    button_to 'Cancel', controller.previous_view, :method => :get
+  end
+  
   def byline_for(record, locals={})
     render :partial => "#{record.class.class_name.pluralize.underscore}/byline",
                        :locals => { :"#{record.class.class_name.underscore}" => record }.merge(locals)
