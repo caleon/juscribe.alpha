@@ -68,7 +68,7 @@ module ApplicationHelper
   end
   
   def clip_subnavi_el(record)
-    return nil unless logged_in && record && !record.new_record? && record.accessible_by?(get_viewer)
+    return nil unless logged_in? && record && !record.new_record? && record.accessible_by?(get_viewer)
     if clip = record.clip_for(get_viewer)
       subnavi_el "Unclip", clip_path_for(clip), :method => :delete
     else

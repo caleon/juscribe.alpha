@@ -1,11 +1,12 @@
 <h3>Pictures</h3>
-<ul id="msm_pictures" class="msm_media">
+<ul id="user-pictures" class="media_listing">
 <% thumbs[0..5].each do |pic| %>
 	<li class="pic">
-		<%= link_to image_tag(pic.public_filename, :class => dom_class(pic)), picture_path_for(pic) %>
+		<%= link_to image_tag(pic.public_filename, :class => dom_class(pic)), picture_path_for(pic.parent) %>
 	</li>
 <% end %>
 </ul>
+<!-- FIXME: cannot reference a skin's name when in general views -->
 <div class="msm_widget-footer">
 	<%= link_to 'View all pictures', user_pictures_path(user.to_path(true)) %>
 	<%# FIXME: the following is for user's depictables..., user_pictures_path() %>
