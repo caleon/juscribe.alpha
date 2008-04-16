@@ -25,7 +25,7 @@ xml.rss("version" => "2.0", "xmlns:dc" => "http://purl.org/dc/elements/1.1/") do
         xml.title h(article.title)
         xml.link article_url_for(article)
         xml.guid article_url_for(article)
-        xml.description h(article.content)
+        xml.description article.content
       end
     end
   end
