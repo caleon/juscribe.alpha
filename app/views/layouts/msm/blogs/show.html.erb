@@ -64,7 +64,6 @@
 		<%= framed.wrender :description %>
 		<%= framed.wrender :bloggable %>
 		<%= framed.wrender :latest_pictures unless @blog.pictures.empty? %>
-		<%= framed.wrender :google_ads %>
 		<%= framed.wrender :comments, :blog => @blog %>
 		<%= framed.wrender :google_ads %>
 	<% end %>

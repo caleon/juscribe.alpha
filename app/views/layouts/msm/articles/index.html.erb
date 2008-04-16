@@ -64,7 +64,6 @@
 	
 <% content_for :side_column do -%>
 	<% with_options :layout => wayout(:framed) do |framed| %>
-		<%= framed.render :partial => custom_partial('ads/google_ads') %>
 		<%# framed.render :partial => "user", :object => @user %>
 		<%= framed.render :partial => custom_partial('ads/google_ads') %>
 	<% end %>
