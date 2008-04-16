@@ -25,7 +25,7 @@ class Thoughtlet < ActiveRecord::Base
   end
   
   def path_name_prefix
-    [ self.user.path_prefix, 'thoughtlet' ].join('_')
+    [ self.user.path_name_prefix, 'thoughtlet' ].join('_')
   end
   
   def location_empty?; self.location.blank?; end
