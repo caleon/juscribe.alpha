@@ -1,7 +1,3 @@
-<%= @widgetable.path_name_prefix %>
-<br />
-<%= @widgetable.to_path(true).inspect %>
-<br />
 <% form_for :clip, @clip, :url => clips_path_from_widgetable(@widgetable), :html => { :method => :post } do |f| %>
 	<%= render :partial => 'form', :locals => { :f => f } %>
 	<%= f.submit %>
