@@ -415,10 +415,22 @@ strong.articleIntro {
 	background-position: 0 0;
 }
 
+.social_network a:hover .social_network-facebook {
+	background-position: 0 -15px;
+}
+
 .social_network .social_network-myspace {
 	background-position: -15px 0;
 }
 
+.social_network a:hover .social_network-myspace {
+	background-position: -15px -15px;
+}
+
 .social_network .social_network-linkedin {
 	background-position: -30px 0;
+}
+
+.social_network a:hover .social_network-linkedin {
+	background-position: -30px -15px;
 }
