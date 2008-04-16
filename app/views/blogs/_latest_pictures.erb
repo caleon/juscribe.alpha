@@ -3,7 +3,7 @@
 <%# The following compact added in case thumbnails dont exist for some reason. %>
 <% latest_pictures[0..5].map{|pic| pic.thumbnails.find_by_thumbnail('thumb') }.compact.each do |pic| %>
 	<li class="pic">
-		<%= link_to image_tag(pic.public_filename, :class => dom_class(pic)), picture_path_for(pic) %>
+		<%= link_to image_tag(pic.public_filename, :class => dom_class(pic)), picture_path_for(pic.parent) %>
 	</li>
 <% end %>
 </ul>
