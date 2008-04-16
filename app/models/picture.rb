@@ -50,6 +50,14 @@ class Picture < ActiveRecord::Base
     end
   end
   
+  def source
+    if self.thumbnail.blank?
+      self[:source].blank? ? nil : self[:source]
+    else
+      self[:source].blank? ? self.parent.source : self[:source]
+    end
+  end
+  
   def to_path(for_associated=false)
     { :"#{for_associated ? 'picture_id' : 'id'}" => self.to_param }.merge(self.depictable.nil? ? {} : self.depictable.to_path(true))
   end
