@@ -7,7 +7,7 @@
 		<h2><%= link_to article_lead.name, widgetable_path_for(article_lead) %></h2>
 		<p><%= format_article(article_lead, :truncate => 300, :without_intro => true) %></p>
 		<%= byline_for article_lead %>
-		<% content_tag(:ul, :id => 'msm_lead_follow_ups') do -%>
+		<% content_tag(:ul, :id => 'msm_lead_follow_ups', :class => 'articles') do -%>
 			<%= render :partial => "#{partial_path(article_lead)}_line", :collection => article_lead.find_similar(3), :locals => { :without_excerpt => true, :prefix => 'article_lead_similar' } %>
 		<% end if !article_lead.tags.empty? -%>
 <% end -%>

@@ -448,7 +448,7 @@
 		margin-bottom: 36px;
 	}
 	
-	.msm_widget-inner li {
+	.msm_widget-inner ul.articles li {
 		margin-bottom: 9px;
 		background: transparent url(/images/skins/msm/dot.gif) no-repeat 0 5px;
 	}
