@@ -369,6 +369,38 @@ strong.articleIntro {
 	display: inline;
 }
 
+.messages {
+	border-top: 1px solid #ccc;
+}
+
+.message {
+	clear: left;
+	padding: 9px;
+	overflow: hidden;
+	border-bottom: 1px solid #ccc;
+}
+
+.message a.message-subject {
+	font-weight: normal;
+}
+
+.messages .message a.userLink {
+	font-size: 70%;
+}
+
+.message-unread {
+	background: #eeefff;	
+}
+
+.message-unread a.message-subject {
+	font-weight: bold;
+}
+
+#canvas .message .user-picture {
+	width: 30px;
+	height: 30px;
+}
+
 /* Coulda been .social_networks.facebook with styles refactored if not for IE... */
 .social_network {
 	display: inline;
