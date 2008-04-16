@@ -140,9 +140,11 @@ class UsersController < ApplicationController
       if user && user.authenticate(params[:user][:password])
         @user = user
         session[:id] = @user.id
+        before_login = session[:before_login]
+        session[:before_login] = nil
         msg = "You are now logged in."
         respond_to do |format|
-          format.html { flash[:notice] = msg; redirect_to @user }
+          format.html { flash[:notice] = msg; redirect_to before_login || previous_view || @user }
           format.js { flash.now[:notice] = msg; render :action => 'login_success' }
         end
       else
@@ -174,7 +176,7 @@ class UsersController < ApplicationController
     reset_session
     msg = "You are now logged out. See you soon!" # Needs to be set after reset_session.
     respond_to do |format|
-      format.html { flash[:notice] = msg; redirect_to @viewer }
+      format.html { flash[:notice] = msg; redirect_to root_url } # redirecting to previous view is faulty. might be restricted page.
       format.js { flash.now[:notice] = msg }
     end
     @viewer = nil

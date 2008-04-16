@@ -1,13 +1,21 @@
 <div id="debugger">
 	<%= rounded_shim(:top) %>
 	<p id="debugger-inner">
+		referer var class: <%= controller.request.env["HTTP_REFERER"].class.to_s %><br />
+		request url: <%= controller.request.url %><br />
+		WHERE FROM?: <%= controller.request.env["HTTP_REFERER"] %><br />
+		Request Host:<%= controller.request.host %><br />
+		request Path: <%= controller.request.path %><br />
+		previous: <%= controller.previous_view %><br />
+		previous view: <%= session[:previous] %><br />
+		before_login: <%= session[:before_login] %><br />
 		Viewing as: <%= get_viewer.display_name rescue 'Nobody' %>
 		<br />
-		Class of main object: <%= main_object.class.class_name %>: <%= main_object.display_name %>
+		Class of main object: <%= main_object.class.class_name rescue nil %>: <%= main_object.display_name rescue nil %>
 		<br />
-		Main object's layout: <%= main_object.layout_name %>
+		Main object's layout: <%= main_object.layout_name rescue nil %>
 		<br />
-		Main object's skin: <%= main_object.skin_file %>
+		Main object's skin: <%= main_object.skin_file rescue nil %>
 		<br />
 		<%= yield :debugger %>
 	</p>

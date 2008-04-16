@@ -40,14 +40,14 @@ class ClipsController < ApplicationController
   def create
     return unless get_widgetable(:message => "Unable to find object to clip. Please check the address.") && authorize(@widgetable)
     @page_title = "New Clip for #{@widgetable.display_name}"
-    if @clip = @widgetable.clip!(params[:clip].merge(:user => get_viewer)) # TODO: Error messaging for already being clipped.
+    if @widgetable.clip!(params[:clip].merge(:user => get_viewer)) # TODO: Error messaging for already being clipped.
       msg = "You have clipped #{@widgetable.display_name}."
       respond_to do |format|
         format.html { flash[:notice] = msg; redirect_to widgetable_url_for(@widgetable) }
         format.js { flash.now[:notice] = msg }
       end
     else
-      flash.now[:warning] = "There was an error clipping #{@widgetable.display_name}. #{@clip.errors.inspect}"
+      flash.now[:warning] = "There was an error clipping #{@widgetable.display_name}. Do you already have this clipped?"
       respond_to do |format|
         format.html { trender :new }
         format.js { render :action => 'create_error' }

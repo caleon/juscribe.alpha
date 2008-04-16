@@ -13,6 +13,6 @@
 <%= subnavi_el "New Article", article_path_from_blog(blog, :prefix => :new), :current => controller.action_name == 'new' if blog.editable_by?(get_viewer) && (article.nil? || article.new_record?) %>
 <%= subnavi_el "Edit", article_path_for(article, :prefix => :edit), :current => controller.action_name == 'edit' if article && !article.new_record? && article.editable_by?(get_viewer) %>
 <%# FIXME: as per _actions, do we need article && !article.new_record? here? %>
-<%= subnavi_el "Clip", clip_path_from_widgetable(article, :prefix => :new) if logged_in? && article && !article.new_record? && article.published? %>
+<%= clip_subnavi_el(article) if article && article.published? %>
 <%= subnavi_el 'Respond', article_path_from_blog(blog, :prefix => :new, :params => { :re => article.id }) if logged_in? && article && !article.new_record? && article.published? %>
 <% end %>

@@ -67,6 +67,15 @@ module ApplicationHelper
     navi_el(text, path, opts)
   end
   
+  def clip_subnavi_el(record)
+    return nil unless logged_in && record && !record.new_record? && record.accessible_by?(get_viewer)
+    if clip = record.clip_for(get_viewer)
+      subnavi_el "Unclip", clip_path_for(clip), :method => :delete
+    else
+      subnavi_el "Clip", clip_path_from_widgetable(record, :prefix => :new)
+    end
+  end
+  
   def bread_el(text, path, opts={})
     z_index = 10 - (@bread_count ||= 0)
     css_class = [ 'navigationEl', 'breadcrumbEl' ]
@@ -93,7 +102,7 @@ module ApplicationHelper
   end
   
   def debug_module
-    render :partial => 'shared/debugger' if get_viewer && get_viewer.admin?
+    render :partial => 'shared/debugger' if RAILS_ENV == 'development' || (get_viewer && get_viewer.admin?)
   end
   
   def digg_button(javascript=false)

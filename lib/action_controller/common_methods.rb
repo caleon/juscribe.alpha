@@ -216,6 +216,7 @@ module ActionController::CommonMethods
       return true unless (self.class.read_inheritable_attribute(:verify_login_list) || []).include?(action_name.intern)
       return true if get_viewer
       msg = "You need to be logged in to do that."
+      session[:before_login] = request.url
       respond_to_without_type_registration do |format|
         format.html { flash[:warning] = msg; redirect_to login_url and return false }
         format.js { flash.now[:warning] = msg; render :controller => 'users', :action => 'login' and return false }

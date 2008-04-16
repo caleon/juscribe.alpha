@@ -11,9 +11,16 @@ class ApplicationController < ActionController::Base
   # Uncomment the :secret if you're not using the cookie session store
   protect_from_forgery# :secret => 'a241500281274090ecdf656d5074d028'
   filter_parameter_logging :password, :password_confirmation
-  before_filter :load_config, :authenticate, :get_viewer
+  before_filter :load_config, :authenticate, :get_viewer, :clear_stale_session
+  after_filter :set_previous_view
   layout :get_layout
   helper :all  
+  
+  
+  def previous_view
+    #return root_url if request.env['HTTP_REFERER'].nil? || !request.env['HTTP_REFERER'].match(/http:\/\/#{request.host}/)
+    session[:previous] || root_url
+  end
   
   private
   def load_config
@@ -34,6 +41,17 @@ class ApplicationController < ActionController::Base
   rescue ActiveRecord::RecordNotFound
     display_error(:message => error_opts[:message] || "That User could not be found. Please check the address.")
     return false
+  end
+  
+  def set_previous_view
+    if request.get?
+      # FIXME: before_login and previous are too similar.
+      session[:previous] = request.url if !request.path.match(/^\/login/) && !request.path.match(/\.js$/)
+    end
+  end
+  
+  def clear_stale_session
+    session[:before_login] = nil unless action_name == 'login' || session[:before_login].nil?
   end
   
   def get_find_opts(hash={})

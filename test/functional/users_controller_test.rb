@@ -188,7 +188,7 @@ class UsersControllerTest < ActionController::TestCase
   
   def test_login_submit
     post :login, { :user => { :nick => 'colin', :password => 'this is a test' } }
-    assert_redirected_to user_url(users(:colin))
+    assert_redirected_to root_url
     assert_equal "You are now logged in.", flash[:notice]
   end
   
@@ -206,7 +206,7 @@ class UsersControllerTest < ActionController::TestCase
   
   def test_logout
     get :logout, {}, as(:colin)
-    assert_redirected_to user_url(users(:colin))
+    assert_redirected_to root_url
     assert_equal 'You are now logged out. See you soon!', flash[:notice]
     assert_nil session[:id]
     assert_nil assigns(:viewer)

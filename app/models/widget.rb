@@ -21,8 +21,10 @@ class Widget < ActiveRecord::Base
     end
   end
   
-  def path_name_prefix
-    [ self.user.path_name_prefix, 'widget' ].join('_')
+  # New and create needs path based on widgetable
+  # All others can be prefixed by /u/colin/widgets/10/edit, or similar
+  def path_name_prefix(associated=:widgetable)
+    [ self.send(associated).path_name_prefix, (associated == :user ? 'widget' : 'clip') ].join('_')
   end
   
   def full_name
