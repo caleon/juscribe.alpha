@@ -140,7 +140,7 @@
 	
 	.msm_layout .msm_column li > span {
 		display: block;
-		padding-left: 6px;
+		padding-left: 10px;
 	}
 	
 	.msm_layout fieldset {
@@ -428,6 +428,10 @@
 		text-align: center;
 	}
 	
+	#msm_lead_follow_ups {
+		margin-top: 18px;
+	}
+	
 	.msm_layout a.userLink,
 	.msm_layout a.groupLink {
 		float: left;
@@ -446,6 +450,7 @@
 	
 	.msm_widget-inner li {
 		margin-bottom: 9px;
+		background: transparent url(/images/skins/msm/dot.gif) no-repeat 0 5px;
 	}
 	
 	#msm_lead_widget {
