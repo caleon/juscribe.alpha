@@ -1,7 +1,7 @@
 <div id="preview_pane-inner">
 	<% if preview ||= nil %>
-		<%= picture_for(preview) %>
-		<h4><%= preview.title %></h4>
+		<%= picture_for(preview, :link => article_path_for(preview)) %>
+		<h4><%= link_to preview.title, article_path_for(preview) %></h4>
 		<%= format_article(preview, :truncate => 200, :without_intro => true) %>
 		<%= byline_for(preview, :link => true) %>
 	<% else %>

@@ -1,5 +1,5 @@
 <%# link_to(picture_for(user), user, :title => user.name_and_nick, :class => 'userLink') if user.primary_picture %>
-<%= picture_for(user, :with_link => true, :with_text => true) %>
+<%= picture_for(user, :link => true, :with_text => true) %>
 <h4><%= user.full_name %></h4>
 <p>
 	Blogs: <%= user.blogs.count %><br />

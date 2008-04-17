@@ -1,8 +1,8 @@
 <% content_tag_for(html_tag ||= :li, message, :class => (message.read? ? 'message-read' : 'message-unread')) do %>
 	<% if message.sender == get_viewer %>
-		<%= picture_for(message.recipient, :with_text => true, :with_link => true) %>
+		<%= picture_for(message.recipient, :with_text => true, :link => true) %>
 	<% else %>
-		<%= picture_for(message.sender, :with_text => true, :with_link => true) %>			
+		<%= picture_for(message.sender, :with_text => true, :link => true) %>			
 	<% end %>
 	
 	<% unless (no_title ||= false) %>

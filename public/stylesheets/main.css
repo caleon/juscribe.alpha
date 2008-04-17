@@ -212,7 +212,7 @@
 	display: block;
 	max-width: 100px;
 	max-height: 100px;
-	margin: 0 auto;
+	margin: 0 auto 9px;
 }
 
 #browser #preview_pane p {
@@ -231,6 +231,10 @@
 #browser li.browser-col-listing a.over {
 	color: #fff;
 	background-color: #005ED2;
+}
+
+#browser li.browser-col-listing a:active {
+	background-color: #003C89;
 }
 
 p.spaceMessaging {
