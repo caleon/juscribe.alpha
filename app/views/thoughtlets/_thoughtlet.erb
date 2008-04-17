@@ -1,6 +1,6 @@
 <% content_tag_for :li, thoughtlet, prefix ||= nil do -%>
 	<span>
-		<%= timepiece_for(thoughtlet.created_at) %>
+		<%= timepiece_for(thoughtlet.created_at) unless without_time ||= false %>
 		<%= thoughtlet.content %><% if (with_break ||= false) %><br /><% else %> <% end %>
 		<span class="timestamp"><%= thoughtlet.created_at.to_s(:concise) %></span>
 	</span>
