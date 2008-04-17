@@ -54,7 +54,8 @@ module PicturesHelper
                             :class => dom_class(Picture, :include => includes) )
       end + (opts[:with_text] ? "<br />#{opts[:text] || opts[:title] || record.display_name}" : '')),
       (opts[:link].is_a?(String) ? opts[:link] : record), :title => opts[:title] || record.display_name, :class => "#{record.class.class_name.underscore}Link"
-
+  rescue
+    ''
   end
   
   def default_picture_for(klass_name, html_opts={})

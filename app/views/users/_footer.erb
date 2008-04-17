@@ -5,7 +5,7 @@
 		<% end -%>
 
 		<% content_tag :div, :class => 'footer-box' do -%>
-			<%= footer.render :partial => 'latest_articles', :object => @user.latest_articles[0..4] %>
+			<%= footer.render :partial => 'latest_articles', :object => @user.latest_articles[0..4], :locals => { :without_time => true } %>
 		<% end -%>
 
 		<% content_tag :div, :class => 'footer-box' do -%>
