@@ -16,6 +16,9 @@
 <br />
 <%= render :partial => 'pictures/form' %>
 <br />
+<%= f.label :social_networks_aim, "AIM Screen Name" %>
+<%= text_field_tag 'user[social_networks][aim]', @user.social_networks[:aim], :id => 'user_social_networks_aim' %>
+<br />
 <%= f.label :social_networks_facebook, "Facebook ID" %>
 <%= text_field_tag 'user[social_networks][facebook]', @user.social_networks[:facebook], :id => 'user_social_networks_facebook' %>
 <br />

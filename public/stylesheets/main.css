@@ -435,3 +435,11 @@ strong.articleIntro {
 .social_network a:hover .social_network-linkedin {
 	background-position: -30px -15px;
 }
+
+.social_network .social_network-aim {
+	background-position: -45px 0;
+}
+
+.social_network a:hover .social_network-aim {
+	background-position: -45px -15px;
+}

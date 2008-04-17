@@ -124,13 +124,14 @@ class User < ActiveRecord::Base
   end
   
   def social_networks
-    { :facebook => nil, :myspace => nil, :linkedin => nil }.merge((self[:social_networks] || {}).delete_if {|k, v| v.nil? })
+    { :aim => nil, :facebook => nil, :myspace => nil, :linkedin => nil }.merge((self[:social_networks] || {}).delete_if {|k, v| v.nil? })
   end
   
   def active_social_networks
     self.social_networks.delete_if {|k, v| v.nil? }
   end
   
+  def aim?; self.active_social_networks.keys.include?(:aim); end
   def facebook?; self.active_social_networks.keys.include?(:facebook); end
   def myspace?; self.active_social_networks.keys.include?(:myspace); end
   def linkedin?; self.active_social_networks.keys.include?(:linkedin); end

@@ -140,7 +140,7 @@
 	
 	.msm_layout .msm_column li > span {
 		display: block;
-		padding-left: 10px;
+		padding-left: 8px;
 	}
 	
 	.msm_layout fieldset {
@@ -447,9 +447,12 @@
 	.msm_main_column > .msm_widget-inner {
 		margin-bottom: 36px;
 	}
+
+	.msm_widget-inner li {
+		margin-bottom: 9px;
+	}
 	
 	.msm_widget-inner ul.articles li {
-		margin-bottom: 9px;
 		background: transparent url(/images/skins/msm/dot.gif) no-repeat 0 5px;
 	}
 	
