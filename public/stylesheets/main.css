@@ -370,8 +370,26 @@ strong.articleIntro {
 	background: transparent url(/images/rss-icon-27x15.png) no-repeat left top;
 }
 
+.tags {
+	margin-bottom: 18px;
+}
+
 .tags .tag {
 	display: inline;
+}
+
+.tags .tag a {
+	border-right: 1px solid #DDDDAA;
+	border-bottom: 1px solid #DDDDAA;
+	padding: 2px 3px;
+	background-color: #FFFFCC;
+	color: #333;
+	font-weight: normal;
+	text-decoration: none;
+}
+
+.tags .tag a:hover {
+	color: #333;
 }
 
 .messages {
