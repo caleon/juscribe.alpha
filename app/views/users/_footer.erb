@@ -13,7 +13,7 @@
 		<% end if false -%>
 
 		<% content_tag :div, :class => 'footer-box' do -%>
-			<%= footer.render :partial => 'latest_thoughtlets', :object => @user.latest_thoughtlets %>
+			<%= footer.render :partial => 'latest_thoughtlets', :object => @user.latest_thoughtlets.find(:all, :limit => 5) %>
 		<% end -%>
 
 		<%= br_clear %>
