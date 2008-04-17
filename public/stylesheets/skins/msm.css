@@ -380,6 +380,11 @@
 	.msm_layout img.blog-picture {
 		height: 80px;
 	}
+	
+	.msm_layout #msm_header img.blog-picture {
+		float: left;
+		margin-right: 18px;
+	}
 
 /* @end */
 

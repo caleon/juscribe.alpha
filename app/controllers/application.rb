@@ -11,11 +11,14 @@ class ApplicationController < ActionController::Base
   # Uncomment the :secret if you're not using the cookie session store
   protect_from_forgery# :secret => 'a241500281274090ecdf656d5074d028'
   filter_parameter_logging :password, :password_confirmation
-  before_filter :load_config, :authenticate, :get_viewer, :clear_stale_session
+  before_filter :load_config, :authenticate, :get_viewer, :clear_stale_session, :remember_daily_pw
   after_filter :set_previous_view
   layout :get_layout
   helper :all  
   
+  def remember_daily_pw
+    @daily_pw = Digest::SHA256.hexdigest(Time.now.utc.beginning_of_day.to_s)[0..7] if RAILS_ENV == 'development'
+  end
   
   def previous_view
     #return root_url if request.env['HTTP_REFERER'].nil? || !request.env['HTTP_REFERER'].match(/http:\/\/#{request.host}/)

@@ -66,6 +66,10 @@ module ActiveRecord::Acts::Taggable
       end
       return_val == :last ? arr.last : arr
     end
+    
+    def composite_taggings
+      self.taggings
+    end
 
     def tag_list
       #tags.collect { |tag| righttag.name.include?(" ") ? "'#{tag.name}'" : tag.name }.join(", ")

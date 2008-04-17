@@ -117,11 +117,23 @@ class Article < ActiveRecord::Base
     end
   end
   
+  def composite_tags
+    (self.tags + self.blog.tags).uniq
+  end
+  
+  def composite_taggings
+    (self.taggings + self.blog.taggings).inject([]) {|arr, tg| arr << tg unless arr.map(&:tag_id).include?(tg.tag_id); arr }
+  end
+  
+  def tag_list
+    self.composite_tags.map(&:name).join(", ")
+  end
+  
   def find_similar(limit=5, options={})
     raise "Unauthorized SQL injection attempt!" unless limit.is_a?(Fixnum)
     comp_taggings = (self.taggings + self.blog.taggings).uniq.map(&:id)
     Article.find_by_sql(
-      "SELECT unioned.*, sum(pre_similar_count) AS similar_count FROM (" + 
+      "SELECT unioned.*, sum(pre_similar_count) AS similar_count FROM ( " + 
         "SELECT count(t2.id) AS pre_similar_count, " + 
         "articles.* " + 
         "FROM taggings t1 " + 
@@ -138,7 +150,8 @@ class Article < ActiveRecord::Base
         "INNER JOIN articles ON (articles.blog_id = blogs.id) " + 
         "WHERE ((t1.id IN(#{comp_taggings.join(', ')})) AND articles.id != t1.taggable_id) " + 
         "GROUP BY articles.id " +
-      ") unioned GROUP BY unioned.id ORDER BY similar_count DESC"
+        (options[:threshold] ? "HAVING similar_count > #{options[:threshold]} " : "") + 
+      ") unioned GROUP BY unioned.id ORDER BY similar_count DESC LIMIT #{limit}"
     )
   rescue
     []

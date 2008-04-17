@@ -1,6 +1,7 @@
 <div id="debugger">
 	<%= rounded_shim(:top) %>
 	<p id="debugger-inner">
+		The daily password: <%= @daily_pw %><br />
 		referer var class: <%= controller.request.env["HTTP_REFERER"].class.to_s %><br />
 		request url: <%= controller.request.url %><br />
 		WHERE FROM?: <%= controller.request.env["HTTP_REFERER"] %><br />
