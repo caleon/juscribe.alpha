@@ -117,6 +117,33 @@ class Article < ActiveRecord::Base
     end
   end
   
+  def find_similar(limit=5, options={})
+    raise "Unauthorized SQL injection attempt!" unless limit.is_a?(Fixnum)
+    comp_taggings = (self.taggings + self.blog.taggings).uniq.map(&:id)
+    Article.find_by_sql(
+      "SELECT unioned.*, sum(pre_similar_count) AS similar_count FROM (" + 
+        "SELECT count(t2.id) AS pre_similar_count, " + 
+        "articles.* " + 
+        "FROM taggings t1 " + 
+        "INNER JOIN taggings t2 ON (t2.tag_id = t1.tag_id) " + 
+        "INNER JOIN articles ON (t2.taggable_type = 'Article' AND t2.taggable_id = articles.id) " + 
+        "WHERE ((t1.taggable_type = 'Article' AND t1.taggable_id = #{self.id}) AND (t2.taggable_id != #{self.id})) " + 
+        "GROUP BY articles.id " + 
+        "UNION " + 
+        "SELECT count(t3.id) AS pre_similar_count, " + 
+        "articles.* " + 
+        "FROM taggings t1 " + 
+        "INNER JOIN taggings t3 ON (t3.tag_id = t1.tag_id) " + 
+        "INNER JOIN blogs ON (t3.taggable_type = 'Blog' AND t3.taggable_id = blogs.id) " + 
+        "INNER JOIN articles ON (articles.blog_id = blogs.id) " + 
+        "WHERE ((t1.id IN(#{comp_taggings.join(', ')})) AND articles.id != t1.taggable_id) " + 
+        "GROUP BY articles.id " +
+      ") unioned GROUP BY unioned.id ORDER BY similar_count DESC"
+    )
+  rescue
+    []
+  end
+  
   def self.motd
     find(:first, :conditions => ["articles.user_id IN (#{User.admin_ids.join(', ')}) AND articles.published_at IS NOT NULL AND articles.published_at > ?", 1.week.ago.to_formatted_s(:db)], :order => 'articles.id DESC') rescue nil # because User.admin_ids might be empty
   end
