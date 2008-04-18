@@ -4,7 +4,8 @@ class BlogsControllerTest < ActionController::TestCase
 
   def test_index
     get :index, users(:colin).to_path(true)
-    assert_response :success
+    assert_equal 1, users(:colin).blogs.count
+    assert_response :redirect
     assert_not_nil assigns(:bloggable)
     assert_not_nil assigns(:blogs)
     assert assigns(:blogs).is_a?(Array)

@@ -7,6 +7,7 @@ class BlogsController < ApplicationController
     return unless get_bloggable
     find_opts = get_find_opts
     @blogs = @bloggable.blogs.find(:all, find_opts.merge(:include => :latest_articles))
+    redirect_to blog_url_for(@blogs.first) and return if @blogs.size == 1 && !@bloggable.editable_by?(get_viewer)
     @page_title = "Blogs by #{@bloggable.display_name}"
     respond_to do |format|
       format.html { trender }
