@@ -228,7 +228,8 @@
 }
 
 #browser li.browser-col-listing a:hover,
-#browser li.browser-col-listing a.over {
+#browser li.browser-col-listing a.over,
+#browser li.browser-col-listing a.active {
 	color: #fff;
 	background-color: #005ED2;
 }
