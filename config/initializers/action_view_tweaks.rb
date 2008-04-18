@@ -31,10 +31,12 @@ module ActionView::Helpers
   
   module TextHelper
     def simple_format_with_options(text, opts={})
+      # this special override may not be needed anymore, since the class is not being used.
       open_p = %{<p#{opts[:class] ? " class=\"#{opts[:class]}\"" : ''}>}
       content_tag 'p', text.to_s.
         gsub(/\r\n?/, "\n").                    # \r\n and \r -> \n
         gsub(/\n\n+/, "</p>\n\n#{open_p}").           # 2+ newline  -> paragraph
+#        gsub(/\n(?=<\w)/, "</p>\n\n#{open_p}"). # In case one line break followed by html tag Actually we shouldnt. PRE cant be wrapped in P.
         gsub(/([^\n]\n)(?=[^\n])/, '\1<br />'), # 1 newline   -> br
         opts
     end

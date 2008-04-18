@@ -395,7 +395,7 @@
 		color: #999;
 	}
 	
-	.msm_layout p.articleContent {
+	.msm_layout .article p {
 		line-height: 1.8em;
 	}
 	
@@ -676,7 +676,7 @@
 		left: 5px;
 	}
 	
-	#canvas.articles-show p.articleContent {
+	#canvas.articles-show .article p {
 		margin: 0 0 17px;
 	}
 	
