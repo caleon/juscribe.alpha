@@ -63,6 +63,37 @@
 	background-color: transparent;
 }
 
+.sub.navigation li.breadcrumbEl > a.bread-home img.shim {
+	height: 10px;
+	width: 13px;
+	margin-right: 6px;
+	background: transparent url(/images/skins/msm/sprites.png) no-repeat 0 0;
+	vertical-align: baseline;
+}
+
+.sub.navigation li.breadcrumbEl.current > a.bread-home img.shim,
+.sub.navigation li.breadcrumbEl > a.bread-home:hover img.shim {
+	background-position: 0 -10px;
+}
+
+.sub.navigation li.breadcrumbEl > a.bread-home {
+	padding-left: 9px;
+}
+
+.sub.navigation li.navigationEl > a.nav-customize img.shim {
+	height: 10px;
+	width: 10px;
+	margin-right: 6px;
+	background: transparent url(/images/skins/msm/sprites.png) no-repeat -13px 0;
+	vertical-align: baseline;
+}
+
+.sub.navigation li.navigationEl.current > a.nav-customize img.shim,
+.sub.navigation li.navigationEl > a.nav-customize:hover img.shim {
+	background-position: -13px -10px;
+}
+
+
 .flashBox {
 	width: 893px;
 	margin-bottom: 0;
@@ -104,6 +135,7 @@
 		color: #999;
 		font-weight: normal;
 		text-transform: uppercase;
+		letter-spacing: 3px;
 	}
 	
 	.msm_layout h4.descriptor a {
@@ -141,7 +173,12 @@
 		position:  absolute;
 		top:  0;
 		right: 0;
-		background: transparent url(/images/skins/msm/rss-icon-27x15.png) no-repeat left top;
+	}
+	
+	.msm_layout .rss_link > img {
+		width: 27px;
+		height: 15px;
+		background: transparent url(/images/skins/msm/sprites.png) no-repeat -36px 0;
 	}
 		
 	.msm_layout span.timeago {

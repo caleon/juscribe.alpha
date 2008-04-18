@@ -184,23 +184,6 @@
 .sub.navigation li.breadcrumbEl.current > a {
 }
 
-.sub.navigation li.breadcrumbEl > a.bread-home img.shim {
-	height: 10px;
-	width: 13px;
-	margin-right: 6px;
-	background: transparent url(/images/skins/msm/home-off.png) no-repeat top left;
-	vertical-align: absmiddle;
-}
-
-.sub.navigation li.breadcrumbEl.current > a.bread-home img.shim,
-.sub.navigation li.breadcrumbEl > a.bread-home:hover img.shim {
-	background-image: url(/images/skins/msm/home-on.png);
-}
-
-.sub.navigation li.breadcrumbEl > a.bread-home {
-	padding-left: 9px;
-}
-
 #canvas {
 	
 }
@@ -400,6 +383,11 @@ strong.articleIntro {
 	position:  absolute;
 	top:  0;
 	right: 0;
+}
+
+.rss_link > img {
+	width: 27px;
+	height: 15px;
 	background: transparent url(/images/rss-icon-27x15.png) no-repeat left top;
 }
 
