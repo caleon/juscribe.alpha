@@ -251,24 +251,24 @@
 	}
 	
 	.msm_layout .msm_shim_top {
-		background-image: url(/images/skins/msm/corner_dg_TR.gif);
-		background-position: right top;
+		background-image: url(/images/skins/msm/corners.png);
+		background-position: right 0;
 	}
 	
 	.msm_layout .msm_shim_top > div {
-		background-image: url(/images/skins/msm/corner_dg_TL.gif);
-		background-position: left top;
+		background-image: url(/images/skins/msm/corners.png);
+		background-position: left -4px;
 	}
 	
 	.msm_layout .msm_shim_bottom {
 		clear: both;
-		background-image: url(/images/skins/msm/corner_dg_BR.gif);
-		background-position: right bottom;
+		background-image: url(/images/skins/msm/corners.png);
+		background-position: right -8px;
 	}
 	
 	.msm_layout .msm_shim_bottom > div {
-		background-image: url(/images/skins/msm/corner_dg_BL.gif);
-		background-position: left bottom;
+		background-image: url(/images/skins/msm/corners.png);
+		background-position: left -12px;
 	}
 
 /* @end */

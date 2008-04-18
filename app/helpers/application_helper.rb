@@ -93,7 +93,7 @@ module ApplicationHelper
   end
   
   def navi_customize(path)
-    navi_el image_tag('shim.gif', :class => 'shim') + 'Customize', path, :class => 'nav-customize', :right => true if main_object && main_object.editable_by?(get_viewer)
+    navi_el image_tag('shim.gif', :class => 'shim') + 'Customize', path, :class => 'nav-customize', :right => true, :current => controller.controller_name == 'widgets' if main_object && main_object.editable_by?(get_viewer)
   end
   
   def cancel_button
