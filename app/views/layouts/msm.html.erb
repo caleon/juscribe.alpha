@@ -1,11 +1,13 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
 	"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us" dir="ltr">
 <%= render :partial => 'shared/head' %>
 <% body_tag_for(main_object, :onload => @onloads) do %>
+	<%= render :partial => 'shared/skiplinks' %>
 	<% content_tag(:div, :id => 'wrapper') do %>
 		<%= render :partial => 'shared/header' %>
 		<% content_tag(:div, :id => 'canvas', :class => get_canvas_class) do %>
+			<a name="navigation" />
 			<div class="sub navigation">
 				<ul class="navigationList">
 					<%= render :partial => flash[:warning] ? 'shared/subnavigation_error' : 'subnavigation' %>
@@ -15,7 +17,7 @@
 			</div>
 			<%= warning_field %>
 			<%= notice_field %>
-
+			<a name="content"></a>
 			<div id="msm_layout" class="msm_layout">
 				<%= debug_module %>
 			<% if @content_for_header %>
@@ -38,7 +40,7 @@
 				<div id="msm_side_column" class="msm_column">
 					<%= yield :side_column %>
 				</div>
-	
+				<a name="footer" />
 				<div id="msm_footer">
 					<%= rounded_shim(:top) %>
 					<div id="msm_footer-inner">

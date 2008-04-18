@@ -5,6 +5,37 @@
 	http://localhost:3000/stylesheets/main.css?1206320100
 */
 
+#skiplinks li {
+	list-style-type: none;
+}
+
+#skiplinks li a {
+	position: absolute;
+	top:  -2000px;
+	left:  -2000px;
+}
+
+#skiplinks li a:focus, #skiplinks li a:active {
+	top:  10em;
+	left: 0;
+	background-color: #fff;
+	border: 2px solid #009;
+	display: block;
+	width: 7em;
+	padding: .65em;
+	font-size: 1.1em;
+	text-align: center;
+	color: #009;
+	font-weight: 700;
+}
+
+#skiplinks li a:hover {
+	background-color: #f3f3f3;
+	border: 2px solid #999;
+	color: #00e;
+	text-decoration: underline;
+}
+
 #wrapper {
 	margin: 0;
 	padding: 0;

@@ -3,9 +3,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <%= render :partial => 'shared/head' %>
 <% body_tag_for(main_object, :onload => @onloads) do %>
+	<%= render :partial => 'shared/skiplinks' %>
 	<% content_tag(:div, :id => 'wrapper') do %>
 		<%= render :partial => 'shared/header' %>
 		<% content_tag(:div, :id => 'canvas', :class => get_canvas_class) do %>
+			<a name="navigation" />
 			<div class="sub navigation">
 				<ul class="navigationList">
 					<%= render :partial => flash[:warning] ? 'shared/subnavigation_error' : 'subnavigation' %>
@@ -15,12 +17,14 @@
 			</div>
 			<%= warning_field %>
 			<%= notice_field %>
-
+			<a name="content"></a>
 			<div id="standard_layout" class="standard_layout">
 				<%= debug_module %>
 				<%= yield %>
 			</div>
 		<% end %>
+		
+		<a name="footer" />
 		<%= render :partial => 'shared/footer' %>
 	<% end %>
 	<%= render :partial => 'shared/foot' %>
