@@ -96,13 +96,17 @@
 	}
 	
 	.msm_layout h4 {
+		
+	}
+	
+	.msm_layout h4.descriptor {
 		font-size: 77%;
 		color: #999;
 		font-weight: normal;
 		text-transform: uppercase;
 	}
 	
-	.msm_layout h4 a {
+	.msm_layout h4.descriptor a {
 		font-weight: normal;
 	}
 	
