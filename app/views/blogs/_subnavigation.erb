@@ -1,7 +1,7 @@
 <% blog ||= @blog -%>
 <% bloggable ||= @bloggable || blog.bloggable %>
-<%= bread_el image_tag('shim.gif', :class => 'shim') + bloggable.display_name, bloggable_path_for(bloggable), :class => 'bread-home' %>
-<%= bread_el 'Blogs', blogs_path_from_bloggable(bloggable), :current => blog.nil? || blog.new_record? %>
+<%= bread_el image_tag('shim.gif', :class => 'shim') + bloggable.display_name, bloggable_path_for(bloggable), :class => 'bread-home', :rel => 'home' %>
+<%= bread_el 'Blogs', blogs_path_from_bloggable(bloggable), :current => blog.nil? || blog.new_record?, :rel => controller.action_name != 'index' ? 'directory' : nil %>
 <%= bread_el(truncate(blog.name, 20), blog_path_for(blog), :current => !@blog.nil?) if blog && !blog.new_record? %>
 
 <% if controller.controller_name == 'blogs' %>

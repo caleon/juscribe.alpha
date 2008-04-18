@@ -1,0 +1,4 @@
+<%= subnav_for(@taggable) %>
+<%= bread_el 'Tags', taggings_path_from_taggable(@taggable), :current => true, :rel => controller.action_name != 'index' ? 'directory' : nil %>
+<%= subnavi_el 'New', taggings_path_from_taggable(@taggable, :prefix => 'new'), :current => controller.action_name == 'new' if logged_in? %>
+<%= subnavi_el 'Edit', tagging_path_for(@tagging), :current => controller.action_name == 'edit' if logged_in? && @tagging && !@tagging.new_record? && @tagging.editable_by?(get_viewer) %>

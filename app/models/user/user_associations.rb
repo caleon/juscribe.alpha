@@ -10,6 +10,7 @@ class User < ActiveRecord::Base
   has_many :owned_blogs, :class_name => 'Blog', :dependent => :nullify # What is the point?
   has_many :blogs, :as => :bloggable, :dependent => :nullify
   def all_blogs; (owned_blogs + blogs).uniq; end
+  has_one :default_blog, :class_name => 'Blog', :order => 'id ASC' # TODO: let user specify what is a default blog
   has_many :comments, :as => :commentable, :order => 'comments.id DESC'
   has_many :owned_comments, :class_name => 'Comment', :dependent => :nullify
   with_options :class_name => 'Thoughtlet', :order => 'thoughtlets.id DESC' do |thoughtlet|

@@ -1,6 +1,6 @@
-<%= bread_el image_tag('shim.gif', :class => 'shim') + @user.display_name, @user, :class => 'bread-home' %>
+<%= bread_el image_tag('shim.gif', :class => 'shim') + @user.display_name, @user, :class => 'bread-home', :rel => 'home' %>
 <%= bread_el 'Messages', messages_path, :current => @message.nil? || @message.new_record? %>
 <%= bread_el truncate(@message.subject, 20), message_path(@message), :current => true if @message && !@message.new_record? %>
-<%= subnavi_el "Inbox", messages_path, :current => controller.action_name == 'index' && params[:show] != 'sent' %>
-<%= subnavi_el "Sent", messages_path(:show => 'sent'), :current => controller.action_name == 'index' && params[:show] == 'sent' %>
+<%= subnavi_el "Inbox", messages_path, :current => controller.action_name == 'index' && params[:show] != 'sent', :rel => controller.action_name != 'index' && @message && @message.recipient == get_viewer ? 'directory' : nil %>
+<%= subnavi_el "Sent", messages_path(:show => 'sent'), :current => controller.action_name == 'index' && params[:show] == 'sent', :rel => controller.action_name != 'index' && @message && @message.sender == get_viewer ? 'directory' : nil %>
 <%= subnavi_el "Compose", new_message_path, :current => controller.action_name == 'new' %>

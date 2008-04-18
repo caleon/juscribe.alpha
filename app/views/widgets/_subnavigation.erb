@@ -1,4 +1,4 @@
-<%= bread_el image_tag('shim.gif', :class => 'shim') + @user.display_name, @user, :class => 'bread-home' %>
-<%= bread_el "Widgets", user_widgets_path(@user), :current => @widget.nil? || @widget.new_record? %>
+<%= bread_el image_tag('shim.gif', :class => 'shim') + @user.display_name, @user, :class => 'bread-home', :rel => 'home' %>
+<%= bread_el "Widgets", user_widgets_path(@user), :current => @widget.nil? || @widget.new_record?, :rel => controller.action_name != 'index' ? 'directory' : nil %>
 <%= bread_el truncate(@widget.display_name, 20), user_widget_path(@widget.to_path), :current => true if @widget && !@widget.new_record? %>
 <%= subnavi_el 'Edit', edit_user_widget_path(@widget.to_path), :current => controller.action_name == 'edit' if @widget && !@widget.new_record? && @widget.editable_by?(get_viewer) %>

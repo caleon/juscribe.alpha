@@ -18,7 +18,7 @@
 	
 <% content_for :side_column do -%>
 	<% with_options :layout => :framed do |framed| %>
-		<%= framed.wrender :thumbs %>
+		<%= framed.wrender :thumbs unless @article.thumbs.empty? %>
 		<%= framed.wrender :google_ads %>
 		<%= framed.wrender 'blogs/latest_articles', :blog => @article.blog if @article.blog %>
 	<% end %>

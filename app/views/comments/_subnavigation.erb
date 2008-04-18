@@ -1,1 +1,5 @@
 <%= subnav_for(@commentable) %>
+<%= bread_el 'Comments', comments_path_from_commentable(@commentable), :current => true, :rel => controller.action_name != 'index' ? 'directory' : nil %>
+<%= subnavi_el 'New', comment_path_from_commentable(@commentable, :prefix => 'new'), :current => controller.action_name == 'new' && params[:re].blank? if logged_in? %>
+<%= subnavi_el 'Edit', comment_path_for(@comment, :prefix => 'edit'), :current => controller.action_name == 'edit' if logged_in? && @comment && !@comment.new_record? && @comment.editable_by?(get_viewer) %>
+<%= subnavi_el 'Respond', '#', :current => controller.action_name == 'new' && !params[:re].blank? if logged_in?%>
