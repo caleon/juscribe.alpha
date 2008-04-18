@@ -748,7 +748,27 @@
 	}
 	
 	.msm_layout .article-actions {
+		margin-top: 18px;
 		clear: both;
+		text-align: center;
+		background-color: #F5FAFE;
+		padding: 7px 0;
+		border-width: 1px 0;
+		border-color: #ccc;
+		border-style: solid;
+	}
+	
+	.msm_layout .article-actions li {
+		display: inline;
+		margin-right: 7px;
+		padding-right: 7px;
+		border-right: 1px solid #666;
+	}
+	
+	.msm_layout .article-actions li:last-child {
+		margin-right: 0;
+		padding-right: 0;
+		border-right: none;
 	}
 
 /* @end */
