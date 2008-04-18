@@ -26,7 +26,9 @@ module ArticlesHelper
   def format_article(article, opts={})
     text = article.content
     text = article_intro + article.content unless opts[:without_intro]
-    text = sanitize(text, :tags => %w( code blockquote pre a strong em img i b embed object param ), :attributes => %w( id class rel title style href wmode src type name value width height ))
+    allowed_tags = %w( code blockquote pre a strong em img i b embed object param ) - (opts[:truncate] ? %w( embed object param pre ) : [])
+    allowed_attrs = %w( id class rel title style href wmode src type name value width height )
+    text = sanitize(text, :tags => allowed_tags, :attributes => allowed_attrs)
     text = truncate_html(text, opts[:truncate]) if opts[:truncate]
     formatted = Hpricot(simple_format(text, :class => 'articleContent'))
     (formatted/"a").each{|link| link.set_attribute('class', 'external') and link.set_attribute('target', '_new') if link.attributes['href'].match(/:\/\//)}

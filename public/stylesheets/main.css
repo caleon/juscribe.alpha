@@ -229,6 +229,7 @@
 
 #browser .browser-col-listing {
 	margin-bottom: 0;
+	border-bottom: 1px solid #f4f4f4;
 }
 
 #browser #preview_pane {

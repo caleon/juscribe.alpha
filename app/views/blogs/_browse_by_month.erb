@@ -2,7 +2,7 @@
 <h3>Browse Articles</h3>
 <ul id="browser">
 	<li class="browser-col">
-		<h4>Months</h4>
+		<h4 class="descriptor">Months</h4>
 		<ul class="browser-col-list" id="browser-col-list-a">
 		<% blog.months_posted.each do |month_year| %>
 			<% month, year = month_year[0], month_year[1] %>
@@ -16,7 +16,7 @@
 		</ul>
 	</li>
 	<li class="browser-col">
-		<h4>Articles</h4>
+		<h4 class="descriptor">Articles</h4>
 		<ul class="browser-col-list" id="browser-col-list-b">
 			<li class="browser-col-listing" style="color: #999;">Select a month on the left</li>
 		</ul>
