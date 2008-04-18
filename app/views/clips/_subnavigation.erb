@@ -1,1 +1,3 @@
 <%= subnav_for(@widgetable) %>
+<%= bread_el 'Clips', clips_path_from_widgetable(@widgetable), :current => true %>
+<%= subnavi_el 'New', clip_path_from_widgetable(@widgetable, :prefix => 'new'), :current => true %>

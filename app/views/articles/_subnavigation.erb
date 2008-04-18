@@ -3,7 +3,7 @@
 <% author ||= @author || article.author -%>
 <%= bread_el image_tag('shim.gif', :class => 'shim') + author.display_name, author, :class => 'bread-home' %>
 <%= bread_el 'Blogs', blogs_path_from_bloggable(author) %>
-<%= bread_el blog.display_name, blog_path_for(blog), :current => %w(new import).include?(controller.action_name) %>
+<%= bread_el blog.display_name, blog_path_for(blog), :current => controller.controller_name == 'articles' && %w(new import).include?(controller.action_name) %>
 <%= bread_el truncate(article.title, 20), article_path_for(article), :current => controller.controller_name == 'articles' if article && !article.new_record? %>
 
 <% if controller.controller_name == 'articles' %>
