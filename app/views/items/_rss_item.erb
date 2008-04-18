@@ -1,6 +1,8 @@
 <div class="rss_item" id="rss-<%= 'one' || rss_item.item_guid %>">
 	<%= image_tag 'spinner.gif', :id => 'rss_item-spinner', :class => 'spinner', :style => 'display: none;' %>
-	<script type="text/javascript">
-		new Ajax.Updater('rss-<%= "one" || rss_item.item_guid %>', '<%= latest_feed_path(:url => "http://cdmjimmy.blogspot.com/feeds/posts/default?alt=rss") %>', {asynchronous:true, evalScripts:true, onLoading:function(request){$('rss_item-spinner').show()}, onComplete:function(request){$('feed').appear()}, parameters:'<%= request_forgery_protection_token %>=' + encodeURIComponent('<%= escape_javascript form_authenticity_token %>')});
-	</script>
+	<% add_scripts do -%>
+		Event.onReady(function() {
+			new Ajax.Updater('rss-<%= "one" || rss_item.item_guid %>', '<%= latest_feed_path(:url => "http://cdmjimmy.blogspot.com/feeds/posts/default?alt=rss") %>', {asynchronous:true, evalScripts:true, onLoading:function(request){$('rss_item-spinner').show()}, onComplete:function(request){$('feed').appear()}, parameters:'<%= request_forgery_protection_token %>=' + encodeURIComponent('<%= escape_javascript form_authenticity_token %>')});			
+		})
+	<% end -%>
 </div>

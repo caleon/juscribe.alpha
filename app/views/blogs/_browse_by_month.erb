@@ -25,6 +25,4 @@
 		<%= render :partial => 'shared/preview_pane', :locals => { :sym => 'articles' } %>
 	</li>
 </ul>
-<script type="text/javascript">
-		var browser = new Browser('browser', 'preview_pane');
-</script>
+<%= add_inline_scripts("var browser = new Browser('browser', 'preview_pane');") %>

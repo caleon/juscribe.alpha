@@ -2,7 +2,8 @@
 
 <!-- This sets up the cropping UI when the document loads (@onload is referenced in the layout file).
 The param passed is the max zoom level for the cropping UI. -->
-<% add_onload('setup_image_cropper(6)') -%>
+<%# add_onload('setup_image_cropper(6)') -%>
+<%= add_inline_scripts("Event.onReady(function(){ setup_image_cropper(6) })") %>
 
 <!-- alternate css for IE6 to get around its goddamned lack of support for png transparency. -->
 <!--[if IE 6]>

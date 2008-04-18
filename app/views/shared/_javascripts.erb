@@ -1,5 +1,5 @@
 <%= javascript_include_tag :defaults, 'lowpro', 'lightbox', 'modalbox', :cache => 'base' %>
-<%= javascript_include_tag *kropper_scripts if @use_kropper %>
+<%= javascript_include_tag *(kropper_scripts << { :cache => 'kropper' }) if @use_kropper %>
 <%= link_script_files %>
 <% if print_scripts_block? -%>
 	<script type="text/javascript">

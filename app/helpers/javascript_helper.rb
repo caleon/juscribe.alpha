@@ -75,9 +75,9 @@ module JavascriptHelper
   def add_by_type(content, kind=nil, inline=false)
     case kind
     when :add_behavior
-      add_to_behaviors(res)
+      add_to_behaviors(content)
     when nil
-      add_to_scripts(res)
+      add_to_scripts(content)
     else
       raise ArgumentError, "Invalid `kind` in arguments. Expected nil or predefined symbols."
     end
@@ -110,5 +110,6 @@ module JavascriptHelper
       (@extra_scripts ||= []) << content
     else
     end
+    return nil
   end
 end
