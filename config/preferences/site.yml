@@ -3,3 +3,4 @@
 :scripts_at_bottom: true
 :defcon: 0
 :disable_registration: false
+:disable_search: true
