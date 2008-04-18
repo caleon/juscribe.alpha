@@ -1,4 +1,4 @@
-<div class="msm_widget framed" id="msm_widget-<%= @wcount %>">
+<div class="msm_widget framed"<% if @wcount %> id="msm_widget-<%= @wcount %>"<% end %>>
 	<%= rounded_shim(:top) %>
 	<div class="msm_widget-inner">
 		<%= yield %>
