@@ -7,7 +7,7 @@
 	<% content_tag(:div, :id => 'wrapper') do %>
 		<%= render :partial => 'shared/header' %>
 		<% content_tag(:div, :id => 'canvas', :class => get_canvas_class) do %>
-			<a name="navigation" />
+			<a name="navigation"></a>
 			<div class="sub navigation">
 				<ul class="navigationList">
 					<%= render :partial => flash[:warning] ? 'shared/subnavigation_error' : 'subnavigation' %>
@@ -40,7 +40,7 @@
 				<div id="msm_side_column" class="msm_column">
 					<%= yield :side_column %>
 				</div>
-				<a name="footer" />
+				<a name="footer"></a>
 				<div id="msm_footer">
 					<%= rounded_shim(:top) %>
 					<div id="msm_footer-inner">

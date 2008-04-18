@@ -1,7 +1,7 @@
 <% feed = parseFeed(url) -%>
 <div class="feed" style="display: none;" id="feed">
-	<h3><span class="feedBlog">RSS: </span>From <%= link_to feed.feed_title, feed.feed_link %> by <%= feed.item_author %></h3>
-	<h4><%= link_to feed.item_title, feed.item_link %></h4>
+	<h4 class="descriptor"><span class="feedBlog">RSS: </span>From <%= link_to feed.feed_title, feed.feed_link %> by <%= feed.item_author %></h4>
+	<h3><%= link_to feed.item_title, feed.item_link %></h3>
 		<%# TODO: make this use the same formatter as feeds %>
 		<% formatted = Hpricot(truncate_html(simple_format(sanitize(feed.item_content, :tags => %w(a img code blockquote pre param embed object )), :class => 'articleContent'), 1000)) %>
 		<% (formatted/"a").each{|link| link.set_attribute('class', 'external') and link.set_attribute('target', '_new') if link.attributes['href'].match(/:\/\//)} %>
