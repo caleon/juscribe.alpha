@@ -497,3 +497,10 @@ strong.articleIntro {
 .social_network a:hover .social_network-aim {
 	background-position: -45px -15px;
 }
+
+.article object {
+	display: block;
+	margin: 0 auto;
+	background-color: #ccc;
+	border: 12px solid #ccc;
+}
