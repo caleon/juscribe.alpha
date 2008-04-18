@@ -95,6 +95,17 @@
 		font-size: 120%;
 	}
 	
+	.msm_layout h4 {
+		font-size: 77%;
+		color: #999;
+		font-weight: normal;
+		text-transform: uppercase;
+	}
+	
+	.msm_layout h4 a {
+		font-weight: normal;
+	}
+	
 	.msm_layout p {
 		margin: 4px 0 13px;
 		line-height: 1.3em;
