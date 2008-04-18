@@ -1,6 +1,9 @@
 <div id="debugger">
 	<%= rounded_shim(:top) %>
 	<p id="debugger-inner">
+		BLAH: <%= escape_javascript form_authenticity_token %><br />
+		BLAH2: <%= request_forgery_protection_token %><br />
+		THREMOTE: <%= link_to_remote 'hello', :url => user_path(User.find(1)), :update => 'browser', :loading => "var dog='fido'", :complete => "var citty = 'kitty'" %><br />
 		The daily password: <%= @daily_pw %><br />
 		referer var class: <%= controller.request.env["HTTP_REFERER"].class.to_s %><br />
 		request url: <%= controller.request.url %><br />

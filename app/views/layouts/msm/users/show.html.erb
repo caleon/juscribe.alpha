@@ -28,11 +28,11 @@
 
 <div class="msm_row nobg" id="msm_row-3">
 	<div class="msm_main_column-a msm_main_column msm_with_reg_wid">
-		<%= wrender :without_picture => true %>
+		<%= wrender :without_picture => true, :layout => :framed %>
 	</div>
 	
 	<div class="msm_main_column-b msm_main_column nopad">
-		<%= wrender :latest_thoughtlets, :layout => :framed %>
+		<%= wrender :latest_thoughtlets %>
 	</div>
 	<%= br_clear %>
 </div>

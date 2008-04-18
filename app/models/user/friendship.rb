@@ -33,7 +33,7 @@ module Friendship
     unless opts[:without_save] ||= false
       self[:friend_ids] = new_friend_ids
       self.save!
-      Notifier.deliver_friendship_request(user, :friend_id => self.id) unless self.friends_with?(user)
+      Notifier.deliver_friendship_request(user, :friend_id => self.id) unless self.friends_with?(user) || SITE[:defcon] == 0
     else
       self.friend_ids = new_friend_ids
       # Needs to deliver request email separately.

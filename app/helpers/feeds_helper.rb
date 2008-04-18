@@ -1,7 +1,7 @@
 require 'rss/2.0'
 require 'open-uri'
 
-module RssHelper
+module FeedsHelper
   class RssItem
     def initialize(feed_attrs, item_attrs)
       @feed_link = feed_attrs[:link]
@@ -11,12 +11,13 @@ module RssHelper
       @item_author = item_attrs[:author]
       @item_content = item_attrs[:content]
       @item_published_date = item_attrs[:published_date]
+      @item_guid = item_attrs[:guid]
     end
     
     def self.class_name; "RssItem"; end
     
     attr_reader :feed_link, :feed_title, :item_link, :item_title,
-                :item_author, :item_content, :item_published_date
+                :item_author, :item_content, :item_published_date, :item_guid
   end
   
   def parseFeed(feed_url)
@@ -27,7 +28,7 @@ module RssHelper
       latest = result.items.first
       rss_item = RssItem.new( { :link => result.channel.link, :title => result.channel.title },
                                   { :link => latest.link, :title => latest.title, :author => latest.author,
-                                    :content => latest.description, :published_date => latest.pubDate } )
+                                    :content => latest.description, :published_date => latest.pubDate, :guid => latest.guid } )
     end
     return rss_item
   end

@@ -140,7 +140,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :permissions, :requirements => { :id => regex_for(:permission_rule, :id) }
   
   map.search 'search/:query', :controller => 'search', :action => 'index', :query => nil
-  
+  map.latest_feed 'feeds/latest', :controller => 'feeds', :action => 'latest'
   map.registration 'register', :controller => 'users', :action => 'new'
   map.login 'login', :controller => 'users', :action => 'login'
   map.formatted_login 'login.:format', :controller => 'users', :action => 'login'

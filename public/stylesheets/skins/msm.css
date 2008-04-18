@@ -143,6 +143,10 @@
 		padding-left: 8px;
 	}
 	
+	.msm_layout .msm_row form {
+		margin-bottom: 18px;
+	}
+	
 	.msm_layout fieldset {
 		border: 1px solid #ccc;
 	}
@@ -395,7 +399,8 @@
 		color: #999;
 	}
 	
-	.msm_layout .article p {
+	.msm_layout .article p,
+	.msm_layout p.articleContent {
 		line-height: 1.8em;
 	}
 	
@@ -445,6 +450,14 @@
 		font-size: 85%;
 	}
 	
+	.msm_layout .rss_item {
+		min-height: 250px;
+	}
+	
+	.msm_layout .rss_item #rss_item-spinner {
+		display: block;
+		margin: 100px auto;
+	}
 
 /* @end */
 

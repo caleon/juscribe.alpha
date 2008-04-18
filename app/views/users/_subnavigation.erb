@@ -19,7 +19,7 @@
 		<% if get_viewer.friends_with?(@user) %>
 			<%= subnavi_el "Unfriend", unfriend_user_path(@user), { :method => :put } %>
 		<% elsif get_viewer != @user && !get_viewer.kinda_friends_with?(@user) %>
-			<%= subnavi_el "Request Friendship", befriend_user_path(@user), { :method => :put } %>
+			<%= subnavi_el "#{@user.kinda_friends_with?(get_viewer) ? 'Confirm' : 'Request'} Friendship", befriend_user_path(@user), { :method => :put } %>
 		<% end %>
 	<% end %>
 <% end %>
