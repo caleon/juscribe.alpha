@@ -14,6 +14,11 @@
 	<%= f.datetime_select :published_at, :start_year => Time.now.year, :include_blank => true %>
 	<br />
 <% end %>
+<%# This is faulty. A clip can potentially be placed not just on User page but on Blog page or Group page... %>
+<%= label :widget, :position, "Clip and Place" %>
+<%= select_tag 'widget[position]', %{<option></option>} + (1..10).map {|i| %{<option#{' selected="selected"' if @widget && @widget.position == i}>#{i}</option>} }.join, :id => 'widget_position' %>
+<br />
+
 <% if @article.new_record? || @article.draft? %>
 <input type="submit" name="article[publish]" value="Publish Now" />
 <% end %>
