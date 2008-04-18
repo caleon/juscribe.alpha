@@ -54,13 +54,13 @@
 }
 
 .sub.navigation li.breadcrumbEl > a {
-	background: transparent url(/images/skins/msm/bread_bg.png) no-repeat right top;
+	background: transparent url(/images/skins/msm/sprites.png) no-repeat right -20px;
 }
 
 .sub.navigation li.breadcrumbEl > a:hover,
 .sub.navigation li.breadcrumbEl.current > a {
-	background-image: url(/images/skins/msm/bread_bg-hover.png);
-	background-color: transparent;
+	background-image: url(/images/skins/msm/sprites.png);
+	background-position: right -49px;
 }
 
 .sub.navigation li.breadcrumbEl > a.bread-home img.shim {
