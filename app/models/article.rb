@@ -151,7 +151,7 @@ class Article < ActiveRecord::Base
         "WHERE ((t1.id IN(#{comp_taggings.join(', ')})) AND articles.id != t1.taggable_id AND articles.published_at IS NOT NULL) " + 
         "GROUP BY articles.id " +
         (options[:threshold] ? "HAVING similar_count > #{options[:threshold]} " : "") + 
-      ") unioned GROUP BY unioned.id ORDER BY similar_count DESC, articles.published_at DESC LIMIT #{limit}"
+      ") unioned GROUP BY unioned.id ORDER BY similar_count DESC, unioned.published_at DESC LIMIT #{limit}"
     )
   rescue
     []
