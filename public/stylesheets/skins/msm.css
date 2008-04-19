@@ -105,6 +105,9 @@
 	#msm_layout,
 	.sub.navigation {
 		width: 965px;
+	}
+	
+	.sub.navigation {
 		height: 27px;
 	}
 	
