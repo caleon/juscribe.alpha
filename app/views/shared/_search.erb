@@ -1,4 +1,4 @@
 <% form_tag '#', :class => 'search', :method => (SITE[:disable_search] ? :get : :post) do -%>
 	<%= text_field_tag :query, nil, :placeholder => 'Search Juscribe' %>
-	<%= submit_tag 'Search', :id => 'search_button' %>
+	<%= submit_tag 'Search', :id => 'search_button', :disabled => true %>
 <% end -%>
