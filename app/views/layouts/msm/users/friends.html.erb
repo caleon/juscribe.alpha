@@ -12,7 +12,12 @@
 <% end -%>	
 
 <div class="last msm_row" id="msm_row-1">
-	<%= render :partial => 'friend', :collection => @friends %>
+<% @friends.each do |friend| %>
+	<div class="friend" id="friend-<%= friend.id %>">
+		<%= render :partial => 'user', :object => friend %>
+		<%= br_clear %>
+	</div>
+<% end %>
 </div>
 
 <% content_for :side_column do -%>
