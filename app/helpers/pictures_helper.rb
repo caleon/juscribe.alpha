@@ -48,7 +48,7 @@ module PicturesHelper
         dom_class_str = [ dom_class(picture, :include => includes), with[:class] ].compact.join(' ')
         dom_id_str = dom_id(picture, :include => includes)
         image_tag(picture.public_filename,
-                  { :class => dom_class_str, :id => dom_id_str, :alt => picture.caption } )
+                  { :class => dom_class_str, :id => dom_id_str, :alt => picture.caption, :width => picture.width, :height => picture.height } )
       else
         default_picture_for(record.class.class_name,
                             :class => dom_class(Picture, :include => includes) )
