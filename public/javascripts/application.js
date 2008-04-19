@@ -27,25 +27,27 @@ MsmLayout.prototype = {
 	equalizeWidgetHeights: function(el1_id, el2_id){
 		els = [ $(el1_id), $(el2_id) ];
 		targetHeight = els.max(function(el){ return el.getHeight(); });
-		shortEl = els.find(function(el){ return el.getHeight() != targetHeight; });
-		diff = targetHeight - shortEl.getHeight();
+		if(shortEl = els.find(function(el){ return el.getHeight() != targetHeight; })){
+			diff = targetHeight - shortEl.getHeight();
 		
-		adjuster = shortEl.childElements().find(function(e){ return e.className.match(/inner|content/); });
-		otherHeights = this.getOtherHeights(adjuster);
-		trueHeight = adjuster.getHeight() - otherHeights;		
-		adjuster.style.height = trueHeight + diff + 'px';
+			adjuster = shortEl.childElements().find(function(e){ return e.className.match(/inner|content/); });
+			otherHeights = this.getOtherHeights(adjuster);
+			trueHeight = adjuster.getHeight() - otherHeights;		
+			adjuster.style.height = trueHeight + diff + 'px';
+		}
 	},
 	
 	equalizeColumnHeights: function(col1_id, col2_id){
 		els = [ $(col1_id), $(col2_id) ];
 		targetHeight = els.max(function(el){ return el.getHeight(); });
-		shortEl = els.find(function(el){ return el.getHeight() != targetHeight; });
-		diff = targetHeight - shortEl.getHeight();
+		if(shortEl = els.find(function(el){ return el.getHeight() != targetHeight; })){
+			diff = targetHeight - shortEl.getHeight();
 		
-		adjuster = shortEl.childElements().last().childElements().find(function(el){ return el.className.match(/inner|content/); });
-		otherHeights = this.getOtherHeights(adjuster);
-		trueHeight = adjuster.getHeight() - otherHeights;
-		adjuster.style.height = trueHeight + diff + 'px';
+			adjuster = shortEl.childElements().last().childElements().find(function(el){ return el.className.match(/inner|content/); });
+			otherHeights = this.getOtherHeights(adjuster);
+			trueHeight = adjuster.getHeight() - otherHeights;
+			adjuster.style.height = trueHeight + diff + 'px';
+		}
 	},
 	
 	getOtherHeights: function(el){
