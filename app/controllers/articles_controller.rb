@@ -156,7 +156,7 @@ class ArticlesController < ApplicationController
       create_uploaded_picture_for(@article, :save => true) if picture_uploaded?
       unless params[:widget][:position].blank?
         if clip = @article.clip_for(get_viewer)
-          clip.place!(params[:widget][:position])
+          clip.place!(params[:widget][:position]) unless clip.position == params[:widget][:position].to_i
         else
           @article.clip!(:position => params[:widget][:position], :user => get_viewer)
         end
