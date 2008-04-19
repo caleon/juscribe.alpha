@@ -7,6 +7,7 @@
 		<%= picture_for(@blog) %>
 		<h2><%= @page_title %></h2>
 		<h4>by <%= link_to @blog.bloggable.display_name, @blog.bloggable %></h4>
+		<p><%=h @blog.description %></p>
 	</div>
 	<div class="msm_column msm_column-b">
 		<%= render :partial => 'tags/tags', :object => @blog  %>
@@ -50,16 +51,17 @@
 	<div class="msm_main_column-ab msm_main_column msm_with_reg_wid">
 		<%= render(:partial => 'articles/article',
 							 :layout => wayout(:widget),
-							 :object => @articles[3]) %>
+							 :object => @articles[4]) %>
 	</div>
-<% end if @articles[3] -%>
+<% end if @articles[4] -%>
 	
 <% content_for :side_column do -%>
 	<% with_options :layout => :framed do |framed| %>
-		<%= framed.wrender :description %>
+		<%# framed.wrender :description # Description moved to header %>
 		<%= framed.wrender :bloggable %>
 		<%= framed.wrender :latest_pictures unless @blog.pictures.empty? %>
-		<%= framed.wrender :comments, :blog => @blog %>
+		<%= render :partial => 'articles/article', :object => @articles[3], :layout => wayout(:framed) if @articles[3] %>
+		<%# framed.wrender :comments, :blog => @blog # BLOG comments will show on Blog About page if there is one. %>
 		<%= framed.wrender :google_ads %>
 	<% end %>
 <% end -%>
