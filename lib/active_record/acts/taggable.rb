@@ -98,7 +98,7 @@ module ActiveRecord::Acts::Taggable
               ") " +
           "GROUP BY #{table_name}.#{primary_key} " +
           (options[:threshold] ? "HAVING similar_count > #{options[:threshold]} " : "") +
-          "ORDER BY similar_count DESC LIMIT #{limit}")
+          "ORDER BY similar_count DESC, #{table_name}.created_at DESC LIMIT #{limit}")
     end
   
     #def taggable?; true; end

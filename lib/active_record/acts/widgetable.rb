@@ -40,7 +40,7 @@ module ActiveRecord::Acts::Widgetable #:nodoc:
     def get_popular(*args)
       opts = args.extract_options!
       limit = args.shift || opts[:limit] || 20
-      find(:all, :joins => :clips, :select => "#{self.table_name}.*, count(widgets.widgetable_id) AS clips_count", :group => :widgetable_id, :order => 'clips_count DESC', :limit => limit, :conditions => opts[:conditions])
+      find(:all, :joins => :clips, :select => "#{self.table_name}.*, count(widgets.widgetable_id) AS clips_count", :group => :widgetable_id, :order => "clips_count DESC, #{self.table_name}.created_at DESC", :limit => limit, :conditions => opts[:conditions])
     end
   end
 
