@@ -345,7 +345,6 @@
 		clear: both;
 		min-height: 50px;
 		background-color: #fff;
-		font-size: 88%;
 	}
 	
 	#msm_footer-inner {
@@ -357,6 +356,7 @@
 		float: left;
 		margin: 0 18px 18px 0;
 		width: 218px;
+		font-size: 88%;
 	}
 	
 	#msm_main_column .msm_row {
@@ -581,6 +581,7 @@
 		padding: 0;
 	}
 		
+	#msm_row-2 > .msm_main_column-a,
 	#msm_row-3 > .msm_main_column-a {
 		width: 298px;
 	}
@@ -692,6 +693,7 @@
 	#canvas.articles-show #msm_header iframe,
 	#canvas.articles-show #msm_header img.digg {
 		float: right;
+		margin-left: 9px;
 	}
 	
 	.msm_layout a.article_picture_link {

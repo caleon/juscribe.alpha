@@ -41,13 +41,16 @@
 					<%= yield :side_column %>
 				</div>
 				<a name="footer"></a>
+			<% if @content_for_footer %>
 				<div id="msm_footer">
 					<%= rounded_shim(:top) %>
 					<div id="msm_footer-inner">
-						<%= render :partial => 'footer' %>
+						<%= yield :footer %>
+						<%# render :partial => 'footer' %>
 					</div>
 					<%= rounded_shim(:bottom) %>
 				</div>
+			<% end %>
 			</div>
 
 		<% end %>

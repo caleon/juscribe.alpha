@@ -55,3 +55,29 @@
 		<%= framed.wrender :comments if @user && !@user.new_record? %>
 	<% end %>
 <% end -%>
+
+<% content_for :footer do -%>
+	<% with_options :locals => { :prefix => :footer } do |footer| %>
+		<% content_tag :div, :class => 'footer-box' do -%>
+			<%= render :partial => 'blogs', :object => @user.blogs[0..4], :locals => { :bloggable => @user, :prefix => :footer } %>
+		<% end -%>
+
+		<% content_tag :div, :class => 'footer-box' do -%>
+			<%= footer.render :partial => 'latest_articles', :object => @user.latest_articles[0..4], :locals => { :without_time => true } %>
+		<% end -%>
+
+		<% content_tag :div, :class => 'footer-box' do -%>
+			<%= footer.render :partial => 'upcoming_events', :object => @user.upcoming_events[0..4] %>
+		<% end if false -%>
+
+		<% content_tag :div, :class => 'footer-box' do -%>
+			<%= footer.render :partial => 'latest_thoughtlets', :object => @user.latest_thoughtlets[0..4], :locals => { :without_time => true } %>
+		<% end -%>
+
+		<%= br_clear %>
+
+		<% content_tag :div, :class => 'footer-box' do -%>
+			<%= footer.render :partial => 'friends', :object => @user.friends[0..4] %>
+		<% end if false -%>
+	<% end %>
+<% end -%>
