@@ -95,7 +95,7 @@ module WidgetsHelper
             # FIXME: Huh? params?
            :object => params[:object] || obj,
            :layout => opts[:layout],
-           :locals => { :"#{instance_name}" => main_object }
+           :locals => { :"#{instance_name}" => main_object }.merge(opts)
   end
   
   def wrender_vacant(opts={})
