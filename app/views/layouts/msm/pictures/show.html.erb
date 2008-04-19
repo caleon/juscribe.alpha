@@ -1,5 +1,6 @@
 <% add_meta_keyword!(@picture.depictable.display_name) -%>
 <% set_link_author!(@picture.user) -%>
+<% @no_top_shim, @no_bottom_shim = true, true -%>
 
 <% content_for :header do -%>
 	<div class="msm_column msm_column-a">
@@ -11,13 +12,20 @@
 	</div>
 <% end -%>	
 
-<div class="last msm_row" id="msm_row-1">
-	<%= render :partial => 'show' %>
+<div class="msm_row innerpad" id="msm_row-1">
+	<%= rounded_shim(:top) %>
+	<div class="msm_row-content">
+		<%= render :partial => 'show' %>
+	</div>
+	<%= rounded_shim(:bottom) %>
+</div>
+	
+<div class="last msm_row nopad" id="msm_row-2">
+	<%= wrender :other_pictures, :layout => :framed unless @picture.other_pictures.empty? %>
 </div>
 	
 <% content_for :side_column do -%>
 	<% with_options :layout => :framed do |framed| %>
-		<%= framed.wrender :other_pictures unless @picture.other_pictures.empty? %>
 		<%# TODO: SHOW attachments framed.wrender :pictures if @article.primary_picture %>
 		<%= framed.wrender :google_ads %>
 	<% end %>

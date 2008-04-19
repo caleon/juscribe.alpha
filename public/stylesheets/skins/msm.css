@@ -501,6 +501,7 @@
 	
 	#msm_lead_follow_ups {
 		margin-top: 18px;
+		font-size: 88%;
 	}
 	
 	.msm_layout a.userLink,
@@ -633,6 +634,8 @@
 		padding-left: 13px;
 		padding-top: 9px;
 		background: #F2F2F2;
+		border: 0 solid #ddd;
+		border-width: 4px 0;
 	}
 	
 	.msm_widget ul.media_listing > li {
@@ -790,6 +793,12 @@
 }
 .msm_layout img.pictureShow.large {
 	width: 580px;
+}
+
+#canvas.pictures-show .msm_layout .msm_row .msm_row-content {
+	border: 0 solid #ddd;
+	border-width: 8px 0;
+	background-color: #F2F2F2;
 }
 
 #login-form {
