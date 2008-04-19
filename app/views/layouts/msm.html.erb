@@ -7,6 +7,12 @@
 	<% content_tag(:div, :id => 'wrapper') do %>
 		<%= render :partial => 'shared/header' %>
 		<% content_tag(:div, :id => 'canvas', :class => get_canvas_class) do %>
+			<% content_for :before_scripts do -%>
+				<script type="text/javascript">
+					var msm_layout = new MsmLayout();
+				</script>
+			<% end -%>
+			
 			<a name="navigation"></a>
 			<div class="sub navigation">
 				<ul class="navigationList">
@@ -40,6 +46,8 @@
 				<div id="msm_side_column" class="msm_column">
 					<%= yield :side_column %>
 				</div>
+				<%= add_inline_scripts("Event.onReady(function(){ msm_layout.equalizeColumnHeights('msm_main_column', 'msm_side_column'); })") %>
+				
 				<a name="footer"></a>
 			<% if @content_for_footer %>
 				<div id="msm_footer">

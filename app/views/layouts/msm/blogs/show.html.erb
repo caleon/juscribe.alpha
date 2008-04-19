@@ -50,7 +50,6 @@
 	
 	<%# TODO: do this after layoutable module is ready so that wrender can work here and increase dom_ids with wcount %>
 	<% add_scripts do -%>
-		var msm_layout = new MsmLayout();
 		msm_layout.equalizeWidgetHeights('msm_widget-2', 'msm_widget-3');
 	<% end if @articles[2] -%>
 
@@ -80,7 +79,6 @@
 		<%= framed.wrender :google_ads %>
 	<% end %>
 <% end -%>
-<%= add_inline_scripts("Event.onReady(function(){ msm_layout.equalizeColumnHeights('msm_main_column', 'msm_side_column'); })") %>
 
 <% content_for :footer do -%>
 	<%= render :partial => 'browse_by_month' %>
