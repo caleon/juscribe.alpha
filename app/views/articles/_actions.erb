@@ -9,4 +9,4 @@
 		<% end %>
 	<% end %>
 	<%= content_tag :li, (link_to 'Respond', article_path_from_blog(@article.blog, :prefix => 'new', :params => { :re => @article.id })) if logged_in? && article && !article.new_record? && article.published? %>
-<% end %>
+<% end if logged_in? %>

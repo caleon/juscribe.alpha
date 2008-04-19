@@ -397,6 +397,7 @@ strong.articleIntro {
 
 .tags .tag {
 	display: inline;
+	line-height: 2em;
 }
 
 .tags .tag a {
