@@ -1,4 +1,5 @@
 <h3>Latest from <%= blog.short_name %> <%= rss_link_for("Latest Articles from #{blog.display_name}", formatted_user_blog_latest_articles_path(blog.to_path(true).merge(:format => :rss)) ) %></h3>
-<% content_tag(:ul, :id => 'msm_other_main_widgets') do -%>
+<%# Don't use MSM id or class names in general views! %>
+<% content_tag(:ul, :id => 'msm_other_main_widgets', :class => 'articles') do -%>
 	<%= render :partial => 'articles/article_line', :collection => blog.latest_articles %>
 <% end -%>
