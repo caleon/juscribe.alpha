@@ -26,12 +26,11 @@ module MetaTagHelper
     set_meta!(:keywords, :content => meta_keywords_array.compact.join(', '))
   end
   def add_meta_keyword!(keyword)
-    @meta_keywords << keyword
+    (@meta_keywords ||= []) << keyword
     set_meta!(:keywords, :content => meta_keywords_array.compact.join(', '))
   end
 
   def meta_tags; tagarize_meta(*metas.values); end
-  
 
   def metas
     @meta_hash ||= {}
