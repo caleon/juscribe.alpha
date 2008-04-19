@@ -11,8 +11,8 @@ module MetaTagHelper
   end
   
   def meta_author_tag; tagarize_meta metas[:author]; end
-  def set_meta_author!(user)
-    set_meta!(:author, :content => user.name_and_nick)
+  def set_meta_author!(author)
+    set_meta!(:author, :content => author.display_name)
   end  
   
   def meta_description_tag; tagarize_meta metas[:description]; end
@@ -22,11 +22,11 @@ module MetaTagHelper
     
   def meta_keywords_tag; tagarize_meta metas[:keywords]; end
   def set_meta_keywords!(*keywords)
-    meta_key_words_array = keywords
+    @meta_keywords = keywords
     set_meta!(:keywords, :content => meta_keywords_array.compact.join(', '))
   end
   def add_meta_keyword!(keyword)
-    meta_keywords_array << keyword
+    @meta_keywords << keyword
     set_meta!(:keywords, :content => meta_keywords_array.compact.join(', '))
   end
 
@@ -46,6 +46,6 @@ module MetaTagHelper
   end
   
   def tagarize_meta(*meta_abstracts)
-    meta_abstracts.compact.select(&:has_content?).map {|ma| content_tag(:meta, ma.content, ma.options) }.join("\r\n")
+    meta_abstracts.compact.map {|ma| content_tag(:meta, ma.content, ma.options) }.join("\r\n")
   end   
 end
