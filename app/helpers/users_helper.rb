@@ -8,7 +8,7 @@ module UsersHelper
   end
   
   def myspace_link(user)
-    "http://www.myspace.com/" # STUBBED
+    "http://www.myspace.com/#{user.social_networks[:myspace]}"
   end
   
   def linkedin_link(user)
