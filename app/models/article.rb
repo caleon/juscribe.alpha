@@ -148,7 +148,7 @@ class Article < ActiveRecord::Base
         "INNER JOIN taggings t3 ON (t3.tag_id = t1.tag_id) " + 
         "INNER JOIN blogs ON (t3.taggable_type = 'Blog' AND t3.taggable_id = blogs.id) " + 
         "INNER JOIN articles ON (articles.blog_id = blogs.id) " + 
-        "WHERE ((t1.id IN(#{comp_taggings.join(', ')})) AND articles.id != t1.taggable_id AND articles.published_at IS NOT NULL) " + 
+        "WHERE ((t1.id IN(#{comp_taggings.join(', ')})) AND articles.id != #{self.id} AND articles.published_at IS NOT NULL) " + 
         "GROUP BY articles.id " +
         (options[:threshold] ? "HAVING similar_count > #{options[:threshold]} " : "") + 
       ") unioned GROUP BY unioned.id ORDER BY similar_count DESC, unioned.published_at DESC LIMIT #{limit}"
