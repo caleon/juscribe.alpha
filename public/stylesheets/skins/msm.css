@@ -363,7 +363,7 @@
 		padding: 18px;
 	}
 	
-	#msm_side_column > div:last_child {
+	#msm_side_column > div:last-child {
 		margin-bottom: 0;
 	}
 	
