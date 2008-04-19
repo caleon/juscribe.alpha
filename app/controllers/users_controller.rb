@@ -15,7 +15,7 @@ class UsersController < ApplicationController
     respond_to do |format|
       format.html { trender }
       format.js
-      format.xml
+      format.rss { render :layout => false }
     end
   end
   

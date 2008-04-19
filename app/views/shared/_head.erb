@@ -3,7 +3,7 @@
 	<meta http-equiv="Content-Language" content="en-us" />
 	<title><%= APP[:name] %>: <%= @page_title || (main_object ? main_object.to_s : 'Welcome') %></title>
 	<%= meta_tags %>
-	<%= auto_discovery_link_tag(:rss, { :format => :rss }) if action_accepts?(:xml) %>
+	<%= auto_discovery_link_tag(:rss, { :format => :rss }) if action_accepts?(:rss) %>
 	<%= link_tags %>	
 	<%= stylesheet_link_tag 'setup', 'main', 'modalbox', 'lightbox', :cache => 'base' %>
 	<%= stylesheet_link_tag kropper_css if @use_kropper %>
