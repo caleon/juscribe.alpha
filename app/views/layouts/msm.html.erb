@@ -40,6 +40,8 @@
 				<div id="msm_side_column" class="msm_column">
 					<%= yield :side_column %>
 				</div>
+				<%= add_inline_scripts("Event.onReady(function(){ msm_layout.equalizeColumnHeights('msm_main_column', 'msm_side_column'); })") %>
+				
 				<a name="footer"></a>
 			<% if @content_for_footer %>
 				<div id="msm_footer">

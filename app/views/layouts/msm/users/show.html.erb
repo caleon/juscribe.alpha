@@ -60,8 +60,6 @@
 	<% end %>
 <% end -%>
 
-<%= add_inline_scripts("Event.onReady(function(){ msm_layout.equalizeColumnHeights('msm_main_column', 'msm_side_column'); })") %>
-
 <% content_for :footer do -%>
 	<% with_options :locals => { :prefix => :footer } do |footer| %>
 		<% content_tag :div, :class => 'footer-box' do -%>
