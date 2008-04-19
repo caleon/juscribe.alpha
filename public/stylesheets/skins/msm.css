@@ -327,7 +327,6 @@
 	#msm_main_column {
 		float: left;
 		margin-right: 9px;
-		margin-bottom: 9px;
 		width: 616px;
 	}
 	
@@ -339,6 +338,7 @@
 	#msm_main_column,
 	#msm_side_column {
 		min-height: 500px;
+		margin-bottom: 9px;
 	}
 	
 	#msm_footer {
@@ -363,7 +363,7 @@
 		padding: 18px;
 	}
 	
-	#msm_side_column .msm_row:last_child {
+	#msm_side_column .msm_widget:last_child {
 		margin-bottom: 0;
 	}
 	
