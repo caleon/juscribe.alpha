@@ -1,2 +1,2 @@
-<h3>In Response To...</h3>
-<%= render :partial => 'articles/article_line', :object => original %>
+<h4 class="descriptor">In Response To...</h4>
+<%= render :partial => 'articles/article', :object => original, :locals => { :without_picture => true, :truncate => 100 } %>

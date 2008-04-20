@@ -197,7 +197,6 @@
 	
 	.msm_layout .msm_column li > span {
 		display: block;
-		padding-left: 8px;
 	}
 	
 	.msm_layout .msm_row form {
@@ -513,7 +512,8 @@
 	}
 	
 	.msm_layout .rss_item {
-		min-height: 250px;
+		height: 250px;
+		overflow: hidden;
 	}
 	
 	.msm_layout .rss_item #rss_item-spinner {
@@ -534,8 +534,10 @@
 		margin-bottom: 9px;
 	}
 	
-	.msm_widget-inner ul.articles li {
+	.msm_widget-inner ul.articles li,
+	.msm_widget-inner ul.responses li {
 		background: transparent url(/images/skins/msm/dot.gif) no-repeat 0 5px;
+		padding-left: 8px;
 	}
 	
 	#msm_lead_widget {
