@@ -43,16 +43,21 @@ MsmLayout.prototype = {
 		if(shortEl = els.find(function(el){ return el.getHeight() != targetHeight; })){
 			diff = targetHeight - shortEl.getHeight();
 		
-			adjuster = shortEl.childElements().last().childElements().find(function(el){ return el.className.match(/inner|content/); });
-			otherHeights = this.getOtherHeights(adjuster);
-			trueHeight = adjuster.getHeight() - otherHeights;
-			adjuster.style.height = trueHeight + diff + 'px';
+			if(adjuster = shortEl.childElements().last().descendants().find(function(el){ return el.className.match(/inner|content/); })){
+				otherHeights = this.getOtherHeights(adjuster);
+				trueHeight = adjuster.getHeight() - otherHeights;
+				adjuster.style.height = trueHeight + diff + 'px';
+			}
 		}
 	},
 	
 	getOtherHeights: function(el){
-		return this.heightOffsets.inject(0, function(acc, s){
-			return acc + parseInt(el.getStyle(s));
-		});
+		if(el){
+			return this.heightOffsets.inject(0, function(acc, s){
+				return acc + parseInt(el.getStyle(s));
+			});
+		} else {
+			0
+		}
 	}
 };
