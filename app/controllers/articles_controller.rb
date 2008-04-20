@@ -9,7 +9,7 @@ class ArticlesController < ApplicationController
     return unless get_blog
     find_opts = get_find_opts
     if request.path.match(/\/drafts/)
-      unless get_viewer && (@articles = @blog.drafts.find(:all, :conditions => ["articles.user_id = ?", get_viewer.id])).empty?
+      unless get_viewer && !(@articles = @blog.drafts.find(:all, :conditions => ["articles.user_id = ?", get_viewer.id])).empty?
         @articles ||= []
         return display_error(:message => "You do not have drafts for #{@blog.display_name}.")
       end
