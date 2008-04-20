@@ -494,3 +494,7 @@ strong.articleIntro {
 	background-color: #ccc;
 	border: 12px solid #ccc;
 }
+
+.google_ads {
+	overflow: hidden;
+}

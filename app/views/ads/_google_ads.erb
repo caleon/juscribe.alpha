@@ -1,16 +1,18 @@
 <h3>Google Ads</h3>
-<% if RAILS_ENV != 'production' %>
-	<%= image_tag 'google_ad.png', :width => 300, :height => 250 %>
-<% else %>
-<script type="text/javascript"><!--
-google_ad_client = "pub-8279972647102312";
-/* 300x250, created 3/23/08 */
-google_ad_slot = "3471608826";
-google_ad_width = 300;
-google_ad_height = 250;
-//-->
-</script>
-<script type="text/javascript"
-src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
-</script>
-<% end %>
+<div class="google_ads">
+	<% if RAILS_ENV != 'production' %>
+		<%= image_tag 'google_ad.png', :width => 300, :height => 250 %>
+	<% else %>
+	<script type="text/javascript"><!--
+	google_ad_client = "pub-8279972647102312";
+	/* 300x250, created 3/23/08 */
+	google_ad_slot = "3471608826";
+	google_ad_width = 300;
+	google_ad_height = 250;
+	//-->
+	</script>
+	<script type="text/javascript"
+	src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+	</script>
+	<% end %>
+</div>
