@@ -16,13 +16,13 @@
 		<span class="timestamp">Timestamp: <%= Time.now.to_s %></span>
 	</div>
 
-	<div class="msm_main_column-a msm_main_column nopad">
+	<div class="msm_main_column-a msm_main_column nopad" id="msm_lead_column">
 		<%= render :partial => 'blog_lead',
 		 					 :layout => wayout(:lead_widget),
 		 					 :object => @blogs[0] if @blogs[0] %>
 	</div>
 
-	<div class="msm_main_column-b msm_main_column">
+	<div class="msm_main_column-b msm_main_column" id="msm_non_lead_column">
 		<%= wrender :blogs, :layout => wayout(:inner) %>
 		<% collection = @blogs[1..7].map{|bl| bl.primary_article}.compact rescue [] %>
 		<%= render :partial => 'latest_blogs',
@@ -30,6 +30,10 @@
 		 					 :locals => { :bloggable => @bloggable,
 														:collection => collection } unless collection.blank? %>
 	</div>
+	<% add_scripts do -%>
+		msm_layout.equalizeColumnHeights('msm_lead_column', 'msm_non_lead_column');
+	<% end -%>
+	
 	<%= rounded_shim(:bottom) %>
 </div>
 
