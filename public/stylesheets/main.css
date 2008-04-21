@@ -499,6 +499,8 @@ strong.articleIntro {
 	width: 175px;
 	max-height: 100px;
 	margin: 0 0 9px 18px !important;
+	cursor: auto !important;
+	border: 1px solid #ccc;
 }
 
 .google_ads {
