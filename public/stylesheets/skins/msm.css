@@ -363,6 +363,10 @@
 		font-size: 88%;
 	}
 	
+	#msm_footer div.footer-box li {
+		margin-bottom: 4px;		
+	}
+	
 	#msm_main_column .msm_row {
 		padding: 18px;
 	}
