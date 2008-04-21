@@ -495,6 +495,12 @@ strong.articleIntro {
 	border: 12px solid #ccc;
 }
 
+.feed .articleContent img {
+	width: 175px;
+	max-height: 100px;
+	margin: 0 0 9px 18px !important;
+}
+
 .google_ads {
 	overflow: hidden;
 	height: 250px;

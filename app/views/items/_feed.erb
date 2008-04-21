@@ -3,8 +3,6 @@
 	<h4 class="descriptor"><span class="feedBlog">RSS: </span>From <%= link_to feed.feed_title, feed.feed_link %> by <%= feed.item_author %></h4>
 	<h3><%= link_to feed.item_title, feed.item_link %></h3>
 		<%# TODO: make this use the same formatter as feeds %>
-		<% formatted = Hpricot(truncate_html(simple_format(sanitize(feed.item_content, :tags => %w(a code blockquote pre param )), :class => 'articleContent'), 500)) %>
-		<% (formatted/"a").each{|link| link.set_attribute('class', 'external') and link.set_attribute('target', '_new') if link.attributes['href'].match(/:\/\//)} %>
-	  <%= formatted.to_html %>
+		<%= format_feed(feed) %>
 	<%= byline_for feed %>
 </div>
