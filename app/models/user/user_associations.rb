@@ -13,6 +13,7 @@ class User < ActiveRecord::Base
   has_one :default_blog, :class_name => 'Blog', :order => 'id ASC' # TODO: let user specify what is a default blog
   has_many :comments, :as => :commentable, :order => 'comments.id DESC'
   has_many :owned_comments, :class_name => 'Comment', :dependent => :nullify
+  has_many :latest_comments, :class_name => 'Comment', :order => 'comments.id DESC', :limit => 5
   with_options :class_name => 'Thoughtlet', :order => 'thoughtlets.id DESC' do |thoughtlet|
     thoughtlet.has_many :thoughtlets, :dependent => :nullify
     thoughtlet.has_many :latest_thoughtlets, :limit => 8
