@@ -1,6 +1,7 @@
 <div id="debugger">
 	<%= rounded_shim(:top) %>
 	<p id="debugger-inner">
+		COMMENT PATH: <%= comment_path_for(Comment.find(:first)) %><br />
 		BLAH: <%= escape_javascript form_authenticity_token %><br />
 		BLAH2: <%= request_forgery_protection_token %><br />
 		THREMOTE: <%= link_to_remote 'hello', :url => user_path(User.find(1)), :update => 'browser', :loading => "var dog='fido'", :complete => "var citty = 'kitty'" %><br />

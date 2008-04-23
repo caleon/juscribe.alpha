@@ -84,7 +84,7 @@ class ArticlesController < ApplicationController
     @page_title = "New Article"
     if @blog.editable_by?(get_viewer) && @article.save
       create_uploaded_picture_for(@article, :save => true) if picture_uploaded?
-      @article.clip!(:position => params[:widget][:position], :user => get_viewer) unless params[:widget][:position].blank?
+      @article.clip!(:position => params[:widget][:position], :user => get_viewer) unless params[:widget].blank? || params[:widget][:position].blank?
       msg = "You have successfully created your article."
       respond_to do |format|
         format.html { flash[:notice] = msg; redirect_to article_url_for(@article) }
@@ -154,7 +154,7 @@ class ArticlesController < ApplicationController
     @page_title = "#{@article.display_name} - Edit"
     if @article.update_attributes(params[:article])
       create_uploaded_picture_for(@article, :save => true) if picture_uploaded?
-      unless params[:widget][:position].blank?
+      unless params[:widget].blank? || params[:widget][:position].blank?
         if clip = @article.clip_for(get_viewer)
           clip.place!(params[:widget][:position]) unless clip.position == params[:widget][:position].to_i
         else

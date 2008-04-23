@@ -100,11 +100,11 @@ class UserTest < ActiveSupport::TestCase
     assert !users(:colin).friends_with?(users(:keira))
     assert users(:colin).kinda_friends_with?(users(:keira))
     assert !users(:colin).befriend(users(:keira))
-    assert_equal orig_mail_count + 1, ActionMailer::Base.deliveries.size
+    assert_equal orig_mail_count + 1, ActionMailer::Base.deliveries.size unless SITE[:defcon] == 0
     
     assert_equal 1, users(:keira).befriend(users(:colin)), "#{users(:keira).errors.inspect}"
     assert users(:keira).friends_with?(users(:colin))
-    assert_equal orig_mail_count + 1, ActionMailer::Base.deliveries.size, users(:colin).friend_ids.inspect
+    assert_equal orig_mail_count + 1, ActionMailer::Base.deliveries.size, users(:colin).friend_ids.inspect unless SITE[:defcon] == 0
     assert users(:keira).friends.include?(users(:colin))
     assert users(:keira).friend_ids.include?(users(:colin).id)
     assert users(:colin).friends_with?(users(:keira))

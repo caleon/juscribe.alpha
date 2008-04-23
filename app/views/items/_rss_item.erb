@@ -4,7 +4,7 @@
 		Event.onReady(function() {
 			new Ajax.Updater('rss-<%= "one" || rss_item.item_guid %>', '<%= latest_feed_path(:url => "http://cdmjimmy.blogspot.com/feeds/posts/default?alt=rss") %>', {asynchronous:true, evalScripts:true, onLoading:function(request){$('rss_item-spinner').show()}, onComplete:function(request){$('feed').appear();}, parameters:'<%= request_forgery_protection_token %>=' + encodeURIComponent('<%= escape_javascript form_authenticity_token %>')});			
 		})
-	<% end -%>
+	<% end unless RAILS_ENV == 'test' -%>
 	<noscript>
 		There is supposed to be a dynamically loaded RSS feed item here from "<%= url %>". Please enable Javascript to enable this feature.
 	</noscript>

@@ -45,6 +45,6 @@ module MetaTagHelper
   end
   
   def tagarize_meta(*meta_abstracts)
-    meta_abstracts.compact.map {|ma| content_tag(:meta, ma.content, ma.options) }.join("\r\n")
+    meta_abstracts.compact.map {|ma| tag(:meta, ma.options) }.join("\r\n")
   end   
 end

@@ -37,7 +37,7 @@ class UsersControllerTest < ActionController::TestCase
     assert_not_nil assigns(:user)
     assert_not_nil assigns(:widgets)
     # assert_not_nil assigns(:skin_file) this is nil until layout is set
-    get :show, users(:colin).to_path.merge(:format => 'xml')
+    get :show, users(:colin).to_path.merge(:format => 'rss')
     assert_response :success
     assert_template 'show'
     assert_not_nil assigns(:user)

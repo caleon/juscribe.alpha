@@ -1,4 +1,5 @@
 <% content_tag :li, :class => 'comment' do %>
+	<a name="comment-<%= comment.id %>"></a>
 	<span>
 		<%= comment.body %>
 		<%= byline_for comment %>
