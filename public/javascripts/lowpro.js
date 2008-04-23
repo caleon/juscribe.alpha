@@ -1,65 +1,19 @@
 LowPro = {};
-LowPro.Version = '0.4';
+LowPro.Version = '0.5';
+LowPro.CompatibleWithPrototype = '1.6';
+
+if (Prototype.Version.indexOf(LowPro.CompatibleWithPrototype) != 0 && console && console.warn)
+  console.warn("This version of Low Pro is tested with Prototype " + LowPro.CompatibleWithPrototype + 
+                  " it may not work as expected with this version (" + Prototype.Version + ")");
 
 if (!Element.addMethods) 
   Element.addMethods = function(o) { Object.extend(Element.Methods, o) };
 
 // Simple utility methods for working with the DOM
-DOM = {
-  insertAfter : function(element, node, otherNode) {
-    element = $(element);
-    if (otherNode.nextSibling)
-      return element.insertBefore(node, otherNode.nextSibling);
-    else
-      return element.appendChild(node);
-  },
-  addBefore : function(element, node) {
-    element = $(element);
-    return element.parentNode.insertBefore(node, element);
-  },
-  addAfter : function(element, node) {
-    element = $(element);
-    return $(element.parentNode).insertAfter(node, element);
-  },
-  replaceElement : function(element, node) {
-    $(element).parentNode.replaceChild(node, element);
-    return node;
-  },
-  prependChild : function(element, node) {
-    $(element).insertBefore(node, element.firstChild);
-  },
-  appendChildren : function(element, children) {
-    element = $(element);
-    if (!(children instanceof Array))
-      children = Array.prototype.slice.call(arguments, 1);
-    children.each(function(child) { element.appendChild(child) });
-    return children;
-  }
-};
-
-// Add them to the element mixin
-Element.addMethods(DOM);
+DOM = {};
 
 // DOMBuilder for prototype
 DOM.Builder = {
-  IE_TRANSLATIONS : {
-    'class' : 'className',
-    'for' : 'htmlFor'
-  },
-  cache: {},
-  ieAttrSet : function(attrs, attr, el) {
-    var trans;
-    if (trans = this.IE_TRANSLATIONS[attr]) el[trans] = attrs[attr];
-    else if (attr == 'style') el.style.cssText = attrs[attr];
-    else if (attr.match(/^on/)) el[attr] = new Function(attrs[attr]);
-    else el.setAttribute(attr, attrs[attr]);
-  },
-  getElement : function(tag) {
-    var element = DOM.Builder.cache[tag];
-    if (element == null) 
-      element = DOM.Builder.cache[tag] = document.createElement(tag);
-    return element.cloneNode(false);
-  },
 	tagFunc : function(tag) {
 	  return function() {
 	    var attrs, children; 
@@ -77,20 +31,7 @@ DOM.Builder = {
   },
 	create : function(tag, attrs, children) {
 		attrs = attrs || {}; children = children || []; tag = tag.toLowerCase();
-		var isIE = navigator.userAgent.match(/MSIE/);
-		var el = (isIE && attrs.name) ? 
-		  document.createElement("<" + tag + " name=" + attrs.name + ">") : 
-		  DOM.Builder.getElement(tag);
-		
-		for (var attr in attrs) {
-		  if (attrs[attr] === true) attrs[attr] = attr;
-		  if (typeof attrs[attr] != 'function') {
-		    if (isIE) this.ieAttrSet(attrs, attr, el);
-		    else el.setAttribute(attr, attrs[attr].toString());
-		  } else if (attr.match(/^on(.+)$/)) {
-		    Event.observe(el, RegExp.$1, attrs[attr]);
-		  };
-	  }
+		var el = new Element(tag, attrs);
 	  
 		for (var i=0; i<children.length; i++) {
 			if (typeof children[i] == 'string') 
@@ -121,141 +62,17 @@ DOM.Builder.fromHTML = function(html) {
   return root.childNodes[0];
 };
 
-String.prototype.toElement2 = function() {
-  return DOM.Builder.fromHTML(this);
-};
-
-(function() {
-  var old$ = $;
-  $ = function(element) {
-    if (element && element.toElement2 && element.match(/^<(.+)>$/)) 
-      return $(element.toElement2());
-    return old$.apply(this, arguments);
-  }
-})();
 
 
-
-// Adapted from DOM Ready extension by Dan Webb
-// http://www.vivabit.com/bollocks/2006/06/21/a-dom-ready-extension-for-prototype
-// which was based on work by Matthias Miller, Dean Edwards and John Resig
+// Wraps the 1.6 contentloaded event for backwards compatibility
 //
 // Usage:
 //
 // Event.onReady(callbackFunction);
 Object.extend(Event, {
-  _domReady : function() {
-    if (arguments.callee.done) return;
-    arguments.callee.done = true;
-
-    if (Event._timer)  clearInterval(Event._timer);
-    
-    Event._readyCallbacks.each(function(f) { f() });
-    Event._readyCallbacks = null;
-    
-  },
   onReady : function(f) {
-    if (!this._readyCallbacks) {
-      var domReady = this._domReady;
-      
-      if (domReady.done) return f();
-      
-      if (document.addEventListener)
-        document.addEventListener("DOMContentLoaded", domReady, false);
-        
-        /*@cc_on @*/
-        /*@if (@_win32)
-            var dummy = location.protocol == "https:" ?  "https://javascript:void(0)" : "javascript:void(0)";
-            document.write("<script id=__ie_onload defer src='" + dummy + "'><\/script>");
-            document.getElementById("__ie_onload").onreadystatechange = function() {
-                if (this.readyState == "complete") { domReady(); }
-            };
-        /*@end @*/
-        
-        if (/WebKit/i.test(navigator.userAgent)) { 
-          this._timer = setInterval(function() {
-            if (/loaded|complete/.test(document.readyState)) domReady(); 
-          }, 10);
-        }
-        
-        Event.observe(window, 'load', domReady);
-        Event._readyCallbacks =  [];
-    }
-    Event._readyCallbacks.push(f);
-  }
-});
-
-// Extend Element with observe and stopObserving.
-if (typeof Element.Methods.observe == 'undefined') Element.addMethods({
-  observe : function(el, event, callback) {
-    Event.observe(el, event, callback);
-  },
-  stopObserving : function(el, event, callback) {
-    Event.stopObserving(el, event, callback);
-  }
-});
-
-// Replace out existing event observe code with Dean Edwards' addEvent
-// http://dean.edwards.name/weblog/2005/10/add-event/
-Object.extend(Event, {
-  _observeAndCache : function(el, type, func) {
-    if (!func.$$guid) func.$$guid = Event._guid++;
-  	if (!el.events) el.events = {};
-  	var handlers = el.events[type];
-  	if (!handlers) {
-  		handlers = el.events[type] = {};
-  		if (el["on" + type]) {
-  			handlers[0] = el["on" + type];
-  		}
-  	}
-  	handlers[func.$$guid] = func;
-  	el["on" + type] = Event._handleEvent;
-  	
-  	if (!Event.observers) Event.observers = [];
-  	Event.observers.push([el, type, func, false]);
-	},
-	stopObserving : function(el, type, func) {
-	  el = $(el);
-    if (el.events && el.events[type]) delete el.events[type][func.$$guid];
-    
-    for (var i = 0; i < Event.observers.length; i++) {
-      if (Event.observers[i] &&
-          Event.observers[i][0] == el && 
-          Event.observers[i][1] == type && 
-          Event.observers[i][2] == func) delete Event.observers[i];
-    }
-  },
-  _handleEvent : function(e) {
-    var returnValue = true;
-    e = e || Event._fixEvent(window.event);
-    var handlers = this.events[e.type], el = $(this);
-    for (var i in handlers) {
-    	el.$$handleEvent = handlers[i];
-    	if (el.$$handleEvent(e) === false) returnValue = false;
-    }
-    if (returnValue == false) e.preventDefault();
-  	return returnValue;
-  },
-  _fixEvent : function(e) {
-    e.preventDefault = Event._preventDefault;
-    e.stopPropagation = Event._stopPropagation;
-    return e;
-  },
-  _preventDefault : function() { this.returnValue = false },
-  _stopPropagation : function() { this.cancelBubble = true },
-  _guid : 1
-});
-
-// Allows you to trigger an event element.  
-Object.extend(Event, {
-  trigger : function(element, event, fakeEvent) {
-    element = $(element);
-    fakeEvent = fakeEvent || { type :  event };
-    if(element.events && element.events[event]) { 	
-      $H(element.events[event]).each(function(cache) {
-        cache[1].call(element, fakeEvent);
-    	});
-    }
+    if (document.body) f();
+    else document.observe('dom:loaded', f);
   }
 });
 
@@ -280,7 +97,7 @@ Event.addBehavior = function(rules) {
     Ajax.Responders.register({
       onComplete : function() { 
         if (Event.addBehavior.reassignAfterAjax) 
-          setTimeout(function() { ab.unload(); ab.load(ab.rules) }, 10);
+          setTimeout(function() { ab.reload() }, 10);
       }
     });
     ab.responderApplied = true;
@@ -294,7 +111,7 @@ Event.addBehavior = function(rules) {
 
 Object.extend(Event.addBehavior, {
   rules : {}, cache : [],
-  reassignAfterAjax : true,
+  reassignAfterAjax : false,
   autoTrigger : true,
   
   load : function(rules) {
@@ -305,6 +122,7 @@ Object.extend(Event.addBehavior, {
         var parts = sel.split(/:(?=[a-z]+$)/), css = parts[0], event = parts[1];
         $$(css).each(function(element) {
           if (event) {
+            observer = Event.addBehavior._wrapObserver(observer);
             $(element).observe(event, observer);
             Event.addBehavior.cache.push([element, event, observer]);
           } else {
@@ -326,6 +144,18 @@ Object.extend(Event.addBehavior, {
       Event.stopObserving.apply(Event, c);
     });
     this.cache = [];
+  },
+  
+  reload: function() {
+    var ab = Event.addBehavior;
+    ab.unload(); 
+    ab.load(ab.rules);
+  },
+  
+  _wrapObserver: function(observer) {
+    return function(event) {
+      if (observer.call(this, event) === false) event.stop(); 
+    }
   }
   
 });
@@ -333,7 +163,7 @@ Object.extend(Event.addBehavior, {
 Event.observe(window, 'unload', Event.addBehavior.unload.bind(Event.addBehavior));
 
 // A silly Prototype style shortcut for the reckless
-$$$ = Event.addBehavior;
+$$$ = Event.addBehavior.bind(Event);
 
 // Behaviors can be bound to elements to provide an object orientated way of controlling elements
 // and their behavior.  Use Behavior.create() to make a new behavior class then use attach() to
@@ -361,45 +191,130 @@ $$$ = Event.addBehavior;
 //
 // Each behaviour has a collection of all its instances in Behavior.instances
 //
-Behavior = {
-  create : function(members) {
-    var behavior = function() { 
-      var behavior = arguments.callee;
-      if (this == window || $H(this).values().include(behavior)) {
-        var args = [];
-        for (var i = 0; i < arguments.length; i++) 
-          args.push(arguments[i]);
-          
-        return function() {
-          var initArgs = [this].concat(args);
-          behavior.attach.apply(behavior, initArgs);
-        };
-      } else {
-        var args = (arguments.length == 2 && arguments[1] instanceof Array) ? 
-                    arguments[1] : Array.prototype.slice.call(arguments, 1);
+var Behavior = {
+  create: function() {
+    var parent = null, properties = $A(arguments);
+    if (Object.isFunction(properties[0]))
+      parent = properties.shift();
 
-        this.element = $(arguments[0]);
-        this.initialize.apply(this, args);
-        behavior._bindEvents(this);
-        behavior.instances.push(this);
-      }
-    };
-    behavior.prototype.initialize = Prototype.K;
-    Object.extend(behavior.prototype, members);
-    Object.extend(behavior, Behavior.ClassMethods);
+      var behavior = function() { 
+        var behavior = arguments.callee;
+        if (!this.initialize) {
+          var args = $A(arguments);
+
+          return function() {
+            var initArgs = [this].concat(args);
+            behavior.attach.apply(behavior, initArgs);
+          };
+        } else {
+          var args = (arguments.length == 2 && arguments[1] instanceof Array) ? 
+                      arguments[1] : Array.prototype.slice.call(arguments, 1);
+
+          this.element = $(arguments[0]);
+          this.initialize.apply(this, args);
+          behavior._bindEvents(this);
+          behavior.instances.push(this);
+        }
+      };
+
+    Object.extend(behavior, Class.Methods);
+    Object.extend(behavior, Behavior.Methods);
+    behavior.superclass = parent;
+    behavior.subclasses = [];
     behavior.instances = [];
+
+    if (parent) {
+      var subclass = function() { };
+      subclass.prototype = parent.prototype;
+      behavior.prototype = new subclass;
+      parent.subclasses.push(behavior);
+    }
+
+    for (var i = 0; i < properties.length; i++)
+      behavior.addMethods(properties[i]);
+
+    if (!behavior.prototype.initialize)
+      behavior.prototype.initialize = Prototype.emptyFunction;
+
+    behavior.prototype.constructor = behavior;
+
     return behavior;
   },
-  ClassMethods : {
+  Methods : {
     attach : function(element) {
       return new this(element, Array.prototype.slice.call(arguments, 1));
     },
     _bindEvents : function(bound) {
       for (var member in bound)
         if (member.match(/^on(.+)/) && typeof bound[member] == 'function')
-          bound.element.observe(RegExp.$1, bound[member].bindAsEventListener(bound));
+          bound.element.observe(RegExp.$1, Event.addBehavior._wrapObserver(bound[member].bindAsEventListener(bound)));
     }
   }
 };
 
+Remote = Behavior.create({
+  initialize: function(options) {
+    if (this.element.nodeName == 'FORM') new Remote.Form(this.element, options);
+    else new Remote.Link(this.element, options);
+  }
+});
+
+Remote.Base = {
+  initialize : function(options) {
+    this.options = Object.extend({
+      evaluateScripts : true
+    }, options || {});
+  },
+  _makeRequest : function(options) {
+    if (options.update) new Ajax.Updater(options.update, options.url, options);
+    else new Ajax.Request(options.url, options);
+    return false;
+  }
+}
+
+Remote.Link = Behavior.create(Remote.Base, {
+  onclick : function() {
+    var options = Object.extend({ url : this.element.href, method : 'get' }, this.options);
+    return this._makeRequest(options);
+  }
+});
+
+
+Remote.Form = Behavior.create(Remote.Base, {
+  onclick : function(e) {
+    var sourceElement = e.element();
+    
+    if (['input', 'button'].include(sourceElement.nodeName.toLowerCase()) && 
+        sourceElement.type == 'submit')
+      this._submitButton = sourceElement;
+  },
+  onsubmit : function() {
+    var options = Object.extend({
+      url : this.element.action,
+      method : this.element.method || 'get',
+      parameters : this.element.serialize({ submit: this._submitButton.name })
+    }, this.options);
+    this._submitButton = null;
+    return this._makeRequest(options);
+  }
+});
+
+Observed = Behavior.create({
+  initialize : function(callback, options) {
+    this.callback = callback.bind(this);
+    this.options = options || {};
+    this.observer = (this.element.nodeName == 'FORM') ? this._observeForm() : this._observeField();
+  },
+  stop: function() {
+    this.observer.stop();
+  },
+  _observeForm: function() {
+    return (this.options.frequency) ? new Form.Observer(this.element, this.options.frequency, this.callback) :
+                                      new Form.EventObserver(this.element, this.callback);
+  },
+  _observeField: function() {
+    return (this.options.frequency) ? new Form.Element.Observer(this.element, this.options.frequency, this.callback) :
+                                      new Form.Element.EventObserver(this.element, this.callback);
+  }
+});
 

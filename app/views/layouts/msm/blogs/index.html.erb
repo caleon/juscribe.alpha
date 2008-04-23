@@ -31,7 +31,7 @@
 														:collection => collection } unless collection.blank? %>
 	</div>
 	<% add_scripts do -%>
-		msm_layout.equalizeColumnHeights('msm_lead_column', 'msm_non_lead_column');
+		Event.onReady(function(){ msm_layout.equalizeColumnHeights('msm_lead_column', 'msm_non_lead_column'); });
 	<% end -%>
 	
 	<%= rounded_shim(:bottom) %>

@@ -32,7 +32,7 @@
 		<%= wrender :popular_articles, :layout => :inner %>
 	</div>
 	<% add_scripts do -%>
-		msm_layout.equalizeColumnHeights('msm_lead_column', 'msm_non_lead_column');
+		Event.onReady(function(){ msm_layout.equalizeColumnHeights('msm_lead_column', 'msm_non_lead_column'); });
 	<% end -%>
 	
 	<%= rounded_shim(:bottom) %>
@@ -55,7 +55,7 @@
 	
 	<%# TODO: do this after layoutable module is ready so that wrender can work here and increase dom_ids with wcount %>
 	<% add_scripts do -%>
-		msm_layout.equalizeWidgetHeights('msm_widget-3', 'msm_widget-4');
+		Event.onReady(function(){ msm_layout.equalizeWidgetHeights('msm_widget-3', 'msm_widget-4'); });
 	<% end if @articles[2] -%>
 
 	<%= br_clear %>

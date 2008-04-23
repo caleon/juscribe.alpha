@@ -17,7 +17,7 @@
 		<%= wrender :layout => :inner %>
 	</div>
 	<% add_scripts do -%>
-		msm_layout.equalizeColumnHeights('msm_lead_column', 'msm_non_lead_column');
+		Event.onReady(function(){ msm_layout.equalizeColumnHeights('msm_lead_column', 'msm_non_lead_column'); });
 	<% end -%>
 	
 	<%= rounded_shim(:bottom) %>
@@ -41,7 +41,7 @@
 	<%= br_clear %>
 </div>
 <% add_scripts do -%>
-	msm_layout.equalizeWidgetHeights('msm_widget-5', 'msm_widget-6');
+	Event.onReady(function(){ msm_layout.equalizeWidgetHeights('msm_widget-5', 'msm_widget-6'); });
 <% end -%>
 
 <div class="last msm_row" id="msm_row-4">

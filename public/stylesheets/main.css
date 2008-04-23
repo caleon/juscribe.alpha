@@ -509,10 +509,12 @@ strong.articleIntro {
 
 .olderArticle {
 	float: right;
+	margin-left: 4px;
 }
 
 .newerArticle {
 	float: left;
+	margin-right: 4px;
 }
 
 .google_ads {
