@@ -225,6 +225,6 @@ class ArticlesController < ApplicationController
   def add_to_article_history(article)
     (session[:articles_history] ||= []).delete(article.id)
     session[:articles_history].unshift(article.id)
-    session[:articles_history] = session[:articles_history][0..9] if session[:articles_history].size > 10
+    session[:articles_history] = session[:articles_history][0..4] if session[:articles_history].size > 5
   end
 end
