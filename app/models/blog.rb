@@ -7,7 +7,7 @@ class Blog < ActiveRecord::Base
   has_many :all_articles, :class_name => 'Article', :order => 'articles.published_at DESC'
   with_options :class_name => 'Article', :order => 'articles.published_at DESC', :conditions => "articles.published_at IS NOT NULL AND articles.published_at < NOW()" do |art|
     art.has_many :articles
-    art.has_many :latest_articles, :limit => 5
+    art.has_many :latest_articles, :limit => 3
     art.has_one :primary_article
   end
   has_many :drafts, :class_name => 'Article', :order => 'articles.id DESC', :conditions => "articles.published_at IS NULL"
@@ -35,6 +35,12 @@ class Blog < ActiveRecord::Base
     def primary_find(*args)
       find_by_permalink(*args)
     end
+  end
+  
+  def popular_articles(*args)
+    opts = args.extract_options!
+    opts[:limit] ||= args.shift || 5
+    self.articles.get_popular(*(args << opts))
   end
   
   def months_posted

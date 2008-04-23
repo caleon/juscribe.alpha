@@ -29,6 +29,7 @@
 <% @wcount = 1 %>
 	<div class="msm_main_column-b msm_main_column" id="msm_non_lead_column">
 		<%= wrender :latest_articles, :layout => :inner %>
+		<%= wrender :popular_articles, :layout => :inner %>
 	</div>
 	<% add_scripts do -%>
 		msm_layout.equalizeColumnHeights('msm_lead_column', 'msm_non_lead_column');
@@ -37,7 +38,7 @@
 	<%= rounded_shim(:bottom) %>
 </div>
 
-<% @wcount = 2 %>
+<% @wcount = 3 %>
 <% content_tag :div, :class => "msm_row#{' nobg' if @articles[2]}", :id => "msm_row-2" do -%>
 	<div class="msm_main_column-a<%= 'b' unless @articles[2] %> msm_main_column msm_with_reg_wid">
 		<%= render(:partial => 'articles/article',
@@ -45,7 +46,7 @@
 							 :object => @articles[1]) %>
 	</div>
 
-<% @wcount = 3 %>
+<% @wcount = 4 %>
 	<% content_tag :div, :class => "msm_main_column-b msm_main_column nopad" do -%>
 		<%= render(:partial => 'articles/article',
 							 :layout => wayout(:widget),
@@ -54,13 +55,13 @@
 	
 	<%# TODO: do this after layoutable module is ready so that wrender can work here and increase dom_ids with wcount %>
 	<% add_scripts do -%>
-		msm_layout.equalizeWidgetHeights('msm_widget-2', 'msm_widget-3');
+		msm_layout.equalizeWidgetHeights('msm_widget-3', 'msm_widget-4');
 	<% end if @articles[2] -%>
 
 	<%= br_clear %>
 <% end if @articles[1] -%>
 
-<% @wcount = 4 %>
+<% @wcount = 5 %>
 <% content_tag :div, :class => 'last msm_row', :id => 'msm_row-3' do -%>
 	<div class="msm_main_column-ab msm_main_column msm_with_reg_wid">
 		<%= render(:partial => 'articles/article',
@@ -72,14 +73,14 @@
 <% content_for :side_column do -%>
 	<% with_options :layout => :framed do |framed| %>
 		<%# framed.wrender :description # Description moved to header %>
-		<% @wcount = 5 %>
-		<%= framed.wrender :bloggable %>
 		<% @wcount = 6 %>
-		<%= framed.wrender :latest_pictures unless @blog.pictures.empty? %>
+		<%= framed.wrender :bloggable %>
 		<% @wcount = 7 %>
+		<%= framed.wrender :latest_pictures unless @blog.pictures.empty? %>
+		<% @wcount = 8 %>
 		<%= render :partial => 'articles/article', :object => @articles[3], :layout => wayout(:framed) if @articles[3] %>
 		<%# framed.wrender :comments, :blog => @blog # BLOG comments will show on Blog About page if there is one. %>
-		<% @wcount = 8 %>
+		<% @wcount = 9 %>
 		<%= framed.wrender :google_ads %>
 	<% end %>
 <% end -%>

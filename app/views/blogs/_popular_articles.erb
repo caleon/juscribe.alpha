@@ -1,0 +1,5 @@
+<h3>Popular Articles </h3>
+<%# Don't use MSM id or class names in general views! %>
+<% content_tag(:ul, :id => 'msm_other_main_widgets', :class => 'articles') do -%>
+	<%= render :partial => 'articles/article_line', :collection => blog.popular_articles, :locals => { :prefix => :popular } %>
+<% end -%>
