@@ -162,7 +162,7 @@ class CommentsControllerTest < ActionController::TestCase
     post :create, articles(:blog).to_path(true).merge(:comment => { :body => 'blah blah' }), as(:nana)
     assert_not_nil assigns(:comment)
     assert assigns(:comment).valid?
-    assert_redirected_to user_blog_article_url(articles(:blog).to_path)
+    assert_redirected_to user_blog_article_url(articles(:blog).to_path) + "#comment-#{assigns(:comment).id}"
     assert_equal "You have commented on #{articles(:blog).display_name}.", flash[:notice]
   end
   
@@ -191,7 +191,7 @@ class CommentsControllerTest < ActionController::TestCase
     assert_equal users(:colin), articles(:blog).user
     assert articles(:blog).accessible_by?(users(:colin))
     post :create, articles(:blog).to_path(true).merge(:comment => { :body => 'blah blah' }), as(:colin)
-    assert_redirected_to user_blog_article_url(articles(:blog).to_path)
+    assert_redirected_to user_blog_article_url(articles(:blog).to_path) + "#comment-#{assigns(:comment).id}"
     assert_equal "You have commented on #{articles(:blog).display_name}.", flash[:notice]
   end
   
@@ -226,7 +226,7 @@ class CommentsControllerTest < ActionController::TestCase
   def test_update_as_comment_owner
     articles(:blog).publish!
     put :update, comments(:blog_comment).to_path.merge(:comment => { :body => 'blah blah' }), as(:keira)
-    assert_redirected_to user_blog_article_url(articles(:blog).to_path)
+    assert_redirected_to user_blog_article_url(articles(:blog).to_path) + "#comment-#{assigns(:comment).id}"
     assert_equal "You have successfully updated #{comments(:blog_comment).display_name}.", flash[:notice]
     assert_equal 'blah blah', comments(:blog_comment).reload.body
   end
@@ -241,7 +241,7 @@ class CommentsControllerTest < ActionController::TestCase
   def test_update_as_commentable_owner
     articles(:blog).publish!
     put :update, comments(:blog_comment).to_path.merge(:comment => { :body => 'blah blah' }), as(:colin)
-    assert_redirected_to user_blog_article_url(articles(:blog).to_path)
+    assert_redirected_to user_blog_article_url(articles(:blog).to_path) + "#comment-#{assigns(:comment).id}"
     assert_equal "You have successfully updated #{comments(:blog_comment).display_name}.", flash[:notice]
   end
   

@@ -130,8 +130,9 @@ class ApplicationController < ActionController::Base
     instance_eval %{ #{acshun ? "#{acshun}_" : ''}#{bloggable.path_name_prefix}_url(bloggable.to_path) }
   end
   
-  def comment_url_for(comment, acshun=nil)
-    instance_eval %{ #{acshun ? "#{acshun}_" : ''}#{comment.path_name_prefix}_url(comment.to_path) }
+  def comment_url_for(comment, acshun=nil) # FIXME: acshun probably not needed in this scenario.
+#    instance_eval %{ #{acshun ? "#{acshun}_" : ''}#{comment.path_name_prefix}_url(comment.to_path) }
+    commentable_url_for(comment.commentable) + "#comment-#{comment.id}"
   end
   
   def commentable_url_for(commentable, acshun=nil)

@@ -47,7 +47,7 @@ class CommentsController < ApplicationController
     if !is_comment_spam && @comment.save
       msg = "You have commented on #{@commentable.display_name}."
       respond_to do |format|
-        format.html { flash[:notice] = msg; redirect_to commentable_url_for(@commentable) }
+        format.html { flash[:notice] = msg; redirect_to comment_url_for(@comment) }
         format.js { flash.now[:notice] = msg }
       end
     else
@@ -75,7 +75,7 @@ class CommentsController < ApplicationController
     if @comment.update_attributes(params[:comment])
       msg = "You have successfully updated #{@comment.display_name}."
       respond_to do |format|
-        format.html { flash[:notice] = msg; redirect_to commentable_url_for(@commentable) }
+        format.html { flash[:notice] = msg; redirect_to comment_url_for(@comment) }
         format.js { flash.now[:notice] = msg }
       end
     else
