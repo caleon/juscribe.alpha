@@ -303,6 +303,11 @@
 	.msm_row.innerpad > .msm_row-content {
 		margin: 18px;
 	}
+	
+	/* AKA .msm_row-content.minimal */
+	.msm_layout .msm_row > .minimal {
+		margin: 4px 9px;
+	}
 			
 	.msm_layout #msm_header {
 		background: #fff;
