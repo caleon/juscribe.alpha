@@ -1,5 +1,5 @@
 <% content_tag :ul, :class => "tags #{list.class.class_name.underscore}-tags" do -%>
 	<% list.composite_taggings.each do |tagging| %>
-		<li class="tag"><%= link_to tagging.tag.name, tagging_path_for(tagging), :rel => 'tag' %></li>
+		<li class="tag"><nobr><%= link_to tagging.tag.name, tagging_path_for(tagging), :rel => 'tag' %></nobr></li>
 	<% end %>
 <% end if list && !list.composite_taggings.empty? %>

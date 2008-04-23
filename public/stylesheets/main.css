@@ -503,6 +503,18 @@ strong.articleIntro {
 	border: 1px solid #ccc;
 }
 
+.olderArticle, .newerArticle {
+	font-size: 88%;
+}
+
+.olderArticle {
+	float: right;
+}
+
+.newerArticle {
+	float: left;
+}
+
 .google_ads {
 	overflow: hidden;
 	height: 250px;

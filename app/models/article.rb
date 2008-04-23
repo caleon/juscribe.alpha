@@ -89,6 +89,30 @@ class Article < ActiveRecord::Base
     (self.draft? && (self.editable_by?(user) || self.blog.editable_by?(user))) ||
     (!self.draft? && !future_publication? && super)
   end
+  
+  def composite_tags
+    (self.tags + self.blog.tags).uniq
+  end
+  
+  def composite_taggings
+    (self.taggings + self.blog.taggings).inject([]) {|arr, tg| arr << tg unless arr.map(&:tag_id).include?(tg.tag_id); arr }
+  end
+  
+  def tag_list
+    self.composite_tags.map(&:name).join(", ")
+  end
+  
+  def find_all_neighbors(opts={})
+    opts[:limit] ||= 5
+    prev_articles = self.blog.articles.find(:all, :limit => opts[:limit], :order => 'articles.published_at DESC', :conditions => ["articles.published_at < ?", self.published_at])
+    next_articles = self.blog.articles.find(:all, :limit => opts[:limit], :order => 'articles.published_at ASC', :conditions => ["articles.published_at > ?", self.published_at])
+    return [ prev_articles, next_articles ]
+  end
+  
+  # TODO: The following can be set with has_many and we can :include them.
+  def find_neighbors(opts={})
+    @neighbors ||= self.find_all_neighbors(:limit => 1).map {|array_or_res| array_or_res.first rescue array_or_res }
+  end
     
   def self.primary_find(*args); find_by_params(*args); end
   
@@ -115,18 +139,6 @@ class Article < ActiveRecord::Base
     else
       []
     end
-  end
-  
-  def composite_tags
-    (self.tags + self.blog.tags).uniq
-  end
-  
-  def composite_taggings
-    (self.taggings + self.blog.taggings).inject([]) {|arr, tg| arr << tg unless arr.map(&:tag_id).include?(tg.tag_id); arr }
-  end
-  
-  def tag_list
-    self.composite_tags.map(&:name).join(", ")
   end
   
   def find_similar(limit=5, options={})
