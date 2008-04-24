@@ -1,5 +1,9 @@
 <h3>Latest Comments</h3>
-<% content_tag :ul, :class => 'comments user-comments', :id => "user-#{@user.id}-comments" do -%>
-	<%= render :partial => 'comments/comment_line', :collection => latest_comments,
-						 :locals => { :without_user => without_user ||= false, :without_commentable => without_commentable ||= false, :prefix => prefix ||= nil } %>
-<% end -%>
+<% unless latest_comments.blank? %>
+	<% content_tag :ul, :class => 'comments user-comments', :id => "user-#{@user.id}-comments" do -%>
+		<%= render :partial => 'comments/comment_line', :collection => latest_comments,
+							 :locals => { :without_user => without_user ||= false, :without_commentable => without_commentable ||= false, :prefix => prefix ||= nil } %>
+	<% end -%>
+<% else %>
+	No comments found.
+<% end %>

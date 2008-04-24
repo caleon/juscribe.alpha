@@ -1,14 +1,18 @@
 <% user ||= @user -%>
 <h3>Latest News <%= user ? rss_link_for(:articles, formatted_articles_path(user, :format => :xml)) : nil %></h3>
-<% content_tag(:ul, :id => 'msm_other_main_widgets') do -%>
-	<% latest_articles.each do |art| %>
-		<li>
-			<span>
-			<% if art.blog %>
-				<span class="articleBlog"><%= art.blog.short_name %></span>
-			<% end %>
-				<%= link_to art.title, article_path_for(art) %> <span class="timeago"><%= time_ago_in_words(art.updated_at) %></span>
-			</span>
-		</li>
-	<% end %>
-<% end -%>
+<% unless latest_articles.blank? %>
+	<% content_tag(:ul, :id => 'msm_other_main_widgets') do -%>
+		<% latest_articles.each do |art| %>
+			<li>
+				<span>
+				<% if art.blog %>
+					<span class="articleBlog"><%= art.blog.short_name %></span>
+				<% end %>
+					<%= link_to art.title, article_path_for(art) %> <span class="timeago"><%= time_ago_in_words(art.updated_at) %></span>
+				</span>
+			</li>
+		<% end %>
+	<% end -%>
+<% else %>
+	No articles found.
+<% end %>
