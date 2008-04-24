@@ -51,7 +51,7 @@ class CommentsController < ApplicationController
     if @commentable.allows_comments? && (get_viewer || @commentable.allows_anonymous_comments?)
       @page_title = "New Comment on #{@commentable.display_name}"
 
-      @comment = @commentable.comments.new(params[:comment].merge(:user => get_viewer))
+      @comment = @commentable.comments.new(params[:comment].merge(:user => get_viewer, :ip_addr => request.remote_ip))
       is_comment_spam = is_spam?(:comment_content => @comment.body, :permalink => commentable_url_for(@commentable),
                                  :comment_type => 'comment', :comment_author => (get_viewer.nick rescue @comment.nick), :comment_author_email => (get_viewer.email rescue @comment.email))
       if !is_comment_spam && @comment.save
