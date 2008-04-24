@@ -4,3 +4,5 @@
 :defcon: 0
 :disable_registration: false
 :disable_search: true
+:disable_comments: false
+:disable_anonymous_comments: false

@@ -5,7 +5,8 @@ class Comment < ActiveRecord::Base
   belongs_to :commentable, :polymorphic => true, :inherits_layout => true
   belongs_to :original, :class_name => "Comment", :foreign_key => :secondary_id
   has_many :followups, :class_name => "Comment", :as => :original, :foreign_key => :secondary_id
-  validates_presence_of :user_id
+  validates_presence_of :user_id, :unless => lambda{|comment| !SITE[:disable_anonymous] && comment.commentable &&
+                                                              comment.commentable.allows_anonymous_comments? && !comment.email.blank? } # For anonymous comments
   
   after_create :increment_counter#, :send_notification
   
@@ -19,6 +20,10 @@ class Comment < ActiveRecord::Base
   
   def path_name_prefix
     [ self.commentable.path_name_prefix, 'comment' ].join('_')
+  end
+  
+  def anonymous?
+    self.user.nil?
   end
   
   def accessible_by?(user=nil)

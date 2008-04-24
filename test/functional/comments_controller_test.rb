@@ -124,12 +124,29 @@ class CommentsControllerTest < ActionController::TestCase
     articles(:blog).publish!
     assert articles(:blog).accessible_by?(nil)
     get :new, articles(:blog).to_path(true)
+    assert_response :success
+    assert_not_nil assigns(:comment)
+  end
+  
+  def test_new_without_login_when_not_allowed
+    articles(:blog).publish!
+    articles(:blog).disallow_anonymous_comments!
+    assert articles(:blog).accessible_by?(nil)
+    get :new, articles(:blog).to_path(true)
     assert_redirected_to login_url
     assert_equal "You need to be logged in to do that.", flash[:warning]
   end
   
   def test_new_with_non_user
     articles(:blog).publish!
+    get :new, articles(:blog).to_path(true), as(123123123123)
+    assert_response :success
+    assert_not_nil assigns(:comment)
+  end
+  
+  def test_new_with_non_user_when_not_allowed
+    articles(:blog).publish!
+    articles(:blog).disallow_comments!
     get :new, articles(:blog).to_path(true), as(123123123123)
     assert_redirected_to login_url
     assert_equal "You need to be logged in to do that.", flash[:warning]
@@ -168,6 +185,17 @@ class CommentsControllerTest < ActionController::TestCase
   
   def test_create_with_non_user
     articles(:blog).publish!
+    assert articles(:blog).allows_comments? && articles(:blog).allows_anonymous_comments?
+    post :create, articles(:blog).to_path(true).merge(:comment => { :body => 'blah blah' })
+    assert_response :success
+    assert_not_nil assigns(:comment)
+  end
+
+  def test_create_with_non_user_when_disallowed
+    articles(:blog).publish!
+    articles(:blog).disallow_anonymous_comments!
+    assert articles(:blog).allows_comments?
+    assert !articles(:blog).allows_anonymous_comments?
     post :create, articles(:blog).to_path(true).merge(:comment => { :body => 'blah blah' })
     assert_nil assigns(:comment)
     assert_redirected_to login_url

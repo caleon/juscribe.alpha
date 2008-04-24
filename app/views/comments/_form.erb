@@ -1,4 +1,24 @@
-<%= f.text_area :body %>
-<br />
-<%= submit_tag 'Comment' %>
+<% if commentable.allows_comments? %>
+	<% form_for :comment, commentable.comments.new, :url => comments_path_from_commentable(commentable), :html => { :class => 'commentForm', :method => 'post' } do |f| %>
+		<fieldset>
+			<legend>Comment on <%= commentable.display_name %></legend>
+			<% if !logged_in? && commentable.allows_anonymous_comments? %>
+				<%= f.label :nick, 'Name' %>
+				<%= f.text_field :nick %>
+				<br />
+				<%= f.label :email, 'Email' %>
+				<%= f.text_field :email %>
+				<br />
+			<% end %>
+			<%= f.text_area :body %>
+			<br />
+			<%= f.submit 'Comment' %>
+		</fieldset>
+	<% end%>
+<% else %>
+	Comments are closed.
+<% end %>
 
+<% if !logged_in? && !commentable.allows_anonymous_comments? %>
+	Please <%= link_to 'login', login_path %> to comment.
+<% end %>

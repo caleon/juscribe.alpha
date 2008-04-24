@@ -1,6 +1,10 @@
 <%= f.label :description %>
 <%= f.text_area :description %>
 <br />
+<%= f.check_box :allow_anonymous_comments %><%= f.label :allow_anonymous_comments %>
+<br />
+<%= f.check_box :allow_anonymous_comments %><%= f.label :allow_anonymous_comments %> (if comments are allowed)
+<br />
 <%= render :partial => 'pictures/form' %>
 
 <%= render :partial => 'shared/layout_form', :locals => { :f => f } %>

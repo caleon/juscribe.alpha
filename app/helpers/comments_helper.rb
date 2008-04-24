@@ -15,4 +15,8 @@ module CommentsHelper
   def commentable_path_for(commentable, opts={})
     instance_eval %{ #{opts[:prefix] ? "#{opts[:prefix]}_" : ''}#{commentable.path_name_prefix}_path(commentable.to_path.merge(opts[:params] || {})) }
   end
+  
+  def comment_form_for(record, opts={})
+    render :partial => 'comments/form', :locals => { :commentable => record }
+  end
 end

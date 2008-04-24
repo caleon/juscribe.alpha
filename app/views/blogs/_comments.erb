@@ -2,4 +2,4 @@
 <ul id="blog-<%= blog.id %>-comments">
 	<%= render :partial => 'comments/comment', :collection => blog.comments %>
 </ul>
-<%= render(:partial => 'comment_form', :locals => { :blog => blog, :comment => Comment.new }) %>
+<%= comment_form_for(blog) %>

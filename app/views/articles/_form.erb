@@ -18,7 +18,8 @@
 <%= label :widget, :position, "Clip and Place" %>
 <%= select_tag 'widget[position]', %{<option></option>} + (1..10).map {|i| %{<option#{' selected="selected"' if @widget && @widget.position == i}>#{i}</option>} }.join, :id => 'widget_position' %>
 <br />
-
+<%= f.check_box :allow_comments %><%= f.label :allow_comments %>
+<br />
 <% if @article.new_record? || @article.draft? %>
 <input type="submit" name="article[publish]" value="Publish Now" />
 <% end %>

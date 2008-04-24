@@ -11,9 +11,10 @@ class User < ActiveRecord::Base
   has_many :blogs, :as => :bloggable, :dependent => :nullify
   def all_blogs; (owned_blogs + blogs).uniq; end
   has_one :default_blog, :class_name => 'Blog', :order => 'id ASC' # TODO: let user specify what is a default blog
-  has_many :comments, :as => :commentable, :order => 'comments.id DESC'
+
+  acts_as_commentable
   has_many :owned_comments, :class_name => 'Comment', :dependent => :nullify
-  has_many :latest_comments, :class_name => 'Comment', :order => 'comments.id DESC', :limit => 5
+
   with_options :class_name => 'Thoughtlet', :order => 'thoughtlets.id DESC' do |thoughtlet|
     thoughtlet.has_many :thoughtlets, :dependent => :nullify
     thoughtlet.has_many :latest_thoughtlets, :limit => 8
@@ -49,8 +50,6 @@ class User < ActiveRecord::Base
                             :conditions => "position IS NOT NULL"
   has_many :unplaced_widgets, :class_name => 'Widget', :order => :position, :dependent => :nullify,
                               :conditions => "position IS NULL"
-    
-  
   def primary_picture_path
     self.primary_picture.file_path
   rescue NoMethodError

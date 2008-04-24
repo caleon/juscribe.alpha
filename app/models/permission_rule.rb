@@ -6,6 +6,7 @@ class PermissionRule < ActiveRecord::Base
   serialize :allowed
   serialize :denied
   serialize :bosses
+  serialize :options
   before_save :check_integrity
   
   has_many :permissions
@@ -15,8 +16,9 @@ class PermissionRule < ActiveRecord::Base
   VALID_TYPES = [ :user, :group ]
   DEFAULTS = { :allowed => { :user => [], :group => [] },
                :denied => { :user => [], :group => [] },
-               :bosses => { :user => [], :group => [] } }
-  PASTS = {:allow => :allowed, :deny => :denied, :boss => :bosses}
+               :bosses => { :user => [], :group => [] },
+               :options => { :comments => nil, :anonymous_comments => nil } }
+  PASTS = { :allow => :allowed, :deny => :denied, :boss => :bosses }
   
   validates_presence_of :name
   validates_uniqueness_of :name, :scope => :user_id, :allow_nil => true
@@ -71,6 +73,21 @@ class PermissionRule < ActiveRecord::Base
   def allowed; DEFAULTS[:allowed].merge(self[:allowed] || {}); end
   def denied; DEFAULTS[:denied].merge(self[:denied] || {}); end
   def bosses; DEFAULTS[:bosses].merge(self[:bosses] || {}); end
+  def options; DEFAULTS[:options].merge(self[:options] || {}); end
+  
+  def set_option!(key, val)
+    self.options = self.options.merge(key => val)
+    self.save!
+  end
+  
+  def get_option(key)
+    self.options[key]
+  end
+  
+  def reset_options!
+    self.options = DEFAULTS[:options]
+    self.save!
+  end
   
   def whitelist!(*args)
     self.allow!(*args)
@@ -118,7 +135,7 @@ class PermissionRule < ActiveRecord::Base
   def rule_helper(act, args, proc)
     raise ArgumentError, 'Need to specify permittable type' unless VALID_TYPES.include?(args.first)
     kind, hash = args.shift, self.send(PASTS[act]) # kind is :user, hash is formatted
-    self[PASTS[act]] = hash.merge(kind => hash[kind].send(proc, args.map(&:to_id)))
+    self[PASTS[act]] = hash.merge(kind => hash[kind].send(proc, args.map(&:to_id))) # NOTE: to_id is used HERE!
     self.save!
     self.reload
   end

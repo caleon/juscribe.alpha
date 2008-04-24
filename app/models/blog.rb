@@ -1,5 +1,6 @@
 class Blog < ActiveRecord::Base
   include_custom_plugins
+  acts_as_commentable
   has_one :layouting, :as => :layoutable
   
   belongs_to :user # creator
@@ -11,7 +12,6 @@ class Blog < ActiveRecord::Base
     art.has_one :primary_article
   end
   has_many :drafts, :class_name => 'Article', :order => 'articles.id DESC', :conditions => "articles.published_at IS NULL"
-  has_many :comments, :as => :commentable, :order => 'comments.id DESC'
   
   validates_presence_of :bloggable_type, :bloggable_id, :user_id, :name, :short_name, :permalink
   validates_length_of :name, :in => (3..70)

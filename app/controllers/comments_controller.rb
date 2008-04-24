@@ -1,6 +1,6 @@
 class CommentsController < ApplicationController
   use_shared_options :collection_owner => :commentable
-  verify_login_on :new, :create, :edit, :update, :destroy
+  verify_login_on :edit, :update, :destroy
   authorize_on :index, :show, :new, :create, :edit, :update, :destroy
   
   include Akismet
@@ -29,33 +29,51 @@ class CommentsController < ApplicationController
   
   def new
     return unless get_commentable(:message => "Unable to find object to comment. Please check the address.") && authorize(@commentable)
-    @comment = Comment.new
-    @page_title = "New Comment on #{@commentable.display_name}"
-    respond_to do |format|
-      format.html { trender }
-      format.js
+    if @commentable.allows_comments? && (get_viewer || @commentable.allows_anonymous_comments?)
+      @comment = Comment.new
+      @page_title = "New Comment on #{@commentable.display_name}"
+      respond_to do |format|
+        format.html { trender }
+        format.js
+      end
+    else
+      msg = "You need to be logged in to do that." # FIXME: this messaging should be refactored.
+      session[:before_login] = request.url
+      respond_to_without_type_registration do |format|
+        format.html { flash[:warning] = msg; redirect_to login_url }
+        format.js { flash.now[:warning] = msg; render :controller => 'users', :action => 'login' }
+      end
     end
   end
   
   def create
     return unless get_commentable(:message => "Unable to find object to comment. Please check the address.") && authorize(@commentable)
-    @page_title = "New Comment on #{@commentable.display_name}"
+    if @commentable.allows_comments? && (get_viewer || @commentable.allows_anonymous_comments?)
+      @page_title = "New Comment on #{@commentable.display_name}"
 
-    @comment = @commentable.comments.new(params[:comment].merge(:user => get_viewer))
-    is_comment_spam = is_spam?(:comment_content => @comment.body, :permalink => commentable_url_for(@commentable),
-                               :comment_type => 'comment', :comment_author => get_viewer.nick, :comment_author_email => get_viewer.email)
-    if !is_comment_spam && @comment.save
-      msg = "You have commented on #{@commentable.display_name}."
-      respond_to do |format|
-        format.html { flash[:notice] = msg; redirect_to comment_url_for(@comment) }
-        format.js { flash.now[:notice] = msg }
+      @comment = @commentable.comments.new(params[:comment].merge(:user => get_viewer))
+      is_comment_spam = is_spam?(:comment_content => @comment.body, :permalink => commentable_url_for(@commentable),
+                                 :comment_type => 'comment', :comment_author => (get_viewer.nick rescue @comment.nick), :comment_author_email => (get_viewer.email rescue @comment.email))
+      if !is_comment_spam && @comment.save
+        msg = "You have commented on #{@commentable.display_name}."
+        respond_to do |format|
+          format.html { flash[:notice] = msg; redirect_to comment_url_for(@comment) }
+          format.js { flash.now[:notice] = msg }
+        end
+      else
+        flash.now[:warning] = "There was an error commenting on #{@commentable.display_name}." +
+                              (is_comment_spam ? " Our system thinks your comment was a spam. If you think this is a mistake, please contact the site administrator." : "")
+        respond_to do |format|
+          format.html { trender :new }
+          format.js { render :action => 'create_error' }
+        end
       end
     else
-      flash.now[:warning] = "There was an error commenting on #{@commentable.display_name}." +
-                            (is_comment_spam ? " Our system thinks your comment was a spam. If you think this is a mistake, please contact the site administrator." : "")
-      respond_to do |format|
-        format.html { trender :new }
-        format.js { render :action => 'create_error' }
+      msg = "You need to be logged in to do that." # FIXME: this messaging should be refactored.
+      session[:before_login] = request.url
+      respond_to_without_type_registration do |format|
+        format.html { flash[:warning] = msg; redirect_to login_url }
+        format.js { flash.now[:warning] = msg; render :controller => 'users', :action => 'login' }
       end
     end
   end

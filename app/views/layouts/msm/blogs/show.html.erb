@@ -75,12 +75,12 @@
 		<%# framed.wrender :description # Description moved to header %>
 		<% @wcount = 6 %>
 		<%= framed.wrender :bloggable %>
+		<%# @wcount = 7 %>
+		<%# framed.wrender :latest_pictures unless @blog.pictures.empty? %>
 		<% @wcount = 7 %>
-		<%= framed.wrender :latest_pictures unless @blog.pictures.empty? %>
-		<% @wcount = 8 %>
 		<%= render :partial => 'articles/article', :object => @articles[3], :layout => wayout(:framed) if @articles[3] %>
 		<%# framed.wrender :comments, :blog => @blog # BLOG comments will show on Blog About page if there is one. %>
-		<% @wcount = 9 %>
+		<% @wcount = 8 %>
 		<%= framed.wrender :google_ads %>
 	<% end %>
 <% end -%>

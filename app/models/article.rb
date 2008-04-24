@@ -1,9 +1,9 @@
 class Article < ActiveRecord::Base
-  include_custom_plugins  
+  include_custom_plugins
+  acts_as_commentable
   
   belongs_to :user # creator
   belongs_to :blog, :inherits_layout => true
-  has_many :comments, :as => :commentable
   
   belongs_to :original, :class_name => 'Article', :foreign_key => :original_id
   has_many :responses, :class_name => 'Article', :foreign_key => :original_id, :order => "articles.published_at DESC"
@@ -102,6 +102,15 @@ class Article < ActiveRecord::Base
     self.composite_tags.map(&:name).join(", ")
   end
   
+  # Refer to commentable.rb as well as the private section of this model file.
+  def allows_comments?
+    self.blog.allows_comments? && super
+  end
+  
+  def allows_anonymous_comments?
+    self.blog.allows_anonymous_comments? && super
+  end
+  
   def find_all_neighbors(opts={})
     opts[:limit] ||= 5
     prev_articles = self.blog.articles.find(:all, :limit => opts[:limit], :order => 'articles.published_at DESC', :conditions => ["articles.published_at < ?", self.published_at])
@@ -191,4 +200,7 @@ class Article < ActiveRecord::Base
   def verify_non_empty_permalink
     make_permalink if self[:permalink].blank?
   end
+  
+  def default_allows_comments?; self.blog.allows_comments?; end
+  def default_allows_anonymous_comments?; self.blog.allows_anonymous_comments?; end
 end

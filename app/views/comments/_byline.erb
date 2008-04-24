@@ -1,1 +1,1 @@
-by: <%= comment.user.display_name %>
+by: <%= comment.anonymous? ? comment.nick : comment.user.display_name %>
