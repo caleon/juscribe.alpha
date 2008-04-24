@@ -31,7 +31,7 @@ module ArticlesHelper
     text = sanitize(text, :tags => allowed_tags, :attributes => allowed_attrs)
     text = truncate_html(text, opts[:truncate]) if opts[:truncate]
     formatted = Hpricot(simple_format(text, :class => 'articleContent'))
-    (formatted/"a").each{|link| link.set_attribute('class', 'external') and link.set_attribute('target', '_new') if link.attributes['href'].match(/:\/\//)}
+    (formatted/"a").each{|link| link.set_attribute('class', 'external') and link.set_attribute('target', '_new') if link.attributes['href'].match(/:\/\/\w+\.[^(juscribe\.com)].*$/)}
     formatted.to_html
   end
   
