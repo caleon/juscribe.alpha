@@ -79,7 +79,7 @@ module ActionController::CommonMethods
     def preview
       # TODO: setup format.html version
       # This can be done with rjs......
-      return unless setup
+      return unless setup && authorize(main_object)
       #render :partial => "preview",
       #       :object => instance_variable_get(shared_setup_options[:instance_var])
       render :action => '../shared/preview.js.rjs', :layout => false
