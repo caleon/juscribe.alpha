@@ -85,4 +85,60 @@ class ArticleTest < ActiveSupport::TestCase
     assert_not_nil Article.find_any_by_permalink_and_nick(*args)
     assert Article.find_any_by_permalink_and_nick(*args).empty?
   end
+  
+  
+  # NOTE: P should not be an allowed tag.
+  def test_formatting
+    def html_escape(s)
+      s.to_s.gsub(/[&"><]/) { |special| { '&' => '&amp;', '"' => '&quot;', '>' => '&gt;', '<' => '&lt;' }[special] }
+    end
+    alias :h :html_escape
+    
+    def p_wrap(text, opts={})
+      allowed_tags = opts[:tags].is_a?(Array) ? opts[:tags] : %w(strong em b i code pre tt samp kbd var sub 
+        sup dfn cite big small address br span h1 h2 h3 h4 h5 h6 ul ol li abbr 
+        acronym a img blockquote embed object param)
+      block_levels = "pre|blockquote|h1|h2|h3|h4|h5|h6|ol|ul"
+      res = text.to_s.
+            gsub(/(<\/?(\w+)[^>]*>)/) {|t| allowed_tags.include?($2) ? $1 : h($1)}.
+            gsub(/\r\n?/, "\n").
+            gsub(/\n\n+/, "</p>\n\n<p>")
+      res = "<p>" + res + "</p>"
+      res.gsub(/(<(?:#{block_levels})>)/, "</p>\n\\1").gsub(/(<\/(?:#{block_levels})>)/, "\\1\n<p>").
+          gsub(/\s*<p><\/p>\s*/, "\n").
+          gsub(/([^\n|>]\n)(?!\n)/, "\\1<br />\n").strip
+    end
+    
+    # str.gsub(/(<p[^>]*>.*?)(?=<pre)/, '\1</p>')
+    
+    assert_equal "<p>Hello world</p>", p_wrap("Hello world")
+    assert_equal "<p>Hello\n<br />\nworld</p>", p_wrap("Hello\nworld")
+    assert_equal "<p>Hello\n<br />\nworld</p>", p_wrap("Hello\r\nworld")
+    assert_equal "<p>Hello</p>\n\n<p>world</p>", p_wrap("Hello\n\nworld")
+    assert_equal "<p>Hello\n<br />\nworld</p>\n\n<p>Goodbye\n<br />\nworld</p>", p_wrap("Hello\nworld\n\nGoodbye\nworld")
+    assert_equal "<p>Hello\n<br />\nworld</p>\n\n<p>Goodbye\n<br />\nworld</p>", p_wrap("Hello\nworld\r\n\r\nGoodbye\r\nworld")
+    assert_equal "<p>&lt;p&gt;Hello world&lt;/p&gt;</p>", p_wrap("<p>Hello world</p>")
+    # Method that wraps p_wrap will use Hpricot to remove unwanted attributes
+    #assert_equal "<p>&lt;p&gt;Hello world&lt;/p&gt;</p>", p_wrap('<p class="sampleClass">Hello world</p>')
+    #assert_equal "<p>&lt;p&gt;Hello world&lt;/p&gt;</p>", p_wrap('<p style="color: #fff;">Hello world</p>')
+    #assert_equal "<p>&lt;p&gt;Hello world&lt;/p&gt;</p>", p_wrap('<p class="sampleClass" style="color:#fff;">Hello world</p>')
+    
+    assert_equal "<pre>Hello world</pre>", p_wrap('<pre>Hello world</pre>')
+    assert_equal "<p>Hello world</p>\n<pre>Goodbye world</pre>", p_wrap('Hello world<pre>Goodbye world</pre>')
+    assert_equal "<p>Hello world </p>\n<pre>Goodbye world</pre>", p_wrap("Hello world <pre>Goodbye world</pre>")
+    assert_equal "<p>Hello world\n<br />\n</p>\n<pre>Goodbye world</pre>", p_wrap("Hello world\n<pre>Goodbye world</pre>")
+    assert_equal "<p>Hello world</p>\n<pre>Goodbye world</pre>", p_wrap("Hello world\n\n<pre>Goodbye world</pre>")
+    assert_equal "<pre>Good morning</pre>\n<p>Good afternoon</p>\n<pre>Good evening</pre>",
+                 p_wrap("<pre>Good morning</pre>Good afternoon<pre>Good evening</pre>")
+    assert_equal "<p>Hello world</p>\n<pre>This is code</pre>\n<p>Goodbye world</p>",
+                 p_wrap("Hello world<pre>This is code</pre>Goodbye world")
+    assert_equal "<p>Hello world \n<br />\n</p>\n<pre>This is code</pre>\n<p>\n Goodbye world</p>",
+                 p_wrap("Hello world\s\n<pre>This is code</pre>\n\sGoodbye world")
+    
+                 
+    assert_equal '<pre>&lt;script type=&quot;text/javascript&quot;&gt;document.write("hello");&lt;/script&gt;</pre>',
+                 p_wrap('<pre><script type="text/javascript">document.write("hello");</script></pre>') # use html_escape
+                 
+    
+  end
 end

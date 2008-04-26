@@ -20,20 +20,64 @@ module ArticlesHelper
   end
   
   def article_intro
-    content_tag :strong, "(#{APP[:name].upcase}) --", :class => 'articleIntro'
+    content_tag :strong, "(#{APP[:name].upcase}) &mdash;", :class => 'articleIntro'
+  end
+  
+  def allowed_tags(trunc=false)
+    %w(strong em b i code pre tt samp kbd var sub 
+      sup dfn cite big small address br span h1 h2 h3 h4 h5 h6 ul ol li abbr 
+      acronym a img blockquote embed object param p) - (trunc ? %w( embed object param pre ) : [])
+  end
+  
+  def allowed_attributes
+    %w(href src width height alt target cite datetime title class name xml:lang abbr wmode type value)
   end
   
   def format_article(article, opts={})
     text = article.content
     text = article_intro + article.content unless opts[:without_intro]
-    allowed_tags = %w( code blockquote pre a strong em img i b embed object param ) - (opts[:truncate] ? %w( embed object param pre ) : [])
-    allowed_attrs = %w( id class rel title style href wmode src type name value width height )
-    text = sanitize(text, :tags => allowed_tags, :attributes => allowed_attrs)
-    text = truncate_html(text, opts[:truncate]) if opts[:truncate]
-    formatted = Hpricot(simple_format(text, :class => 'articleContent'))
-    (formatted/"a").each{|link| link.set_attribute('class', 'external') and link.set_attribute('target', '_new') if link.attributes['href'].match(/:\/\/\w+\.[^(juscribe\.com)].*$/)}
-    formatted.to_html
+    # Create desired DOM hierarchy and convert to Hpricot
+    formatted = Hpricot(p_wrap(text))
+    # Escape html tags within PRE or CODE
+    (formatted/"pre, code").each do |code_el|
+      code_el.inner_html = code_el.inner_html.gsub(/\n*<br \/>\n*/, "\n")
+      code_el.inner_html = html_escape(code_el.inner_html)
+    end
+    # Make external links styled differently and open in new window
+    (formatted/"a").each {|link| link.set_attribute('class', 'external') and link.set_attribute('target', '_new') if link.attributes['href'].match(/:\/\/\w+\.[^(juscribe\.com)](?:\/.*)?$/)} # Test forging with juscribe.com.hacker.com
+    # Remove unwanted html attributes like onclick
+    text = sanitize(formatted.to_html, :tags => allowed_tags(opts[:truncate]), :attributes => allowed_attributes)
+    hpricot = Hpricot(text)
+    # Set class and unique IDs for each block level element for this articleContent
+    hpricot.each_child do |child|
+      if child.is_a?(Hpricot::Elem)
+        child.set_attribute('class', 'articleContent')
+        paragraph_id = "#{opts[:prefix] ? "#{opts[:prefix]}_" : ''}article-#{article.id}-paragraph-#{Digest::SHA1.hexdigest(child.inner_html)[0..6]}"
+        child.set_attribute('id', paragraph_id)
+      end
+    end
+    text = opts[:truncate] ? truncate_html(hpricot.to_s, opts[:truncate]) : hpricot.to_s
+    # Return finished
+    text.to_s
   end
+  
+  # TODO: Need to Hpricot the input before we save to database on Article#save
+  def p_wrap(text, opts={})
+    # Actually if opts[:truncate], we might wanna remove the bad tags entirely instead of escaping...
+    my_allowed_tags = opts[:tags].is_a?(Array) ? opts[:tags] : (allowed_tags - %w(p))
+    # Basically these are types that cannot exist within a P tag. P is not allowed, however.
+    block_levels = "pre|blockquote|h1|h2|h3|h4|h5|h6|ol|ul"
+    res = text.to_s.
+          gsub(/(<\/?(\w+)[^>]*>)/) {|t| my_allowed_tags.include?($2) ? $1 : h($1)}.
+          gsub(/\r\n?/, "\n").
+          gsub(/\n\n+/, "</p>\n\n<p>")
+    res = "<p>" + res + "</p>"
+
+    res.gsub(/(<(?:#{block_levels})>)/, "</p>\n\\1").gsub(/(<\/(?:#{block_levels})>)/, "\\1\n<p>").
+        gsub(/\s*<p><\/p>\s*/, "\n").
+        gsub(/([^\n|>]\n)(?!\n)/, "\\1<br />\n").strip
+  end
+
   
   # FIXME: if the article record no longer exists, this will error out
   def articles_history(limit=5)

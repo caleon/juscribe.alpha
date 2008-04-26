@@ -1,6 +1,8 @@
 <div id="debugger">
 	<%= rounded_shim(:top) %>
 	<p id="debugger-inner">
+		<%=h 'hello <script type="text/javascript">colin</script>' %>
+	<% if false %>
 		COMMENT PATH: <%= comment_path_for(Comment.find(:first)) %><br />
 		BLAH: <%= escape_javascript form_authenticity_token %><br />
 		BLAH2: <%= request_forgery_protection_token %><br />
@@ -22,6 +24,7 @@
 		<br />
 		Main object's skin: <%= main_object.skin_file rescue nil %>
 		<br />
+		<% end %>
 		<%= yield :debugger %>
 	</p>
 	<%= rounded_shim(:bottom) %>
