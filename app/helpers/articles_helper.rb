@@ -151,8 +151,8 @@ module ArticlesHelper
   def paragraph_id_for(hp_el, opts={})
     raise ArgumentError unless article = opts[:article] || @article
     "#{opts[:prefix] ? "#{opts[:prefix]}_" : ''}" +
-    "article-#{article.id}-" + 
-    "paragraph-#{Digest::SHA1.hexdigest(hp_el.to_s)[0..6]}"
+    "a-#{article.id}-" + 
+    "p-#{Digest::SHA1.hexdigest(hp_el.to_s)[0..6]}"
   end
 
   def create_comment_mixin(hp_el, paragraph_id)
