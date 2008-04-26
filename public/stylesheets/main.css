@@ -523,7 +523,7 @@ strong.articleIntro {
 	opacity: 0.8;
 }
 
-#canvas.articles-show .article .articleContent.active {
+#canvas.articles-show .article .articleContent.active span.mixedComment {
 	opacity: 1;
 }
 

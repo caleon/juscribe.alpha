@@ -81,7 +81,7 @@ module ArticlesHelper
     @component_count = 0
     @aggregate_length = 0
     hpricot.each_child_with_index do |child, i|
-      if child.is_a?(Hpricot::Elem)
+      if child.elem?
         child.set_attribute('class', 'articleContent')
         paragraph_id = "#{opts[:prefix] ? "#{opts[:prefix]}_" : ''}article-#{article.id}-paragraph-#{Digest::SHA1.hexdigest(child.inner_html)[0..6]}"
         child.set_attribute('id', paragraph_id)
@@ -93,7 +93,7 @@ module ArticlesHelper
         else
           @aggregate_length += child.inner_text.chars.length
         end
-        child.inner_html += content_tag(:span, "&nbsp;", :class => paragraph_id + "-comment mixedComment") unless opts[:truncate]
+        child.inner_html += content_tag(:span, "&nbsp;", :class => paragraph_id + "-comment mixedComment") unless opts[:truncate] || child.name == 'pre'
       end
     end
     text = opts[:truncate] ? truncate_html(hpricot.to_s, opts[:truncate]) : hpricot.to_s
