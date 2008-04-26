@@ -72,7 +72,7 @@ module ArticlesHelper
         child.set_attribute('id', paragraph_id)
         #if i.even? && !opts[:truncate] && (i >= 2 && comp = article_components_for(article)[(i-2)/2])
         #if i.even? && !opts[:truncate] && i > 4 && comp = article_components_for(article)[(i-4)/2]
-        if @aggregate_length > 800 && comp = article_components_for(article)[@component_count] 
+        if @aggregate_length > 1400 && comp = article_components_for(article)[@component_count] 
           child.inner_html = render_article_component(article, comp) + child.inner_html
           @aggregate_length = child.inner_text.chars.length
           @component_count += 1
