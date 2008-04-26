@@ -501,9 +501,9 @@ strong.articleIntro {
 .article .articleContent span.mixedComment {
 	display: none;
 	position: absolute;
-	width: 150px;
-	height: 90px;
-	margin-right: -150px;
+	width: 250px;
+	height: 140px;
+	margin-right: -250px;
 	background-color: #eee;
 	border: 3px solid #666;
 	border-width: 3px 0;
@@ -512,14 +512,19 @@ strong.articleIntro {
 	z-index: 120;
 }
 
-.article .articleContent.hover,
-.article .articleContent:hover {
+#canvas.articles-show .article .articleContent.hover,
+#canvas.articles-show .article .articleContent:hover {
 	background-color: #ffc;
 }
 
-.article .articleContent.hover span.mixedComment,
-.article .articleContent:hover span.mixedComment {
+#canvas.articles-show .article .articleContent.hover span.mixedComment,
+#canvas.articles-show .article .articleContent:hover span.mixedComment {
 	display: block;
+	opacity: 0.8;
+}
+
+#canvas.articles-show .article .articleContent.active {
+	opacity: 1;
 }
 
 .feed .articleContent img {

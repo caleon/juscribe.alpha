@@ -93,7 +93,7 @@ module ArticlesHelper
         else
           @aggregate_length += child.inner_text.chars.length
         end
-        child.inner_html += content_tag(:span, "&nbsp;", :class => paragraph_id + "-comment mixedComment")
+        child.inner_html += content_tag(:span, "&nbsp;", :class => paragraph_id + "-comment mixedComment") unless opts[:truncate]
       end
     end
     text = opts[:truncate] ? truncate_html(hpricot.to_s, opts[:truncate]) : hpricot.to_s
