@@ -494,6 +494,34 @@ strong.articleIntro {
 	border: 12px solid #ccc;
 }
 
+.article .articleContent {
+	position: relative;
+}
+
+.article .articleContent span.mixedComment {
+	display: none;
+	position: absolute;
+	width: 150px;
+	height: 90px;
+	margin-right: -150px;
+	background-color: #eee;
+	border: 3px solid #666;
+	border-width: 3px 0;
+	top: 0;
+	right: 0;
+	z-index: 120;
+}
+
+.article .articleContent.hover,
+.article .articleContent:hover {
+	background-color: #ffc;
+}
+
+.article .articleContent.hover span.mixedComment,
+.article .articleContent:hover span.mixedComment {
+	display: block;
+}
+
 .feed .articleContent img {
 	width: 175px;
 	max-height: 100px;

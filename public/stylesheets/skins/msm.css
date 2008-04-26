@@ -741,6 +741,9 @@
 		margin: 0;
 	}
 	
+	#canvas.articles-show .article > a.article_picture_link {
+		z-index: 101;
+	}
 	
 	#canvas.articles-show span.caption {
 		bottom: 1px;

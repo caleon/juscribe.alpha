@@ -47,6 +47,21 @@ module ArticlesHelper
     %w(href src width height alt target cite datetime title class name xml:lang abbr wmode type value)
   end
   
+  # format_article will create a proper DOM structure so that unwrapped text nodes are wrapped in P
+  # tags and allowed block-level elements exist outside of the P tags. Furthermore, each direct
+  # descendant of the wrapping .article element (created outside #format_article) will have an
+  # 'articleContent' class name for consistent styling.
+  #
+  # Currently the method will also mix in article images throughout the post within set intervals,
+  # but TODO: the interval should factor in the overall length of the article as well, in order to
+  # evenly space out images as much as possible instead of having a bunch of pictures at the top
+  # of a long article and only text down below.
+  #
+  # The mixing in functionality is supposed to allow other elements besides pictures to appear.
+  # This will allow modules like "You may also like" to be mixed into an article.
+  #
+  # Lastly, an empty SPAN element is added to the end of the .articleContent element to be populated
+  # via Javascript with comments corresponding to that paragraph.
   def format_article(article, opts={})
     text = article.content
     text = article_intro + article.content unless opts[:without_intro]
@@ -65,13 +80,12 @@ module ArticlesHelper
     # Set class and unique IDs for each block level element for this articleContent
     @component_count = 0
     @aggregate_length = 0
-    hpricot.each_child do |child|
+    hpricot.each_child_with_index do |child, i|
       if child.is_a?(Hpricot::Elem)
         child.set_attribute('class', 'articleContent')
         paragraph_id = "#{opts[:prefix] ? "#{opts[:prefix]}_" : ''}article-#{article.id}-paragraph-#{Digest::SHA1.hexdigest(child.inner_html)[0..6]}"
         child.set_attribute('id', paragraph_id)
-        #if i.even? && !opts[:truncate] && (i >= 2 && comp = article_components_for(article)[(i-2)/2])
-        #if i.even? && !opts[:truncate] && i > 4 && comp = article_components_for(article)[(i-4)/2]
+        child.set_attribute('style', "z-index: #{100 - i};")
         if @aggregate_length > 1400 && comp = article_components_for(article)[@component_count] 
           child.inner_html = render_article_component(article, comp) + child.inner_html
           @aggregate_length = child.inner_text.chars.length
@@ -79,6 +93,7 @@ module ArticlesHelper
         else
           @aggregate_length += child.inner_text.chars.length
         end
+        child.inner_html += content_tag(:span, "&nbsp;", :class => paragraph_id + "-comment mixedComment")
       end
     end
     text = opts[:truncate] ? truncate_html(hpricot.to_s, opts[:truncate]) : hpricot.to_s
