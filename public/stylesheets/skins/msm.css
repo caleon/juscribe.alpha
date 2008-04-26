@@ -742,7 +742,7 @@
 	}
 	
 	#canvas.articles-show .article > a.article_picture_link {
-		z-index: 101;
+		z-index: 51;
 	}
 	
 	#canvas.articles-show span.caption {

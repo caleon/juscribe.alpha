@@ -85,7 +85,7 @@ module ArticlesHelper
         child.set_attribute('class', 'articleContent')
         paragraph_id = "#{opts[:prefix] ? "#{opts[:prefix]}_" : ''}article-#{article.id}-paragraph-#{Digest::SHA1.hexdigest(child.inner_html)[0..6]}"
         child.set_attribute('id', paragraph_id)
-        child.set_attribute('style', "z-index: #{100 - i};")
+        child.set_attribute('style', "z-index: #{50 - i};")
         if @aggregate_length > 1400 && comp = article_components_for(article)[@component_count] 
           child.inner_html = render_article_component(article, comp) + child.inner_html
           @aggregate_length = child.inner_text.chars.length
