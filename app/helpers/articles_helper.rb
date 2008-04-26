@@ -23,6 +23,20 @@ module ArticlesHelper
     content_tag :strong, "(#{APP[:name].upcase}) &mdash;", :class => 'articleIntro'
   end
   
+  def article_components_for(article)
+    article.pictures[1..-1] || []
+  end
+  
+  def render_article_component(article, text_or_model)
+    case text_or_model
+    when Picture
+      if feature = text_or_model.thumbnails.find_by_thumbnail('feature')
+#        image_tag(thumb.public_filename, :class => dom_class(thumb) + ' articleComponent ' + cycle('right', 'left'))
+        zoomable_picture_with(feature, :article_id => article.id, :with => { :class => "articleComponent #{cycle('right', 'left')}" })
+      end
+    end
+  end
+  
   def allowed_tags(trunc=false)
     %w(strong em b i code pre tt samp kbd var sub 
       sup dfn cite big small address br span h1 h2 h3 h4 h5 h6 ul ol li abbr 
@@ -49,11 +63,22 @@ module ArticlesHelper
     text = sanitize(formatted.to_html, :tags => allowed_tags(opts[:truncate]), :attributes => allowed_attributes)
     hpricot = Hpricot(text)
     # Set class and unique IDs for each block level element for this articleContent
+    @component_count = 0
+    @aggregate_length = 0
     hpricot.each_child do |child|
       if child.is_a?(Hpricot::Elem)
         child.set_attribute('class', 'articleContent')
         paragraph_id = "#{opts[:prefix] ? "#{opts[:prefix]}_" : ''}article-#{article.id}-paragraph-#{Digest::SHA1.hexdigest(child.inner_html)[0..6]}"
         child.set_attribute('id', paragraph_id)
+        #if i.even? && !opts[:truncate] && (i >= 2 && comp = article_components_for(article)[(i-2)/2])
+        #if i.even? && !opts[:truncate] && i > 4 && comp = article_components_for(article)[(i-4)/2]
+        if @aggregate_length > 800 && comp = article_components_for(article)[@component_count] 
+          child.inner_html = render_article_component(article, comp) + child.inner_html
+          @aggregate_length = child.inner_text.chars.length
+          @component_count += 1
+        else
+          @aggregate_length += child.inner_text.chars.length
+        end
       end
     end
     text = opts[:truncate] ? truncate_html(hpricot.to_s, opts[:truncate]) : hpricot.to_s

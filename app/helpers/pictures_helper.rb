@@ -23,6 +23,21 @@ module PicturesHelper
     instance_eval %{ #{opts[:prefix] ? "#{opts[:prefix]}_" : ''}#{depictable.path_name_prefix}_path(depictable.to_path.merge(opts[:params])) }
   end
   
+  def zoomable_picture_with(picture, opts={})
+    if picture
+      original = picture.original? ? picture : picture.parent
+      feature = picture.feature? ? picture : picture.thumbnails.find_by_thumbnail('feature')
+      res = <<-EOB
+        <a href="#{picture_path_for(original)}" rel="lightbox[article_#{opts[:article_id]}]" class="article_picture_link#{' right' if (opts[:with] ||= {}) && opts[:with][:class].to_s.match(/right/)}" title="#{picture.caption.gsub(/\"/, "\"").gsub(/\'/, "\'") if !picture.caption.blank?}">
+          #{just_picture_tag(feature, :with => opts[:with])}
+          #{caption_for(feature)}
+          <span class="picture-symbol">&nbsp;</span>
+          <span class="zoomer">+</span>
+        </a>
+      EOB
+    end
+  end
+  
   def caption_for(picture, opts={})
     return '' if !(picture && !picture.caption.blank?)
     content_tag(:span, picture.caption, opts.merge(:class => 'caption')) if picture && !picture.caption.blank?
@@ -44,21 +59,27 @@ module PicturesHelper
       picture = record.primary_picture
     end
     link_to_if opts[:link],
-      (if picture
-        dom_class_str = [ dom_class(picture, :include => includes), with[:class] ].compact.join(' ')
-        dom_id_str = dom_id(picture, :include => includes)
-        image_tag(picture.public_filename,
-                  { :class => dom_class_str, :id => dom_id_str, :alt => picture.caption } )
-      else
-        default_picture_for(record.class.class_name,
-                            :class => dom_class(Picture, :include => includes) )
-      end + (opts[:with_text] ? "<br />#{opts[:text] || opts[:title] || record.display_name}" : '')),
+      ( just_picture_tag(picture, :include => includes, :with => with, :class => opts[:class]) + 
+          (opts[:with_text] ? "<br />#{opts[:text] || opts[:title] || record.display_name}" : '') ),
       (opts[:link].is_a?(String) ? opts[:link] : record), :title => opts[:title] || record.display_name, :class => "#{record.class.class_name.underscore}Link"
   rescue
     ''
   end
   
-  def default_picture_for(klass_name, html_opts={})
+  def just_picture_tag(picture, opts={})
+    includes = opts.delete(:include) || []
+    includes.push(picture.depictable) if includes.last != picture.depictable
+    with = opts.delete(:with) || {}
+    if picture
+      dom_class_str = [ dom_class(picture, :include => includes), with[:class] ].compact.join(' ')
+      dom_id_str = dom_id(picture, :include => includes)
+      image_tag(picture.public_filename, { :class => dom_class_str, :id => dom_id_str, :alt => picture.caption } )
+    else
+      default_picture_for(opts[:class], :class => dom_class(Picture, :include => includes) )
+    end
+  end
+  
+  def default_picture_for(klass_name="", html_opts={})
     file_path = [ klass_name.underscore, 'default.gif' ].join('/')
     image_tag(file_path, { :alt => "Default #{klass_name.humanize} picture" }.merge(html_opts))
   end

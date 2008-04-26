@@ -82,6 +82,10 @@ class Picture < ActiveRecord::Base
     other_pictures.map{|pic| pic.thumbnails.find_by_thumbnail('thumb') }
   end
   
+  def feature?; self.thumbnail == 'feature'; end
+  def thumb?; self.thumbnail == 'thumb'; end
+  def original?; self.thumbnail.blank?; end
+  
   ### IMAGE PROCESSING METHODS
   
   # Overwriting for depictable_type

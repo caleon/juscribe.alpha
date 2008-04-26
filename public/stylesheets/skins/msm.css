@@ -724,6 +724,12 @@
 		position: relative;
 		overflow: hidden;
 		margin: 0 18px 9px 0;
+		max-width: 265px;
+	}
+	
+	.msm_layout a.article_picture_link.right {
+		float: right;
+		margin: 0pt 0 9px 18px;
 	}
 	
 	#canvas.articles-show img.article-picture {
@@ -734,6 +740,7 @@
 		padding: 0;
 		margin: 0;
 	}
+	
 	
 	#canvas.articles-show span.caption {
 		bottom: 1px;
@@ -768,7 +775,7 @@
 		left: 5px;
 	}
 	
-	#canvas.articles-show .article p {
+	#canvas.articles-show .articleContent {
 		margin: 0 0 17px;
 	}
 	
