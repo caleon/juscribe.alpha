@@ -25,6 +25,7 @@ class Comment < ActiveRecord::Base
     self[:reference_ids] || []
   end
   
+  # This needs to get references of its references utnil there is no more.
   def references
     @references ||= if !self.commentable.loaded?
       self.commentable.comments.find(self.reference_ids).sort_by {|com| self.reference_ids.index(com.id) }

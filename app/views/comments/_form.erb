@@ -17,7 +17,7 @@
 			<br />
 			<%= f.submit 'Comment' %>
 		</fieldset>
-	<% end%>
+	<% end if logged_in? || commentable.allows_anonymous_comments? %>
 <% else %>
 	Comments are closed.
 <% end %>

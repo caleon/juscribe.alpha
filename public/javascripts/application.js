@@ -14,23 +14,11 @@ Browser.prototype = {
 		Element.addClassName(el, 'active')
 		if (this.lastClicked.get(lvl) && this.lastClicked.get(lvl) != el) {
 			Element.removeClassName(this.lastClicked.get(lvl), 'active');
-		}
+		};
 		this.lastClicked.set(lvl, el);
 		$(this.previewPane + '-inner').innerHTML = 'Nothing selected';
 	}
 };
-
-// Classes method: Ruby iterates through each comment's references and adds dom class "reference-12".
-// 								 Javascript searches for class and displays references.
-//								 and those referencing this comment??
-//								 Actually the above will show "children" of a particular comment. Need to show
-//								 ancestors now... Well grab the class names of this comment beginning with "reference-",
-//								 do a $() find on those strings and Element.show() them.
-// 							FLAW: Idea is to hide the rest. Not show the selected.
-//									Then on initialize, I need to build an array of all comment ids, from which I'll subtract
-//									the ids grabbed from steps above, and then run Element.fade() on them.
-//									Or just hide all children of parent ul.comments, then show thread...?
-
 
 var CommentEngine = Class.create();
 CommentEngine.prototype = {
@@ -39,6 +27,7 @@ CommentEngine.prototype = {
 	domList: null,
 	commentableType: null,
 	commentableId: null,
+	showingThread: null,
 	comments: [],
 	activeCommentIds: [],
 	hiddenCommentIds: [],
@@ -57,9 +46,21 @@ CommentEngine.prototype = {
 			onSuccess: this.createComments.bind(this)
 		});
 
-		this.domList = $(commentsList);	
+		this.domList = $(commentsList);
+		var commentNodes = this.domList.getElementsByTagName('li');
+		for(i = 0; i < commentNodes.length; i++){
+			this.attachThreaderEvent(commentNodes[i]);
+		}
 	},
 	
+	attachThreaderEvent: function(node){
+		var commentId = node.id.split('-').last();
+		var threader = document.createElement('a');
+		threader.href = 'javascript://';
+		threader.innerHTML = 'TH' + commentId;
+		threader.onclick = function(){ commentEngine.toggleThread(commentId); return false };
+		node.appendChild(threader);
+	},
 	createComments: function(response){
 		var xmlDoc = response.responseXML;
 		var commentable = xmlDoc.getElementsByTagName('commentable')[0];
@@ -78,21 +79,29 @@ CommentEngine.prototype = {
 				var reference = references[j];
 				referenceIds.push(reference.firstChild.nodeValue);
 			};
-			var comment = new Comment(commentId, referenceIds);
-			this.indexReference(comment.id, comment.referenceIds);
-			this.comments.push(comment);
+			this.addComment(commentId, referenceIds);
 		};
 	},
-	indexReference: function(commentId, referenceIds){
-		if(this.commentAssociations.get(commentId)){
-			this.commentAssociations.set(commentId, this.commentAssociations.get(commentId).concat(referenceIds).uniq());
+	
+	addComment: function(commentId, referenceIds){
+		var comment = new Comment(commentId, referenceIds);
+		this.indexReference(comment);
+		this.comments.push(comment);
+	},
+	removeComment: function(commentId){
+		var comment = this.comments.find(function(com){ return com.id == commentId });
+		this.unindexReference(comment.id);
+		this.comments = this.comments.without(comment);
+	},
+	
+	indexReference: function(comment){
+		if(this.commentAssociations.get(comment.id)){
+			this.commentAssociations.set(comment.id, this.commentAssociations.get(comment.id).concat(comment.referenceIds).uniq());
 		} else {
-			this.commentAssociations.set(commentId, referenceIds);
+			this.commentAssociations.set(comment.id, comment.referenceIds);
 		};
-		for(var i = 0; i < referenceIds.length; i++){
-			if(referenceIds[i]){
-				this.inverseIndex(referenceIds[i], commentId);
-			}
+		for(var i = 0; i < comment.referenceIds.length; i++){
+			this.inverseIndex(comment.referenceIds[i], comment.id);
 		}
 	},
 	inverseIndex: function(referenceId, commentId){
@@ -105,17 +114,46 @@ CommentEngine.prototype = {
 			this.commentAssociations.set(referenceId, [commentId]);
 		}
 	},
-	addComment: function(commentId, referenceIds){},
-	removeComment: function(commentId){},
+	unindexReference: function(comment){
+		if(this.commentAssociations.get(comment.id)){
+			this.commentAssociations.set(comment.id, this.commentAssociations.get(comment.id).without(comment.id));
+		};
+		for(var i = 0; i < comment.referenceIds.length; i++){
+			this.inverseUnindex(comment.referenceIds[i], comment.id);
+		}
+	},
+	inverseUnindex: function(referenceId, commentId){
+		var referenceIds;
+		if(referenceIds = this.commentAssociations.get(referenceId)){
+			if(referenceIds.include(commentId)){
+				this.commentAssociations.set(referenceId, referenceIds.without(commentId));
+			};
+		}
+	},
+	
+	toggleThread: function(commentId){
+		if(this.showingThread){
+			if(this.showingThread != commentId){
+				this.unshowThread(this.showingThread);
+				this.showThread(commentId);
+			} else {
+				this.unshowThread(commentId);
+			}
+		} else {
+			this.showThread(commentId);	
+		}		
+	},
 	showThread: function(commentId){
 		var thread = this.commentAssociations.get(commentId);
 		var other_ids = this.comments.collect(function(com){ return com.id }).reject(function(id){ return commentId == id || thread.include(id) });
 		this.hiddenCommentIds = other_ids;
-		other_ids.collect(function(id){ return $('comment-' + id) }).invoke('fade');
+		this.showingThread = commentId;
+		other_ids.collect(function(id){ return $('comment-' + id) }).invoke('blindUp', {duration: 0.3});
 	},
 	unshowThread: function(commentId){
-		this.hiddenCommentIds.collect(function(id){ return $('comment-' + id) }).invoke('appear');
+		this.hiddenCommentIds.collect(function(id){ return $('comment-' + id) }).invoke('blindDown', {duration: 0.3});
 		this.hiddenCommentIds = [];
+		this.showingThread = null;
 	}
 };
 
@@ -130,6 +168,4 @@ Comment.prototype = {
 			this.referenceIds = referenceIds;
 		};
 	}
-	
-	
 };
