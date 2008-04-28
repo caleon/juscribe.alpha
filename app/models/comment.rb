@@ -1,10 +1,9 @@
 class Comment < ActiveRecord::Base
+  serialize :reference_ids
   acts_as_accessible
 
   belongs_to :user
   belongs_to :commentable, :polymorphic => true, :inherits_layout => true
-  belongs_to :original, :class_name => "Comment", :foreign_key => :secondary_id
-  has_many :followups, :class_name => "Comment", :as => :original, :foreign_key => :secondary_id
   validates_presence_of :user_id, :unless => lambda{|comment| !SITE[:disable_anonymous] && comment.commentable &&
                                                               comment.commentable.allows_anonymous_comments? && !comment.email.blank? } # For anonymous comments
   
@@ -20,6 +19,33 @@ class Comment < ActiveRecord::Base
   
   def path_name_prefix
     [ self.commentable.path_name_prefix, 'comment' ].join('_')
+  end
+  
+  def reference_ids
+    self[:reference_ids] || []
+  end
+  
+  def references
+    @references ||= if !self.commentable.loaded?
+      self.commentable.comments.find(self.reference_ids).sort_by {|com| self.reference_ids.index(com.id) }
+    else
+      if self.commentable.comments.loaded?
+        self.commentable.comments.select{|com| self.reference_ids.include?(com.id) }.sort_by {|com| self.reference_ids.index(com.id) }
+      else
+        self.commentable.comments.find(self.reference_ids).sort_by {|com| self.reference_ids.index(com.id) }        
+      end
+    end
+  end
+  
+  # comment[:references] = "@47, @8, @92"
+  def references=(list, with_save=false)
+    @references = nil
+    self.reference_ids = list.split(/\s*,\s*/).select{|mark| mark.is_a?(String) && mark[0].chr == "@" }.map {|str| str[1..-1].to_i }
+    self.save if with_save
+  end
+  
+  def add_references(*comment_ids)
+    
   end
   
   def anonymous?

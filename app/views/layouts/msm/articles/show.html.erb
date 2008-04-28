@@ -12,6 +12,7 @@
 	</div>
 <% end -%>
 
+<% if @article.published? %>
 <div class="msm_row innerpad" id="msm_row-1">
 	<%= rounded_shim(:top) %>
 	<div class="msm_row-content minimal">
@@ -19,6 +20,7 @@
 	</div>
 	<%= rounded_shim(:bottom) %>
 </div>
+<% end %>
 
 <div class="msm_row innerpad" id="msm_row-2">
 	<%= rounded_shim(:top) %>
@@ -28,6 +30,7 @@
 	<%= rounded_shim(:bottom) %>
 </div>
 
+<% if @article.published? %>
 <div class="msm_row innerpad" id="msm_row-3">
 	<%= rounded_shim(:top) %>
 	<div class="msm_row-content minimal">
@@ -46,6 +49,7 @@
 	</div>
 	<%= rounded_shim(:bottom) %>
 </div>
+<% end %>
 	
 <% content_for :side_column do -%>
 	<% with_options :layout => :framed do |framed| %>

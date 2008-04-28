@@ -13,7 +13,7 @@ class CommentsController < ApplicationController
     respond_to do |format|
       format.html { trender }
       format.js
-      format.xml
+      format.xml { render :layout => false }
     end
   end
   

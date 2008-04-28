@@ -1,4 +1,4 @@
 <%= render :partial => 'tags/list', :object => tags %>
 <% form_for :tagging, tags.taggings.new, :url => taggings_path_from_taggable(tags) do |f| %>
 	<%= render :partial => 'tags/form', :locals => { :f => f } %>
-<% end if tags.editable_by?(get_viewer) %>
+<% end if false && tags.editable_by?(get_viewer) %>

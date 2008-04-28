@@ -1,4 +1,7 @@
+<%= add_inline_scripts("var commentEngine = new CommentEngine('#{article_path_for(@article)}/', 'comments.xml', 'article-#{@article.id}-comments');") %>
 <h3>Comments</h3>
-<%= render :partial => 'comments/comment', :collection => @article.comments %>
+<ul id="article-<%= @article.id %>-comments" class="article-comments comments">
+	<%= render :partial => 'comments/comment', :collection => @article.comments %>
+</ul>
 <%= comment_form_for(@article) %>
 <%# FIXME: shit, passing local var comment instead of @comment means error messaging might be fukt %>

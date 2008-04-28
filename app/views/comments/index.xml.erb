@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<records>
+	<commentable type="<%= @commentable.class.class_name %>">
+		<id><%= @commentable.id %></id>
+	</commentable>
+	<comments>
+	<% @comments.each do |comment| %>
+		<comment id="<%= comment.id %>">
+		<% comment.references.each do |ref| %>
+			<reference_id><%= ref.id %></reference_id>
+		<% end %>
+		</comment>
+	<% end %>
+	</comments>
+</records>

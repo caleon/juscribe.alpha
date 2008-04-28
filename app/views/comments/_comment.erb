@@ -1,4 +1,4 @@
-<% content_tag :li, :class => 'comment' do %>
+<% content_tag_for :li, comment do %>
 	<a name="comment-<%= comment.id %>"></a>
 	<span>
 		<%= comment.body %>
