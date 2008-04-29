@@ -478,11 +478,11 @@
 		list-style-position: inside;
 	}
 	
-	.msm_layout .articleContent ol li {
+	.msm_layout ol.articleContent li {
 		list-style-type: decimal;
 	}
 	
-	.msm_layout .articleContent ul li {
+	.msm_layout ul.articleContent li {
 		list-style-type: circle;
 	}
 	
