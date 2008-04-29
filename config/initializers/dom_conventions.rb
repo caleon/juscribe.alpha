@@ -53,7 +53,7 @@ module ActionController::RecordIdentifier
         sub_dom_id = dom_id(record.send(next_sym), :include => subarr)
       end
     end
-    [ prefix, sub_dom_id, singular_class_name(record), record.id ].compact * '-'
+    [ prefix, sub_dom_id, singular_class_name(record), (record.scoped_id rescue record.id) ].compact * '-'
   end
   alias_method_chain :dom_id, :associations
 end

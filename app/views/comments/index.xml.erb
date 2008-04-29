@@ -5,9 +5,9 @@
 	</commentable>
 	<comments>
 	<% @comments.each do |comment| %>
-		<comment id="<%= comment.id %>">
+		<comment id="<%= comment.scoped_id %>">
 		<% comment.references.each do |ref| %>
-			<reference_id><%= ref.id %></reference_id>
+			<reference_id><%= ref.scoped_id %></reference_id>
 		<% end %>
 		</comment>
 	<% end %>

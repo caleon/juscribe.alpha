@@ -49,7 +49,7 @@ class ApplicationController < ActionController::Base
   def set_previous_view
     if request.get?
       # FIXME: before_login and previous are too similar.
-      session[:previous] = request.url if !request.path.match(/^\/login/) && !request.path.match(/\.js$/)
+      session[:previous] = request.url if params[:format].blank? && !request.path.match(/^\/login/) && !request.path.match(/\.js$/)
     end
   end
   

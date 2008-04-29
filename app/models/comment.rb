@@ -4,13 +4,15 @@ class Comment < ActiveRecord::Base
 
   belongs_to :user
   belongs_to :commentable, :polymorphic => true, :inherits_layout => true
-  validates_presence_of :user_id, :unless => lambda{|comment| !SITE[:disable_anonymous] && comment.commentable &&
-                                                              comment.commentable.allows_anonymous_comments? && !comment.email.blank? } # For anonymous comments
+  acts_as_list :scope => :commentable
+  
+  validates_presence_of :user_id, :unless => lambda{|comment| !SITE[:disable_anonymous] && comment.commentable && comment.commentable.allows_anonymous_comments? && !comment.email.blank? } # For anonymous comments
   
   after_create :increment_counter#, :send_notification
   
   # For widget
   alias_attribute :content, :body
+  alias_attribute :scoped_id, :position
   def name; self.body.to_s[0..10] + '...'; end
   
   def to_path(for_associated=false)
@@ -22,26 +24,21 @@ class Comment < ActiveRecord::Base
   end
   
   def reference_ids
-    self[:reference_ids] || []
+    self[:reference_ids] || [] # will not include paragraph hash here.
   end
   
-  # This needs to get references of its references utnil there is no more.
+  # This needs to get references of its references until there is no more...
   def references
-    @references ||= if !self.commentable.loaded?
-      self.commentable.comments.find(self.reference_ids).sort_by {|com| self.reference_ids.index(com.id) }
-    else
-      if self.commentable.comments.loaded?
-        self.commentable.comments.select{|com| self.reference_ids.include?(com.id) }.sort_by {|com| self.reference_ids.index(com.id) }
-      else
-        self.commentable.comments.find(self.reference_ids).sort_by {|com| self.reference_ids.index(com.id) }        
-      end
-    end
+    @references ||= Comment.find(:all, :conditions => ["(comments.commentable_type = ? AND comments.commentable_id = ?) AND comments.position IN (?)", self.commentable_type, self.commentable_id, self.reference_ids], :order => 'comments.position ASC')
   end
   
   # comment[:references] = "@47, @8, @92"
   def references=(list, with_save=false)
     @references = nil
-    self.reference_ids = list.split(/\s*,\s*/).select{|mark| mark.is_a?(String) && mark[0].chr == "@" }.map {|str| str[1..-1].to_i }.reject{|id| self.id == id }
+    list = list.gsub(/,/, ' ')
+    list.gsub(/\s+([a-z0-9]{7})\s*/, ' ')
+    self.paragraph_hash = $1
+    self.reference_ids = list.split(/\s+/).select{|mark| mark.is_a?(String) && mark.match(/^@\d+$/) }.map {|str| str[1..-1].to_i }.reject{|id| self.position == id }
     self.save if with_save
   end
   

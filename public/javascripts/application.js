@@ -50,6 +50,7 @@ CommentEngine.prototype = {
 		var commentNodes = this.domList.getElementsByTagName('li');
 		for(i = 0; i < commentNodes.length; i++){
 			this.attachThreaderEvent(commentNodes[i]);
+			this.attachResponderEvent(commentNodes[i]);
 		}
 	},
 	
@@ -60,6 +61,23 @@ CommentEngine.prototype = {
 		threader.innerHTML = 'TH' + commentId;
 		threader.onclick = function(){ commentEngine.toggleThread(commentId); return false };
 		node.appendChild(threader);
+	},
+	attachResponderEvent: function(node){
+		if($('comment_references')){
+			var commentId = node.id.split('-').last();
+			var responder = document.createElement('a');
+			responder.href = 'javascript://';
+			responder.innerHTML = 'RE' + commentId;
+			responder.onclick = function(){
+				var origVal = $('comment_references').value;
+				if(!origVal.match(new RegExp('@' + commentId + '\\W')) &&
+					 !origVal.match(new RegExp('@' + commentId + '$'))){
+					var returnVal = $('comment_references').value.strip() + ' @' + commentId
+					$('comment_references').value = returnVal.strip();
+				}
+			};
+			node.appendChild(responder);
+		}
 	},
 	createComments: function(response){
 		var xmlDoc = response.responseXML;
@@ -134,8 +152,8 @@ CommentEngine.prototype = {
 	toggleThread: function(commentId){
 		if(this.showingThread){
 			if(this.showingThread != commentId){
-				this.unshowThread(this.showingThread);
-				this.showThread(commentId);
+				var engine = this;
+				this.unshowThread(this.showingThread, function(){engine.showThread(commentId)});
 			} else {
 				this.unshowThread(commentId);
 			}
@@ -150,10 +168,17 @@ CommentEngine.prototype = {
 		this.showingThread = commentId;
 		other_ids.collect(function(id){ return $('comment-' + id) }).invoke('blindUp', {duration: 0.3});
 	},
-	unshowThread: function(commentId){
-		this.hiddenCommentIds.collect(function(id){ return $('comment-' + id) }).invoke('blindDown', {duration: 0.3});
-		this.hiddenCommentIds = [];
+	unshowThread: function(commentId, onComplete){
+		var els = this.hiddenCommentIds.collect(function(id){ return $('comment-' + id) });
 		this.showingThread = null;
+		this.hiddenCommentIds = [];
+		if(els.length == 0){
+			onComplete();
+		} else {
+			els.each(function(el){
+				el.blindDown({duration: 0.3, afterFinish: (onComplete && els.last() == el) ? onComplete : null});
+			});
+		}
 	}
 };
 

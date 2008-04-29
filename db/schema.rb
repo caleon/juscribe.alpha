@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 72) do
+ActiveRecord::Schema.define(:version => 73) do
 
   create_table "articles", :force => true do |t|
     t.string   "title"
@@ -50,6 +50,7 @@ ActiveRecord::Schema.define(:version => 72) do
     t.string   "ip_addr"
     t.string   "paragraph_hash"
     t.text     "reference_ids"
+    t.integer  "position"
   end
 
   create_table "events", :force => true do |t|

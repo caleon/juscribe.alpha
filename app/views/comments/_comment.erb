@@ -1,5 +1,5 @@
-<% content_tag_for :li, comment do %>
-	<a name="comment-<%= comment.id %>"></a>
+<% content_tag_for :li, comment, prefix ||= nil do %>
+	<a name="comment-<%= comment.scoped_id %>"></a>
 	<span>
 		<%= comment.body %>
 		<%= byline_for comment %>

@@ -6,7 +6,7 @@ module ActiveRecord::Acts::Commentable
   module ClassMethods
     def acts_as_commentable(options = {})
       with_options :class_name => 'Comment', :as => :commentable do |comment|
-        comment.has_many :comments, :order => 'comments.id ASC'
+        comment.has_many :comments, :order => 'comments.position ASC'
         comment.has_many :latest_comments, :order => 'comments.id DESC', :limit => 5
       end   
       
@@ -59,6 +59,15 @@ module ActiveRecord::Acts::Commentable
     def allow_comments; self.allows_comments?; end
     def allow_anonymous_comments; self.allows_anonymous_comments?; end
     
+    def chrono_comments
+      @chrono_comments ||= self.comments.find(:all, :order => 'comments.id ASC')
+    end
+    
+    def correct_comment_positions!
+      chrono_comments.each do |comment|
+        comment.update_attribute(:position, chrono_comments.index(comment) + 1)
+      end
+    end
     
     private
     # The following are for cases when the values are not set in permission_rules.options column.
