@@ -41,7 +41,7 @@ class Comment < ActiveRecord::Base
   # comment[:references] = "@47, @8, @92"
   def references=(list, with_save=false)
     @references = nil
-    self.reference_ids = list.split(/\s*,\s*/).select{|mark| mark.is_a?(String) && mark[0].chr == "@" }.map {|str| str[1..-1].to_i }
+    self.reference_ids = list.split(/\s*,\s*/).select{|mark| mark.is_a?(String) && mark[0].chr == "@" }.map {|str| str[1..-1].to_i }.reject{|id| self.id == id }
     self.save if with_save
   end
   

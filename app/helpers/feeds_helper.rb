@@ -48,7 +48,7 @@ module FeedsHelper
     doc = Hpricot(truncate_html(simple_format(sanitize(feed.item_content, :tags => %w( a img em i strong b )), :class => 'articleContent'), 500))
     first_p = (doc/".articleContent").first
     (doc/"img").remove
-    first_p.inner_html = primary_picture_node(feed).to_html + first_p.inner_html
+    first_p.inner_html = (primary_picture_node(feed).to_html rescue '') + first_p.inner_html
     (doc/"a:empty").remove # In case the removed images were wrapped in a link
     (doc/"a").each {|link| link.set_attribute('class', 'external') and link.set_attribute('target', '_new') if link.attributes['href'].match(/:\/\//) }
     doc.to_html
