@@ -475,7 +475,12 @@
 	}
 	
 	.msm_layout .articleContent li {
-		list-style-position: inside;
+		list-style-position: outside;
+	}
+	
+	.msm_layout ul.articleContent,
+	.msm_layout ol.articleContent {
+		padding-left: 20px;
 	}
 	
 	.msm_layout ol.articleContent li {
