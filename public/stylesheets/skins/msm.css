@@ -469,8 +469,21 @@
 	}
 	
 	.msm_layout .article p,
-	.msm_layout p.articleContent {
+	.msm_layout p.articleContent,
+	.msm_layout .articleContent li {
 		line-height: 1.8em;
+	}
+	
+	.msm_layout .articleContent li {
+		list-style-position: inside;
+	}
+	
+	.msm_layout .articleContent ol li {
+		list-style-type: decimal;
+	}
+	
+	.msm_layout .articleContent ul li {
+		list-style-type: circle;
 	}
 	
 	/* Embedded images within a post */
@@ -780,6 +793,10 @@
 	
 	#canvas.articles-show .articleContent {
 		margin: 0 0 17px;
+	}
+	
+	.msm_layout .articleContent li {
+		margin-bottom: 8px;
 	}
 	
 	.msm_layout .article-actions {
