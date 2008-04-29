@@ -842,3 +842,19 @@
 #login-form {
 	background-color: #fff;
 }
+
+	.msm_layout .comment {
+		clear: both;
+	}
+	
+	.msm_layout .comment img.user-picture {
+		float: left;
+		margin-right: 4px;
+		height: 25px;
+		width: 25px;
+		border-width: 1px;
+	}
+	
+	.msm_layout .comment a.commentAction {
+		float: right;
+	}

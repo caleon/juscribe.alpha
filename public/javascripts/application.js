@@ -20,6 +20,71 @@ Browser.prototype = {
 	}
 };
 
+Scroller = {
+	yOffset: 0,
+	scrollLoop: false, 
+	scrollInterval: null,
+	getWindowHeight: function(){
+		if (document.all){
+			return (document.documentElement.clientHeight) ? document.documentElement.clientHeight : document.body.clientHeight;
+		} else {
+			return window.innerHeight;
+		}
+	},
+	getScrollLeft: function(){
+		if (document.all) {
+			return (document.documentElement.scrollLeft) ? document.documentElement.scrollLeft : document.body.scrollLeft;
+		} else {
+			return window.pageXOffset;
+		}
+	},
+	getScrollTop: function(){
+		if (document.all) {
+			return (document.documentElement.scrollTop) ? document.documentElement.scrollTop : document.body.scrollTop;
+		} else {
+			return window.pageYOffset;
+		}
+	},
+	getElementYpos: function(el){
+		var y = 0;
+		while(el.offsetParent){
+			y += el.offsetTop
+			el = el.offsetParent;
+		}
+		return y;
+	},
+	to: function(id){
+		if(this.scrollLoop){
+			clearInterval(this.scrollInterval);
+			this.scrollLoop = false;
+			this.scrollInterval = null;
+		};
+		var container = document.getElementById('canvas');
+		var documentHeight = this.getElementYpos(container) + container.offsetHeight;
+		var windowHeight = this.getWindowHeight()-this.yOffset;
+		var ypos = this.getElementYpos(document.getElementById(id));
+		if(ypos > documentHeight - windowHeight) ypos = documentHeight - windowHeight;
+		this.scrollTo(0,ypos-this.yOffset);
+	},
+	scrollTo: function(x,y) {
+		if(this.scrollLoop) {
+			var left = this.getScrollLeft();
+			var top = this.getScrollTop();
+			if(Math.abs(left-x) <= 1 && Math.abs(top-y) <= 1) {
+				window.scrollTo(x,y);
+				clearInterval(this.scrollInterval);
+				this.scrollLoop = false;
+				this.scrollInterval = null;
+			} else {
+				window.scrollTo(left+(x-left)/2, top+(y-top)/2);
+			}
+		} else {
+			this.scrollInterval = setInterval("Scroller.scrollTo("+x+","+y+")",100);
+			this.scrollLoop = true;
+		}
+	}
+};
+
 var CommentEngine = Class.create();
 CommentEngine.prototype = {
 	baseURI: '',
@@ -47,7 +112,7 @@ CommentEngine.prototype = {
 		});
 
 		this.domList = $(commentsList);
-		var commentNodes = this.domList.getElementsByTagName('li');
+		var commentNodes = this.domList.select('li.comment');
 		for(i = 0; i < commentNodes.length; i++){
 			this.attachThreaderEvent(commentNodes[i]);
 			this.attachResponderEvent(commentNodes[i]);
@@ -58,25 +123,32 @@ CommentEngine.prototype = {
 		var commentId = node.id.split('-').last();
 		var threader = document.createElement('a');
 		threader.href = 'javascript://';
+		threader.className = 'commentAction';
 		threader.innerHTML = 'TH' + commentId;
-		threader.onclick = function(){ commentEngine.toggleThread(commentId); return false };
-		node.appendChild(threader);
+		threader.onclick = function(){ commentEngine.toggleThread(commentId); return false; };
+		var listEl = document.createElement('li');
+		listEl.appendChild(threader);
+		node.select('ul.commentActions')[0].appendChild(listEl);
 	},
 	attachResponderEvent: function(node){
 		if($('comment_references')){
 			var commentId = node.id.split('-').last();
 			var responder = document.createElement('a');
 			responder.href = 'javascript://';
+			responder.className = 'commentAction';
 			responder.innerHTML = 'RE' + commentId;
 			responder.onclick = function(){
 				var origVal = $('comment_references').value;
 				if(!origVal.match(new RegExp('@' + commentId + '\\W')) &&
 					 !origVal.match(new RegExp('@' + commentId + '$'))){
-					var returnVal = $('comment_references').value.strip() + ' @' + commentId
+					var returnVal = $('comment_references').value.strip() + ' @' + commentId;
 					$('comment_references').value = returnVal.strip();
-				}
+				};
+				return false;
 			};
-			node.appendChild(responder);
+			var listEl = document.createElement('li');
+			listEl.appendChild(responder);
+			node.select('ul.commentActions')[0].appendChild(listEl);
 		}
 	},
 	createComments: function(response){
@@ -163,10 +235,18 @@ CommentEngine.prototype = {
 	},
 	showThread: function(commentId){
 		var thread = this.commentAssociations.get(commentId);
-		var other_ids = this.comments.collect(function(com){ return com.id }).reject(function(id){ return commentId == id || thread.include(id) });
-		this.hiddenCommentIds = other_ids;
+		var otherIds = this.comments.collect(function(com){ return com.id }).reject(function(id){ return commentId == id || thread.include(id) });
+		this.hiddenCommentIds = otherIds;
 		this.showingThread = commentId;
-		other_ids.collect(function(id){ return $('comment-' + id) }).invoke('blindUp', {duration: 0.3});
+		//otherIds.collect(function(id){ return $('comment-' + id) }).invoke('blindUp', {duration: 0.3});
+		var els = otherIds.collect(function(id){ return $('comment-' + id) });
+		els.each(function(el){
+			el.blindUp({duration: 0.3, afterFinish: (els.last() == el) ? function(){
+				Scroller.to('comment-' + commentId);
+				setTimeout("$('comment-" + commentId + "').highlight()", 600);
+				} : null})
+		});
+		//Scroller.to('comment-' + commentId);
 	},
 	unshowThread: function(commentId, onComplete){
 		var els = this.hiddenCommentIds.collect(function(id){ return $('comment-' + id) });
