@@ -258,12 +258,13 @@ CommentEngine.prototype = {
 		if(lastEl){
 			lastEl.blindUp({duration: 0.05, queue: 'end', afterFinish: function(){
 					Scroller.to('comment-' + commentId);
-					setTimeout("$('comment-" + commentId + "').highlight({queue: {position: 'end', scope: 'highlight'}})", 600);
+					//setTimeout("$('comment-" + commentId + "').highlight({queue: {position: 'end', scope: 'highlight'}})", 600);
 				}
 			});
 		};
 	},
 	unshowThread: function(commentId){
+		Effect.Queues.get('highlight').invoke('cancel');
 		var els = this.hiddenCommentIds.collect(function(id){ return $('comment-' + id) });
 		this.showingThread = null;
 		this.hiddenCommentIds = [];
