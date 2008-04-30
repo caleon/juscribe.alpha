@@ -116,6 +116,8 @@ CommentEngine.prototype = {
 		for(i = 0; i < commentNodes.length; i++){
 			this.attachThreaderEvent(commentNodes[i]);
 			this.attachResponderEvent(commentNodes[i]);
+			// Following is a hack since blind effects needs explicit height on elements.
+			commentNodes[i].style.height = commentNodes[i].getHeight() + 'px';
 		}
 		
 		if($('comment_references')){
@@ -243,7 +245,10 @@ CommentEngine.prototype = {
 		var otherIds = this.comments.collect(function(com){ return com.id }).reject(function(id){ return commentId == id || thread.include(id) });
 		this.hiddenCommentIds = otherIds;
 		this.showingThread = commentId;
-		$('comment-' + commentId).addClassName('comment-showing');
+		var comment = $('comment-' + commentId);
+		// 28 for height of shims, 34 for margins of shims = 62px
+		comment.style.height = comment.getHeight() + 62 + 'px';
+		comment.addClassName('comment-showing');
 		//otherIds.collect(function(id){ return $('comment-' + id) }).invoke('blindUp', {duration: 0.3});
 		var els = otherIds.collect(function(id){ return $('comment-' + id) });
 		els.each(function(el){
@@ -258,7 +263,9 @@ CommentEngine.prototype = {
 		var els = this.hiddenCommentIds.collect(function(id){ return $('comment-' + id) });
 		this.showingThread = null;
 		this.hiddenCommentIds = [];
-		$('comment-' + commentId).removeClassName('comment-showing');
+		var comment = $('comment-' + commentId);
+		comment.removeClassName('comment-showing');
+		comment.style.height = comment.getHeight() - 62 + 'px';
 		if(els.length == 0){
 			onComplete();
 		} else {

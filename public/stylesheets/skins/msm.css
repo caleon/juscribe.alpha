@@ -851,16 +851,16 @@
 	.msm_layout .article-comments {
 		display: block;
 		margin-bottom: 18px;
-		overflow: hidden;
 	}
 	
 	.msm_layout .article-comments .comment {
-		display: block;
 		margin-bottom: 17px;
 	}
 	
 	.msm_layout .comment {
+		display: block;
 		clear: both;
+		position: relative;
 	}
 	
 	.msm_layout .comment .shim {
@@ -868,11 +868,12 @@
 		height: 14px;
 		background-color: transparent;
 		background-repeat: repeat-x;
-		background-image: url(/images/comments.png);
+		background-image: none;
 	}
 	
 	.msm_layout .comment-showing .shim {
 		display: block;
+		background-image: url(/images/comments.png);
 	}
 	
 	.msm_layout .comment .shim.top,
@@ -909,5 +910,9 @@
 	}
 	
 	.msm_layout .comment .commentMain {
-		padding: 0 50px;
+		overflow: hidden;
+	}
+	
+	.msm_layout .commentMain .commentContent {
+
 	}

@@ -35,4 +35,23 @@ module CommentsHelper
     opts[:truncate] ? truncate_html(hpricot.to_s, opts[:truncate]) : hpricot.to_s
   end
   
+  def block_wrap(text, opts={})
+    wrapper = opts[:tag] || 'p'
+    # Actually if opts[:truncate], we might wanna remove the bad tags entirely instead of escaping...
+    my_allowed_tags = opts[:tags].is_a?(Array) ? opts[:tags] : (allowed_tags - [wrapper])
+    # Basically these are types that cannot exist within a P tag. P is not allowed, however.
+    # TODO: Style h1-h3 so that they are at greatest the size of an h3.
+    block_levels = "pre|blockquote|h1|h2|h3|h4|h5|h6|ol|ul"
+    res = text.to_s.
+          gsub(/(<\/?(\w+)[^>]*>)/) {|t| my_allowed_tags.include?($2) ? $1 : h($1)}.
+          gsub(/\r\n?/, "\n").
+          gsub(/\n\n+/, "</p>\n\n<p>")
+    res = "<div>" + res + "</div>"
+
+    res.gsub(/(<(?:#{block_levels})>)/, "</p>\n\\1").gsub(/(<\/(?:#{block_levels})>)/, "\\1\n<p>").
+        gsub(/\s*<p><\/p>\s*/, "\n").
+        gsub(/([^\n|>]\n)(?!\n)/, "\\1<br />\n").strip
+    
+  end
+  
 end
