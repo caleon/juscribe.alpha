@@ -110,7 +110,7 @@ module ArticlesHelper
   
   # Escape html tags within PRE or CODE  
   def escape_code_html(text)
-    text.gsub(/<code[^>]*>(.*)<\/code>/m) do |t|
+    text.gsub(/<code[^>]*>(.*?)<\/code>/m) do |t|
       "<code>" + h($1) + "</code>"
     end.gsub(/<pre[^>]*>(.*?)<\/pre>/m) do |t|
       "<pre>" + h($1) + "</pre>"
