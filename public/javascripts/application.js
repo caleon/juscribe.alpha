@@ -251,28 +251,32 @@ CommentEngine.prototype = {
 		comment.addClassName('comment-showing');
 		//otherIds.collect(function(id){ return $('comment-' + id) }).invoke('blindUp', {duration: 0.3});
 		var els = otherIds.collect(function(id){ return $('comment-' + id) });
-		els.each(function(el){
-			el.blindUp({duration: 0.3, afterFinish: (els.last() == el) ? function(){
-				Scroller.to('comment-' + commentId);
-				setTimeout("$('comment-" + commentId + "').highlight()", 600);
-				} : null})
-		});
-		//Scroller.to('comment-' + commentId);
+		var lastEl = els.pop();
+		els.invoke('blindUp', {duration: 0.3});
+		if(lastEl){
+			lastEl.blindUp({duration: 0.3, afterFinish: function(){
+					Scroller.to('comment-' + commentId);
+					setTimeout("$('comment-" + commentId + "').highlight()", 600);
+				}
+			});
+		};
 	},
 	unshowThread: function(commentId, onComplete){
 		var els = this.hiddenCommentIds.collect(function(id){ return $('comment-' + id) });
 		this.showingThread = null;
 		this.hiddenCommentIds = [];
+		if(els.length == 0){
+			(onComplete) ? onComplete() : null;
+		} else {
+			var lastEl = els.pop();
+			els.invoke('blindDown', {duration: 0.3});
+			if(lastEl){
+				lastEl.blindDown({duration: 0.3, afterFinish: (onComplete) ? onComplete : null})
+			};
+		}
 		var comment = $('comment-' + commentId);
 		comment.removeClassName('comment-showing');
 		comment.style.height = comment.getHeight() - 62 + 'px';
-		if(els.length == 0){
-			onComplete();
-		} else {
-			els.each(function(el){
-				el.blindDown({duration: 0.3, afterFinish: (onComplete && els.last() == el) ? onComplete : null});
-			});
-		}
 	}
 };
 
