@@ -81,7 +81,8 @@ module PicturesHelper
     end
   end
   
-  def default_picture_for(klass_name="", html_opts={})
+  def default_picture_for(klass_name=nil, html_opts={})
+    klass_name = klass_name.blank? ? "" : klass_name
     file_path = [ klass_name.underscore, 'default.png' ].join('/')
     image_tag(file_path, { :alt => "Default #{klass_name.humanize.downcase} picture" }.merge(html_opts))
   end
