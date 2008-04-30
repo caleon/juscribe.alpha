@@ -77,7 +77,7 @@ module PicturesHelper
       dom_id_str = dom_id(picture, opts[:prefix], :include => includes)
       image_tag(picture.public_filename, { :class => dom_class_str, :id => dom_id_str, :alt => picture.caption } )
     else
-      default_picture_for(opts[:class], :class => dom_class(Picture, :include => includes << opts[:class].constantize) )
+      default_picture_for(opts[:class], :class => dom_class(Picture, :include => opts[:class] ? (includes << opts[:class].constantize) : includes) )
     end
   end
   
