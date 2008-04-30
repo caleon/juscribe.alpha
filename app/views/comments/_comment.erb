@@ -1,7 +1,7 @@
 <% content_tag_for :li, comment, prefix ||= nil do %>
+	<div class="shim top shim-top"></div>
 	<a name="comment-<%= comment.scoped_id %>"></a>
 	<div class="comment-inner">
-		<div class="shim top shim-top"></div>
 		<%= picture_for(comment.user, :class => 'User', :prefix => "comment-#{comment.id}", :type => :thumb, :link => user_path(comment.user)) %>
 		<ul class="commentActions">
 		
@@ -9,8 +9,7 @@
 		<div class="commentMain">
 			<%= format_comment(comment) %>
 			<%= byline_for(comment) %>
-		</div>
-		
-		<div class="shim bottom shim-bottom"></div>
+		</div>		
 	</div>
+	<div class="shim bottom shim-bottom"></div>
 <% end %>

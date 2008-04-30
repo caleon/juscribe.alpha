@@ -854,7 +854,7 @@
 	}
 	
 	.msm_layout .article-comments .comment {
-		margin-bottom: 17px;
+		/*margin-bottom: 17px;*/
 	}
 	
 	.msm_layout .comment {
@@ -864,7 +864,6 @@
 	}
 	
 	.msm_layout .comment .shim {
-		display: none;
 		height: 14px;
 		background-color: transparent;
 		background-repeat: repeat-x;
@@ -879,14 +878,14 @@
 	.msm_layout .comment .shim.top,
 	.msm_layout .comment .shim-top {
 		background-position: 0 0;
-		margin-bottom: 17px;
+		margin-bottom: 0px;
 	}
 	
 	.msm_layout .comment .shim.bottom,
 	.msm_layout .comment .shim-bottom {
 		clear: both;
 		background-position: 0 -14px;
-		margin-top: 17px;
+		margin-top: 0px;
 	}
 	
 	.msm_layout .comment-inner {

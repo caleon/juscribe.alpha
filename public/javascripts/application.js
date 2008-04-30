@@ -247,7 +247,7 @@ CommentEngine.prototype = {
 		this.showingThread = commentId;
 		var comment = $('comment-' + commentId);
 		// 28 for height of shims, 34 for margins of shims = 62px
-		comment.style.height = comment.getHeight() + 62 + 'px';
+//		comment.style.height = comment.getHeight() + 62 + 'px';
 		comment.addClassName('comment-showing');
 		//otherIds.collect(function(id){ return $('comment-' + id) }).invoke('blindUp', {duration: 0.3});
 		var els = otherIds.collect(function(id){ return $('comment-' + id) });
@@ -276,7 +276,7 @@ CommentEngine.prototype = {
 		}
 		var comment = $('comment-' + commentId);
 		comment.removeClassName('comment-showing');
-		comment.style.height = comment.getHeight() - 62 + 'px';
+//		comment.style.height = comment.getHeight() - 62 + 'px';
 	}
 };
 
