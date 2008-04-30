@@ -117,12 +117,17 @@ CommentEngine.prototype = {
 			this.attachThreaderEvent(commentNodes[i]);
 			this.attachResponderEvent(commentNodes[i]);
 		}
+		
+		if($('comment_references')){
+			$('comment_references').onfocus = function(){ this.blur(); }
+			$('comment_references').ondblclick = function(){ this.value = '' }
+		}
 	},
 	
 	attachThreaderEvent: function(node){
 		var commentId = node.id.split('-').last();
 		var threader = document.createElement('a');
-		threader.href = 'javascript://';
+		threader.href = 'javascript:void(0)';
 		threader.className = 'commentAction';
 		threader.innerHTML = 'TH' + commentId;
 		threader.onclick = function(){ commentEngine.toggleThread(commentId); return false; };
@@ -134,7 +139,7 @@ CommentEngine.prototype = {
 		if($('comment_references')){
 			var commentId = node.id.split('-').last();
 			var responder = document.createElement('a');
-			responder.href = 'javascript://';
+			responder.href = 'javascript:void(0)';
 			responder.className = 'commentAction';
 			responder.innerHTML = 'RE' + commentId;
 			responder.onclick = function(){

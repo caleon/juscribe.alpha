@@ -553,3 +553,15 @@ strong.articleIntro {
 	overflow: hidden;
 	height: 250px;
 }
+
+.commentForm input,
+.commentForm textarea {
+	border: 1px solid #ccc;
+}
+
+#comment_references {
+	background-color: #eee;
+	color: #666;
+	font-weight: bold;
+	cursor: pointer;
+}

@@ -10,9 +10,11 @@
 				<%= f.text_field :email %>
 				<br />
 			<% end %>
-			<%= f.label :references %>
-			<%= f.text_field :references %>
-			<br />
+			<% if commentable.comments.count > 0 %>
+				<%= f.label :references %>
+				<%= f.text_field :references %>
+				<br />
+			<% end %>
 			<%= f.text_area :body %>
 			<br />
 			<%= f.submit 'Comment' %>
