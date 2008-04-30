@@ -23,9 +23,9 @@ module CommentsHelper
   # Borrows heavily from articles_helper.rb
   def format_comment(comment, opts={})
     opts[:comment] ||= comment
-    text = comment.body
+    text = escape_code_html(comment.body)
     formatted = Hpricot(p_wrap(text))
-    escape_code_html(formatted)
+    clean_code_breaks(formatted)
     clarify_external_links(formatted)
     text = sanitize(formatted.to_html, :tags => allowed_tags(opts[:truncate]), :attributes => allowed_attributes)
     hpricot = Hpricot(text)
@@ -36,7 +36,7 @@ module CommentsHelper
   end
   
   def block_wrap(text, opts={})
-    wrapper = opts[:tag] || 'p'
+    wrapper = opts[:tag] || 'div'
     # Actually if opts[:truncate], we might wanna remove the bad tags entirely instead of escaping...
     my_allowed_tags = opts[:tags].is_a?(Array) ? opts[:tags] : (allowed_tags - [wrapper])
     # Basically these are types that cannot exist within a P tag. P is not allowed, however.
