@@ -21,7 +21,7 @@ Browser.prototype = {
 };
 
 Scroller = {
-	yOffset: 0,
+	yOffset: 200,
 	scrollLoop: false, 
 	scrollInterval: null,
 	getWindowHeight: function(){
@@ -238,6 +238,7 @@ CommentEngine.prototype = {
 		var otherIds = this.comments.collect(function(com){ return com.id }).reject(function(id){ return commentId == id || thread.include(id) });
 		this.hiddenCommentIds = otherIds;
 		this.showingThread = commentId;
+		$('comment-' + commentId).addClassName('comment-showing');
 		//otherIds.collect(function(id){ return $('comment-' + id) }).invoke('blindUp', {duration: 0.3});
 		var els = otherIds.collect(function(id){ return $('comment-' + id) });
 		els.each(function(el){
@@ -252,6 +253,7 @@ CommentEngine.prototype = {
 		var els = this.hiddenCommentIds.collect(function(id){ return $('comment-' + id) });
 		this.showingThread = null;
 		this.hiddenCommentIds = [];
+		$('comment-' + commentId).removeClassName('comment-showing');
 		if(els.length == 0){
 			onComplete();
 		} else {

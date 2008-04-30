@@ -48,39 +48,41 @@ module PicturesHelper
     includes.push(record) if includes.last != record
     with = opts.delete(:with) || {}
     
-    case opts[:type]
-    when nil
-      picture = record.primary_picture.thumbnails.find_by_thumbnail('feature')
-    when :thumb
-      picture = record.thumbs.first
-    when :feature
-      picture = record.primary_picture.thumbnails.find_by_thumbnail('feature')
-    when :full
-      picture = record.primary_picture
+    begin
+      case opts[:type]
+      when nil
+        picture = record.primary_picture.thumbnails.find_by_thumbnail('feature')
+      when :thumb
+        picture = record.thumbs.first
+      when :feature
+        picture = record.primary_picture.thumbnails.find_by_thumbnail('feature')
+      when :full
+        picture = record.primary_picture
+      end
+    rescue
+      picture = nil
     end
-    link_to_if opts[:link],
+    link_to_if opts[:link] && picture,
       ( just_picture_tag(picture, :prefix => opts[:prefix], :include => includes, :with => with, :class => opts[:class]) + 
           (opts[:with_text] ? "<br />#{opts[:text] || opts[:title] || record.display_name}" : '') ),
-      (opts[:link].is_a?(String) ? opts[:link] : record), :title => opts[:title] || record.display_name, :class => "#{record.class.class_name.underscore}Link"
-  rescue
-    ''
+      (opts[:link].is_a?(String) ? opts[:link] : record), :title => opts[:title] || (record.display_name rescue opts[:class]), :class => "#{record.class.class_name.underscore rescue (opts[:class].underscore rescue nil)}Link"
   end
   
   def just_picture_tag(picture, opts={})
     includes = opts.delete(:include) || []
-    includes.push(picture.depictable) if includes.last != picture.depictable
+    includes.push(picture.depictable) if picture && includes.last != picture.depictable
     with = opts.delete(:with) || {}
     if picture
       dom_class_str = [ dom_class(picture, :include => includes), with[:class] ].compact.join(' ')
       dom_id_str = dom_id(picture, opts[:prefix], :include => includes)
       image_tag(picture.public_filename, { :class => dom_class_str, :id => dom_id_str, :alt => picture.caption } )
     else
-      default_picture_for(opts[:class], :class => dom_class(Picture, :include => includes) )
+      default_picture_for(opts[:class], :class => dom_class(Picture, :include => includes << opts[:class].constantize) )
     end
   end
   
   def default_picture_for(klass_name="", html_opts={})
-    file_path = [ klass_name.underscore, 'default.gif' ].join('/')
-    image_tag(file_path, { :alt => "Default #{klass_name.humanize} picture" }.merge(html_opts))
+    file_path = [ klass_name.underscore, 'default.png' ].join('/')
+    image_tag(file_path, { :alt => "Default #{klass_name.humanize.downcase} picture" }.merge(html_opts))
   end
 end

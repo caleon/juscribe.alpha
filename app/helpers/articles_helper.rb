@@ -132,9 +132,9 @@ module ArticlesHelper
       if child.elem?
         # IMPORTANT: the following digest code cannot change, else it will mess up associations
         # It should also be set before modifications to the entire element, like class, id, inner_html...
-        paragraph_id = paragraph_id_for(child, opts) unless opts[:truncate]
-        child.set_attribute('class', 'articleContent')
-        unless opts[:truncate]
+        paragraph_id = paragraph_id_for(child, opts) unless opts[:truncate] || opts[:without_comps]
+        child.set_attribute('class', opts[:class] || 'articleContent')
+        unless opts[:truncate] || opts[:without_comps]
           child.set_attribute('id', paragraph_id)
           # The following WAS necessary to make highlighting of paragraph render above previous paragraphs
           # but we are not highlighting paragraphs anymore.
