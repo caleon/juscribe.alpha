@@ -1,5 +1,5 @@
 <% article ||= neighbors || @article -%>
 <% older_article, newer_article = article.find_neighbors -%>
-<%= link_to "<< Newer: #{newer_article.title}", article_path_for(newer_article), :class => 'newerArticle' if newer_article %>
-<%= link_to "Older: #{older_article.title} >>", article_path_for(older_article), :class => 'olderArticle' if older_article %>
+<%= link_to "&laquo; Newer: #{newer_article.title}", article_path_for(newer_article), :class => 'newerArticle' if newer_article %>
+<%= link_to "Older: #{older_article.title} &raquo;", article_path_for(older_article), :class => 'olderArticle' if older_article %>
 <%= br_clear %>
