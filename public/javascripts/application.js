@@ -93,6 +93,7 @@ CommentEngine.prototype = {
 	commentableType: null,
 	commentableId: null,
 	showingThread: null,
+	effectsInProgress: false,
 	comments: [],
 	activeCommentIds: [],
 	hiddenCommentIds: [],
@@ -231,8 +232,8 @@ CommentEngine.prototype = {
 	toggleThread: function(commentId){
 		if(this.showingThread){
 			if(this.showingThread != commentId){
-				var engine = this;
-				this.unshowThread(this.showingThread, function(){engine.showThread(commentId)});
+				this.unshowThread(this.showingThread);
+				this.showThread(commentId);
 			} else {
 				this.unshowThread(commentId);
 			}
@@ -240,43 +241,39 @@ CommentEngine.prototype = {
 			this.showThread(commentId);	
 		}		
 	},
+	checkEffects: function(){
+		return this.effectsInProgress
+	},
 	showThread: function(commentId){
 		var thread = this.commentAssociations.get(commentId);
 		var otherIds = this.comments.collect(function(com){ return com.id }).reject(function(id){ return commentId == id || thread.include(id) });
 		this.hiddenCommentIds = otherIds;
 		this.showingThread = commentId;
 		var comment = $('comment-' + commentId);
-		// 28 for height of shims, 34 for margins of shims = 62px
-//		comment.style.height = comment.getHeight() + 62 + 'px';
 		comment.addClassName('comment-showing');
-		//otherIds.collect(function(id){ return $('comment-' + id) }).invoke('blindUp', {duration: 0.3});
+		
 		var els = otherIds.collect(function(id){ return $('comment-' + id) });
 		var lastEl = els.pop();
-		els.invoke('blindUp', {duration: 0.3});
+		els.invoke('blindUp', {duration: 0.05, queue: 'end'});
 		if(lastEl){
-			lastEl.blindUp({duration: 0.3, afterFinish: function(){
+			lastEl.blindUp({duration: 0.05, queue: 'end', afterFinish: function(){
 					Scroller.to('comment-' + commentId);
-					setTimeout("$('comment-" + commentId + "').highlight()", 600);
+					setTimeout("$('comment-" + commentId + "').highlight({queue: {position: 'end', scope: 'highlight'}})", 600);
 				}
 			});
 		};
 	},
-	unshowThread: function(commentId, onComplete){
+	unshowThread: function(commentId){
 		var els = this.hiddenCommentIds.collect(function(id){ return $('comment-' + id) });
 		this.showingThread = null;
 		this.hiddenCommentIds = [];
 		if(els.length == 0){
 			(onComplete) ? onComplete() : null;
 		} else {
-			var lastEl = els.pop();
-			els.invoke('blindDown', {duration: 0.3});
-			if(lastEl){
-				lastEl.blindDown({duration: 0.3, afterFinish: (onComplete) ? onComplete : null})
-			};
+			els.invoke('blindDown', {duration: 0.05, queue: 'front'});
 		}
 		var comment = $('comment-' + commentId);
 		comment.removeClassName('comment-showing');
-//		comment.style.height = comment.getHeight() - 62 + 'px';
 	}
 };
 
