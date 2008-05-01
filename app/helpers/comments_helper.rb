@@ -1,9 +1,12 @@
 module CommentsHelper
   def comment_path_for(comment, opts={})
-#    path = instance_eval %{ #{opts[:prefix] ? "#{opts[:prefix]}_" : ''}#{comment.path_name_prefix}_path(comment.to_path.merge(opts[:params])) }
-    commentable_path_for(comment.commentable, opts) + "#comment-#{comment.scoped_id}"
+    if opts[:anchor]
+      commentable_path_for(comment.commentable, opts) + "#comment-#{comment.scoped_id}"
+    else
+      instance_eval %{ #{opts[:prefix] ? "#{opts[:prefix]}_" : ''}#{comment.path_name_prefix}_path(comment.to_path.merge(opts[:params] || {})) }
+    end
   end
-  
+    
   def comment_path_from_commentable(commentable, opts={})
     instance_eval %{ #{opts[:prefix] ? "#{opts[:prefix]}_" : ''}#{commentable.path_name_prefix}_#{opts[:suffix] || 'comment'}_path(commentable.to_path(true).merge(opts[:params] || {})) }
   end
@@ -20,10 +23,19 @@ module CommentsHelper
     render :partial => 'comments/form', :locals => { :commentable => record }
   end
   
+  def commenter_for(comment)
+    return nil unless comment
+    if comment.anonymous?
+      comment.nick
+    else
+      link_to comment.user.display_name, user_path(comment.user)
+    end
+  end
+  
   # Borrows heavily from articles_helper.rb
   def format_comment(comment, opts={})
     opts[:comment] ||= comment
-    text = escape_code_html(comment.body)
+    text = escape_code_html(comment.body.blank? ? '[Deleted]' : comment.body)
     formatted = Hpricot(p_wrap(text))
     clean_code_breaks(formatted)
     clarify_external_links(formatted)

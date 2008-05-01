@@ -2,7 +2,7 @@
 	<span>
 	<% unless without_commentable ||= false %>
 		<span class="commentable">
-			<%= link_to comment_line.commentable.display_name, comment_path_for(comment_line), :title => comment_line.body %>
+			<%= link_to comment_line.commentable.display_name, comment_path_for(comment_line, :anchor => true), :title => comment_line.body %>
 		</span>
 	<% end %>
 		<%= link_to_if without_commentable, truncate(comment_line.body, 35), comment_path_for(comment_line) %>

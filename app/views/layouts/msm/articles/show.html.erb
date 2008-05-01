@@ -2,7 +2,7 @@
 
 <% content_for :header do -%>
 	<div class="msm_column msm_column-a">
-		<span class="timestamp">updated at <%= @article.updated_at.to_s %></span>
+		<span class="timestamp">updated at <%= timestamp_for(@article.updated_at) %></span>
 		<h2><%= @page_title + (@article.imported? ? ' (imported)' : '') %></h2>
 		<%= content_tag :h4, "Re: " + link_to("#{@article.original.display_name}", article_path_for(@article.original)) if @article.original %>
 	</div>

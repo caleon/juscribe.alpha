@@ -6,6 +6,7 @@
 	<comments>
 	<% @comments.each do |comment| %>
 		<comment id="<%= comment.scoped_id %>">
+			<replies_count><%= comment.replies_count %></replies_count>
 		<% comment.references.each do |ref| %>
 			<reference_id><%= ref.scoped_id %></reference_id>
 		<% end %>

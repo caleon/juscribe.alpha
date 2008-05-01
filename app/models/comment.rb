@@ -50,6 +50,10 @@ class Comment < ActiveRecord::Base
     self.user.nil?
   end
   
+  def deleted?
+    self.body.blank?
+  end
+  
   def accessible_by?(user=nil)
     (self.user == user || self.commentable.accessible_by?(user) rescue true) && self.rule.accessible_by?(user)
   end
@@ -57,12 +61,21 @@ class Comment < ActiveRecord::Base
   def editable_by?(user=nil)
     user && (self.commentable.editable_by?(user) || super)
   end
+  
+  def nullify!(user=nil)
+    self.update_attribute(:body, nil) if self.editable_by?(user)
+  end
+  
+  def correct_replies_count!
+    self.references.each {|ref| ref.increment!(:replies_count) } if !self.references.empty?
+  end
 
   #######
   private
   #######
   def increment_counter
     self.commentable.increment!(:comments_count) if self.commentable.respond_to?(:comments_count)
+    self.correct_replies_count!
   end
   
   def send_notification

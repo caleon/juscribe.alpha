@@ -69,6 +69,10 @@ module ActiveRecord::Acts::Commentable
       end
     end
     
+    def correct_replies_count!
+      self.comments.each {|comment| comment.correct_replies_count! }
+    end
+    
     private
     # The following are for cases when the values are not set in permission_rules.options column.
     def default_allows_comments?; true; end

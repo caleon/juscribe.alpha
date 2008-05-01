@@ -21,7 +21,7 @@ Browser.prototype = {
 };
 
 Scroller = {
-	yOffset: 200,
+	yOffset: 100,
 	scrollLoop: false, 
 	scrollInterval: null,
 	getWindowHeight: function(){

@@ -533,7 +533,6 @@
 	.msm_layout a.userLink,
 	.msm_layout a.groupLink {
 		float: left;
-		margin: 0 7px 0 0;
 		text-align: center;
 		font-size: 85%;
 	}
@@ -894,18 +893,19 @@
 	
 	.msm_layout .comment img.user-picture {
 		float: left;
-		margin-right: 4px;
 		height: 40px;
 		width: 40px;
 		border-width: 1px;
+		margin: 0pt 7px 0pt 0pt;
 	}
 	
 	.msm_layout .comment ul.commentActions {
-		float: right;
+		/* float: right; */
 	}
 	
 	.msm_layout .comment a.commentAction {
-	
+		float: right;
+		margin-left: 7px;
 	}
 	
 	.msm_layout .comment .commentMain {
@@ -913,5 +913,5 @@
 	}
 	
 	.msm_layout .commentMain .commentContent {
-
+		margin-top: 0;
 	}

@@ -1,5 +1,5 @@
 <small>
 	by: <%= link_to article.user.nick, article.user %>
-	<% if article.published? %> | <%= article.published_at.to_s %><% end %>
+	<% if article.published? %> | <%= timestamp_for(article.published_at) %><% end %>
 	<% if (link ||= false) || @article.nil? %> | <%= link_to 'Source', article_path_for(article) %><% end %>
 </small>

@@ -330,7 +330,8 @@ form {
 	display: block;
 }
 
-body pre {
+body pre,
+body code {
 	font-size: 88%;
 }
 
