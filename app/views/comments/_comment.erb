@@ -5,7 +5,7 @@
 	<div class="shim top shim-top"></div>
 	<a name="comment-<%= comment.scoped_id %>"></a>
 	<div class="comment-inner">
-		<%= picture_for(comment.user, :class => 'User', :prefix => "comment-#{comment.id}", :type => :thumb, :link => user_path(comment.user)) %>
+		<%= picture_for(comment.user, :class => 'User', :prefix => "comment-#{comment.id}", :type => :thumb, :link => user_path(comment.user), :text => comment.scoped_id) %>
 		<ul class="commentActions">
 		<% if comment.commentable.editable_by?(get_viewer) %>
 			<li>
@@ -16,10 +16,9 @@
 		<div class="commentMain">
 			<%= byline_for(comment) %>
 		<% if !comment.reference_ids.empty? %>
-			<p class="references"><%= comment.reference_ids.map{|id| "@#{id}"}.join(' ') %></p>
+			<p class="references"><%= comment.reference_ids.map{|id| "@#{id}"}.join(' ') %> | <span class="repliesCount" id="comment-<%= comment.id %>-repliesCount"><%= comment.replies_count %> replies</span></p>
 		<% end %>
 			<%= format_comment(comment) %>
-			<p class="repliesCount" id="comment-<%= comment.id %>-repliesCount"><%= comment.replies_count %> replies</p>
 		</div>		
 	</div>
 	<div class="shim bottom shim-bottom"></div>

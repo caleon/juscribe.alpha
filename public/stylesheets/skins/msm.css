@@ -685,6 +685,10 @@
 		border: 3px solid #ccc;
 	}
 	
+	.msm_layout .msm_widget .userLink {
+		margin-right: 7px;
+	}
+	
 	.msm_widget-footer {
 		padding-top: 9px;
 		font-size: 90%;
@@ -862,6 +866,10 @@
 		position: relative;
 	}
 	
+	.msm_layout .comment.deleted {
+		opacity: 0.7;
+	}
+	
 	.msm_layout .comment .shim {
 		height: 14px;
 		background-color: transparent;
@@ -892,7 +900,6 @@
 	}
 	
 	.msm_layout .comment img.user-picture {
-		float: left;
 		height: 40px;
 		width: 40px;
 		border-width: 1px;
@@ -914,4 +921,10 @@
 	
 	.msm_layout .commentMain .commentContent {
 		margin-top: 0;
+	}
+	
+	.msm_layout .commentMain p.references {
+		margin-bottom: 4px;
+		font-size: 88%;
+		color: #666;
 	}

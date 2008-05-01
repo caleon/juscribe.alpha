@@ -8,6 +8,7 @@
 <%= subnavi_el 'New Blog', blog_path_from_bloggable(bloggable, :prefix => :new), :current => controller.action_name == 'new' if bloggable.editable_by?(get_viewer) && (blog.nil? || blog.new_record?) %>
 <%= subnavi_el 'Edit', blog_path_for(blog, :prefix => :edit), :current => controller.action_name == 'edit' if blog && !blog.new_record? && blog.editable_by?(get_viewer) %>
 <%= clip_subnavi_el(blog) %>
+<%= subnavi_el 'Drafts', drafts_path_from_blog(blog) if blog && !blog.new_record? && blog.editable_by?(get_viewer) %>
 <%= subnavi_el 'Import Articles', articles_path_from_blog(blog, :prefix => :import) if blog && !blog.new_record? && blog.editable_by?(get_viewer) %>
 <%= subnavi_el 'New Article', article_path_from_blog(blog, :prefix => :new) if blog && !blog.new_record? && blog.editable_by?(get_viewer) %>
 <% end %>

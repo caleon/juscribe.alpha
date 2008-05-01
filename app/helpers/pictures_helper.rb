@@ -62,10 +62,10 @@ module PicturesHelper
     rescue
       picture = nil
     end
-    link_to_if opts[:link] && picture,
+    link_to_if opts[:link],
       ( just_picture_tag(picture, :prefix => opts[:prefix], :include => includes, :with => with, :class => opts[:class]) + 
-          (opts[:with_text] ? "<br />#{opts[:text] || opts[:title] || record.display_name}" : '') ),
-      (opts[:link].is_a?(String) ? opts[:link] : record), :title => opts[:title] || (record.display_name rescue opts[:class]), :class => "#{record.class.class_name.underscore rescue (opts[:class].underscore rescue nil)}Link"
+          ((opts[:with_text] || opts[:text]) ? "<br />#{opts[:text] || opts[:title] || record.display_name}" : '') ),
+      (opts[:link].is_a?(String) ? opts[:link] : record || '#'), :title => opts[:title] || (record.display_name rescue opts[:class]), :class => "#{record.class.class_name.underscore rescue (opts[:class].underscore rescue nil)}Link"
   end
   
   def just_picture_tag(picture, opts={})

@@ -15,6 +15,22 @@ module ArticlesHelper
     instance_eval %{ #{opts[:prefix] ? "#{opts[:prefix]}_" : ''}#{blog.path_name_prefix}_articles_path(blog.to_path(true).merge(opts[:params] || {})) }
   end
   
+  def draft_path_for(draft, opts={})
+    instance_val %{ #{opts[:prefix] ? "#{opts[:prefix]}_" : ''}#{draft.path_name_prefix}_#{opts[:url] ? 'url' : 'path'}(draft.to_path.merge(opts[:params] || {})) }
+  end
+  
+  def draft_url_for(draft, opts={})
+    draft_path_for(draft, opts.merge(:url => true))
+  end
+  
+  def draft_path_from_blog(blog, opts={})
+    instance_eval %{ #{opts[:prefix] ? "#{opts[:prefix]}_" : ''}#{blog.path_name_prefix}_draft_path(blog.to_path(true).merge(opts[:params] || {})) }
+  end
+  
+  def drafts_path_from_blog(blog, opts={})
+    instance_eval %{ #{opts[:prefix] ? "#{opts[:prefix]}_" : ''}#{blog.path_name_prefix}_drafts_path(blog.to_path(true).merge(opts[:params] || {})) }
+  end
+  
   def latest_articles_url_for(object, opts={})
     instance_eval %{ #{opts[:prefix] ? "#{opts[:prefix]}_" : ''}#{object.path_name_prefix}_latest_articles_url(object.to_path(true)) }
   end
