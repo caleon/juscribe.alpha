@@ -135,13 +135,15 @@ CommentEngine.prototype = {
 	
 	addParagraphBehavior: function(node){
 		var paragraph_id = node.className.match(/-p-([a-z0-9]{7})-/).last();
-		node.onclick = function(){
-			var origVal = $('comment_references').value;
-			if(!origVal.match(new RegExp(paragraph_id))){
-				var returnVal = origVal.strip() + ' ' + paragraph_id;
-				$('comment_references').value = returnVal.strip();
-			};
-	//		if(this.showingThread && this.showingThread)
+		if($('comment_references')){
+			node.onclick = function(){
+				var origVal = $('comment_references').value;
+				if(!origVal.match(new RegExp(paragraph_id))){
+					var returnVal = origVal.strip() + ' ' + paragraph_id;
+					$('comment_references').value = returnVal.strip();
+				};
+		//		if(this.showingThread && this.showingThread)
+			}
 		}
 	},
 	

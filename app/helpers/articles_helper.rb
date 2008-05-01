@@ -160,14 +160,14 @@ module ArticlesHelper
           # The following WAS necessary to make highlighting of paragraph render above previous paragraphs
           # but we are not highlighting paragraphs anymore.
           # child.set_attribute('style', "z-index: #{50 - i/2};")
-          if aggregate_length > 1400 && comp = article_components_for(article)[component_count] 
+          if aggregate_length > 1400 && child.name == 'p' && comp = article_components_for(article)[component_count] 
             child.inner_html = render_article_component(article, comp) + child.inner_html
             aggregate_length = child.inner_text.chars.length
             component_count += 1
           else
             aggregate_length += child.inner_text.chars.length
           end
-          create_comment_mixin(child, paragraph_id) unless child.name == 'pre'
+          create_comment_mixin(child, paragraph_id) unless child.name == 'pre' || child.inner_text.chars.length < 150
         end
       end
     end
