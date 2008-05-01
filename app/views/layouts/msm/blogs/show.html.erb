@@ -4,7 +4,7 @@
 
 <% content_for :header do -%>
 	<div class="msm_column msm_column-a">
-		<%= picture_for(@blog) %>
+		<%# picture_for(@blog) %>
 		<h2><%= @page_title %></h2>
 		<h4>by <%= link_to @blog.bloggable.display_name, @blog.bloggable %></h4>
 		<p><%=h @blog.description %></p>

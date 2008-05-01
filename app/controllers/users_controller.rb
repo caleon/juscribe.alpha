@@ -162,7 +162,7 @@ class UsersController < ApplicationController
         @user = get_viewer
         msg = "You are already logged in."
         respond_to do |format|
-          format.html { flash[:notice] = msg; redirect_to @user }
+          format.html { flash[:notice] = msg; redirect_to @user || root_url }
           format.js { flash.now[:notice] = msg; render :action => 'login_already' }
         end
       else
