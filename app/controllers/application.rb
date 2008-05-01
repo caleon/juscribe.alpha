@@ -37,6 +37,7 @@ class ApplicationController < ActionController::Base
     
   def get_viewer
     @viewer ||= (User.find(session[:id]) rescue nil) if session[:id]
+    render :text => "Sorry, Internet Explorer currently not supported in Juscribe's Alpha release." and return if request.user_agent =~ /MSIE/
   end
   
   def get_user(error_opts={})

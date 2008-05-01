@@ -1,8 +1,8 @@
 --- 
 :load_all_initially: true
 :scripts_at_bottom: true
-:defcon: 0
-:disable_registration: false
+:defcon: 1
+:disable_registration: true
 :disable_search: true
 :disable_comments: false
 :disable_anonymous_comments: false
