@@ -5,7 +5,7 @@
 			<%= link_to comment_line.commentable.display_name, comment_path_for(comment_line, :anchor => true), :title => comment_line.body %>
 		</span>
 	<% end %>
-		<%= link_to_if without_commentable, truncate(comment_line.body, 35), comment_path_for(comment_line) %>
+		<%= link_to_if without_commentable, truncate(comment_line.body, 35), comment_path_for(comment_line, :anchor => true) %>
 		<%= byline_for comment_line unless without_user ||= false %>
 	</span>
 <% end %>
