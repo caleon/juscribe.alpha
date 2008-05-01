@@ -525,6 +525,7 @@ strong.articleIntro {
 #canvas.articles-show .article .articleContent:hover span.mixedComment {
 	display: block;
 	opacity: 0.8;
+	cursor: pointer;
 }
 
 #canvas.articles-show .article .articleContent.active span.mixedComment {

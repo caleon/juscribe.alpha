@@ -99,6 +99,7 @@ CommentEngine.prototype = {
 	hiddenCommentIds: [],
 	commentAssociations: new Hash(),
 	commentsIndex: new Hash(),
+	paragraphAssocations: new Hash(),
 	
 	// Actually, ideally I want new CommentEngine(this) on the article or something...
 	initialize: function(baseURI, indexFile, commentsList, prefix){
@@ -123,20 +124,24 @@ CommentEngine.prototype = {
 		
 		var paragraphs = $$('span.mixedComment');
 		for(i = 0; i < paragraphs.length; i ++){
-			var mixedComment = paragraphs[i];
-			var paragraph_id = mixedComment.className.match(/-p-([a-z0-9]{7})-/).last();
-			mixedComment.onclick = function(){
-				var origVal = $('comment_references').value;
-				if(!origVal.match(new RegExp(paragraph_id))){
-					var returnVal = origVal.strip() + ' ' + paragraph_id;
-					$('comment_references').value = returnVal.strip();
-				}
-			}
+			this.addParagraphBehavior(paragraphs[i]);
 		};
 		
 		if($('comment_references')){
 			$('comment_references').onfocus = function(){ this.blur(); }
 			$('comment_references').ondblclick = function(){ this.value = '' }
+		}
+	},
+	
+	addParagraphBehavior: function(node){
+		var paragraph_id = node.className.match(/-p-([a-z0-9]{7})-/).last();
+		node.onclick = function(){
+			var origVal = $('comment_references').value;
+			if(!origVal.match(new RegExp(paragraph_id))){
+				var returnVal = origVal.strip() + ' ' + paragraph_id;
+				$('comment_references').value = returnVal.strip();
+			};
+	//		if(this.showingThread && this.showingThread)
 		}
 	},
 	
