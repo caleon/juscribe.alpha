@@ -121,6 +121,19 @@ CommentEngine.prototype = {
 			commentNodes[i].style.height = commentNodes[i].getHeight() + 'px';
 		}
 		
+		var paragraphs = $$('span.mixedComment');
+		for(i = 0; i < paragraphs.length; i ++){
+			var mixedComment = paragraphs[i];
+			var paragraph_id = mixedComment.className.match(/-p-([a-z0-9]{7})-/).last();
+			mixedComment.onclick = function(){
+				var origVal = $('comment_references').value;
+				if(!origVal.match(new RegExp(paragraph_id))){
+					var returnVal = origVal.strip() + ' ' + paragraph_id;
+					$('comment_references').value = returnVal.strip();
+				}
+			}
+		};
+		
 		if($('comment_references')){
 			$('comment_references').onfocus = function(){ this.blur(); }
 			$('comment_references').ondblclick = function(){ this.value = '' }
@@ -149,7 +162,7 @@ CommentEngine.prototype = {
 				var origVal = $('comment_references').value;
 				if(!origVal.match(new RegExp('@' + commentId + '\\W')) &&
 					 !origVal.match(new RegExp('@' + commentId + '$'))){
-					var returnVal = $('comment_references').value.strip() + ' @' + commentId;
+					var returnVal = origVal.strip() + ' @' + commentId;
 					$('comment_references').value = returnVal.strip();
 				};
 				return false;

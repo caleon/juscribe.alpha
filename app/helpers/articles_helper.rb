@@ -181,6 +181,6 @@ module ArticlesHelper
   end
 
   def create_comment_mixin(hp_el, paragraph_id)
-    hp_el.inner_html += content_tag(:span, "&nbsp;", :class => paragraph_id + "-comment article-mixedComment mixedComment")
+    hp_el.inner_html += content_tag(:span, "#{@article.comments_for(paragraph_id).size}", :class => paragraph_id + "-comment article-mixedComment mixedComment")
   end
 end

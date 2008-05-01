@@ -90,6 +90,14 @@ class Article < ActiveRecord::Base
     (!self.draft? && !future_publication? && super)
   end
   
+  def comments_for(paragraph_hash)
+    if self.comments.loaded?
+      self.comments.select{|com| com.paragraph_hash == paragraph_hash }
+    else
+      self.comments.find(:all, :conditions => ["comments.paragraph_hash = ?", paragraph_hash], :order => 'comments.id ASC')
+    end
+  end
+  
   def composite_tags
     (self.tags + self.blog.tags).uniq
   end

@@ -502,12 +502,15 @@ strong.articleIntro {
 .article .articleContent span.mixedComment {
 	display: none;
 	position: absolute;
-	width: 250px;
-	height: 140px;
-	margin-right: -250px;
-	background-color: #eee;
-	border: 3px solid #666;
-	border-width: 3px 0;
+	width: 40px;
+	height: 23px;
+	margin-right: -40px;
+	background: transparent url(/images/commentBubble.png) no-repeat top left;
+	color: #fff;
+	font-weight: bold;
+	font-size: 88%;
+	line-height: 20px;
+	text-align: center;
 	top: 0;
 	right: 0;
 	z-index: 120;
