@@ -15,9 +15,7 @@
 		</ul>
 		<div class="commentMain">
 			<%= byline_for(comment) %>
-		<% if !comment.reference_ids.empty? %>
-			<p class="references"><%= comment.reference_ids.map{|id| "@#{id}"}.join(' ') %> | <span class="repliesCount" id="comment-<%= comment.id %>-repliesCount"><%= comment.replies_count %> replies</span></p>
-		<% end %>
+			<p class="references"><% if !comment.reference_ids.empty? %><%= comment.reference_ids.map{|id| "@#{id}"}.join(' ') %> | <% end %><span class="repliesCount" id="comment-<%= comment.id %>-repliesCount"><%= comment.replies_count %> replies</span></p>
 			<%= format_comment(comment) %>
 		</div>		
 	</div>
