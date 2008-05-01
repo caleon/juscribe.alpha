@@ -77,7 +77,7 @@
 		<% end -%>
 		
 		<% content_tag :div, :class => 'footer-box' do -%>
-			<%= render :partial => 'latest_comments', :object => @user.latest_comments.find(:all, :limit => 5), :locals => { :without_user => true, :without_commentable => true, :prefix => :footer } %>
+			<%= render :partial => 'owned_comments', :object => @user.owned_comments.find(:all, :limit => 5), :locals => { :without_user => true, :without_commentable => true, :prefix => :footer } %>
 		<% end -%>
 		
 		<% content_tag :div, :class => 'footer-box' do -%>
