@@ -5,7 +5,9 @@ class ActionController::Resources::Resource #:nodoc:
 end
 
 ActionController::Routing::Routes.draw do |map|
-  map.root :controller => 'main'  
+  #map.root :controller => 'main' 
+  map.root :controller => 'users', :action => 'show', :id => 'colin'
+  map.connect '/', :controller => 'users', :action => 'show', :id => 'colin'
   
   ################################################### USERS
   map.resources :users, :custom_path => 'u',

@@ -6,8 +6,8 @@
 		<%= navi_el "Inbox#{get_viewer.messages.unread.size > 0 ? " (#{get_viewer.messages.unread.size})" : ''}", messages_path %>
 		<%= navi_el 'Preferences', edit_user_path(get_viewer) %>
 	<% end %>
-		<%= navi_el "About", about_path %>
-		<%= navi_el "Help", help_path %>
+		<%# navi_el "About", about_path %>
+		<%# navi_el "Help", help_path %>
 	<% if logged_in? %>
 		<li class="navigationEl last"><%= link_to 'Logout', logout_path %></li>
 	<% else -%>
