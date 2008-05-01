@@ -1,6 +1,6 @@
 class MainController < ApplicationController
   def index
-    
+    redirect_to :controller => 'users', :action => 'show', :id => 'colin'
   end
   
   def contents
