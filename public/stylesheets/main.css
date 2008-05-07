@@ -488,7 +488,8 @@ strong.articleIntro {
 	background-position: -45px -15px;
 }
 
-.article object {
+.article object,
+.article .articleContent > embed {
 	display: block;
 	margin: 0 auto;
 	background-color: #ccc;
