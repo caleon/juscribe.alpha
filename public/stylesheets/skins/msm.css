@@ -796,9 +796,12 @@
 		left: 5px;
 	}
 	
-	#canvas.articles-show .articleContent,
-	#canvas.articles-show .article > embed {
+	#canvas.articles-show .articleContent {
 		margin: 0 0 17px;
+	}
+	
+	#canvas.articles-show .article > embed {
+		margin-bottom: 17px;
 	}
 	
 	.msm_layout .articleContent li {
