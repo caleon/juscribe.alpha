@@ -28,7 +28,7 @@ module PicturesHelper
       original = picture.original? ? picture : picture.parent
       feature = picture.feature? ? picture : picture.thumbnails.find_by_thumbnail('feature')
       res = <<-EOB
-        <a href="#{picture_path_for(original)}" rel="lightbox[article_#{opts[:article_id]}]" class="article_picture_link#{' right' if (opts[:with] ||= {}) && opts[:with][:class].to_s.match(/right/)}" title="#{picture.caption.gsub(/\"/, "\"").gsub(/\'/, "\'") if !picture.caption.blank?}">
+        <a href="#{picture_path_for(original)}" rel="lightbox[article_#{opts[:article_id]}]" class="article_picture_link#{' right' if (opts[:with] ||= {}) && opts[:with][:class].to_s.match(/right/)}" title="#{h(picture.caption) if !picture.caption.blank?}">
           #{just_picture_tag(feature, :with => opts[:with])}
           #{caption_for(feature)}
           <span class="picture-symbol">&nbsp;</span>
