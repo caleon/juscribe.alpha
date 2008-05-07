@@ -489,7 +489,8 @@ strong.articleIntro {
 }
 
 .article object,
-.article .articleContent > embed {
+.article .articleContent > embed,
+.article > embed {
 	display: block;
 	margin: 0 auto;
 	background-color: #ccc;
