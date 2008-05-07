@@ -167,7 +167,7 @@ module ArticlesHelper
           else
             aggregate_length += child.inner_text.chars.length
           end
-          create_comment_mixin(child, paragraph_id) unless child.name == 'pre' || child.inner_text.chars.length < 150
+          create_comment_mixin(child, paragraph_id) unless %w(pre blockquote).include?(child.name) || child.inner_text.chars.length < 150
         end
       end
     end
