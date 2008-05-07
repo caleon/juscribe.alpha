@@ -796,7 +796,8 @@
 		left: 5px;
 	}
 	
-	#canvas.articles-show .articleContent {
+	#canvas.articles-show .articleContent,
+	#canvas.articles-show .article > embed {
 		margin: 0 0 17px;
 	}
 	
