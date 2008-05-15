@@ -5,7 +5,7 @@ module JavascriptHelper
   
   def link_script_files
     (@script_files ||= []).map do |script|
-      javascript_include_tag script
+      javascript_include_tag script.to_s
     end.join('\r\n')
   end
   
