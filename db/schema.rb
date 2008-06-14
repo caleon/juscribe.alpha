@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 74) do
+ActiveRecord::Schema.define(:version => 20080614230048) do
 
   create_table "articles", :force => true do |t|
     t.string   "title"
@@ -252,6 +252,7 @@ ActiveRecord::Schema.define(:version => 74) do
     t.boolean  "admin",                         :default => false
     t.text     "about"
     t.text     "social_networks"
+    t.string   "time_zone"
   end
 
   create_table "widgets", :force => true do |t|

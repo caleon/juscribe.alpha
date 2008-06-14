@@ -11,7 +11,7 @@ class ApplicationController < ActionController::Base
   # Uncomment the :secret if you're not using the cookie session store
   protect_from_forgery# :secret => 'a241500281274090ecdf656d5074d028'
   filter_parameter_logging :password, :password_confirmation
-  before_filter :load_config, :authenticate, :get_viewer, :clear_stale_session, :remember_daily_pw
+  before_filter :load_config, :authenticate, :get_viewer, :clear_stale_session, :set_time_zone, :remember_daily_pw
   after_filter :set_previous_view
   layout :get_layout
   helper :all  
@@ -25,6 +25,10 @@ class ApplicationController < ActionController::Base
     session[:previous] || root_url
   end
   
+  def set_time_zone
+    Time.zone = get_viewer.time_zone if get_viewer
+  end
+  
   private
   def load_config
     # TODO: set up a special table where a "recheck" value can be toggled. This
@@ -36,7 +40,7 @@ class ApplicationController < ActionController::Base
   end
     
   def get_viewer
-    render :text => "Sorry, Internet Explorer currently not supported in Juscribe's Alpha release." and return if request.user_agent =~ /MSIE/
+    render :text => "Sorry, Internet Explorer currently not supported in Juscribe's Alpha release." and return nil if request.user_agent =~ /MSIE/
     @viewer ||= (User.find(session[:id]) rescue nil) if session[:id]
   end
   

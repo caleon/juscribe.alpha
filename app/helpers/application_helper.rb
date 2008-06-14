@@ -142,7 +142,7 @@ module ApplicationHelper
   end
   
   def timestamp_for(timestamp)
-    timestamp.to_s # Stubbed
+    timestamp.inspect # Stubbed
   end
   
 end
