@@ -4,6 +4,8 @@ class Blog < ActiveRecord::Base
   has_one :layouting, :as => :layoutable
   
   belongs_to :user # creator
+  # acts_as_list :scope => :user_id Not necessarily because blog can belong to owner
+
   belongs_to :bloggable, :polymorphic => true
   has_many :all_articles, :class_name => 'Article', :order => 'articles.published_at DESC'
   with_options :class_name => 'Article', :order => 'articles.published_at DESC', :conditions => "articles.published_at IS NOT NULL AND articles.published_at < NOW()" do |art|
