@@ -284,17 +284,14 @@ CommentEngine.prototype = {
 		};
 	},
 	unshowThread: function(commentId){
-		Effect.Queues.get('highlight').invoke('cancel');
+		//Effect.Queues.get('highlight').invoke('cancel');
 		var els = this.hiddenCommentIds.collect(function(id){ return $('comment-' + id) });
 		this.showingThread = null;
 		this.hiddenCommentIds = [];
-		if(els.length == 0){
-			(onComplete) ? onComplete() : null;
-		} else {
+		if(els.length > 0){
 			els.invoke('blindDown', {duration: 0.05, queue: 'front'});
 		}
-		var comment = $('comment-' + commentId);
-		comment.removeClassName('comment-showing');
+		$('comment-' + commentId).removeClassName('comment-showing');
 	}
 };
 
