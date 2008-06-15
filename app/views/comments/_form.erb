@@ -1,3 +1,4 @@
+<a name="commentForm"></a>
 <% if commentable.allows_comments? %>
 	<% form_for :comment, commentable.comments.new, :url => comments_path_from_commentable(commentable), :html => { :class => 'commentForm', :method => 'post' } do |f| %>
 		<fieldset>

@@ -61,10 +61,10 @@ class CommentsController < ApplicationController
           format.js { flash.now[:notice] = msg }
         end
       else
-        flash.now[:warning] = "There was an error commenting on #{@commentable.display_name}." +
+        flash[:warning] = "There was an error commenting on #{@commentable.display_name}." +
                               (is_comment_spam ? " Our system thinks your comment was a spam. If you think this is a mistake, please contact the site administrator." : "")
         respond_to do |format|
-          format.html { trender :new }
+          format.html { redirect_to commentable_url_for(@commentable) + '#commentForm' }
           format.js { render :action => 'create_error' }
         end
       end

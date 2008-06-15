@@ -186,9 +186,17 @@ class CommentsControllerTest < ActionController::TestCase
   def test_create_with_non_user
     articles(:blog).publish!
     assert articles(:blog).allows_comments? && articles(:blog).allows_anonymous_comments?
-    post :create, articles(:blog).to_path(true).merge(:comment => { :body => 'blah blah' })
-    assert_response :success
+    post :create, articles(:blog).to_path(true).merge(:comment => { :email => 'blah@blah.com', :body => 'blah blah' })
+    assert_redirected_to user_blog_article_url(articles(:blog).to_path) + "#comment-#{assigns(:comment).scoped_id}"
+    assert_equal "You have commented on #{articles(:blog).display_name}.", flash[:notice]
     assert_not_nil assigns(:comment)
+  end
+  
+  def test_create_with_non_user_without_valid_fields
+    articles(:blog).publish!
+    assert articles(:blog).allows_comments? && articles(:blog).allows_anonymous_comments?
+    post :create, articles(:blog).to_path(true).merge(:comment => { :body => 'blah blah' })
+    assert_redirected_to user_blog_article_url(articles(:blog).to_path) + '#commentForm'
   end
 
   def test_create_with_non_user_when_disallowed
