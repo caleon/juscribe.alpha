@@ -5,7 +5,7 @@
 	<div class="shim top shim-top"></div>
 	<a name="comment-<%= comment.scoped_id %>"></a>
 	<div class="comment-inner">
-		<%= picture_for(comment.user, :class => 'User', :prefix => "comment-#{comment.id}", :type => :thumb, :link => (comment.user.nil? ? '#' : user_path(comment.user)), :text => comment.scoped_id) %>
+		<%= picture_for(comment.user, :class => 'User', :prefix => "comment-#{comment.id}", :type => :thumb, :link => (comment.user.nil? ? "#comment-#{comment.scoped_id}" : user_path(comment.user)), :text => comment.scoped_id) %>
 		<ul class="commentActions">
 		<% if comment.commentable.editable_by?(get_viewer) %>
 			<li>
