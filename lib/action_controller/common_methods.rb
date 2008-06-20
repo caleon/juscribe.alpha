@@ -82,7 +82,7 @@ module ActionController::CommonMethods
       return unless setup && authorize(main_object)
       #render :partial => "preview",
       #       :object => instance_variable_get(shared_setup_options[:instance_var])
-      render :action => '../shared/preview.js.rjs', :layout => false
+      render :template => 'shared/preview.js.rjs', :layout => false
     end
     
     def setup(includes=nil, error_opts={})
