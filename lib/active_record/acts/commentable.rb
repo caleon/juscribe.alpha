@@ -20,6 +20,10 @@ module ActiveRecord::Acts::Commentable
   end
   
   module InstanceMethods
+    def true_values
+      [ true, 'true', 't', '1', 1, 'y', 'yes' ]
+    end
+    
     # These functionalities depend on PermissionRule model.
     # Seems like these following functionality will depend on one or two columns on each commentable model.
     def allows_comments?
@@ -41,17 +45,17 @@ module ActiveRecord::Acts::Commentable
     
     # The following are for usage with forms.
     def allow_comments=(input)
-      if !self.allows_comments? && [ true, 'true', 't', '1', 1, 'y', 'yes' ].include?(input)
+      if !self.allows_comments? && true_values.include?(input)
         self.allow_comments!
-      elsif self.allows_comments? && ![ true, 'true', 't', '1', 1, 'y', 'yes' ].include?(input)
+      elsif self.allows_comments? && !true_values.include?(input)
         self.disallow_comments!
       end
     end
     
     def allow_anonymous_comments=(input)
-      if !self.allows_anonymous_comments? && [ true, 'true', 't', '1', 1, 'y', 'yes' ].include?(input)
+      if !self.allows_anonymous_comments? && true_values.include?(input)
         self.allow_anonymous_comments!
-      elsif self.allows_anonymous_comments? && ![ true, 'true', 't', '1', 1, 'y', 'yes' ].include?(input)
+      elsif self.allows_anonymous_comments? && !true_values.include?(input)
         self.disallow_anonymous_comments!
       end
     end
