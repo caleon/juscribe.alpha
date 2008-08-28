@@ -22,16 +22,16 @@ module FeedsHelper
   
   # Why is this camelcased?
   def parseFeed(feed_url)
-    rss_item = nil
     open(feed_url) do |http|
       response = http.read
       result = RSS::Parser.parse(response, false)
       latest = result.items.first
       rss_item = RssItem.new( { :link => result.channel.link, :title => result.channel.title },
                               { :link => latest.link, :title => latest.title, :author => latest.author,
-                                :content => latest.description, :published_date => latest.pubDate, :guid => latest.guid } )
+                                :content => latest.description, :published_date => latest.pubDate,
+                                :guid => latest.guid } )
     end
-    return rss_item
+    return rss_item ||= nil
   end
   
   def rss_link_for(kind, path, opts={})
