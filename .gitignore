@@ -3,6 +3,7 @@
 attachment_fu_plugin.sqlite3.db
 config/database.yml
 coverage/*
+log/*
 log/*.log
 public/images/uploads/*
 public/javascripts/all.js
