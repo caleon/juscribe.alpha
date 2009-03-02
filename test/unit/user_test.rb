@@ -19,7 +19,7 @@ class UserTest < ActiveSupport::TestCase
     assert_equal "colin p. chun", users(:colin).full_name
     assert_equal "colin p. chun (colin)", users(:colin).name_and_nick
     assert_equal "colin p. chun <colin@venturous.net>", users(:colin).email_address
-    assert_equal 23, users(:colin).age # This.. heh will need to be changed.
+    assert_equal 24, users(:colin).age # This.. heh will need to be changed.
     assert_equal 'm', users(:colin).sex
     assert_equal 'male', users(:colin).sex(true)
   end
