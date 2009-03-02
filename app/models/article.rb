@@ -7,6 +7,9 @@ class Article < ActiveRecord::Base
   
   belongs_to :original, :class_name => 'Article', :foreign_key => :original_id
   has_many :responses, :class_name => 'Article', :foreign_key => :original_id, :order => "articles.published_at DESC"
+  def continuations
+    self.responses.find(:all, :conditions => ["user_id = ?", self.user_id])
+  end
     
   validates_presence_of :blog_id, :user_id, :title, :permalink, :content
   validates_length_of :title, :in => (3..70)
