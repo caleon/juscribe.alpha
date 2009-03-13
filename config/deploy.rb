@@ -1,10 +1,10 @@
 set :application, "juscribe.com"
 set :port, 2600
-set(:mongrel_conf) { "#{current_path}/config/mongrel_cluster.yml" } # Reformatted to fix a capistrano bug
+# set(:mongrel_conf) { "#{current_path}/config/mongrel_cluster.yml" } # Reformatted to fix a capistrano bug
 
 ssh_options[:paranoid] = false
 set :user, "colin"
-set :runner, user # user that strts up the mongrel instances. change later.
+# set :runner, user # user that strts up the mongrel instances. change later.
 set :user_sudo, false
 
 # If you aren't deploying to /u/apps/#{application} on the target
@@ -27,6 +27,21 @@ set :deploy_via, :remote_cache
 role :app, application
 role :web, application
 role :db,  application, :primary => true
+
+namespace :deploy do
+  task :start, :roles => :app do
+    run "touch #{current_release}/tmp/restart.txt"
+  end
+  
+  task :stop, :roles => :app do
+    # Do nothing.
+  end
+  
+  desc "Restart Application"
+  task :restart, :roles => :app do
+    run "touch #{current_release}/tmp/restart.txt"
+  end
+end
 
 # moves over config files after deploying the code
 task :update_config, :roles => [ :app ] do
