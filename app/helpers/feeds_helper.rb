@@ -31,7 +31,6 @@ module FeedsHelper
                                 :content => latest.description, :published_date => latest.pubDate,
                                 :guid => latest.guid } )
     end
-    return rss_item ||= nil
   end
   
   def rss_link_for(kind, path, opts={})
