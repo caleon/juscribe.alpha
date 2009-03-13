@@ -3,7 +3,9 @@ class User < ActiveRecord::Base
   
   validates_presence_of     :email, :first_name, :last_name, :nick, :birthdate
   validates_uniqueness_of   :nick, :email
-  validates_exclusion_of    :nick, :in => PROHIBITED_NICKS, :on => :create
+  if RAILS_ENV != 'development'
+    validates_exclusion_of    :nick, :in => PROHIBITED_NICKS, :on => :create, :unless => RAILS_ENV == 'development'
+  end
   validates_length_of       :nick, :in => 3..20
   validates_length_of       :first_name, :in => 2..30
   validates_length_of       :middle_initial, :in => 0..1, :allow_nil => true
