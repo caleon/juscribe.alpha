@@ -56,6 +56,12 @@ class UsersControllerTest < ActionController::TestCase
     assert_equal 'Become a new Juscribe member!', assigns(:page_title)
   end
   
+  def test_new_when_logged_in
+    get :new, as(:colin)
+    assert_redirected_to :action => 'show', :id => 'colin'
+    assert_equal "You are already registered! Please log out to create a new account.", flash[:notice]
+  end
+  
   def test_create_with_invalid_entries
     post :create, :user => { :nick => '  2', :first_name => 'bam', :last_name => 'bam', :password => 'bambam', :password_confirmation => 'bambam', :birthdate => Date.new(1984, 1, 4), :email => 'doggie@.com' }
     assert_response :success

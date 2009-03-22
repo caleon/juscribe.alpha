@@ -30,6 +30,10 @@ class UsersController < ApplicationController
   
   # TODO: quit borrowing normal methods from common and set titles for actions  
   def new
+    if get_viewer
+      flash[:notice] = "You are already registered! Please log out to create a new account."
+      redirect_to get_viewer and return
+    end
     @page_title = "Become a new Juscribe member!"
     @user = User.new
     @registration_closed = registration_closed?
