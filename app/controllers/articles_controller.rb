@@ -81,7 +81,8 @@ class ArticlesController < ApplicationController
   
   def create
     return unless get_blog
-    @article = @blog.articles.new(params[:article].merge(:user => get_viewer))
+    @article = @blog.articles.new(:user => get_viewer)
+    @article.attributes = params[:article]
     @page_title = "New Article"
     if @blog.editable_by?(get_viewer) && @article.save
       create_uploaded_picture_for(@article, :save => true) if picture_uploaded?
