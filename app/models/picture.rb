@@ -1,3 +1,4 @@
+require 'ftools'
 class Picture < ActiveRecord::Base
   include_custom_plugins  
   
@@ -186,8 +187,17 @@ class Picture < ActiveRecord::Base
     if self.thumbnail.nil?
       FileUtils.mkdir_p(File.dirname(full_filename(:local => true)))
       orig_name = full_filename.gsub(/(.+)(\.[a-z]+)$/, '\1_original\2')
-      File.cp(temp_path, orig_name)
+      File.cp(my_temp_path, orig_name)
       File.chmod(attachment_options[:chmod] || 0644, orig_name)
     end
+  end
+  
+  def my_temp_path
+    p = my_temp_paths.first
+    p.respond_to?(:path) ? p.path : p.to_s
+  end
+  
+  def my_temp_paths
+    copy_to_temp_file(full_filename(:local => true))
   end
 end
