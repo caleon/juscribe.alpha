@@ -57,28 +57,24 @@ module ActiveRecord::Acts::Accessible #:nodoc:
       raise ActiveRecord::RecordNotFound if prule.nil?
       prule
     rescue NoMethodError, ActiveRecord::RecordNotFound
-      if self.new_record?
-        after_create {|record| record.create_rule }
-      else        
-        self.create_rule
-      end
+      self.create_rule(:user => self.user)
     end
       
     def create_rule(attrs={})
       attrs[:user_id] = self[:user_id] || attrs[:user_id] || (attrs.delete(:user).id if attrs[:user]) rescue nil
       raise ArgumentError, 'Need to supply a user or user_id.' unless attrs[:user_id]
-      self.rule = PermissionRule.create!(attrs)          
+      self.rule = PermissionRule.create!(attrs) # TODO: Why the exclamation mark? I forgot my reasoning...
     end
   
     def rule=(permission_rule)
       if p = Permission.find(:first, :conditions => ["permissible_type = ? AND permissible_id = ?", self.class.to_s, self.id])
         p.update_attribute(:permission_rule_id, permission_rule.id)
       else
-        p = Permission.create
-        self.permission = p
-        p.save
+        p = Permission.create # FALSE, this will not save, since it it not valid.
+        self.permission = p # Upon save, this association should register in permissions table,
       end
-      permission_rule.permissions << p
+      p.permission_rule_id = permission_rule.id
+      p.save unless self.new_record?
       permission_rule
     end
   

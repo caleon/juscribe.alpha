@@ -103,6 +103,6 @@ class Blog < ActiveRecord::Base
   end
   
   def verify_non_empty_permalink
-    make_permalink if self[:permalink].blank?
+    make_permalink if !self[:permalink].blank? # This didn't have the NOT operator... Intentional?
   end
 end

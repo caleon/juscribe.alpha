@@ -63,14 +63,14 @@ class AccessibleTest < ActiveSupport::TestCase
   end
   
   def test_whitelist_blacklist
-    acc1 = AccessibleMixin.create(:user => @colin)
+    acc1 = AccessibleMixin.create(:user => @colin) # Is this supposed to be @user? Apparently not (#82)
     rule1 = acc1.create_rule(:user => @user)
     rule1.deny!(:user, @stranger)
     assert rule1.protected?
     assert_equal rule1, acc1.rule
     assert !rule1.accessible_by?(@stranger)
     assert !acc1.accessible_by?(@stranger)
-    rule1.allow!(:user, @user)
+    rule1.allow!(:user, @stranger)
     # Because #allow! doesn't remove the user from denied list:
     assert !rule1.accessible_by?(@stranger)
     assert !acc1.accessible_by?(@stranger)
