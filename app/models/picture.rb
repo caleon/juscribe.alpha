@@ -90,6 +90,19 @@ class Picture < ActiveRecord::Base
   
   ### IMAGE PROCESSING METHODS
   
+  # Following is copied from file_system_backend
+
+  # The attachment ID used in the full path of a file
+  def attachment_path_id
+    ((respond_to?(:parent_id) && parent_id) || id).to_i
+  end
+
+  # overrwrite this to do your own app-specific partitioning. 
+  # you can thank Jamis Buck for this: http://www.37signals.com/svn/archives2/id_partitioning.php
+  def partitioned_path(*args)
+    ("%08d" % attachment_path_id).scan(/..../) + args
+  end
+  
   # Overwriting for depictable_type
   def full_filename(*args)
     opts = args.extract_options!
