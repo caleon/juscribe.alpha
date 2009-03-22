@@ -76,6 +76,13 @@ module ActionController::CommonMethods
     end
     alias_method :trender, :theme_render
     
+    
+    # The following is so that it is formatted in the view in a way that distinguishes
+    # the flash message from the name of a record.
+    def flash_name_for(record)
+      %{<span class="recordName #{record.class.class_name.underscore}Name">#{record.display_name}</span>}
+    end
+    
     def preview
       # TODO: setup format.html version
       # This can be done with rjs......
@@ -177,7 +184,7 @@ module ActionController::CommonMethods
       yield :after_setup if block_given?
       if instance_variable_get("#{shared_setup_options[:instance_var]}").update_attributes(params[shared_setup_options[:instance_sym]])
         yield :after_save if block_given?
-        msg = "You have successfully updated #{instance_variable_get("#{shared_setup_options[:instance_var]}").display_name}."
+        msg = "You have successfully updated #{flash_name_for(instance_variable_get("#{shared_setup_options[:instance_var]}"))}."
         yield :before_response if block_given?
         respond_to do |format|
           format.html do
@@ -198,7 +205,7 @@ module ActionController::CommonMethods
 
     def destroy
       return unless setup
-      msg = "You have deleted #{instance_variable_get("#{shared_setup_options[:instance_var]}").display_name}."
+      msg = "You have deleted #{flash_name_for(instance_variable_get("#{shared_setup_options[:instance_var]}"))}."
       instance_variable_get("#{shared_setup_options[:instance_var]}").nullify!(get_viewer)
       respond_to do |format|
         format.html { flash[:notice] = msg; redirect_to :back }

@@ -122,7 +122,7 @@ class GalleriesControllerTest < ActionController::TestCase
   def test_update
     put :update, galleries(:trip).to_path.merge(:gallery => { :name => 'blah' }), as(:colin)
     assert_redirected_to user_gallery_url(galleries(:trip).to_path)
-    assert_equal "You have successfully updated #{galleries(:trip).display_name}.", flash[:notice]
+    assert_equal "You have successfully updated #{flash_name_for(galleries(:trip))}.", flash[:notice]
   end
   
   def test_update_without_login

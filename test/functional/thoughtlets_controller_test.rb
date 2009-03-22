@@ -113,7 +113,7 @@ class ThoughtletsControllerTest < ActionController::TestCase
   def test_update
     put :update, thoughtlets(:happenings).to_path.update(:thoughtlet => { :location => 'somewhere' }), as(:colin)
     assert_redirected_to user_thoughtlet_url(thoughtlets(:happenings).to_path)
-    assert_equal "You have successfully updated #{thoughtlets(:happenings).display_name}.", flash[:notice]
+    assert_equal "You have successfully updated #{flash_name_for(thoughtlets(:happenings))}.", flash[:notice]
   end
   
   def test_update_without_login

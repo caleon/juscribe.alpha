@@ -62,6 +62,7 @@ class MessagesControllerTest < ActionController::TestCase
     post :create, { :message => { :recipient => users(:keira).nick, :subject => 'dynamiiiiiic', :body => 'hello you, lets get together sometime.' } }, as(:colin)
     assert_not_nil assigns(:message)
     assert_redirected_to message_url(assigns(:message))
+    # The following does not use flash_name_for since the controller action doesn't use it.
     assert_equal "You have sent your message to kknight.", flash[:notice]
   end
   
@@ -82,7 +83,7 @@ class MessagesControllerTest < ActionController::TestCase
     @request.env["HTTP_REFERER"] = "http://www.cnn.com/"
     delete :destroy, messages(:colin_to_nana).to_path, as(:nana)
     assert_redirected_to "http://www.cnn.com/"
-    assert_equal "You have successfully deleted #{messages(:colin_to_nana).display_name}.", flash[:notice]
+    assert_equal "You have successfully deleted #{flash_name_for(messages(:colin_to_nana))}.", flash[:notice]
   end
   
   def test_destroy_by_sender

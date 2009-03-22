@@ -63,13 +63,13 @@ class PermissionsController < ApplicationController
     return unless setup
     @page_title = "#{@permission_rule.display_name} - Edit"
     if @permission_rule.update_attributes(params[:permission_rule])
-      msg = "You have successfully updated #{@permission_rule.display_name}."
+      msg = "You have successfully updated #{flash_name_for(@permission_rule)}."
       respond_to do |format|
         format.html { flash[:notice] = msg; redirect_to permission_url(@permission_rule) }
         format.js { flash.now[:notice] = msg }
       end
     else
-      flash.now[:warning] = "There was an error updating #{@permission_rule.display_name}."
+      flash.now[:warning] = "There was an error updating #{flash_name_for(@permission_rule)}."
       respond_to do |format|
         format.html { trender :edit }
         format.js { render :action => 'update_error' }
@@ -80,7 +80,7 @@ class PermissionsController < ApplicationController
   def destroy
     return unless setup
     @permission_rule.nullify!(get_viewer)
-    msg = "You have deleted the permission rule #{@permission_rule.display_name}."
+    msg = "You have deleted the permission rule #{flash_name_for(@permission_rule)}."
     respond_to do |format|
       format.html { flash[:notice] = msg; redirect_to permissions_url }
       format.js { flash.now[:notice] = msg }

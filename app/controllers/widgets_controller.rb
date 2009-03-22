@@ -46,13 +46,13 @@ class WidgetsController < ApplicationController
     return unless setup && authorize(@widget, :editable => true)
     @page_title = "#{@widget.display_name} - Edit"
     if @widget.update_attributes(params[:widget])
-      msg = "You have successfully updated #{@widget.display_name}."
+      msg = "You have successfully updated #{flash_name_for(@widget)}."
       respond_to do |format|
         format.html { flash[:notice] = msg; redirect_to user_widgets_url(@user) }
         format.js { flash.now[:notice] = msg }
       end
     else
-      flash.now[:warning] = "There was an error updating your #{@widget.display_name}."
+      flash.now[:warning] = "There was an error updating your #{flash_name_for(@widget)}."
       respond_to do |format|
         format.html { trender :edit }
         format.js { render :action => 'update_error' }
@@ -63,7 +63,7 @@ class WidgetsController < ApplicationController
   def destroy
     return unless setup && authorize(@widget, :editable => true)
     @widget.nullify!(get_viewer)
-    msg = "You have deleted #{@widget.display_name}."
+    msg = "You have deleted #{flash_name_for(@widget)}."
     respond_to do |format|
       format.html { flash[:notice] = msg; redirect_to user_url(@user) }
       format.js { flash.now[:notice] = msg }
@@ -73,7 +73,7 @@ class WidgetsController < ApplicationController
   def place
     return unless setup && authorize(@widget, :editable => true)
     @widget.place!(params[:widget][:position])
-    msg = "You have placed #{@widget.display_name}."
+    msg = "You have placed #{flash_name_for(@widget)}."
     respond_to do |format|
       format.html { flash[:notice] = msg; redirect_to user_widgets_url(@user) }
       format.js { flash.now[:notice] = msg }
@@ -85,7 +85,7 @@ class WidgetsController < ApplicationController
   def unplace
     return unless setup && authorize(@widget, :editable => true)
     @widget.unplace!
-    msg = "You have unplaced #{@widget.display_name}."
+    msg = "You have unplaced #{flash_name_for(@widget)}."
     respond_to do |format|
       format.html { flash[:notice] = msg; redirect_to user_widgets_url(@user) }
       format.js { flash.now[:notice] = msg }

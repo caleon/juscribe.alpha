@@ -271,6 +271,6 @@ class PicturesControllerTest < ActionController::TestCase
 #    flunk pictures(:for_blog).to_path.inspect
     delete :destroy, pictures(:for_blog).to_path, as(:colin)
     assert_redirected_to articles(:blog).to_path
-    assert_equal "You have deleted a picture on #{articles(:blog).display_name}.", flash[:notice]
+    assert_equal "You have deleted a picture on #{flash_name_for(articles(:blog))}.", flash[:notice]
   end
 end

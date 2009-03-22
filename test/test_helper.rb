@@ -41,6 +41,9 @@ class Test::Unit::TestCase
 
   # Add more helper methods to be used by all tests here...
   
+  # FIXME: This fails when used in conjunction with #flash_name_for. The html will display with
+  # backslashes in the error for the test but in actually it probably doesn't. On the other hand,
+  # assert_tag seems to be escaping characters on its own
   def assert_flash_equal(expects, type)
     assert_tag :tag => 'div', :attributes => { :id => "flash#{type.to_s.capitalize}" },
                               :content => expects
@@ -65,5 +68,9 @@ class Test::Unit::TestCase
     end
     hash.merge(opts)
     hash
+  end
+  
+  def flash_name_for(record)
+    %{<span class="recordName #{record.class.class_name.underscore}Name">#{record.display_name}</span>}
   end
 end

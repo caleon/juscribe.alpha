@@ -70,13 +70,13 @@ class GalleriesController < ApplicationController
     return unless setup(:permission) && authorize(@gallery, :editable => true)
     @page_title = "#{@gallery.display_name} - Edit"
     if @gallery.update_attributes(params[:gallery])
-      msg = "You have successfully updated #{@gallery.display_name}."
+      msg = "You have successfully updated #{flash_name_for(@gallery)}."
       respond_to do |format|
         format.html { flash[:notice] = msg; redirect_to user_gallery_url(@gallery.to_path) }
         format.js { flash.now[:notice] = msg }
       end
     else
-      flash.now[:warning] = "There was an error updating your #{@gallery.display_name}."
+      flash.now[:warning] = "There was an error updating your #{flash_name_for(@gallery)}."
       respond_to do |format|
         format.html { trender :edit }
         format.js { render :action => 'update_error' }
@@ -86,7 +86,7 @@ class GalleriesController < ApplicationController
   
   def destroy
     return unless setup(:permission) && authorize(@gallery, :editable => true)
-    msg = "You have deleted #{@gallery.display_name}."
+    msg = "You have deleted #{flash_name_for(@gallery)}."
     respond_to do |format|
       format.html { flash[:notice] = msg; redirect_to :back }
       format.js { flash.now[:notice] = msg }

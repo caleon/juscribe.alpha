@@ -136,7 +136,7 @@ class ArticlesControllerTest < ActionController::TestCase
     date = articles(:blog).published_date
     put :update, articles(:blog).to_path.update(:article => { :title => 'yo yo yo' }), as(:colin)
     assert_redirected_to articles(:blog).reload.to_path
-    assert_equal "You have successfully updated #{articles(:blog).display_name}.", flash[:notice]
+    assert_equal "You have successfully updated #{flash_name_for(articles(:blog))}.", flash[:notice]
     assert_equal articles(:blog), assigns(:article)
   end
   
@@ -181,7 +181,7 @@ class ArticlesControllerTest < ActionController::TestCase
     articles(:blog).publish!
     put :unpublish, articles(:blog).to_path, as(:colin)
     assert_redirected_to user_blog_draft_url(articles(:blog).reload.to_path)
-    assert_equal "You have unpublished #{articles(:blog).display_name}.", flash[:notice]
+    assert_equal "You have unpublished #{flash_name_for(articles(:blog))}.", flash[:notice]
   end
   
   def test_unpublish_unpublished
@@ -195,7 +195,7 @@ class ArticlesControllerTest < ActionController::TestCase
     delete :destroy, articles(:blog).to_path, as(:colin)
     assert_response :redirect
     assert_redirected_to 'http://www.cnn.com'
-    assert_equal "You have deleted #{articles(:blog).display_name}.", flash[:notice]
+    assert_equal "You have deleted #{flash_name_for(articles(:blog))}.", flash[:notice]
   end
   
   def test_destroy_without_login
@@ -316,7 +316,7 @@ class ArticlesControllerTest < ActionController::TestCase
     assert articles(:blog).draft?
     put :update, articles(:blog).to_path.merge(:article => { :content => "la dee la la dee la" }), as(:colin)
     assert_redirected_to user_blog_draft_url(articles(:blog).to_path)
-    assert_equal "You have successfully updated #{articles(:blog).display_name}.", flash[:notice]
+    assert_equal "You have successfully updated #{flash_name_for(articles(:blog))}.", flash[:notice]
   end
   
   def test_draft_update_with_title_change
@@ -325,7 +325,7 @@ class ArticlesControllerTest < ActionController::TestCase
     assert articles(:blog).draft?
     put :update, articles(:blog).to_path.merge(:article => { :title => new_title }), as(:colin)
     assert_redirected_to user_blog_draft_url(articles(:blog).to_path)
-    assert_equal "You have successfully updated #{articles(:blog).display_name}.", flash[:notice]
+    assert_equal "You have successfully updated #{flash_name_for(articles(:blog))}.", flash[:notice]
     assert_not_equal new_title, articles(:blog).reload.title
   end
   
@@ -383,7 +383,7 @@ class ArticlesControllerTest < ActionController::TestCase
     assert articles(:blog).to_path.keys.size == 3 # nick and permalink AND blog_id
     put :publish, articles(:blog).to_path, as(:colin)
     assert_redirected_to user_blog_article_url(articles(:blog).reload.to_path)
-    assert_equal "You have published #{articles(:blog).display_name}.", flash[:notice]
+    assert_equal "You have published #{flash_name_for(articles(:blog))}.", flash[:notice]
   end
   
   def test_draft_publish_with_wrong_permalink
@@ -433,7 +433,7 @@ class ArticlesControllerTest < ActionController::TestCase
     assert articles(:blog).draft?
     delete :destroy, articles(:blog).to_path, as(:colin)
     assert_response :redirect
-    assert_equal "You have deleted #{articles(:blog).display_name}.", flash[:notice]
+    assert_equal "You have deleted #{flash_name_for(articles(:blog))}.", flash[:notice]
     assert_redirected_to 'http://www.cnn.com'
   end
   

@@ -177,7 +177,7 @@ class BlogsControllerTest < ActionController::TestCase
   def test_update_as_owner
     put :update, blogs(:company).to_path.merge(:blog => { :description => 'laaaaaa' }), as(:colin)
     assert_redirected_to group_blog_url(blogs(:company).to_path)
-    assert_equal "You have successfully updated #{blogs(:company).display_name}.", flash[:notice]
+    assert_equal "You have successfully updated #{flash_name_for(blogs(:company))}.", flash[:notice]
   end
   
   def test_update_as_non_logged
@@ -211,7 +211,7 @@ class BlogsControllerTest < ActionController::TestCase
     assert blogs(:company).editable_by?(users(:keira))
     put :update, blogs(:company).to_path.merge(:blog => { :description => 'laaaaaa' }), as(:keira)
     assert_redirected_to group_blog_url(blogs(:company).to_path)
-    assert_equal "You have successfully updated #{blogs(:company).display_name}.", flash[:notice]
+    assert_equal "You have successfully updated #{flash_name_for(blogs(:company))}.", flash[:notice]
   end
   
   def test_update_as_boss_though_private
@@ -220,13 +220,13 @@ class BlogsControllerTest < ActionController::TestCase
     assert blogs(:company).private?
     put :update, blogs(:company).to_path.merge(:blog => { :description => 'laaaaaa' }), as(:keira)
     assert_redirected_to group_blog_url(blogs(:company).to_path)
-    assert_equal "You have successfully updated #{blogs(:company).display_name}.", flash[:notice]
+    assert_equal "You have successfully updated #{flash_name_for(blogs(:company))}.", flash[:notice]
   end
   
   def test_destroy_as_owner
     @request.env["HTTP_REFERER"] = "http://www.cnn.com/"
     delete :destroy, blogs(:company).to_path, as(:colin)
-    assert_equal "You have successfully deleted #{blogs(:company).display_name}.", flash[:notice]
+    assert_equal "You have successfully deleted #{flash_name_for(blogs(:company))}.", flash[:notice]
     assert_redirected_to "http://www.cnn.com/"
   end
 end

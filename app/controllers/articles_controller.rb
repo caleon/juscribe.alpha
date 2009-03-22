@@ -12,7 +12,7 @@ class ArticlesController < ApplicationController
       @drafts = true
       unless get_viewer && !(@articles = @blog.drafts.find(:all, :conditions => ["articles.user_id = ?", get_viewer.id])).empty?
         @articles ||= []
-        return display_error(:message => "You do not have drafts for #{@blog.display_name}.")
+        return display_error(:message => "You do not have drafts for #{flash_name_for(@blog)}.")
       end
     else
       if @blog.editable_by?(get_viewer)
@@ -21,7 +21,7 @@ class ArticlesController < ApplicationController
         @articles = @blog.articles.find(:all, find_opts)
       end      
     end
-    @page_title = "Articles from #{@author.display_name}'s blog: #{@blog.display_name}"
+    @page_title = "Articles from #{flash_name_for(@author)}'s blog: #{flash_name_for(@blog)}"
     respond_to do |format|
       format.html { trender }
       format.js
@@ -163,7 +163,7 @@ class ArticlesController < ApplicationController
           @article.clip!(:position => params[:widget][:position], :user => get_viewer)
         end
       end
-      msg = "You have successfully updated #{@article.display_name}."
+      msg = "You have successfully updated #{flash_name_for(@article)}."
       respond_to do |format|
         format.html { flash[:notice] = msg; redirect_to article_url_for(@article) }
         format.js { flash.now[:notice] = msg }
@@ -180,7 +180,7 @@ class ArticlesController < ApplicationController
   def publish
     return unless setup(:permission)
     @article.publish!
-    msg = "You have published #{@article.display_name}."
+    msg = "You have published #{flash_name_for(@article)}."
     respond_to do |format|
       format.html { flash[:notice] = msg; redirect_to article_url_for(@article) }
       format.js { flash.now[:notice] = msg }
@@ -190,7 +190,7 @@ class ArticlesController < ApplicationController
   def unpublish
     return unless setup(:permission)
     @article.unpublish!
-    msg = "You have unpublished #{@article.display_name}."
+    msg = "You have unpublished #{flash_name_for(@article)}."
     respond_to do |format|
       format.html { flash[:notice] = msg; redirect_to article_url_for(@article) }
       format.js { flash.now[:notice] = msg }

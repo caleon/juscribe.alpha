@@ -71,7 +71,7 @@ class MessagesController < ApplicationController
     return unless setup
     if @message.recipient == get_viewer
       @message.nullify!(get_viewer)
-      msg = "You have successfully deleted #{@message.display_name}."
+      msg = "You have successfully deleted #{flash_name_for(@message)}."
       respond_to do |format|
         format.html { flash[:notice] = msg; redirect_to :back }
         format.js { flash.now[:notice] = msg }

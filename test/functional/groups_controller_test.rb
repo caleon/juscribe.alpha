@@ -114,7 +114,7 @@ class GroupsControllerTest < ActionController::TestCase
   def test_update
     put :update, groups(:company).to_path.merge(:group => { :name => 'blah blah' }), as(:colin)
     assert_redirected_to group_url(groups(:company).reload)
-    assert_equal "You have successfully updated #{groups(:company).display_name}.", flash[:notice]
+    assert_equal "You have successfully updated #{flash_name_for(groups(:company))}.", flash[:notice]
     assert_equal 'blah blah', groups(:company).reload.name
   end
   
@@ -136,14 +136,14 @@ class GroupsControllerTest < ActionController::TestCase
     assert groups(:company).editable_by?(users(:nana))
     put :update, groups(:company).to_path.merge(:group => { :name => 'blah blah' }), as(:nana)
     assert_redirected_to group_url(groups(:company).reload)
-    assert_equal "You have successfully updated #{groups(:company).display_name}.", flash[:notice]
+    assert_equal "You have successfully updated #{flash_name_for(groups(:company))}.", flash[:notice]
   end
   
   def test_destroy
     @request.env["HTTP_REFERER"] = 'http://www.cnn.com/'
     delete :destroy, groups(:company).to_path, as(:colin)
     assert_redirected_to 'http://www.cnn.com/'
-    assert_equal "You have successfully disbanded #{groups(:company).display_name}.", flash[:notice]
+    assert_equal "You have successfully disbanded #{flash_name_for(groups(:company))}.", flash[:notice]
   end
   
   def test_destroy_by_non_user
@@ -163,14 +163,14 @@ class GroupsControllerTest < ActionController::TestCase
     groups(:company).rule.add_boss!(:user, users(:nana))
     delete :destroy, groups(:company).to_path, as(:nana)
     assert_redirected_to 'http://www.cnn.com/'
-    assert_equal "You have successfully disbanded #{groups(:company).display_name}.", flash[:notice]
+    assert_equal "You have successfully disbanded #{flash_name_for(groups(:company))}.", flash[:notice]
   end
   
   def test_join
     assert !groups(:company).has_member?(users(:nana))
     put :join, groups(:company).to_path, as(:nana)
     assert_redirected_to group_url(groups(:company))
-    assert_equal "You have successfully joined #{groups(:company).display_name}.", flash[:notice]
+    assert_equal "You have successfully joined #{flash_name_for(groups(:company))}.", flash[:notice]
     assert groups(:company).has_member?(users(:nana))
   end
   
@@ -178,7 +178,7 @@ class GroupsControllerTest < ActionController::TestCase
     groups(:company).join(users(:nana))
     put :join, groups(:company).to_path, as(:nana)
     assert_redirected_to group_url(groups(:company))
-    assert_equal "There was an error joining #{groups(:company).display_name}.", flash[:warning]
+    assert_equal "There was an error joining #{flash_name_for(groups(:company))}.", flash[:warning]
   end
   
   def test_join_by_non_user
@@ -191,14 +191,14 @@ class GroupsControllerTest < ActionController::TestCase
     groups(:company).join(users(:nana))
     put :leave, groups(:company).to_path, as(:nana)
     assert_redirected_to group_url(groups(:company))
-    assert_equal "You have successfully left #{groups(:company).display_name}.", flash[:notice]
+    assert_equal "You have successfully left #{flash_name_for(groups(:company))}.", flash[:notice]
     assert !groups(:company).has_member?(users(:nana))
   end
   
   def test_leave_by_non_member
     put :leave, groups(:company).to_path, as(:nana)
     assert_redirected_to group_url(groups(:company))
-    assert_equal "There was an error leaving #{groups(:company).display_name}.", flash[:warning]
+    assert_equal "There was an error leaving #{flash_name_for(groups(:company))}.", flash[:warning]
     assert !groups(:company).has_member?(users(:nana))
   end
   
@@ -214,7 +214,7 @@ class GroupsControllerTest < ActionController::TestCase
     assert groups(:company).rank_for(users(:colin)) >= Membership::ADMIN_RANK
     put :kick, groups(:company).to_path.merge(:member => users(:nana).id), as(:colin)
     assert_redirected_to group_url(groups(:company))
-    assert_equal "You have successfully kicked #{users(:nana).display_name}.", flash[:notice]
+    assert_equal "You have successfully kicked #{flash_name_for(users(:nana))}.", flash[:notice]
     assert !groups(:company).has_member?(users(:nana))
   end
   
@@ -237,7 +237,7 @@ class GroupsControllerTest < ActionController::TestCase
     assert groups(:company).has_member?(users(:alessandra))
     put :kick, groups(:company).to_path.merge(:member => users(:alessandra).id), as(:nana)
     assert_redirected_to group_url(groups(:company))
-    assert_equal "You have successfully kicked #{users(:alessandra).display_name}.", flash[:notice]
+    assert_equal "You have successfully kicked #{flash_name_for(users(:alessandra))}.", flash[:notice]
     assert !groups(:company).has_member?(users(:alessandra))
   end
   
@@ -246,20 +246,20 @@ class GroupsControllerTest < ActionController::TestCase
     groups(:company).join(users(:alessandra))
     put :kick, groups(:company).to_path.merge(:member => users(:alessandra).id), as(:nana)
     assert_redirected_to group_url(groups(:company))
-    assert_equal "You have successfully kicked #{users(:alessandra).display_name}.", flash[:notice]
+    assert_equal "You have successfully kicked #{flash_name_for(users(:alessandra))}.", flash[:notice]
   end
   
   def test_kicking_non_member
     assert !groups(:company).has_member?(users(:nana))
     put :kick, groups(:company).to_path.merge(:member => users(:nana).id), as(:colin)
     assert_redirected_to group_url(groups(:company))
-    assert_equal "There was an error kicking #{users(:nana).display_name}.", flash[:warning]
+    assert_equal "There was an error kicking #{flash_name_for(users(:nana))}.", flash[:warning]
   end
   
   def test_invite
     put :invite, groups(:company).to_path.merge(:member => users(:nana).id), as(:colin)
     assert_redirected_to group_url(groups(:company))
-    assert_equal "You have invited #{users(:nana).display_name} to #{groups(:company).display_name}.", flash[:notice]
+    assert_equal "You have invited #{flash_name_for(users(:nana))} to #{flash_name_for(groups(:company))}.", flash[:notice]
   end
   
   def test_invite_by_non_user
@@ -271,6 +271,6 @@ class GroupsControllerTest < ActionController::TestCase
   def test_invite_by_non_member
     put :invite, groups(:company).to_path.merge(:member => users(:nana).id), as(:alessandra)
     assert_redirected_to group_url(groups(:company))
-    assert_equal "There was an error inviting #{users(:nana).display_name} to #{groups(:company).display_name}.", flash[:warning]
+    assert_equal "There was an error inviting #{flash_name_for(users(:nana))} to #{flash_name_for(groups(:company))}.", flash[:warning]
   end
 end

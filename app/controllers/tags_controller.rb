@@ -46,13 +46,13 @@ class TagsController < ApplicationController
     else
       @page_title = "New Tag on #{@taggable.display_name}"
       if @taggable.tag_with(params[:tagging][:name], :user => get_viewer)
-        msg = "You have tagged #{@taggable.display_name}."
+        msg = "You have tagged #{flash_name_for(@taggable)}."
         respond_to do |format|
           format.html { flash[:notice] = msg; redirect_to taggable_url_for(@taggable) }
           format.js { flash.now[:notice] = msg }
         end
       else
-        flash.now[:warning] = "There was an error tagging #{@taggable.display_name}."
+        flash.now[:warning] = "There was an error tagging #{flash_name_for(@taggable)}."
         respond_to do |format|
           format.html { trender :new }
           format.js { render :action => 'create_error' }
@@ -66,7 +66,7 @@ class TagsController < ApplicationController
   def destroy
     return unless setup && authorize(@taggable, :editable => true)
     @taggable.taggings.find_by_tag_id(@tag.id).nullify!(get_viewer)
-    msg = "You have deleted a tag on #{@taggable.display_name}."
+    msg = "You have deleted a tag on #{flash_name_for(@taggable)}."
     respond_to do |format|
       format.html { flash[:notice] = msg; redirect_to taggable_url_for(@taggable) }
       format.js { flash.now[:notice] = msg }

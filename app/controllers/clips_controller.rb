@@ -41,13 +41,13 @@ class ClipsController < ApplicationController
     return unless get_widgetable(:message => "Unable to find object to clip. Please check the address.") && authorize(@widgetable)
     @page_title = "New Clip for #{@widgetable.display_name}"
     if @widgetable.clip!(params[:clip].merge(:user => get_viewer)) # TODO: Error messaging for already being clipped.
-      msg = "You have clipped #{@widgetable.display_name}."
+      msg = "You have clipped #{flash_name_for(@widgetable)}."
       respond_to do |format|
         format.html { flash[:notice] = msg; redirect_to widgetable_url_for(@widgetable) }
         format.js { flash.now[:notice] = msg }
       end
     else
-      flash.now[:warning] = "There was an error clipping #{@widgetable.display_name}. Do you already have this clipped?"
+      flash.now[:warning] = "There was an error clipping #{flash_name_for(@widgetable)}. Do you already have this clipped?"
       respond_to do |format|
         format.html { trender :new }
         format.js { render :action => 'create_error' }
@@ -68,13 +68,13 @@ class ClipsController < ApplicationController
     return unless setup && authorize(@clip, :editable => true)
     @page_title = "#{@clip.display_name} - Edit"
     if @clip.update_attributes(params[:clip])
-      msg = "You have successfully updated #{@clip.display_name}."
+      msg = "You have successfully updated #{flash_name_for(@clip)}."
       respond_to do |format|
         format.html { flash[:notice] = msg; redirect_to widgetable_url_for(@widgetable) } # New pattern for polymorphic models
         format.js { flash.now[:notice] = msg }
       end
     else
-      flash.now[:warning] = "There was an error updating your #{@clip.display_name}."
+      flash.now[:warning] = "There was an error updating your #{flash_name_for(@clip)}."
       respond_to do |format|
         format.html { trender :edit }
         format.js { render :action => 'update_error' }
@@ -85,7 +85,7 @@ class ClipsController < ApplicationController
   def destroy
     return unless setup && authorize(@clip, :editable => true)
     @widgetable.unclip!(:user => get_viewer)
-    msg = "You have unclipped #{@widgetable.display_name}."
+    msg = "You have unclipped #{flash_name_for(@widgetable)}."
     respond_to do |format|
       format.html { flash[:notice] = msg; redirect_to widgetable_url_for(@widgetable) }
       format.js { flash.now[:notice] = msg }

@@ -30,7 +30,7 @@ class PicturesController < ApplicationController
   def new
     return unless get_depictable(:message => "Unable to find the object to depict. Please check the address.") && authorize(@depictable)
     @picture = @depictable.pictures.new
-    @page_title = "New Picture for #{@depictable.display_name}"
+    @page_title = "New Picture for #{flash_name_for(@depictable)}"
     respond_to do |format|
       format.html { trender }
       format.js
@@ -39,7 +39,7 @@ class PicturesController < ApplicationController
   
   def create
     return unless get_depictable(:message => "Unable to find_the_object to depict. Please check the address.") && authorize(@depictable)
-    @page_title = "New Picture for #{@depictable.display_name}"
+    @page_title = "New Picture for #{flash_name_for(@depictable)}"
     @picture = create_uploaded_picture_for(@depictable, :save => true, :respond => true)
     return if @picture.errors.empty?
     respond_to do |format|
@@ -51,7 +51,7 @@ class PicturesController < ApplicationController
   def edit
     return unless setup(:permission) && authorize(@picture, :editable => true)
     @use_kropper = true
-    @page_title = "Edit #{@picture.display_name}"
+    @page_title = "Edit #{flash_name_for(@picture)}"
     respond_to do |format|
       format.html { trender }
       format.js
@@ -60,7 +60,7 @@ class PicturesController < ApplicationController
   
   def update
     return unless setup(:permission) && authorize(@picture, :editable => true)
-    @page_title = "Edit #{@picture.display_name}"
+    @page_title = "Edit #{flash_name_for(@picture)}"
     @use_kropper = true
     if params[:picture].delete(:crop_cancel) == "true"
       msg = "Image editing canceled."
@@ -94,7 +94,7 @@ class PicturesController < ApplicationController
   def destroy
     return unless setup(:permission) && authorize(@picture, :editable => true)
     @picture.nullify!(get_viewer)
-    msg = "You have deleted a picture on #{@depictable.display_name}."
+    msg = "You have deleted a picture on #{flash_name_for(@depictable)}."
     respond_to do |format|
       format.html { flash[:notice] = msg; redirect_to depictable_url_for(@depictable) }
       format.js { flash.now[:notice] = msg }

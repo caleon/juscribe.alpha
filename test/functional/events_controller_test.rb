@@ -111,7 +111,7 @@ class EventsControllerTest < ActionController::TestCase
   def test_update
     put :update, events(:birthday).to_path.merge(:event => { :content => "birthday bash!" }), as(:colin)
     assert_redirected_to user_event_url(events(:birthday).to_path)
-    assert_equal "You have successfully updated #{events(:birthday).display_name}.", flash[:notice]
+    assert_equal "You have successfully updated #{flash_name_for(events(:birthday))}.", flash[:notice]
   end
   
   def test_update_without_login
@@ -135,13 +135,13 @@ class EventsControllerTest < ActionController::TestCase
   def test_begin_event
     put :begin_event, events(:birthday).to_path, as(:colin)
     assert_redirected_to user_event_url(events(:birthday).to_path)
-    assert_equal "Your event #{events(:birthday).display_name} has officially begun!", flash[:notice]
+    assert_equal "Your event #{flash_name_for(events(:birthday))} has officially begun!", flash[:notice]
   end
   
   def test_end_event
     put :end_event, events(:birthday).to_path, as(:colin)
     assert_redirected_to user_event_url(events(:birthday).to_path)
-    assert_equal "Your event #{events(:birthday).display_name} has officially ended!", flash[:notice]
+    assert_equal "Your event #{flash_name_for(events(:birthday))} has officially ended!", flash[:notice]
   end
   
   def test_destroy

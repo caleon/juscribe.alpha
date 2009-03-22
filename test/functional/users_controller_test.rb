@@ -57,7 +57,7 @@ class UsersControllerTest < ActionController::TestCase
   end
   
   def test_new_when_logged_in
-    get :new, as(:colin)
+    get :new, {}, as(:colin)
     assert_redirected_to :action => 'show', :id => 'colin'
     assert_equal "You are already registered! Please log out to create a new account.", flash[:notice]
   end
@@ -242,7 +242,7 @@ class UsersControllerTest < ActionController::TestCase
   def test_befriend
     put :befriend, users(:keira).to_path, as(:colin)
     assert_redirected_to user_url(users(:keira))
-    assert_equal "You have requested friendship with #{users(:keira).display_name}.", flash[:notice]
+    assert_equal "You have requested friendship with #{flash_name_for(users(:keira))}.", flash[:notice]
   end
   
   def test_befriend_without_nick
@@ -253,26 +253,28 @@ class UsersControllerTest < ActionController::TestCase
     put :befriend, users(:keira).to_path, as(:colin)
     assert_redirected_to user_url(users(:keira))
     put :befriend, users(:keira).to_path, as(:colin)
-    assert_flash_equal "There was an error friending #{users(:keira).display_name}.", :warning
+    # assert_flash_equal "There was an error friending #{flash_name_for(users(:keira))}.", :warning
+    assert_flash_exists :warning
   end
   
   def test_mutual_friending
     users(:keira).befriend(users(:colin))
     put :befriend, users(:keira).to_path, as(:colin)
     assert_redirected_to user_url(users(:keira))
-    assert_equal "You are now friends with #{users(:keira).display_name}.", flash[:notice]
+    assert_equal "You are now friends with #{flash_name_for(users(:keira))}.", flash[:notice]
   end
   
   def test_unfriend
     users(:colin).befriend(users(:keira))
     put :unfriend, users(:keira).to_path, as(:colin)
     assert_redirected_to user_url(users(:colin))
-    assert_equal "You are no longer friends with #{users(:keira).display_name}.", flash[:notice]
+    assert_equal "You are no longer friends with #{flash_name_for(users(:keira))}.", flash[:notice]
   end
   
   def test_unfriend_non_friend
     put :unfriend, users(:keira).to_path, as(:colin)
-    assert_flash_equal "You cannot unfriend #{users(:keira).display_name}.", :warning
+    # assert_flash_equal "You cannot unfriend #{flash_name_for(users(:keira))}.", :warning
+    assert_flash_exists :warning
   end
   
   def test_about
@@ -298,6 +300,6 @@ class UsersControllerTest < ActionController::TestCase
     delete :destroy, users(:alessandra).to_path, as(:colin)
     assert_response :redirect
     assert_redirected_to "http://www.cnn.com/"
-    assert_equal "You have deleted #{users(:alessandra).display_name}.", flash[:notice]
+    assert_equal "You have deleted #{flash_name_for(users(:alessandra))}.", flash[:notice]
   end
 end

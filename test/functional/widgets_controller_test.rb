@@ -102,7 +102,7 @@ class WidgetsControllerTest < ActionController::TestCase
   def test_update
     put :update, widgets(:colin_clip).to_path(:user).update(:widget => { :name => 'blah' }), as(:colin)
     assert_redirected_to user_widgets_url(users(:colin))
-    assert_equal "You have successfully updated #{widgets(:colin_clip).display_name}.", flash[:notice]
+    assert_equal "You have successfully updated #{flash_name_for(widgets(:colin_clip))}.", flash[:notice]
   end
   
   def test_update_without_login
@@ -126,7 +126,7 @@ class WidgetsControllerTest < ActionController::TestCase
   def test_place
     put :place, widgets(:colin_clip).to_path(:user).merge(:widget => { :position => 4 }), as(:colin)
     assert_redirected_to user_widgets_url(users(:colin))
-    assert_equal "You have placed #{widgets(:colin_clip).display_name}.", flash[:notice]
+    assert_equal "You have placed #{flash_name_for(widgets(:colin_clip))}.", flash[:notice]
   end
   
   def test_place_without_params
@@ -138,13 +138,13 @@ class WidgetsControllerTest < ActionController::TestCase
   def test_unplace
     put :unplace, widgets(:colin_clip).to_path(:user), as(:colin)
     assert_redirected_to user_widgets_url(users(:colin))
-    assert_equal "You have unplaced #{widgets(:colin_clip).display_name}.", flash[:notice]
+    assert_equal "You have unplaced #{flash_name_for(widgets(:colin_clip))}.", flash[:notice]
   end
   
   def test_destroy
     delete :destroy, widgets(:colin_clip).to_path(:user), as(:colin)
     assert_redirected_to user_url(users(:colin))
-    assert_equal "You have deleted #{widgets(:colin_clip).display_name}.", flash[:notice]
+    assert_equal "You have deleted #{flash_name_for(widgets(:colin_clip))}.", flash[:notice]
   end
   
   def test_destroy_by_random_user
@@ -167,6 +167,6 @@ class WidgetsControllerTest < ActionController::TestCase
     
     delete :destroy, widgets(:article_clip).to_path(:user), as(:colin)
     assert_redirected_to user_url(users(:nana))
-    assert_equal "You have deleted #{widgets(:article_clip).display_name}.", flash[:notice]
+    assert_equal "You have deleted #{flash_name_for(widgets(:article_clip))}.", flash[:notice]
   end
 end

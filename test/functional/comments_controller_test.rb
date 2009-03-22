@@ -180,7 +180,7 @@ class CommentsControllerTest < ActionController::TestCase
     assert_not_nil assigns(:comment)
     assert assigns(:comment).valid?
     assert_redirected_to user_blog_article_url(articles(:blog).to_path) + "#comment-#{assigns(:comment).scoped_id}"
-    assert_equal "You have commented on #{articles(:blog).display_name}.", flash[:notice]
+    assert_equal "You have commented on #{flash_name_for(articles(:blog))}.", flash[:notice]
   end
   
   def test_create_with_non_user
@@ -188,7 +188,7 @@ class CommentsControllerTest < ActionController::TestCase
     assert articles(:blog).allows_comments? && articles(:blog).allows_anonymous_comments?
     post :create, articles(:blog).to_path(true).merge(:comment => { :email => 'blah@blah.com', :body => 'blah blah' })
     assert_redirected_to user_blog_article_url(articles(:blog).to_path) + "#comment-#{assigns(:comment).scoped_id}"
-    assert_equal "You have commented on #{articles(:blog).display_name}.", flash[:notice]
+    assert_equal "You have commented on #{flash_name_for(articles(:blog))}.", flash[:notice]
     assert_not_nil assigns(:comment)
   end
   
@@ -228,7 +228,7 @@ class CommentsControllerTest < ActionController::TestCase
     assert articles(:blog).accessible_by?(users(:colin))
     post :create, articles(:blog).to_path(true).merge(:comment => { :body => 'blah blah' }), as(:colin)
     assert_redirected_to user_blog_article_url(articles(:blog).to_path) + "#comment-#{assigns(:comment).scoped_id}"
-    assert_equal "You have commented on #{articles(:blog).display_name}.", flash[:notice]
+    assert_equal "You have commented on #{flash_name_for(articles(:blog))}.", flash[:notice]
   end
   
   def test_edit_as_comment_owner
@@ -263,7 +263,7 @@ class CommentsControllerTest < ActionController::TestCase
     articles(:blog).publish!
     put :update, comments(:blog_comment).to_path.merge(:comment => { :body => 'blah blah' }), as(:keira)
     assert_redirected_to user_blog_article_url(articles(:blog).to_path) + "#comment-#{assigns(:comment).scoped_id}"
-    assert_equal "You have successfully updated #{comments(:blog_comment).display_name}.", flash[:notice]
+    assert_equal "You have successfully updated #{flash_name_for(comments(:blog_comment))}.", flash[:notice]
     assert_equal 'blah blah', comments(:blog_comment).reload.body
   end
   
@@ -278,7 +278,7 @@ class CommentsControllerTest < ActionController::TestCase
     articles(:blog).publish!
     put :update, comments(:blog_comment).to_path.merge(:comment => { :body => 'blah blah' }), as(:colin)
     assert_redirected_to user_blog_article_url(articles(:blog).to_path) + "#comment-#{assigns(:comment).scoped_id}"
-    assert_equal "You have successfully updated #{comments(:blog_comment).display_name}.", flash[:notice]
+    assert_equal "You have successfully updated #{flash_name_for(comments(:blog_comment))}.", flash[:notice]
   end
   
   def test_update_as_non_user
@@ -292,7 +292,7 @@ class CommentsControllerTest < ActionController::TestCase
     articles(:blog).publish!
     delete :destroy, comments(:blog_comment).to_path, as(:keira)
     assert_redirected_to user_blog_article_url(articles(:blog).to_path)
-    assert_equal "You have deleted a comment on #{articles(:blog).display_name}.", flash[:notice]
+    assert_equal "You have deleted a comment on #{flash_name_for(articles(:blog))}.", flash[:notice]
   end
   
   def test_destroy_as_non_comment_owner
@@ -306,6 +306,6 @@ class CommentsControllerTest < ActionController::TestCase
     articles(:blog).publish!
     delete :destroy, comments(:blog_comment).to_path, as(:colin)
     assert_redirected_to user_blog_article_url(articles(:blog).to_path)
-    assert_equal "You have deleted a comment on #{articles(:blog).display_name}.", flash[:notice]
+    assert_equal "You have deleted a comment on #{flash_name_for(articles(:blog))}.", flash[:notice]
   end
 end

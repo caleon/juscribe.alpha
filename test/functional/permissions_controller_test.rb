@@ -89,7 +89,7 @@ class PermissionsControllerTest < ActionController::TestCase
   def test_update
     put :update, permission_rules(:blog).to_path.merge(:permission_rule => { :name => 'BEST friends' }), as(:colin)
     assert_redirected_to permission_url(permission_rules(:blog))
-    assert_equal "You have successfully updated #{permission_rules(:blog).display_name}.", flash[:notice]
+    assert_equal "You have successfully updated #{flash_name_for(permission_rules(:blog))}.", flash[:notice]
   end
   
   def test_update_without_user
@@ -107,7 +107,7 @@ class PermissionsControllerTest < ActionController::TestCase
   def test_destroy
     delete :destroy, permission_rules(:blog).to_path, as(:colin)
     assert_redirected_to permissions_url
-    assert_equal "You have deleted the permission rule #{permission_rules(:blog).display_name}.", flash[:notice]
+    assert_equal "You have deleted the permission rule #{flash_name_for(permission_rules(:blog))}.", flash[:notice]
   end
   
   def test_destroy_without_user

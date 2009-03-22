@@ -55,13 +55,13 @@ class CommentsController < ApplicationController
       is_comment_spam = is_spam?(:comment_content => @comment.body, :permalink => commentable_url_for(@commentable),
                                  :comment_type => 'comment', :comment_author => (get_viewer.nick rescue @comment.nick), :comment_author_email => (get_viewer.email rescue @comment.email))
       if !is_comment_spam && @comment.save
-        msg = "You have commented on #{@commentable.display_name}."
+        msg = "You have commented on #{flash_name_for(@commentable)}."
         respond_to do |format|
           format.html { flash[:notice] = msg; redirect_to comment_url_for(@comment) }
           format.js { flash.now[:notice] = msg }
         end
       else
-        flash[:warning] = "There was an error commenting on #{@commentable.display_name}." +
+        flash[:warning] = "There was an error commenting on #{flash_name_for(@commentable)}." +
                               (is_comment_spam ? " Our system thinks your comment was a spam. If you think this is a mistake, please contact the site administrator." : "")
         respond_to do |format|
           format.html { redirect_to commentable_url_for(@commentable) + '#commentForm' }
@@ -91,13 +91,13 @@ class CommentsController < ApplicationController
     return unless setup && authorize(@comment, :editable => true)
     @page_title = "#{@comment.display_name} - Edit"
     if @comment.update_attributes(params[:comment])
-      msg = "You have successfully updated #{@comment.display_name}."
+      msg = "You have successfully updated #{flash_name_for(@comment)}."
       respond_to do |format|
         format.html { flash[:notice] = msg; redirect_to comment_url_for(@comment) }
         format.js { flash.now[:notice] = msg }
       end
     else
-      flash.now[:warning] = "There was an error updating your #{@comment.display_name}."
+      flash.now[:warning] = "There was an error updating your #{flash_name_for(@comment)}."
       respond_to do |format|
         format.html { trender :edit }
         format.js { render :action => 'update_error' }
@@ -108,7 +108,7 @@ class CommentsController < ApplicationController
   def destroy
     return unless setup(:permission) && authorize(@comment, :editable => true)
     @comment.nullify!(get_viewer)
-    msg = "You have deleted a comment on #{@commentable.display_name}."
+    msg = "You have deleted a comment on #{flash_name_for(@commentable)}."
     respond_to do |format|
       format.html { flash[:notice] = msg; redirect_to commentable_url_for(@commentable) }
       format.js { flash.now[:notice] = msg }

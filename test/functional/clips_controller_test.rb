@@ -122,7 +122,7 @@ class ClipsControllerTest < ActionController::TestCase
 #    assert_not_nil assigns(:clip)
 #    assert assigns(:clip).valid?
     assert_redirected_to user_url(users(:keira))
-    assert_equal "You have clipped #{users(:keira).display_name}.", flash[:notice]
+    assert_equal "You have clipped #{flash_name_for(users(:keira))}.", flash[:notice]
   end
   
   def test_create_with_diff_user
@@ -130,7 +130,7 @@ class ClipsControllerTest < ActionController::TestCase
 #    assert_not_nil assigns(:clip)
 #    assert assigns(:clip).valid?
     assert_redirected_to user_url(users(:keira))
-    assert_equal "You have clipped #{users(:keira).display_name}.", flash[:notice]
+    assert_equal "You have clipped #{flash_name_for(users(:keira))}.", flash[:notice]
  end
   
   def test_create_with_non_user
@@ -157,7 +157,7 @@ class ClipsControllerTest < ActionController::TestCase
 #    assert_not_nil assigns(:clip)
 #    assert assigns(:clip).valid?
     assert_redirected_to user_url(users(:keira))
-    assert_equal "You have clipped #{users(:keira).display_name}.", flash[:notice]
+    assert_equal "You have clipped #{flash_name_for(users(:keira))}.", flash[:notice]
   end
   
   def test_edit
@@ -182,7 +182,7 @@ class ClipsControllerTest < ActionController::TestCase
   def test_update
     put :update, widgets(:colin_clip).to_path.update(:clip => { :name => 'blah' }), as(:colin)
     assert_redirected_to user_url(users(:colin))
-    assert_equal "You have successfully updated #{widgets(:colin_clip).display_name}.", flash[:notice]
+    assert_equal "You have successfully updated #{flash_name_for(widgets(:colin_clip))}.", flash[:notice]
   end
   
   def test_update_without_login
@@ -206,7 +206,7 @@ class ClipsControllerTest < ActionController::TestCase
   def test_destroy
     delete :destroy, widgets(:colin_clip).to_path, as(:colin)
     assert_redirected_to user_url(users(:colin))
-    assert_equal "You have unclipped #{users(:colin).display_name}.", flash[:notice]
+    assert_equal "You have unclipped #{flash_name_for(users(:colin))}.", flash[:notice]
   end
   
   def test_destroy_by_random_user
@@ -230,6 +230,6 @@ class ClipsControllerTest < ActionController::TestCase
     
     delete :destroy, widgets(:article_clip).to_path, as(:colin)
     assert_redirected_to user_blog_article_url(articles(:blog).to_path), articles(:blog).to_path.inspect
-    assert_equal "You have unclipped #{articles(:blog).display_name}.", flash[:notice]
+    assert_equal "You have unclipped #{flash_name_for(articles(:blog))}.", flash[:notice]
   end
 end

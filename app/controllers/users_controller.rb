@@ -31,8 +31,12 @@ class UsersController < ApplicationController
   # TODO: quit borrowing normal methods from common and set titles for actions  
   def new
     if get_viewer
-      flash[:notice] = "You are already registered! Please log out to create a new account."
-      redirect_to get_viewer and return
+      msg = "You are already registered! Please log out to create a new account."
+      respond_to do |format|
+        format.html { flash[:notice] = msg; redirect_to get_viewer }
+        format.js { flash.now[:notice] = msg }
+      end
+      return
     end
     @page_title = "Become a new Juscribe member!"
     @user = User.new
@@ -129,7 +133,7 @@ class UsersController < ApplicationController
   
   def destroy
     return unless setup(:permission) && authorize(@user, :editable => true)
-    msg = "You have deleted #{@user.display_name}."
+    msg = "You have deleted #{flash_name_for(@user)}."
     @user.nullify!(get_viewer)
     respond_to do |format|
       format.html { flash[:notice] = msg; redirect_to :back }
@@ -203,14 +207,14 @@ class UsersController < ApplicationController
     return unless setup
     @page_title = get_viewer.display_name
     if res = get_viewer.befriend(@user) # This sends out notifier in model.
-      @notice = [ "You have requested friendship with #{@user.display_name}.",
-                  "You are now friends with #{@user.display_name}." ][res]
+      @notice = [ "You have requested friendship with #{flash_name_for(@user)}.",
+                  "You are now friends with #{flash_name_for(@user)}." ][res]
       respond_to do |format|
         format.html { flash[:notice] = @notice; redirect_to @user }
         format.js          
       end
     else
-      flash.now[:warning] = "There was an error friending #{@user.display_name}."
+      flash.now[:warning] = "There was an error friending #{flash_name_for(@user)}."
       respond_to do |format|
         format.html { params[:id] = get_viewer.nick; show }
         format.js { render :action => 'befriend_error' }
@@ -221,13 +225,13 @@ class UsersController < ApplicationController
   def unfriend
     return unless setup
     if get_viewer.kinda_friends_with?(@user) && get_viewer.unfriend(@user)
-      msg = "You are no longer friends with #{@user.display_name}."
+      msg = "You are no longer friends with #{flash_name_for(@user)}."
       respond_to do |format|
         format.html { flash[:notice] = msg; redirect_to get_viewer }
         format.js { flash.now[:notice] = msg; }
       end
     else
-      flash.now[:warning] = "You cannot unfriend #{@user.display_name}."
+      flash.now[:warning] = "You cannot unfriend #{flash_name_for(@user)}."
       respond_to do |format|
         format.html do
           params[:id] = get_viewer.friends_with?(@user) ? @user.nick : get_viewer.nick

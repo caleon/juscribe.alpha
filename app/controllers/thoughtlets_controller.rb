@@ -68,13 +68,13 @@ class ThoughtletsController < ApplicationController
     return unless setup(:permission) && authorize(@thoughtlet, :editable => true)
     @page_title = "#{@thoughtlet.display_name} - Edit"
     if @thoughtlet.update_attributes(params[:thoughtlet])
-      msg = "You have successfully updated #{@thoughtlet.display_name}."
+      msg = "You have successfully updated #{flash_name_for(@thoughtlet)}."
       respond_to do |format|
         format.html { flash[:notice] = msg; redirect_to user_thoughtlet_url(@thoughtlet.to_path) }
         format.js { flash.now[:notice] = msg }
       end
     else
-      flash.now[:warning] = "There was an error updating your #{@thoughtlet.display_name}."
+      flash.now[:warning] = "There was an error updating your #{flash_name_for(@thoughtlet)}."
       respond_to do |format|
         format.html { trender :edit }
         format.js { render :action => 'update_error' }
@@ -84,7 +84,7 @@ class ThoughtletsController < ApplicationController
   
   def destroy
     return unless setup(:permission) && authorize(@thoughtlet, :editable => true)
-    msg = "You have deleted #{@thoughtlet.display_name}."
+    msg = "You have deleted #{flash_name_for(@thoughtlet)}."
     respond_to do |format|
       format.html { flash[:notice] = msg; redirect_to :back }
       format.js { flash.now[:notice] = msg }

@@ -21,7 +21,7 @@ class BlogsController < ApplicationController
     @blog = @bloggable.blogs.primary_find(params[:blog_id], :include => [:permission, :latest_articles])
     raise ActiveRecord::RecordNotFound if @blog.nil? || !authorize(@blog)
     @articles = @blog.latest_articles
-    @page_title = "Latest Articles from #{@blog.name}"
+    @page_title = "Latest Articles from #{@blog.display_name}"
     respond_to do |format|
       format.html
       format.rss { render :layout => false }
@@ -113,13 +113,13 @@ class BlogsController < ApplicationController
     @page_title = "#{@blog.display_name} - Edit"
     if @blog.update_attributes(params[:blog])
       create_uploaded_picture_for(@blog, :save => true) if picture_uploaded?
-      msg = "You have successfully updated #{@blog.display_name}."
+      msg = "You have successfully updated #{flash_name_for(@blog)}."
       respond_to do |format|
         format.html { flash[:notice] = msg; redirect_to blog_url_for(@blog) }
         format.js { flash.now[:notice] = msg }
       end
     else
-      flash.now[:warning] = "There was an error updating your #{@blog.display_name}."
+      flash.now[:warning] = "There was an error updating your #{flash_name_for(@blog)}."
       respond_to do |format|
         format.html { trender :edit }
         format.js { render :action => 'update_error' }
@@ -129,7 +129,7 @@ class BlogsController < ApplicationController
   
   def destroy
     return unless setup(:permission) && authorize(@blog, :editable => true)
-    msg = "You have successfully deleted #{@blog.display_name}."
+    msg = "You have successfully deleted #{flash_name_for(@blog)}."
     @blog.nullify!(get_viewer)
     respond_to do |format|
       format.html { flash[:notice] = msg; redirect_to :back }

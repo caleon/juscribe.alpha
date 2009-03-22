@@ -67,13 +67,13 @@ class GroupsController < ApplicationController
     return unless setup(:permission) && authorize(@group, :editable => true)
     @page_title = "#{@group.display_name} - Edit"
     if @group.update_attributes(params[:group])
-      msg = "You have successfully updated #{@group.display_name}."
+      msg = "You have successfully updated #{flash_name_for(@group)}."
       respond_to do |format|
         format.html { flash[:notice] = msg; redirect_to group_url(@group) }
         format.js { flash.now[:notice] = msg }
       end
     else
-      flash.now[:warning] = "There was an error updating your #{@blog.display_name}."
+      flash.now[:warning] = "There was an error updating your #{flash_name_for(@blog)}."
       respond_to do |format|
         format.html { trender :edit }
         format.js { render :actin => 'update_error' }
@@ -83,7 +83,7 @@ class GroupsController < ApplicationController
   
   def destroy
     return unless setup(:permission) && authorize(@group, :editable => true)
-    msg = "You have successfully disbanded #{@group.display_name}."
+    msg = "You have successfully disbanded #{flash_name_for(@group)}."
     @group.disband!(get_viewer)
     respond_to do |format|
       format.html { flash[:notice] = msg; redirect_to :back }
@@ -95,13 +95,13 @@ class GroupsController < ApplicationController
     return unless setup
     @page_title = @group.display_name
     if @group.join(get_viewer)
-      msg = "You have successfully joined #{@group.display_name}."
+      msg = "You have successfully joined #{flash_name_for(@group)}."
       respond_to do |format|
         format.html { flash[:notice] = msg; redirect_to group_url(@group) }
         format.js { flash.now[:notice] = msg }
       end
     else
-      msg = "There was an error joining #{@group.display_name}."
+      msg = "There was an error joining #{flash_name_for(@group)}."
       respond_to do |format|
         format.html { flash[:warning] = msg; redirect_to group_url(@group) }
         format.js { flash.now[:warning] = msg; render :action => 'join_error' }
@@ -112,13 +112,13 @@ class GroupsController < ApplicationController
   def leave
     return unless setup
     if @group.kick(get_viewer)
-      msg = "You have successfully left #{@group.display_name}."
+      msg = "You have successfully left #{flash_name_for(@group)}."
       respond_to do |format|
         format.html { flash[:notice] = msg; redirect_to group_url(@group) }
         format.js { flas.now[:notice] = msg }
       end
     else
-      msg = "There was an error leaving #{@group.display_name}."
+      msg = "There was an error leaving #{flash_name_for(@group)}."
       respond_to do |format|
         format.html { flash[:warning] = msg; redirect_to group_url(@group) }
         format.js { flash.now[:warning] = msg; render :action => 'leave_error' }
@@ -129,13 +129,13 @@ class GroupsController < ApplicationController
   def kick
     return unless setup(:permission) && authorize(@group, :editable => true)
     if @group.kick(user = User.find(params[:member]))
-      msg = "You have successfully kicked #{user.display_name}."
+      msg = "You have successfully kicked #{flash_name_for(user)}."
       respond_to do |format|
         format.html { flash[:notice] = msg; redirect_to group_url(@group) }
         format.js { flash.now[:notice] = msg }
       end
     else
-      msg = "There was an error kicking #{user.display_name}."
+      msg = "There was an error kicking #{flash_name_for(user)}."
       respond_to do |format|
         format.html { flash[:warning] = msg; redirect_to group_url(@group) }
         format.js { flash.now[:warning] = msg; render :action => 'kick_error' }
@@ -148,13 +148,13 @@ class GroupsController < ApplicationController
   def invite
     return unless setup(:permission)
     if @group.invite({:to_user => (user = User.find(params[:member])), :from_user => get_viewer})
-      msg = "You have invited #{user.display_name} to #{@group.display_name}."
+      msg = "You have invited #{flash_name_for(user)} to #{flash_name_for(@group)}."
       respond_to do |format|
         format.html { flash[:notice] = msg; redirect_to group_url(@group) }
         format.js { flash.now[:notice] = msg }
       end
     else
-      msg = "There was an error inviting #{user.display_name} to #{@group.display_name}."
+      msg = "There was an error inviting #{flash_name_for(user)} to #{flash_name_for(@group)}."
       respond_to do |format|
         format.html { flash[:warning] = msg; redirect_to group_url(@group) }
         format.js { flash.now[:warning] = msg; render :action => 'invite_error' }

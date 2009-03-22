@@ -71,13 +71,13 @@ class EventsController < ApplicationController
     @page_title = "#{@event.display_name} - Edit"
     if @event.update_attributes(params[:event])
       create_uploaded_picture_for(@event, :save => true) if picture_uploaded?
-      msg = "You have successfully updated #{@event.display_name}."
+      msg = "You have successfully updated #{flash_name_for(@event)}."
       respond_to do |format|
         format.html { flash[:notice] = msg; redirect_to user_event_url(@event.to_path) }
         format.js { flash.now[:notice] = msg }
       end
     else
-      flash.now[:warning] = "There was an error updating your #{@event.display_name}."
+      flash.now[:warning] = "There was an error updating your #{flash_name_for(@event)}."
       respond_to do |format|
         format.html { trender :edit }
         format.js { render :action => 'update_error' }
@@ -89,13 +89,13 @@ class EventsController < ApplicationController
     return unless setup(:permission) && authorize(@event, :editable => true)
     @page_title = "#{@event.display_name} - Edit"
     if @event.begin!
-      msg = "Your event #{@event.display_name} has officially begun!"
+      msg = "Your event #{flash_name_for(@event)} has officially begun!"
       respond_to do |format|
         format.html { flash[:notice] = msg; redirect_to user_event_url(@event.user, @event) }
         format.js { flash.now[:notice] = msg }
       end
     else
-      flash.now[:warning] = "There was an error commencing your event #{@event.display_name}."
+      flash.now[:warning] = "There was an error commencing your event #{flash_name_for(@event)}."
       respond_to do |format|
         format.html { trender :edit }
         format.js { render :action => 'begin_event_error' }
@@ -107,13 +107,13 @@ class EventsController < ApplicationController
     return unless setup(:permission) && authorize(@event, :editable => true)
     @page_title = "#{@event.display_name} - Edit"
     if @event.end!
-      msg = "Your event #{@event.display_name} has officially ended!"
+      msg = "Your event #{flash_name_for(@event)} has officially ended!"
       respond_to do |format|
         format.html { flash[:notice] = msg; redirect_to user_event_url(@event.user, @event) }
         format.js { flash.now[:notice] = msg }
       end
     else
-      flash.now[:warning] = "There was an error ending your event #{@event.display_name}."
+      flash.now[:warning] = "There was an error ending your event #{flash_name_for(@event)}."
       respond_to do |format|
         format.html { trender :edit }
         format.js { render :action => 'end_event_error' }
@@ -123,7 +123,7 @@ class EventsController < ApplicationController
   
   def destroy
     return unless setup(:permission) && authorize(@event, :editable => true)
-    msg = "You have deleted #{@event.display_name}."
+    msg = "You have deleted #{flash_name_for(@event)}."
     respond_to do |format|
       format.html { flash[:notice] = msg; redirect_to :back }
       format.js { flash.now[:notice] = msg }
