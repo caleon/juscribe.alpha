@@ -47,10 +47,17 @@ module ActiveRecord
     def layout_name=(str)
       if self.layouting
         self.layouting.choose(str)
-      else
+      elsif !self.new_record?
         self.create_layouting(:name => str, :user => self.user)
+      else
+        after_create {|record| record.create_layouting(:name => str, :user => self.user) }
       end
     end
+    
+    #after_create :set_layout_name!
+    #def set_layout_name!
+    #  self.create_layouting(:name => @layout_name, :user => self.user) unless @layout_name.blank?
+    #end
     
     def layout_name
       self.layouting && !self.layouting.name.blank? ? self.layouting.name : Layouting::DEFAULT_LAYOUT

@@ -57,7 +57,11 @@ module ActiveRecord::Acts::Accessible #:nodoc:
       raise ActiveRecord::RecordNotFound if prule.nil?
       prule
     rescue NoMethodError, ActiveRecord::RecordNotFound
-      self.create_rule(:user => self.user)
+      if self.new_record?
+        after_create {|record| record.create_rule }
+      else        
+        self.create_rule
+      end
     end
       
     def create_rule(attrs={})
