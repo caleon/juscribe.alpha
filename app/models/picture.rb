@@ -5,8 +5,10 @@ class Picture < ActiveRecord::Base
   belongs_to :depictable, :polymorphic => true, :inherits_layout => true
   acts_as_list :scope => 'depictable_id = #{depictable_id} AND depictable_type = \'#{depictable_type}\''
   has_attachment  :content_type => :image,
-                  :storage => :file_system, #(RAILS_ENV != 'production' ? :file_system : :s3),
-                  :path_prefix => "public/images/uploads", # TODO: Setup shared directory.
+                  #:storage => :file_system, #(RAILS_ENV != 'production' ? :file_system : :s3),
+                  :storage => (RAILS_ENV != 'production' ? :file_system : :s3),
+                  #:path_prefix => "public/images/uploads", # TODO: Setup shared directory.
+                  :path_prefix => (RAILS_ENV != 'production' ? "public/images/uploads" : "uploads/pictures"),
                   :min_size => 100.bytes,
                   :max_size => 2048.kilobytes,
                   :resize_to => '800x800>', # Used by RMagick, so probably not needed.
@@ -23,9 +25,7 @@ class Picture < ActiveRecord::Base
   attr_protected :depictable_type, :depictable_id
   # Needs more validations for kropper
   alias_attribute :content, :caption
-  
-  after_create :save_original_copy
-  
+    
   DEFAULT_CROP = { :crop_left         =>  0,
                    :crop_top          =>  0,
                    :crop_width        =>  100,
@@ -90,9 +90,14 @@ class Picture < ActiveRecord::Base
   
   # Overwriting for depictable_type
   def full_filename(thumbnail = nil)
-    file_system_path = (thumbnail ? thumbnail_class : self).attachment_options[:path_prefix].to_s
-    File.join(RAILS_ROOT, file_system_path, self.depictable_type.underscore, *partitioned_path(thumbnail_name_for(thumbnail)))
+    if attachment_options[:storage] != :s3
+      file_system_path = (thumbnail ? thumbnail_class : self).attachment_options[:path_prefix].to_s
+      File.join(RAILS_ROOT, file_system_path, self.depictable_type.underscore, *partitioned_path(thumbnail_name_for(thumbnail)))
+    else
+      super
+    end
   end
+  
   
   # Overwriting for depictable_id, depictable_type, user_id
   def create_or_update_thumbnail(temp_file, file_name_suffix, *size)
@@ -142,6 +147,42 @@ class Picture < ActiveRecord::Base
   def crop!(opts=nil); crop_with_image_science!(opts ? set_crop_params(opts) : crop_params); end
   
     
+    
+  #######
+  protected
+  #######
+  # overriding s3_backend AND file_system_backend method
+  def save_to_storage
+    if save_attachment?
+      orig_name = full_filename.gsub(/(.+)(\.[a-z]+)$/, '\1_original\2')
+      if attachment_options[:storage] == :s3
+        S3Object.store(
+          full_filename,
+          (temp_path ? File.open(temp_path) : temp_data),
+          bucket_name,
+          :content_type => content_type,
+          :access => attachment_options[:s3_access]
+        )
+        S3Object.store(
+          orig_name,
+          (temp_path ? File.open(temp_path) : temp_data),
+          bucket_name,
+          :content_type => content_type,
+          :access => attachment_options[:s3_access]
+        )
+      else
+        # TODO: This overwrites the file if it exists, maybe have an allow_overwrite option?
+        FileUtils.mkdir_p(File.dirname(full_filename))
+        File.cp(temp_path, full_filename)
+        File.cp(temp_path, orig_name)
+        File.chmod(attachment_options[:chmod] || 0644, full_filename)
+        File.chmod(attachment_options[:chmod] || 0644, orig_name)
+      end
+    end
+    @old_filename = nil
+    true
+  end
+  
   #######
   private
   #######
@@ -165,12 +206,17 @@ class Picture < ActiveRecord::Base
     save!
   end
   
-  def save_original_copy
-    if self.thumbnail.nil?
-      FileUtils.mkdir_p(File.dirname(full_filename))
-      orig_name = full_filename.gsub(/(.+)(\.[a-z]+)$/, '\1_original\2')
-      File.cp(temp_path, orig_name)
-      File.chmod(attachment_options[:chmod] || 0644, orig_name)
-    end
-  end
+  # don't need, since we are overriding #save_to_storage method.
+  # def save_original_copy
+  #   if self.thumbnail.nil?
+  #     FileUtils.mkdir_p(File.dirname(full_filename))
+  #     orig_name = full_filename.gsub(/(.+)(\.[a-z]+)$/, '\1_original\2')
+  #     File.cp(temp_path, orig_name)
+  #     File.chmod(attachment_options[:chmod] || 0644, orig_name)
+  #   end
+  # end
+  #
+  # don't need since overriding #save_to_storage method
+  #after_create :save_original_copy
+  
 end
