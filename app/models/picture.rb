@@ -1,15 +1,12 @@
-require 'ftools'
 class Picture < ActiveRecord::Base
   include_custom_plugins  
-  
-  LOCAL_PATH = "public/images/uploads"
   
   belongs_to :user
   belongs_to :depictable, :polymorphic => true, :inherits_layout => true
   acts_as_list :scope => 'depictable_id = #{depictable_id} AND depictable_type = \'#{depictable_type}\''
   has_attachment  :content_type => :image,
-                  :storage => (RAILS_ENV != 'production' ? :file_system : :s3),
-                  :path_prefix => (RAILS_ENV != 'production' ? LOCAL_PATH : "pictures/uploads"),
+                  :storage => :file_system, #(RAILS_ENV != 'production' ? :file_system : :s3),
+                  :path_prefix => "public/images/uploads", # TODO: Setup shared directory.
                   :min_size => 100.bytes,
                   :max_size => 2048.kilobytes,
                   :resize_to => '800x800>', # Used by RMagick, so probably not needed.
@@ -91,25 +88,10 @@ class Picture < ActiveRecord::Base
   
   ### IMAGE PROCESSING METHODS
   
-  # Following is copied from file_system_backend, then modified...
-
-  # overrwrite this to do your own app-specific partitioning. 
-  # you can thank Jamis Buck for this: http://www.37signals.com/svn/archives2/id_partitioning.php
-  def partitioned_path(*args)
-    ("%08d" % ((respond_to?(:parent_id) && parent_id) || id).to_i).scan(/..../) + args
-  end
-  
   # Overwriting for depictable_type
-  def full_filename(*args)
-    opts = args.extract_options!
-    thumbnail = args.shift
-    if opts[:local] || Picture.attachment_options[:storage] != :s3
-      # file_system_path = (thumbnail ? thumbnail_class : self).attachment_options[:path_prefix].to_s
-      file_system_path = LOCAL_PATH
-      File.join(RAILS_ROOT, file_system_path, self.depictable_type.underscore, *partitioned_path(thumbnail_name_for(thumbnail)))
-    else
-      File.join(base_path, thumbnail_name_for(thumbnail)) # copied from s3_backend.rb
-    end
+  def full_filename(thumbnail = nil)
+    file_system_path = (thumbnail ? thumbnail_class : self).attachment_options[:path_prefix].to_s
+    File.join(RAILS_ROOT, file_system_path, self.depictable_type.underscore, *partitioned_path(thumbnail_name_for(thumbnail)))
   end
   
   # Overwriting for depictable_id, depictable_type, user_id
@@ -185,19 +167,10 @@ class Picture < ActiveRecord::Base
   
   def save_original_copy
     if self.thumbnail.nil?
-      FileUtils.mkdir_p(File.dirname(full_filename(:local => true)))
+      FileUtils.mkdir_p(File.dirname(full_filename))
       orig_name = full_filename.gsub(/(.+)(\.[a-z]+)$/, '\1_original\2')
-      File.cp(my_temp_path, orig_name)
+      File.cp(temp_path, orig_name)
       File.chmod(attachment_options[:chmod] || 0644, orig_name)
     end
-  end
-  
-  def my_temp_path
-    p = my_temp_paths.first
-    p.respond_to?(:path) ? p.path : p.to_s
-  end
-  
-  def my_temp_paths
-    copy_to_temp_file(full_filename(:local => true))
   end
 end
