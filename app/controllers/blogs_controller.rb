@@ -78,7 +78,10 @@ class BlogsController < ApplicationController
   
   def create
     return unless get_bloggable && authorize(@bloggable, :editable => true)
-    @blog = @bloggable.blogs.new(params[:blog].merge(:user => get_viewer))
+    @blog = @bloggable.blogs.new(:user => get_viewer)
+    # Need to separate out in two lines so that user is set before going to the other
+    # attribute setters.
+    @blog.attributes = params[:blog]
     @page_title = "New Blog"
     if @blog.save
       create_uploaded_picture_for(@blog, :save => true) if picture_uploaded?
