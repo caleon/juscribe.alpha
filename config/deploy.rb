@@ -49,6 +49,12 @@ task :update_config, :roles => [ :app ] do
 end
 after "deploy:update_code", :update_config
 
+# yes, the conditional might seem redundant, but it's here mostly for placeholding purposes
+task :create_shared_media_directory, :roles => [ :app ] do
+  run "[ ! -d #{shared_path}/uploads ] && mkdir -p #{shared_path}/uploads"
+end
+after "deploy:cold", :create_shared_media_directory
+
 task :symlink_shared_media, :roles => [ :app ] do
   run "ln -s #{shared_path}/uploads #{release_path}/public/images/uploads"
 end
