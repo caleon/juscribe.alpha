@@ -1,7 +1,7 @@
 --- 
 :load_all_initially: true
 :scripts_at_bottom: true
-:defcon: 1
+:defcon: 0
 :disable_registration: true
 :disable_search: true
 :disable_comments: false

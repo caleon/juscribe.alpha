@@ -1,10 +1,10 @@
 everyone:
-  id: 0
+  id: 1
   name: Everyone
   permalink: Everyone
   user_id: 0
 admins:
-  id: 1
+  id: 2
   name: Administrators
   permalink: Administrators
   user_id: 0

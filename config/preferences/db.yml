@@ -1,6 +1,6 @@
 --- 
 development:
-  :wheel_id: 0
+  :wheel_id: 1
   :garbage_id: 2
   
 staging:
