@@ -188,9 +188,14 @@ class Picture < ActiveRecord::Base
   #######
   
   def crop_with_image_science!(par=crop_params)
+    if attachment_options[:storage] != :s3
+      self.temp_path = write_to_temp_file(filename)
+    else
+      self.temp_data = self.current_data
+    end
     self.with_image do |img|
       raise InvalidCropRect unless par.valid_with?(img.width, img.height)
-      self.temp_path = write_to_temp_file(filename)
+      #self.temp_path = write_to_temp_file(filename)
       img.with_crop(*par.reveal) do |cropped_img|
         if par[:resize_to_stencil].to_i == 1
           cropped_img.resize(par[:stencil_width].to_i, par[:stencil_height].to_i) do |crop_resized_img|
