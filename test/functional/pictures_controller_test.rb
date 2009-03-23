@@ -228,10 +228,11 @@ class PicturesControllerTest < ActionController::TestCase
   end
   
   def test_crop
-    post :create, users(:keira).to_path(true).merge(:picture => { :uploaded_data => fixture_file_upload("keira.jpg", "image/jpg") }), as(:colin)
+    post :create, users(:keira).to_path(true).merge(:picture => { :uploaded_data => fixture_file_upload("keira.jpg", "image/jpeg") }), as(:colin)
     pic = assigns(:picture)
     crop_params = { :crop_left => 0, :crop_top => 0, :crop_width => 300, :crop_height => 300, :stencil_width => 300, :stencil_height => 300, :resize_to_stencil => 'false', :crop_cancel => 'false' }
-    put :update, assigns(:picture).to_path.merge(:picture_crop => crop_params, :picture => { :do_crop => 'Crop' }), as(:colin)
+    url_hash = assigns(:picture).to_path.merge(:picture_crop => crop_params, :picture => { :do_crop => 'Crop' })
+    put :update, url_hash, as(:colin)
     assert_redirected_to assigns(:picture).to_path
     assert_equal 300, pic.reload.width
     assert pic.updated_at > 1.minute.ago # Can't check for flash[:notice] cuz of post.
@@ -256,7 +257,7 @@ class PicturesControllerTest < ActionController::TestCase
   end
   
   def test_just_update_with_wrong_crop
-    post :create, users(:keira).to_path(true).merge(:picture => { :uploaded_data => fixture_file_upload("keira.jpg", "image/jpg") }), as(:colin)
+    post :create, users(:keira).to_path(true).merge(:picture => { :uploaded_data => fixture_file_upload("keira.jpg", "image/jpeg") }), as(:colin)
     pic = assigns(:picture)
     crop_params = { :crop_left => 0, :crop_top => 0, :crop_width => -100, :crop_height => 300, :stencil_width => 200, :stencil_height => 300, :resize_to_stencil => 'false', :crop_cancel => 'false' }
     put :update, pic.to_path.merge(:picture_crop => crop_params, :picture => { :do_crop => 'Crop' }), as(:colin)
