@@ -11,7 +11,7 @@ class Picture < ActiveRecord::Base
                   :path_prefix => (RAILS_ENV != 'production' ? "public/images/uploads" : "uploads/pictures"),
                   :min_size => 100.bytes,
                   :max_size => 2048.kilobytes,
-                  :resize_to => '800x800>', # Used by RMagick, so probably not needed.
+                  #:resize_to => '800x800>', # Used by RMagick, so probably not needed.
                   :thumbnails => { :thumb => '100x100', :feature => '300x400' },
                   :processor => 'ImageScience'
   
@@ -169,14 +169,16 @@ class Picture < ActiveRecord::Base
           bucket_name,
           :content_type => content_type,
           :access => attachment_options[:s3_access]
-        )
+        ) if !self.thumbnail? && !AWS::S3::S3Object.exists?(orig_name, bucket_name)
       else
         # TODO: This overwrites the file if it exists, maybe have an allow_overwrite option?
         FileUtils.mkdir_p(File.dirname(full_filename))
         File.cp(temp_path, full_filename)
-        File.cp(temp_path, orig_name)
         File.chmod(attachment_options[:chmod] || 0644, full_filename)
-        File.chmod(attachment_options[:chmod] || 0644, orig_name)
+        if !self.thumbnail? && !File.exists?(orig_name)
+          File.cp(temp_path, orig_name)
+          File.chmod(attachment_options[:chmod] || 0644, orig_name)
+        end
       end
     end
     @old_filename = nil
