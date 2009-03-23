@@ -62,7 +62,7 @@
 	width: 100%	
 	}
 
-#imageData{	padding:0 10px; color: #666; }
+#imageData{	padding:0 10px; color: #666; position: relative; }
 #imageData #imageDetails{ width: 70%; float: left; text-align: left; }	
 #imageData #caption{ font-weight: bold;	}
 #imageData #numberDisplay{ display: block; clear: left; padding-bottom: 1.0em;	}			
