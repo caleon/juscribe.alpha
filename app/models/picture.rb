@@ -156,14 +156,14 @@ class Picture < ActiveRecord::Base
     if save_attachment?
       orig_name = full_filename.gsub(/(.+)(\.[a-z]+)$/, '\1_original\2')
       if attachment_options[:storage] == :s3
-        S3Object.store(
+        AWS::S3::S3Object.store(
           full_filename,
           (temp_path ? File.open(temp_path) : temp_data),
           bucket_name,
           :content_type => content_type,
           :access => attachment_options[:s3_access]
         )
-        S3Object.store(
+        AWS::S3::S3Object.store(
           orig_name,
           (temp_path ? File.open(temp_path) : temp_data),
           bucket_name,
