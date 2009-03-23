@@ -22,9 +22,9 @@ class PicturesController < ApplicationController
       format.html { trender }
       format.js do
         if Picture.attachment_options[:storage] != :s3
-          send_file "#{RAILS_ROOT}/public#{@picture.public_filename}", :disposition => 'inline', :type => @picture.content_type
+          send_file "#{RAILS_ROOT}/public#{@picture.public_original_filename}", :disposition => 'inline', :type => @picture.content_type
         else
-          send_data @picture.current_data, :disposition => 'inline', :type => @picture.content_type
+          send_data @picture.current_data(:original), :disposition => 'inline', :type => @picture.content_type
         end
       end
       format.xml
