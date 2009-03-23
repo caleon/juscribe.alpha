@@ -21,6 +21,7 @@ colin:
   sex: 1
   password_salt: BgymlDt+
   password_hash: 0aac32388a4c248e232bec68771a4dd03c4ce60466cbdfb128353998622caec0
+  time_zone: Pacific Time (US & Canada)
 garbage_man:
   id: 3
   nick: GarbageMan
