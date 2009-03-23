@@ -17,7 +17,7 @@ class Blog < ActiveRecord::Base
   
   validates_presence_of :bloggable_type, :bloggable_id, :user_id, :name, :short_name, :permalink
   validates_length_of :name, :in => (3..70)
-  validates_length_of :short_name, :in => (3..20)
+  validates_length_of :short_name, :in => (2..20)
   validates_uniqueness_of :permalink, :scope => [ :bloggable_id, :bloggable_type ]
   validates_with_regexp :name, :short_name, :permalink
   
