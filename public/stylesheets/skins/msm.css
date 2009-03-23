@@ -837,7 +837,7 @@
 .msm_layout img.pictureShow {
 	display: block;
 	margin: 0 auto;
-	width: 580px;
+	max-width: 580px;
 }
 .msm_layout img.pictureShow.large {
 	width: 580px;
