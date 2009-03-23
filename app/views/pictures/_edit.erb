@@ -44,7 +44,7 @@ The param passed is the max zoom level for the cropping UI. -->
 		        <div id="crop_overlay"></div>
 		        <div id="crop_stencil"></div>
 		        <div id="image_dragger"></div>
-				<%= image_tag(@picture.public_filename, :id => "uncropped_image" ) %>
+				<%= image_tag(@picture.public_original_filename, :id => "uncropped_image" ) %>
 		    </div>
 		    <div id="crop_footer">
 		    	<div id="zoom_slider">

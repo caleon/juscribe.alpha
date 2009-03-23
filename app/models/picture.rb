@@ -104,6 +104,11 @@ class Picture < ActiveRecord::Base
     end
   end
   
+  def current_data(original=false)
+    S3Object.value((original ? full_original_filename : full_filename), bucket_name)
+  end
+  alias_method_chain :current_data, :original
+  
   ### IMAGE PROCESSING METHODS
   
   # Overwriting for depictable_id, depictable_type, user_id
