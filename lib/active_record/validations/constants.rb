@@ -11,8 +11,8 @@ REGEXP_STR = { # Defaults
                # Model specific:
                :article    => { :permalink => "[a-zA-Z0-9][-a-zA-Z0-9]+[a-zA-Z0-9]",
                                 :content => ".{10,}" },
-               :blog       => { :short_name => "([^\\s].+[^\\s])",
-                                :permalink => "[A-Z0-9][-A-Z0-9]+[A-Z0-9]" },
+               :blog       => { :short_name => "([^\\s].*[^\\s])",
+                                :permalink => "[A-Z0-9][-A-Z0-9]*[A-Z0-9]" },
                :gallery    => { :name => "([^\\s].+[^\\s])?" },
                :group      => { :permalink => "[a-zA-Z0-9][-a-zA-Z0-9]+[a-zA-Z0-9]" },
                :message    => { :subject => "[^\\s].+[^\\s]" },
