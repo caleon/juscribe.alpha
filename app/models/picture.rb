@@ -104,7 +104,7 @@ class Picture < ActiveRecord::Base
     end
   end
   
-  def current_data(original=false)
+  def current_data_with_original(original=false)
     S3Object.value((original ? full_original_filename : full_filename), bucket_name)
   end
   alias_method_chain :current_data, :original
