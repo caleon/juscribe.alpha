@@ -86,8 +86,14 @@ class Picture < ActiveRecord::Base
   def thumb?; self.thumbnail == 'thumb'; end
   def original?; self.thumbnail.blank?; end
   
-  ### IMAGE PROCESSING METHODS
+  def full_original_filename
+    full_filename.gsub(/(.+)(\.[a-z]+)$/, '\1_original\2')
+  end
   
+  def public_original_filename
+    public_filename.gsub(/(.+)(\.[a-z]+)$/, '\1_original\2')
+  end
+      
   # Overwriting for depictable_type
   def full_filename(thumbnail = nil)
     if attachment_options[:storage] != :s3
@@ -98,6 +104,7 @@ class Picture < ActiveRecord::Base
     end
   end
   
+  ### IMAGE PROCESSING METHODS
   
   # Overwriting for depictable_id, depictable_type, user_id
   def create_or_update_thumbnail(temp_file, file_name_suffix, *size)
@@ -146,7 +153,6 @@ class Picture < ActiveRecord::Base
   # instantiate and set a CropParams object.
   def crop!(opts=nil); crop_with_image_science!(opts ? set_crop_params(opts) : crop_params); end
   
-    
     
   #######
   protected
