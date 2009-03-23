@@ -86,6 +86,10 @@ class Picture < ActiveRecord::Base
   def thumb?; self.thumbnail == 'thumb'; end
   def original?; self.thumbnail.blank?; end
   
+  def original_filename
+    filename.gsub(/(.+)(\.[a-z]+)$/, '\1_original\2')
+  end
+  
   def full_original_filename
     full_filename.gsub(/(.+)(\.[a-z]+)$/, '\1_original\2')
   end
@@ -104,8 +108,8 @@ class Picture < ActiveRecord::Base
     end
   end
   
-  def current_data_with_original(original=false)
-    AWS::S3::S3Object.value((original ? full_original_filename : full_filename), bucket_name)
+  def current_data_with_original(version=nil)
+    AWS::S3::S3Object.value((version == :original ? full_original_filename : full_filename), bucket_name)
   end
   alias_method_chain :current_data, :original
   
@@ -201,13 +205,13 @@ class Picture < ActiveRecord::Base
   #######
   
   def crop_with_image_science!(par=crop_params)
-    self.temp_data = self.current_data if attachment_options[:storage] == :s3
+    self.temp_data = self.current_data(:original) if attachment_options[:storage] == :s3
     self.with_image do |img|
       raise InvalidCropRect unless par.valid_with?(img.width, img.height)
       # Apparently if this next line exists outside the block, i get the imagescience error about
       # terminating when it threw instance of 'int':
       # "terminate called after throwing an instance of 'int'"
-      self.temp_path = write_to_temp_file(filename) if attachment_options[:storage] != :s3
+      self.temp_path = write_to_temp_file(original_filename) if attachment_options[:storage] != :s3
       img.with_crop(*par.reveal) do |cropped_img|
         if par[:resize_to_stencil].to_i == 1
           cropped_img.resize(par[:stencil_width].to_i, par[:stencil_height].to_i) do |crop_resized_img|
