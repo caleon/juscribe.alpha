@@ -1,4 +1,4 @@
-module Friendship
+module User::Friendship
   def self.included(klass)
     klass.serialize :friend_ids
   end

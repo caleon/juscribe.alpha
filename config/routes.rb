@@ -1,19 +1,15 @@
 include ActiveRecord::Validations::RoutingHelper
 
-class ActionController::Resources::Resource #:nodoc:
-  def path; @path ||= @options[:special_path] || "#{path_prefix}/#{@options[:custom_path] || plural}"; end
-end
-
 ActionController::Routing::Routes.draw do |map|
   map.root :controller => 'main' 
   #map.root :controller => 'users', :action => 'show', :id => 'colin'
   #map.connect '/', :controller => 'users', :action => 'show', :id => 'colin'
   
   ################################################### USERS
-  map.resources :users, :custom_path => 'u',
+  map.resources :users, :as => 'u',
                 :member => { :friends => :get, :befriend => :put, :unfriend => :put, :about => :get, :edit_password => :get, :update_password => :put } do |user|
     user.resources :blogs, :requirements => { :id => regex_for(:blog, :permalink) }, :member => { :browse_by_month => :any } do |blog|
-      blog.resources :articles, :custom_path => ':year/:month/:day', :member => { :unpublish => :put, :preview => :any },
+      blog.resources :articles, :as => ':year/:month/:day', :member => { :unpublish => :put, :preview => :any },
                                 :requirements => { :blog_id => regex_for(:blog, :permalink), :year => /\d{4}/, :month => /\d{1,2}/, :day => /\d{1,2}/,
                                                    :id => regex_for(:article, :permalink) } do |article|
         article.resources :clips, :requirements => { :blog_id => regex_for(:blog, :permalink), :year => /\d{4}/, :month => /\d{1,2}/, :day => /\d{1,2}/,
@@ -79,9 +75,9 @@ ActionController::Routing::Routes.draw do |map|
   map.formatted_bulk_create_user_blog_articles 'u/:user_id/blogs/:blog_id/articles/bulk_create.:format', :controller => 'articles', :action => 'bulk_create', :requirements => { :blog_id => regex_for(:blog, :permalink) }, :conditions => { :method => :get }
   
   #################################################### GROUPS
-  map.resources :groups, :custom_path => 'g', :member => { :join => :put, :leave => :put, :kick => :put, :invite => :put } do |group|
+  map.resources :groups, :as => 'g', :member => { :join => :put, :leave => :put, :kick => :put, :invite => :put } do |group|
     group.resources :blogs, :requirements => { :id => regex_for(:blog, :permalink) }, :member => { :browse_by_month, :any } do |blog|
-      blog.resources :articles, :custom_path => ':year/:month/:day', :member => { :unpublish => :put, :preview => :any },
+      blog.resources :articles, :as => ':year/:month/:day', :member => { :unpublish => :put, :preview => :any },
                                 :requirements => { :blog_id => regex_for(:blog, :permalink), :year => /\d{4}/, :month => /\d{1,2}/, :day => /\d{1,2}/,
                                                    :id => regex_for(:article, :permalink) } do |article|
         article.resources :clips, :requirements => { :blog_id => regex_for(:blog, :permalink), :year => /\d{4}/, :month => /\d{1,2}/, :day => /\d{1,2}/,

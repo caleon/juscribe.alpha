@@ -233,7 +233,7 @@ class PicturesControllerTest < ActionController::TestCase
     crop_params = { :crop_left => 0, :crop_top => 0, :crop_width => 300, :crop_height => 300, :stencil_width => 300, :stencil_height => 300, :resize_to_stencil => 'false', :crop_cancel => 'false' }
     url_hash = assigns(:picture).to_path.merge(:picture_crop => crop_params, :picture => { :do_crop => 'Crop' })
     put :update, url_hash, as(:colin)
-    assert_redirected_to assigns(:picture).to_path
+    assert_redirected_to assigns(:picture).to_path.merge(:action => :edit)
     assert_equal 300, pic.reload.width
     assert pic.updated_at > 1.minute.ago # Can't check for flash[:notice] cuz of post.
   end
@@ -244,7 +244,7 @@ class PicturesControllerTest < ActionController::TestCase
     orig_width = pictures(:for_blog).width
     crop_params = { :crop_left => 0, :crop_top => 0, :crop_width => 300, :crop_height => 300, :stencil_width => 300, :stencil_height => 300, :resize_to_stencil => 'false', :crop_cancel => 'false' }
     put :update, pictures(:for_blog).to_path.merge(:picture_crop => crop_params, :picture => { :name => 'Just a new name for pic' }), as(:colin)
-    assert_redirected_to pictures(:for_blog).to_path
+    assert_redirected_to pictures(:for_blog).to_path.merge(:action => :edit)
     assert_equal "You have successfully edited your image.", flash[:notice]
     assert_equal orig_width, pictures(:for_blog).reload.width
   end
@@ -269,9 +269,8 @@ class PicturesControllerTest < ActionController::TestCase
     pictures(:for_blog).depictable.send(:make_permalink, :with_save => true)
     assert_equal articles(:blog), pictures(:for_blog).depictable
     assert_not_nil articles(:blog)[:permalink]
-#    flunk pictures(:for_blog).to_path.inspect
     delete :destroy, pictures(:for_blog).to_path, as(:colin)
-    assert_redirected_to articles(:blog).to_path
+    assert_redirected_to user_blog_draft_url(articles(:blog).to_path)
     assert_equal "You have deleted a picture on #{flash_name_for(articles(:blog))}.", flash[:notice]
   end
 end

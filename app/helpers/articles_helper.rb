@@ -162,12 +162,12 @@ module ArticlesHelper
           # child.set_attribute('style', "z-index: #{50 - i/2};")
           if aggregate_length > 1400 && child.name == 'p' && comp = article_components_for(article)[component_count] 
             child.inner_html = render_article_component(article, comp) + child.inner_html
-            aggregate_length = child.inner_text.chars.length
+            aggregate_length = child.inner_text.mb_chars.length
             component_count += 1
           else
-            aggregate_length += child.inner_text.chars.length
+            aggregate_length += child.inner_text.mb_chars.length
           end
-          create_comment_mixin(child, paragraph_id) unless %w(pre).include?(child.name) || child.inner_text.chars.length < 150
+          create_comment_mixin(child, paragraph_id) unless %w(pre).include?(child.name) || child.inner_text.mb_chars.length < 150
         end
       end
     end

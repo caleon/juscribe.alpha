@@ -58,7 +58,7 @@ class Widget < ActiveRecord::Base
   end
     
   def method_missing(method_id, *arguments)
-    self.widgetable.send!(method_id, *arguments) rescue super
+    self.widgetable.send(method_id, *arguments) rescue super
   end
 end
 

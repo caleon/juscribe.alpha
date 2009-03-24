@@ -1,6 +1,6 @@
 <%= bread_el @user.display_name, @user %>
 <%= bread_el "Events", user_events_path(@user), :current => @event.nil? || @event.new_record? %>
-<%= bread_el truncate(@event.display_name, 20), user_event_path(@event.to_path), :current => true if @event && !@event.new_record? %>
+<%= bread_el truncate(@event.display_name, :length => 20), user_event_path(@event.to_path), :current => true if @event && !@event.new_record? %>
 
 <% if controller.controller_name == 'events' %>
 <%= subnavi_el "New Event", new_user_event_path(@user), :current => controller.action_name == 'new' if this_is_viewer? %>

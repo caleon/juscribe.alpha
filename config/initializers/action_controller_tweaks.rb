@@ -1,11 +1,4 @@
 module ActionController
-  module Resources
-    class Resource #:nodoc:
-      def path; @path ||= @options[:special_path] || "#{path_prefix}/#{@options[:custom_path] || plural}"; end
-    end
-  end
-  
-  
   module MimeResponds::InstanceMethods
     def respond_to_with_type_registration(*types, &block)
       raise ArgumentError, "respond_to takes either types or a block, never both" unless types.any? ^ block

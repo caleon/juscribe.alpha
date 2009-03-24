@@ -1,5 +1,5 @@
 require 'digest/sha2'
-require 'user/friendship'
+#require 'user/friendship'
 require 'user/user_associations'
 require 'user/user_validations'
 

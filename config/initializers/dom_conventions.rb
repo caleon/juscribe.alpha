@@ -64,8 +64,7 @@ module ActionView::Helpers::RecordTagHelper
     options = args.first.is_a?(Hash) ? args.shift : {}
     child_hash = options.delete(:child)
     concat content_tag(tag_name, capture(&block), 
-      options.merge({ :class => "#{dom_class(record, :child => child_hash)} #{options[:class]}".strip, :id => dom_id(record, prefix, :child => child_hash) })), 
-      block.binding
+      options.merge({ :class => "#{dom_class(record, :child => child_hash)} #{options[:class]}".strip, :id => dom_id(record, prefix, :child => child_hash) }))
   end
   alias_method_chain :content_tag_for, :associations
 end

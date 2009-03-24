@@ -1,11 +1,7 @@
 class User < ActiveRecord::Base
-  PROHIBITED_NICKS = %w( colin caleon admin superuser administrator user users show edit update create friend friends new root sysadmin system login logout mine mailbox any about unfriend befriend )
-  
   validates_presence_of     :email, :first_name, :last_name, :nick, :birthdate
   validates_uniqueness_of   :nick, :email
-  if RAILS_ENV != 'development'
-    validates_exclusion_of    :nick, :in => PROHIBITED_NICKS, :on => :create, :unless => RAILS_ENV == 'development'
-  end
+  validates_exclusion_of    :nick, :in => %w( colin caleon admin superuser administrator user users show edit update create friend friends new root sysadmin system login logout mine mailbox any about unfriend befriend ), :on => :create, :unless => RAILS_ENV == 'development'
   validates_length_of       :nick, :in => 3..20
   validates_length_of       :first_name, :in => 2..30
   validates_length_of       :middle_initial, :in => 0..1, :allow_nil => true

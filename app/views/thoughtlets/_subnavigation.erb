@@ -1,6 +1,6 @@
 <%= bread_el image_tag('shim.gif', :class => 'shim') + @user.display_name, @user, :class => 'bread-home', :rel => 'home' %>
 <%= bread_el "Thoughtlets", user_thoughtlets_path(@user), :current => @thoughtlet.nil? || @thoughtlet.new_record?, :rel => controller.action_name != 'index' ? 'directory' : nil %>
-<%= bread_el truncate(@thoughtlet.display_name, 20), user_thoughtlet_path(@thoughtlet.to_path), :current => true if @thoughtlet && !@thoughtlet.new_record? %>
+<%= bread_el truncate(@thoughtlet.display_name, :length => 20), user_thoughtlet_path(@thoughtlet.to_path), :current => true if @thoughtlet && !@thoughtlet.new_record? %>
 
 <% unless bare ||= false %>
 <%= subnavi_el 'New Thoughtlet', new_user_thoughtlet_path(@user.to_path(true)), :current => controller.action_name == 'new' if this_is_viewer? %>

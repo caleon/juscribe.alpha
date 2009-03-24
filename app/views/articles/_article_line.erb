@@ -12,6 +12,6 @@
 		<% end %>
 	</span>
 	<% unless without_excerpt ||= false %>
-		<%= strip_tags truncate(article_line.content, 45) %>
+		<%= strip_tags truncate(article_line.content, :length => 45) %>
 	<% end %>
 <% end %>

@@ -32,8 +32,7 @@ module ApplicationHelper
     opts = args.extract_options!
     record = args.shift
     concat content_tag(:body, capture(&block),
-                       (opts.merge(record ? { :id => "#{record.class.class_name.downcase}Page" } : {:id => 'Page'}))),
-           block.binding
+                       (opts.merge(record ? { :id => "#{record.class.class_name.downcase}Page" } : {:id => 'Page'})))
   end
 
   def get_canvas_class

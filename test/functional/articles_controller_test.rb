@@ -194,7 +194,7 @@ class ArticlesControllerTest < ActionController::TestCase
     articles(:blog).publish!
     delete :destroy, articles(:blog).to_path, as(:colin)
     assert_response :redirect
-    assert_redirected_to 'http://www.cnn.com'
+    assert_redirected_to 'http://www.cnn.com/'
     assert_equal "You have deleted #{flash_name_for(articles(:blog))}.", flash[:notice]
   end
   
@@ -434,7 +434,7 @@ class ArticlesControllerTest < ActionController::TestCase
     delete :destroy, articles(:blog).to_path, as(:colin)
     assert_response :redirect
     assert_equal "You have deleted #{flash_name_for(articles(:blog))}.", flash[:notice]
-    assert_redirected_to 'http://www.cnn.com'
+    assert_redirected_to 'http://www.cnn.com/'
   end
   
   def test_draft_destroy_without_login

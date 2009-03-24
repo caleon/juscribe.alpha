@@ -1,7 +1,7 @@
 <% set_meta_keywords!(@article.tag_list) -%>
 <% set_meta_author!(@author) -%>
 <% set_link_author!(@author) -%>
-<% set_meta_description!(truncate(strip_tags(@article.content), 200)) -%>
+<% set_meta_description!(truncate(strip_tags(@article.content), :length => 200)) -%>
 <% div_for @article do -%>
 		<%= zoomable_picture_with(@article.primary_picture, :article_id => @article.id, :with => { :class => 'primary' }) %>
 		<%= format_article(@article) %>

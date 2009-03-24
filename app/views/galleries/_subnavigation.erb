@@ -1,6 +1,6 @@
 <%= bread_el image_tag('shim.gif', :class => 'shim') + @user.display_name, @user, :class => 'bread-home' if @user %>
 <%= bread_el 'Galleries', user_galleries_path(@user), :current => @gallery.nil? || @gallery.new_record? %>
-<%= bread_el(truncate(@gallery.name, 20), user_gallery_path(@gallery.to_path), :current => true) if @gallery && !@gallery.new_record? %>
+<%= bread_el(truncate(@gallery.name, :length => 20), user_gallery_path(@gallery.to_path), :current => true) if @gallery && !@gallery.new_record? %>
 
 <% if controller.controller_name == 'galleries' %>
 <%= bread_el 'Pictures', user_gallery_pictures_path(@gallery.to_path(true)) if @gallery && !@gallery.new_record? %>
