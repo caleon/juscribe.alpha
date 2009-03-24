@@ -1,2 +1,2 @@
 <h3><%= @message.subject %></h3>
-<%= render :partial => 'message', :locals => { :full_body => true, :no_title => true } %>
+<%= render :partial => 'message', :object => @message, :locals => { :full_body => true, :no_title => true } %>

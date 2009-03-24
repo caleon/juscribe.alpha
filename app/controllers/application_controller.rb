@@ -85,8 +85,9 @@ class ApplicationController < ActionController::Base
   
   def create_uploaded_picture_for(record, opts={})
     raise unless picture_uploaded? && !record.nil? && (record.respond_to?(:pictures) || record.respond_to?(:picture))
-    params[:picture].merge!(:user => get_viewer || opts[:user])
+    #params[:picture].merge!(:user => get_viewer || opts[:user])
     picture = record.pictures.new(params[:picture]) rescue record.picture.new(params[:picture])
+    picture.user = get_viewer
     return picture if !opts[:save]
     if picture.save
       msg = "Your picture has been uploaded."

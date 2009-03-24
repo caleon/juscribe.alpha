@@ -22,7 +22,8 @@ class Picture < ActiveRecord::Base
   validates_length_of :name, :in => 3..50
   validates_length_of :caption, :in => 3..200, :allow_blank => true
   validates_with_regexp :name, :caption
-  attr_protected :depictable_type, :depictable_id
+  # attr_protected :depictable_type, :depictable_id
+  attr_accessible :content_type, :filename, :thumbnail_resize_options, :depictable, :user, :caption
   # Needs more validations for kropper
   alias_attribute :content, :caption
     
@@ -113,20 +114,26 @@ class Picture < ActiveRecord::Base
   end
   alias_method_chain :current_data, :original
   
+  def temp_path=(value)
+    temp_paths.unshift value
+    temp_path
+  end
+  
   ### IMAGE PROCESSING METHODS
   
   # Overwriting for depictable_id, depictable_type, user_id
+  # Creates or updates the thumbnail for the current attachment.
   def create_or_update_thumbnail(temp_file, file_name_suffix, *size)
     thumbnailable? || raise(ThumbnailError.new("Can't create a thumbnail if the content type is not an image or there is no parent_id column"))
     returning find_or_initialize_thumbnail(file_name_suffix) do |thumb|
-      thumb.attributes = {
-        :content_type             => content_type, 
-        :filename                 => thumbnail_name_for(file_name_suffix), 
-        :temp_path                => temp_file,
+      thumb.temp_paths.unshift temp_file
+      thumb.send(:'attributes=', {
+        :content_type             => content_type,
+        :filename                 => thumbnail_name_for(file_name_suffix),
         :thumbnail_resize_options => size,
         :depictable               => self.depictable,
         :user                     => self.user
-      }
+      }, false)
       callback_with_args :before_thumbnail_saved, thumb
       thumb.save!
     end

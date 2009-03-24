@@ -1,15 +1,15 @@
 require File.expand_path(File.join(File.dirname(__FILE__), '..', 'test_helper'))
 
-class MiniMagickTest < Test::Unit::TestCase
-  attachment_model MiniMagickAttachment
+class CoreImageTest < Test::Unit::TestCase
+  attachment_model CoreImageAttachment
 
-  if Object.const_defined?(:MiniMagick)
+  if Object.const_defined?(:OSX)
     def test_should_resize_image
       attachment = upload_file :filename => '/files/rails.png'
       assert_valid attachment
       assert attachment.image?
-      # test MiniMagick thumbnail
-      assert_equal 43, attachment.width
+      # test core image thumbnail
+      assert_equal 42, attachment.width
       assert_equal 55, attachment.height
       
       thumb      = attachment.thumbnails.detect { |t| t.filename =~ /_thumb/ }
@@ -21,11 +21,17 @@ class MiniMagickTest < Test::Unit::TestCase
       
       # test geometry string
       assert_equal 31, geo.width
-      assert_equal 40, geo.height
+      assert_equal 41, geo.height
+      
+      # This makes sure that we didn't overwrite the original file
+      # and will end up with a thumbnail instead of the original
+      assert_equal 42, attachment.width
+      assert_equal 55, attachment.height
+      
     end
   else
     def test_flunk
-      puts "MiniMagick not loaded, tests not running"
+      puts "CoreImage not loaded, tests not running"
     end
   end
 end

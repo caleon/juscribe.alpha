@@ -1,12 +1,12 @@
 class User < ActiveRecord::Base
   validates_presence_of     :email, :first_name, :last_name, :nick, :birthdate
   validates_uniqueness_of   :nick, :email
-  validates_exclusion_of    :nick, :in => %w( colin caleon admin superuser administrator user users show edit update create friend friends new root sysadmin system login logout mine mailbox any about unfriend befriend ), :on => :create, :unless => RAILS_ENV == 'development'
+  validates_exclusion_of    :nick, :in => %w( colin caleon admin superuser administrator user users show edit update create friend friends new root sysadmin system login logout mine mailbox any about unfriend befriend ), :on => :create, :unless => Proc.new { RAILS_ENV == 'development' }
   validates_length_of       :nick, :in => 3..20
   validates_length_of       :first_name, :in => 2..30
   validates_length_of       :middle_initial, :in => 0..1, :allow_nil => true
   validates_length_of       :last_name, :in => 2..30
-
+  
   validates_numericality_of :sex, :allow_nil => true
   validates_inclusion_of    :sex, :in => %w( m f ), :allow_nil => true
   validates_with_regexp     :nick, :first_name, :middle_initial, :last_name, :email
@@ -24,9 +24,9 @@ class User < ActiveRecord::Base
     attr_accessor :password_confirmation
   end
 
-  after_validation {|user| @password, user.password_confirmation = nil, nil}
-  before_save :deliver_pw_change_notification
-  before_save :deliver_email_change_notification
+  #after_validation :reset_password_attributes
+  #before_save :deliver_pw_change_notification
+  #before_save :deliver_email_change_notification
   
   def password_changed?
     orig_pw_hash = self.instance_variable_get(:@old_password_hash)
@@ -36,6 +36,10 @@ class User < ActiveRecord::Base
   def email_changed?
     orig_email = self.instance_variable_get(:@old_email)
     self.new_record? || (!orig_email.nil? && orig_email != self.email)
+  end
+  
+  def reset_password_attributes
+    @password, self.password_confirmation = nil, nil
   end
   
   def deliver_pw_change_notification

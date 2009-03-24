@@ -9,7 +9,7 @@ module Technoweenie # :nodoc:
         end
 
         module ClassMethods
-          # Yields a block containing an RMagick Image for the given binary data.
+          # Yields a block containing an Image Science image for the given binary data.
           def with_image(file, &block)
             ::ImageScience.with_image file, &block
           end
@@ -34,7 +34,7 @@ module Technoweenie # :nodoc:
             # supports.
             filename.sub! /gif$/, 'png'
             content_type.sub!(/gif$/, 'png')
-            self.temp_path = write_to_temp_file(filename)
+            temp_paths.unshift write_to_temp_file(filename)
             grab_dimensions = lambda do |img|
               self.width  = img.width  if respond_to?(:width)
               self.height = img.height if respond_to?(:height)

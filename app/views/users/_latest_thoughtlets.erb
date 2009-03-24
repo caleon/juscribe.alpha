@@ -1,5 +1,5 @@
 <% user ||= @user -%>
-<h3>Latest Thoughtlets <%= rss_link_for(:user, formatted_user_thoughtlets_path(user.to_path(true).merge(:format => :rss)) ) %></h3>
+<h3>Latest Thoughtlets <%= rss_link_for(:user, user_thoughtlets_path(user.to_path(true).merge(:format => :rss)) ) %></h3>
 <% unless latest_thoughtlets.blank? %>
 	<ul class="thoughtlets user-thoughtlets" id="user-<%= user.id %>-thoughtlets">
 		<%= render :partial => 'thoughtlets/thoughtlet', :collection => latest_thoughtlets, :locals => { :without_time => without_time ||= false } %>
