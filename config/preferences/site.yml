@@ -2,7 +2,9 @@
 :load_all_initially: true
 :scripts_at_bottom: true
 :defcon: 0
-:disable_registration: true
+:disable_registration: false
 :disable_search: true
+:disable_akismet: true
+:disable_google_ads: true
 :disable_comments: false
 :disable_anonymous_comments: false

@@ -1,6 +1,6 @@
 <h3>Google Ads</h3>
 <div class="google_ads">
-	<% if RAILS_ENV != 'production' %>
+	<% if RAILS_ENV != 'production' || SITE[:disable_google_ads] %>
 		<%= image_tag 'google_ad.png', :width => 300, :height => 250 %>
 	<% else %>
 	<script type="text/javascript"><!--

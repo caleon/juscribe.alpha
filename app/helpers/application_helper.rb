@@ -146,4 +146,8 @@ module ApplicationHelper
     timestamp.inspect # Stubbed
   end
   
+  def registration_closed?
+    RAILS_ENV != 'test' && ((SITE[:defcon] == 0 && RAILS_ENV != 'development') || SITE[:disable_registration])
+  end
+  
 end

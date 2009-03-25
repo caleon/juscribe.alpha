@@ -206,7 +206,7 @@ class ApplicationController < ActionController::Base
   end
   
   def registration_closed?
-    RAILS_ENV != 'test' && ((SITE[:defcon] == 0) || SITE[:disable_registration])
+    RAILS_ENV != 'test' && ((SITE[:defcon] == 0 && RAILS_ENV != 'development') || SITE[:disable_registration])
   end
   
 end

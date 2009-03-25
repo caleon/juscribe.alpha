@@ -1,8 +1,11 @@
-<% feed = parseFeed(url) -%>
 <div class="feed" style="display: none;" id="feed">
+<% if feed = parseFeed(url) rescue nil -%>
 	<h4 class="descriptor"><span class="feedBlog">RSS: </span>From <%= link_to feed.feed_title, feed.feed_link, :class => 'external', :target => "_new" %> by <%= feed.item_author %></h4>
 	<h3><%= link_to feed.item_title, feed.item_link, :class => 'external', :target => "_new" %></h3>
 		<%# TODO: make this use the same formatter as feeds %>
 		<%= format_feed(feed) %>
 	<%= byline_for feed %>
+<% else -%>
+	<p>Unable to retrieve feed through the network.</p>
+<% end -%>
 </div>

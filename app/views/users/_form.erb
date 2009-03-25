@@ -14,8 +14,7 @@
 <%= error_message_on @user, 'birthdate' %>
 <%= date_select :user, :birthdate, :start_year => 8.years.ago.year, :end_year => 70.years.ago.year, :default => 13.years.ago %>
 <br />
-<%= render :partial => 'pictures/form' %>
-<br />
+<% unless @user.new_record? %>
 <%= f.label :social_networks_aim, "AIM Screen Name" %>
 <%= text_field_tag 'user[social_networks][aim]', @user.social_networks[:aim], :id => 'user_social_networks_aim' %>
 <br />
@@ -36,3 +35,6 @@
 <br />
 <%= f.label :social_networks_twitter, "Twitter ID" %>
 <%= text_field_tag 'user[social_networks][twitter]', @user.social_networks[:twitter], :id => 'user_social_networks_twitter' %>
+<br />
+<% end %>
+<%= render :partial => 'pictures/form' %>

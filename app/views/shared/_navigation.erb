@@ -11,7 +11,7 @@
 	<% if logged_in? %>
 		<li class="navigationEl last"><%= link_to 'Logout', logout_path %></li>
 	<% else -%>
-		<%= navi_el "Register", registration_path unless SITE[:defcon] == 0 || SITE[:disable_registration] %>
+		<%= navi_el "Register", registration_path unless registration_closed? %>
 		<li class="navigationEl last"><%= link_to 'Login', login_path %></li>
 	<% end -%>
 	</ul>
