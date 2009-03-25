@@ -219,6 +219,10 @@
 	border-right-width: 1px;
 }
 
+#browser #preview_pane span.empty {
+	color: #999;
+}
+
 #browser #preview_pane-inner {
 	margin: 9px;
 }
@@ -235,11 +239,19 @@
 	line-height: 1.2em;
 }
 
-#browser li.browser-col-listing a {
+#browser li.browser-col-listing a,
+#browser li.browser-col-listing span {
 	display: block;
-	color:  #000;
 	font-weight: normal;
 	padding: 4px;
+}
+
+#browser li.browser-col-listing a {
+	color: #000;
+}
+
+#browser li.browser-col-listing span.empty {
+	color: #999;
 }
 
 #browser li.browser-col-listing a:hover,
