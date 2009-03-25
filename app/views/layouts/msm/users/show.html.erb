@@ -58,7 +58,7 @@
 		<%= framed.wrender :friends if @user && !@user.new_record? && !@user.friends.empty? %>
 		<%= framed.wrender %>
 		<%= framed.wrender :google_ads %>
-		<%= framed.wrender :latest_pictures if @user && !@user.new_record? %>
+		<%= framed.wrender :latest_pictures if @user && !@user.new_record? && !@user.latest_pictures.empty? %>
 		<%= framed.wrender :comments if @user && !@user.new_record? %>
 	<% end %>
 <% end -%>
