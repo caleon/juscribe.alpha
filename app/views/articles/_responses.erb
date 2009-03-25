@@ -1,4 +1,4 @@
 <h3>Responses</h3>
-<ul class="article_responses responses">
-	<%= render :partial => 'articles/article_line', :collection => responses, :locals => { :append_class => "article_response response" } %>
-</ul>
+<% content_tag :ul, :id => "#{dom_id(article)}-responses", :class => 'article-responses responses' do %>	
+	<%= render :partial => 'articles/article_line', :collection => responses, :locals => { :append_class => "article-response response", :with_author => true } %>
+<% end %>

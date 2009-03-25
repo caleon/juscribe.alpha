@@ -7,5 +7,7 @@
 		<%= format_article(@article) %>
 		<%= byline_for(@article) %>
 		
+		<%= render :partial => 'articles/continuations', :locals => { :article => @article } %>
+		
 		<%= render :partial => 'articles/actions', :locals => { :article => @article } %>
 <% end -%>	

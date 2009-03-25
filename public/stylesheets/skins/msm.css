@@ -812,6 +812,14 @@
 		margin-bottom: 8px;
 	}
 	
+	.msm_layout h3.sectionHeader {
+		text-align: right;
+	}
+	
+	.msm_layout .article-continuations {
+		text-align: right;
+	}
+	
 	.msm_layout .article-actions {
 		margin-top: 18px;
 		clear: both;
