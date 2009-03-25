@@ -35,9 +35,9 @@ The param passed is the max zoom level for the cropping UI. -->
 
 		<!-- The dimensions and appearance of these elements are all defined in kropper.css -->
 		<div id="image_cropper">
-		    <div id="crop_header">Crop your image</div>
+			<div id="crop_header">Crop your image</div>
 		    <div id="crop_canvas">
-		        <div id="crop_loading_overlay">
+		    	<div id="crop_loading_overlay">
 					<h2>loading...</h2>
 					<p>(If this message doesn't disappear automatically, please make sure your browser has Javascript turned on.)</p>
 				</div>
@@ -45,11 +45,11 @@ The param passed is the max zoom level for the cropping UI. -->
 		        <div id="crop_stencil"></div>
 		        <div id="image_dragger"></div>
 				<%= image_tag(@picture.public_original_filename, :id => "uncropped_image" ) %>
-		    </div>
-		    <div id="crop_footer">
-		    	<div id="zoom_slider">
-		        	<div id="zoom_slider_handle"></div>
-		    	</div>
+			</div>
+		  <div id="crop_footer">
+		    <div id="zoom_slider">
+        	<div id="zoom_slider_handle"></div>
+	    	</div>
 				<div id="crop_buttons">
 					<%= f.submit "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Crop and Update&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", :id => "crop_submit_btn" %>
 					<input type="submit" name="picture[do_crop]" value="Crop" id="do_crop_btn_crop" />
@@ -58,8 +58,8 @@ The param passed is the max zoom level for the cropping UI. -->
 					<input type="button" value="&nbsp;Reset&nbsp;" id="crop_reset_btn" />
 				</div>
 			</div>
-		    <div id="crop_subfooter">
-		        	<a href="http://kropper.captchr.com">kropper v1.0: an open-source image cropper for Rails apps</a>
+		  <div id="crop_subfooter">
+	     	<a href="http://kropper.captchr.com">kropper v1.0: an open-source image cropper for Rails apps</a>
 			</div>
 		</div>
 

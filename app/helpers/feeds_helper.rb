@@ -40,7 +40,8 @@ module FeedsHelper
   
   def primary_picture_node(feed)
     doc = Hpricot(feed.item_content)
-    (doc/"img").first
+    first_pic = (doc/"img").first
+    first_pic.attributes["height"].to_i < 20 || first_pic.attributes["width"].to_i < 20 ? '' : first_pic
   end
     
   def format_feed(feed)
