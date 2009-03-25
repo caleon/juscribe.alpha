@@ -1,18 +1,18 @@
 <%= f.label :first_name %>
-<%= error_message_on @user, 'first_name' %>
 <%= f.text_field :first_name %>
+<%= error_message_on @user, 'first_name' %>
 <br />
 <%= f.label :middle_initial %>
-<%= error_message_on @user, 'middle_initial '%>
 <%= f.text_field :middle_initial, :size => 2, :maxlength => 1 %>
+<%= error_message_on @user, 'middle_initial '%>
 <br />
 <%= f.label :last_name %>
-<%= error_message_on @user, 'last_name' %>
 <%= f.text_field :last_name %>
+<%= error_message_on @user, 'last_name' %>
 <br />
 <%= f.label :birthdate %>
-<%= error_message_on @user, 'birthdate' %>
 <%= date_select :user, :birthdate, :start_year => 8.years.ago.year, :end_year => 70.years.ago.year, :default => 13.years.ago %>
+<%= error_message_on @user, 'birthdate' %>
 <br />
 <% unless @user.new_record? %>
 <%= f.label :social_networks_aim, "AIM Screen Name" %>
