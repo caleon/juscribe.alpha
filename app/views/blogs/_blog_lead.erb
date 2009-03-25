@@ -2,4 +2,8 @@
 <h3>Latest from <%= blog_lead.name %></h3>
 <blockquote class="blogDescription"><%= blog_lead.description || "No description set." %></blockquote>
 <% end -%>
-<%= render :partial => 'articles/article_lead', :object => blog_lead.primary_article if blog_lead.primary_article %>
+<% if blog_lead.primary_article -%>
+	<%= render :partial => 'articles/article_lead', :object => blog_lead.primary_article %>
+<% else -%>
+	<%= render :partial => 'blogs/article_empty' %>
+<% end -%>
