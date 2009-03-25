@@ -29,7 +29,7 @@ module UsersHelper
   
   def social_network_el(network, user, opts={})
     url = h(instance_eval("#{network}_link(user)"))
-    content_tag :li, link_to(image_tag('shim.gif', :class => "social_network-#{network}"), url, :target => (url.match(/http\:/) ? '_new' : nil), :title => "Go to #{user.display_name}'s #{network.to_s.humanize} page"), :class => opts[:class] || 'social_network' if user.send("#{network}?")
+    content_tag :li, link_to(image_tag('shim.gif', :class => "social_network-#{network}"), url, :target => (url.match(/http\:/) ? '_new' : nil), :title => "Go to #{user.display_name}'s #{network.to_s.humanize}"), :class => opts[:class] || 'social_network' if user.send("#{network}?")
   end
   
 end
