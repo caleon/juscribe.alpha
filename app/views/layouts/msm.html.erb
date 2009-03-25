@@ -21,8 +21,10 @@
 					<%= navi_customize(user_widgets_path(@user.to_path(true))) if @user && @user.editable_by?(get_viewer) %>
 				</ul>
 			</div>
-			<%= warning_field %>
-			<%= notice_field %>
+			<div class="flashWrapper">
+				<%= warning_field %>
+				<%= notice_field %>
+			</div>
 			<a name="content"></a>
 			<div id="msm_layout" class="msm_layout">
 				<%= debug_module %>

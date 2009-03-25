@@ -40,11 +40,13 @@ module ApplicationHelper
   end
   
   def warning_field
-    content_tag(:div, flash[:warning], :id => 'flashWarning', :class => 'flashBox') if flash[:warning]
+    content_tag(:div, 
+      content_tag(:div, flash[:warning]), :id => 'flashWarning', :class => 'flashBox') if flash[:warning]
   end
   
   def notice_field
-    content_tag(:div, flash[:notice], :id => 'flashNotice', :class => 'flashBox') if flash[:notice]
+    content_tag(:div, 
+      content_tag(:div, flash[:notice]), :id => 'flashNotice', :class => 'flashBox') if flash[:notice]
   end
   
   def navi_el(text, path, opts={})

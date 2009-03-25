@@ -27,3 +27,12 @@
 <br />
 <%= f.label :social_networks_linkedin, "LinkedIn ID" %>
 <%= text_field_tag 'user[social_networks][linkedin]', @user.social_networks[:linkedin], :id => 'user_social_networks_linkedin' %>
+<br />
+<%= f.label :social_networks_msn, "MSN Messenger ID" %>
+<%= text_field_tag 'user[social_networks][msn]', @user.social_networks[:msn], :id => 'user_social_networks_msn' %>
+<br />
+<%= f.label :social_networks_yim, "Yahoo Messenger ID" %>
+<%= text_field_tag 'user[social_networks][yim]', @user.social_networks[:yim], :id => 'user_social_networks_yim' %>
+<br />
+<%= f.label :social_networks_twitter, "Twitter ID" %>
+<%= text_field_tag 'user[social_networks][twitter]', @user.social_networks[:twitter], :id => 'user_social_networks_twitter' %>

@@ -488,6 +488,30 @@ strong.articleIntro {
 	background-position: -45px -15px;
 }
 
+.social_network .social_network-msn {
+	background-position: -60px 0;
+}
+
+.social_network a:hover .social_network-msn {
+	background-position: -60px -15px;
+}
+
+.social_network .social_network-yim {
+	background-position: -75px 0;
+}
+
+.social_network a:hover .social_network-yim {
+	background-position: -75px -15px;
+}
+
+.social_network .social_network-twitter {
+	background-position: -90px 0;
+}
+
+.social_network a:hover .social_network-twitter {
+	background-position: -90px -15px;
+}
+
 .article object,
 .article .articleContent > embed,
 .article > embed {
