@@ -84,6 +84,7 @@ class UsersControllerTest < ActionController::TestCase
     assert_not_nil assigns(:user).default_blog
     assert_equal User.find_by_nick('Bam_bam'), assigns(:user)
     assert_not_nil assigns(:viewer)
+    assert !assigns(:user).messages.empty?
   end
   
   def test_create_with_picture

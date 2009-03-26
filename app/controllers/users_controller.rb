@@ -74,6 +74,7 @@ class UsersController < ApplicationController
         format.html { flash[:notice] = msg; redirect_to @user }
         format.js { flash.now[:notice] = msg }
       end
+      Message.create(:sender_id => DB[:wheel_id], :recipient_id => @user.id, :subject => "Welcome to Juscribe!", :body => "Thank you for registering with Juscribe.\n\nYou are now able to create blogs for your many interests, and interact with the Juscribe blogging community. Check out some of our features:\n\n- Layouts for customizing the arrangement of your blogs\n- Commenting on particular paragraphs of a blog entry\n- Trademark commenting system which lets you clearly visualize the flow of conversations\n- Ability to clip other people's articles to share on your blog\n- Scheduling when an article gets published on your blog in the future\n- Collaborative blogs\n\nWe have many more features on the way, but in the meantime, enjoy your stay at Juscribe.com!\n\nJuscribe Team")
     else
       flash.now[:warning] = "There was an issue with the registration form."
       respond_to do |format|

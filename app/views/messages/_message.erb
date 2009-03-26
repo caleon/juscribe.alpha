@@ -8,6 +8,6 @@
 	<% unless (no_title ||= false) %>
 		<%= link_to message.subject, message, :class => 'message-subject' %><br />
 	<% end %>
-	<%=h (full_text ||= false) ? truncate(message.body, 30) : message.body %>
+	<%= (full_text ||= false) ? format_message(message) : truncate(message.body, :length => 60) %>
 	<%# TODO: Need timestamp too. -%>
 <% end %>

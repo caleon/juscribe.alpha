@@ -8,7 +8,7 @@ class Message < ActiveRecord::Base
   validates_with_regexp :subject
   validates_with_regexp :body
   
-  after_create :deliver_message_notification
+  #after_create :deliver_message_notification
   
   def read?
     self.read_at?
