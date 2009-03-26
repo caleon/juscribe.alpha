@@ -51,9 +51,9 @@ end
 after "deploy:update_code", :update_config
 
 # yes, the conditional might seem redundant, but it's here mostly for placeholding purposes
-desc "If shared/uploads doesn't exist, create directory"
-task :create_shared_media_directory, :roles => [ :app ] do
-  run "[ ! -d #{shared_path}/uploads ] && mkdir -p #{shared_path}/uploads"
+desc "If shared/uploads, shared/config/ultrasphinx doesn't exist, create directory"
+task :create_directories, :roles => [ :app ] do
+  run "[ ! -d #{shared_path}/uploads ] && mkdir -p #{shared_path}/uploads && mkdir -p #{shared_path}/config/ultrasphinx"
 end
 after "deploy:cold", :create_shared_media_directory
 
@@ -67,7 +67,7 @@ desc "Ultrasphinx related tasks"
 namespace :search do
   desc "Generate config/ultrasphinx/production.conf configuration file on production"
   task :generate_conf, :roles => :app do
-    run "cd #{current_release} && RAILS_ENV=production rake ultrasphinx:configure && cp #{current_release}/config/ultrasphinx/production.conf #{shared_path}/config/"
+    run "cd #{current_release} && RAILS_ENV=production rake ultrasphinx:configure && cp #{current_release}/config/ultrasphinx/production.conf #{shared_path}/config/ultrasphinx/"
   end
   
   desc "Index and start ultrasphinx daemon"
