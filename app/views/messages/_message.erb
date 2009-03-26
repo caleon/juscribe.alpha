@@ -1,4 +1,8 @@
 <% content_tag_for(html_tag ||= :li, message, :class => (message.read? || (message.recipient != get_viewer) ? 'message-read' : 'message-unread')) do %>
+
+	<span class="message-timestamp timestamp" id="<%= dom_id(message) %>-timestamp">
+		<%= message.created_at.to_s(message.created_at.year == Time.zone.now.year ? :this_year : :not_this_year) %>
+	</span>
 	<% if message.sender == get_viewer %>
 		<%= picture_for(message.recipient, :with_text => true, :link => true) %>
 	<% else %>

@@ -483,7 +483,15 @@ strong.articleIntro {
 	clear: left;
 	padding: 9px;
 	overflow: hidden;
+}
+
+li.message {
 	border-bottom: 1px solid #ccc;
+}
+
+.message .timestamp {
+	float: right;
+	font-size: smaller;
 }
 
 .message a.message-subject {
