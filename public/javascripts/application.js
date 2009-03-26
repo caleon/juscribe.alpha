@@ -1,6 +1,16 @@
 // Place your application-specific JavaScript functions and classes here
 // This file is automatically included by javascript_include_tag :defaults
 
+var NickUpdatesForm = Behavior.create({
+	onblur: function(e) {
+		inputted = this.element.value;		
+		el = $('blog_short_name-info');
+		if(inputted && inputted != '' && !el.innerHTML.match(inputted)) {
+			el.innerHTML = el.innerHTML.gsub('your_nick', inputted);
+		}
+	}
+});
+
 var ToggleInfoField = Behavior.create({
 	onfocus: function(e) {
 		targetId = this.element.id + '-info';
