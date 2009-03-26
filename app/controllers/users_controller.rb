@@ -40,6 +40,7 @@ class UsersController < ApplicationController
     end
     @page_title = "Become a new Juscribe member!"
     @user = User.new
+    @blog = Blog.new
     @registration_closed = registration_closed?
     respond_to do |format|
       format.html { trender }
@@ -58,7 +59,13 @@ class UsersController < ApplicationController
       end
       return
     end
-    if @user.save
+    @blog = Blog.new(params[:blog])
+    temp_user = User.find(DB[:garbage_id])
+    @blog.bloggable, @blog.user = temp_user, temp_user
+    if @user.valid? && !(@blog.short_name.blank? || @blog.name.blank?) && @blog.valid?
+      @user.save!
+      @blog.bloggable, @blog.user = @user, @user
+      @blog.save!
       session[:id] = @user.id
       get_viewer
       create_uploaded_picture_for(@user, :save => true) if picture_uploaded?

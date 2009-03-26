@@ -1,15 +1,22 @@
-<% form_for :user, @user, :html => { :id => 'login-form' } do |f| %>
+<% form_for :user, @user, :html => { :id => 'login-form', :class => 'stdForm' } do |f| %>
 	<fieldset>
 		<legend>Login</legend>
-		
-		<%= f.label :nick %><br />
-		<%= f.text_field :nick %>
-		<%= error_message_on @user, 'nick' %>
-		<br />
-		<%= f.label :password %><br />
-		<%= f.password_field :password %>
-		<%= error_message_on @user, 'password' %>
-		<br />
+		<table>
+			<tr>
+				<th><%= f.label :nick %></th>
+				<td>
+					<%= f.text_field :nick %>
+					<%= info_box_for @user, :nick %>
+				</td>
+			</tr>
+			<tr>
+				<th><%= f.label :password %></th>
+				<td>
+					<%= f.password_field :password %>
+					<%= info_box_for @user, :password %>
+				</td>
+			</tr>
+		</table>
 		<%= f.submit 'Login', :disable_with => 'Please wait...' %>
 	</fieldset>
 <% end %>

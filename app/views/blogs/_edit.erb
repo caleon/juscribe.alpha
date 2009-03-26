@@ -1,4 +1,4 @@
-<% form_for :blog, @blog, :url => blog_path_for(@blog), :html => { :method => :put, :multipart => true } do |f| %>
+<% form_for :blog, @blog, :url => blog_path_for(@blog), :html => { :method => :put, :multipart => true, :class => "blogForm stdForm" } do |f| %>
 	<fieldset>
 		<legend>Edit your blog</legend>
 		<%= render :partial => 'form', :locals => { :f => f } %>

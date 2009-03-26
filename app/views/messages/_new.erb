@@ -1,7 +1,10 @@
-<% form_for @message do |f| %>
+<% form_for @message, :html => { :class => "messageForm stdForm" } do |f| %>
 	<fieldset>
 		<legend>Compose message</legend>
-		<%= render :partial => 'form', :locals => { :f => f } %>
+		<table>
+			<%= render :partial => 'form', :locals => { :f => f } %>
+		</table>
+		<%= submit_tag 'Send' %>
 	</fieldset>
 <% end %>
 <%= cancel_button %>

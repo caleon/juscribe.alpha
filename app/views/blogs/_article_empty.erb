@@ -1,4 +1,4 @@
 <% div_for article = Article.new(:content => "Now that you've setup your blog, write an article for it!") do -%>
-	<h2><%= link_to "Compose your first article!", article_path_from_blog(@blog, :prefix => 'new') %></h2>
+	<h2><%= link_to "Compose your first article!", (@blog ? article_path_from_blog(@blog, :prefix => 'new') : '#') %></h2>
 		<p><%= format_article(article, :truncate => 300, :without_intro => true) %></p>
 <% end -%>

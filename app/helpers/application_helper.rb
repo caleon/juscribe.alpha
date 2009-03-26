@@ -107,7 +107,7 @@ module ApplicationHelper
   end
   
   def debug_module
-    render :partial => 'shared/debugger' if RAILS_ENV == 'development' || (get_viewer && get_viewer.admin?)
+    render :partial => 'shared/debugger' if RAILS_ENV == 'development' || (get_viewer && get_viewer.admin? && SITE[:enable_debugger])
   end
   
   def digg_button(javascript=false)

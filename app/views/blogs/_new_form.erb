@@ -1,0 +1,15 @@
+<tr>
+	<th><%= f.label :name %></th>
+	<td>
+		<%= f.text_field :name %>
+		<%= info_box_for @blog, :name, "Name of your blog" %>
+	</td>
+</tr>
+<tr>
+	<th><%= f.label :short_name %></th>
+	<td>
+		<%= f.text_field :short_name %>
+		<%= info_box_for @blog, :short_name, %{http://www.juscribe.com/#{@bloggable.class.class_name.underscore.first rescue "u"}/#{@bloggable.is_a?(User) ? @bloggable.nick : @bloggable.name rescue "your_nick" }/blogs/<span class="emphasis" style="text-transform: uppercase;">XXXXXXX</span>} %>
+	</td>
+</tr>
+<%= yield %>

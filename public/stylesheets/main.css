@@ -299,9 +299,7 @@ p.spaceMessaging {
 }
 
 .fieldWithErrors {
-	padding: 2px;
-	background-color: red;
-	display: table;
+	
 }
 
 #errorExplanation {
@@ -342,38 +340,54 @@ label {
 	color: #444;
 }
 
-.userForm th {
+.userForm fieldset {
+	margin-bottom: 18px;
+}
+
+.stdForm th {
 	width: 150px;
 	text-align: right;
 	padding-top: 0.5em;
 }
 
-.userForm th,
-.userForm td {
-	vertical-align: top;
-	height: 4em;
+.stdForm th,
+.stdForm td {
+	height: 3.7em;
 }
 
-.userForm input {
+.stdForm th,
+.stdForm td {
+	vertical-align: top;
+}
+
+.stdForm input {
 	display: block;
 	padding: 4px;
 }
 
-.userForm .unrequired label {
+.stdForm .fieldWithErrors label {
+	color: red;
+}
+
+.stdForm .fieldWithErrors input {
+	background-color: #fefdb8;
+}
+
+.stdForm .unrequired label {
 	font-weight: normal;
 	color: #999;
 }
 
-.userForm .unrequired input {
+.stdForm .unrequired input {
 	background-color: #eee;
 }
 
-.userForm .info {
+.stdForm .info {
 	color: #999;
 	text-transform: lowercase;
 }
 
-.userForm .info .emphasis {
+.stdForm .info .emphasis {
 	color: #ff5161;
 }
 

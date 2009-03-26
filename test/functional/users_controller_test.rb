@@ -69,11 +69,19 @@ class UsersControllerTest < ActionController::TestCase
     assert_flash_equal 'There was an issue with the registration form.', :warning
   end
     
-  def test_create
+  def test_create_without_blog
     post :create, :user => { :nick => 'Bam_bam', :first_name => 'bam', :last_name => 'bam', :password => 'bambam', :password_confirmation => 'bambam', :birthdate => Date.parse('1/29/1985'), :sex => "1", :email => 'bambam@venturous.net' }
+    assert_response :success
+    assert_template 'new'
+    assert_flash_equal 'There was an issue with the registration form.', :warning
+  end
+  
+  def test_create_with_blog
+    post :create, { :user => { :nick => 'Bam_bam', :first_name => 'bam', :last_name => 'bam', :password => 'bambam', :password_confirmation => 'bambam', :birthdate => Date.parse('1/29/1985'), :sex => "1", :email => 'bambam@venturous.net' }, :blog => { :name => 'flintstone', :short_name => 'flint' } }
     assert_redirected_to :action => 'show', :id => 'Bam_bam'
     assert_equal "You are now a registered user! Welcome!", flash[:notice]
     assert_not_nil assigns(:user)
+    assert_not_nil assigns(:user).default_blog
     assert_equal User.find_by_nick('Bam_bam'), assigns(:user)
     assert_not_nil assigns(:viewer)
   end

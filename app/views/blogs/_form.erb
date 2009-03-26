@@ -1,10 +1,26 @@
-<%= f.label :description %>
-<%= f.text_area :description %>
-<br />
-<%= f.check_box :allow_comments %><%= f.label :allow_comments %>
-<br />
-<%= f.check_box :allow_anonymous_comments %><%= f.label :allow_anonymous_comments %> (if comments are allowed)
-<br />
+<%= add_behavior("td input", 'ToggleInfoField') %>
+<tr class="unrequired">
+	<th><%= f.label :description %></th>
+	<td>
+		<%= f.text_area :description %>
+		<%= info_box_for @blog, :description %>
+	</td>
+</tr>
+<tr>
+	<th>&nbsp;</th>
+	<td>
+		<%= f.check_box :allow_comments, :style => "display: inline;" %><%= f.label :allow_comments %>
+		<br />
+		<%= info_box_for @blog, :allow_comments, "You can turn off commenting on this blog" %>
+	</td>
+</tr>
+<tr>
+	<th>&nbsp;</th>
+	<td>
+		<%= f.check_box :allow_anonymous_comments, :style => "display: inline;" %><%= f.label :allow_anonymous_comments %>
+		<br />
+		<%= info_box_for @blog, :allow_anonymous_comments, "Only matters if you checked <em>Allow comments</em>" %>
+	</td>
+</tr>
 <%= render :partial => 'pictures/form' %>
-
 <%= render :partial => 'shared/layout_form', :locals => { :f => f } %>
