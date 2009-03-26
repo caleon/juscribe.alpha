@@ -1,6 +1,8 @@
 class Comment < ActiveRecord::Base
   serialize :reference_ids
   acts_as_accessible
+  
+  is_indexed :fields => [ 'nick', 'body' ]
 
   belongs_to :user
   belongs_to :commentable, :polymorphic => true, :inherits_layout => true

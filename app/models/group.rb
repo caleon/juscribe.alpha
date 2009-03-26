@@ -1,5 +1,8 @@
 class Group < ActiveRecord::Base
   include_custom_plugins  
+  
+  is_indexed :fields => [ 'name', 'description' ]
+  
   has_one :layouting, :as => :layoutable
   
   belongs_to :user

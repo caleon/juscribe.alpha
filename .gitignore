@@ -2,6 +2,7 @@
 .com.apple.timemachine.supported
 attachment_fu_plugin.sqlite3.db
 config/database.yml
+config/ultrasphinx/development.conf
 coverage/*
 log/*
 log/*.log

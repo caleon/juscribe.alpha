@@ -59,3 +59,9 @@ task :symlink_shared_media, :roles => [ :app ] do
   run "ln -s #{shared_path}/uploads #{release_path}/public/images/uploads"
 end
 after "deploy:update_code", :symlink_shared_media
+
+task :generate_ultrasphinx_conf, :roles => [ :app ] do
+  run "cd #{current_release} && RAILS_ENV=production rake ultrasphinx:configure && cp #{current_release}/config/ultrasphinx/production.conf #{shared_path}/config/"
+  # This will occur after :update_config.
+end
+after "deploy:cold", :generate_ultrasphinx_conf

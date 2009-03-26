@@ -1,4 +1,5 @@
 class Widget < ActiveRecord::Base
+  is_indexed :fields => [ 'name' ]
   # This can be subclassed with column `type`
   belongs_to :user, :inherits_layout => true
   belongs_to :widgetable, :polymorphic => true

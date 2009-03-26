@@ -1,5 +1,7 @@
 class Thoughtlet < ActiveRecord::Base
-  include_custom_plugins  
+  include_custom_plugins
+  
+  is_indexed :fields => [ 'content' ]  
 
   belongs_to :user, :inherits_layout => true
   belongs_to :event

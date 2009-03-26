@@ -2,6 +2,8 @@ class Article < ActiveRecord::Base
   include_custom_plugins
   acts_as_commentable
   
+  is_indexed :fields => [ 'title', 'content' ]
+  
   belongs_to :user # creator
   belongs_to :blog, :inherits_layout => true
   

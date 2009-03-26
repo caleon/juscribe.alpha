@@ -1,5 +1,9 @@
 FreeImage (http://seattlerb.rubyforge.org/ImageScience.html)
-Needed to start: image_science 1.1.3, aws-s3 0.4.0
+sphinx0.9.8 (http://www.sphinxsearch.com/downloads.html)
+sudo gem install chronic (0.2.3)
+script/plugin install git://github.com/fauna/ultrasphinx.git
+gems: image_science 1.1.3, aws-s3 0.4.0
+
 
 from `gem list --local | mate` (3/8/2008)
 

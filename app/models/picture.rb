@@ -1,6 +1,8 @@
 class Picture < ActiveRecord::Base
   include_custom_plugins :except => :acts_as_depictable
   
+  is_indexed :fields => [ 'caption' ]
+  
   belongs_to :user
   belongs_to :depictable, :polymorphic => true, :inherits_layout => true
   acts_as_list :scope => 'depictable_id = #{depictable_id} AND depictable_type = \'#{depictable_type}\''

@@ -6,6 +6,8 @@ require 'user/user_validations'
 class User < ActiveRecord::Base
   include Friendship
   include_custom_plugins  
+  
+  is_indexed :fields => [ 'first_name', 'last_name', 'nick' ]
   # TODO: acts_as_cached
   serialize :social_networks
     

@@ -1,6 +1,8 @@
 class Blog < ActiveRecord::Base
   include_custom_plugins
   acts_as_commentable
+  
+  is_indexed :fields => [ 'name', 'short_name', 'description' ]
   has_one :layouting, :as => :layoutable
   
   belongs_to :user # creator
