@@ -339,32 +339,28 @@ form {
 }
 
 .userForm th {
-	width: 100px;
+	width: 150px;
 	text-align: right;
-}
-
-.userForm td.input {
-	width: 200px;
-	padding: 10px 0;
-}
-
-.userForm td:last-child {
-	width: 230px;
-	padding-left: 10px;
 }
 
 .userForm th,
 .userForm td {
-	vertical-align: middle;
+	vertical-align: top;
+	height: 4em;
 }
 
 .userForm input {
+	display: block;
 	padding: 4px;
 }
 
 .userForm .info {
 	color: #999;
 	text-transform: lowercase;
+}
+
+.userForm .info .emphasis {
+	color: #ff5161;
 }
 
 body pre,

@@ -1,12 +1,16 @@
 <tr>
 	<th><%= f.label :nick %></th>
-	<td class="input"><%= f.text_field :nick %></td>
-	<td><%= info_box_for @user, :nick, %{3-20 alphanumerics or underscore, begin with letter} %></td>
+	<td>
+		<%= f.text_field :nick %>
+		<%= info_box_for @user, :nick, %{3-20 alphanumerics or underscore, begin with letter} %>
+	</td>
 </tr>
 <%= render :partial => 'password_form', :locals => { :f => f } %>
 <tr>
 	<th><%= f.label :email %></th>
-	<td class="input"><%= f.text_field :email %></td>
-	<td><%= info_box_for @user, :email, "Verifiable address" %></td>
+	<td>
+		<%= f.text_field :email %>
+		<%= info_box_for @user, :email, "Verifiable address" %>
+	</td>
 </tr>
 <%= yield %>

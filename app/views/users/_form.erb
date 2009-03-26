@@ -1,59 +1,81 @@
-<%= add_behavior(".input input", 'ToggleInfoField') %>
+<%= add_behavior("td input", 'ToggleInfoField') %>
 <tr>
 	<th><%= f.label :first_name %></th>
-	<td class="input"><%= f.text_field :first_name %></td>
-	<td><%= info_box_for @user, :first_name, 'Enter your first name' %></td>
+	<td>
+		<%= f.text_field :first_name %>
+		<%= info_box_for @user, :first_name, 'Enter your first name' %>
+	</td>
 </tr>
 <tr>
 	<th><%= f.label :middle_initial %></th>
-	<td class="input"><%= f.text_field :middle_initial, :size => 2, :maxlength => 1 %> (optional)</td>
-	<td><%= info_box_for @user, :middle_initial %></td>
+	<td>
+		<%= f.text_field :middle_initial, :size => 2, :maxlength => 1 %>
+		<%= info_box_for @user, :middle_initial, '(Optional)' %>
+	</td>
 </tr>
 <tr>
 	<th><%= f.label :last_name %></th>
-	<td class="input"><%= f.text_field :last_name %></td>
-	<td><%= info_box_for @user, :last_name, 'Enter your last name' %></td>
+	<td>
+		<%= f.text_field :last_name %>
+		<%= info_box_for @user, :last_name, 'Enter your last name' %>
+	</td>
 </tr>
 <tr>
 	<th><%= f.label :birthdate %></th>
-	<td class="input"><%= date_select :user, :birthdate, :start_year => 8.years.ago.year, :end_year => 70.years.ago.year, :default => 13.years.ago %></td>
-	<td><%= info_box_for @user, :birthdate, 'Input your birthdate' %></td>
+	<td>
+		<%= date_select :user, :birthdate, :start_year => 8.years.ago.year, :end_year => 70.years.ago.year, :default => 13.years.ago %>
+		<%= info_box_for @user, :birthdate, 'Input your birthdate' %>
+	</td>
 </tr>
 <% unless @user.new_record? -%>
 <tr>
 	<th><%= f.label :social_networks_aim, "AIM Screen Name" %></th>
-	<td class="input"><%= text_field_tag 'user[social_networks][aim]', @user.social_networks[:aim], :id => 'user_social_networks_aim' %></td>
-	<td><%= info_box_for @user, :social_networks_aim, 'Your AIM screen name' %>
+	<td>
+		<%= text_field_tag 'user[social_networks][aim]', @user.social_networks[:aim], :id => 'user_social_networks_aim' %>
+		<%= info_box_for @user, :social_networks_aim, 'Your AIM screen name' %>
+	</td>
 </tr>
 <tr>
 	<th><%= f.label :social_networks_facebook, "Facebook ID" %></th>
-	<td class="input"><%= text_field_tag 'user[social_networks][facebook]', @user.social_networks[:facebook], :id => 'user_social_networks_facebook' %></td>
-	<td><%= info_box_for @user, :social_networks_facebook, %{Ex: <em>http://www.facebook.com/profile.php?id=<span class="emphasis">XXXXXXX</span>&amp;ref=profile</em>} %></td>
+	<td>
+		<%= text_field_tag 'user[social_networks][facebook]', @user.social_networks[:facebook], :id => 'user_social_networks_facebook' %>
+		<%= info_box_for @user, :social_networks_facebook, %{Ex: <em>http://www.facebook.com/profile.php?id=<span class="emphasis">XXXXXXX</span></em>} %>
+	</td>
 </tr>
 <tr>
 	<th><%= f.label :social_networks_myspace, "MySpace ID" %></th>
-	<td class="input"><%= text_field_tag 'user[social_networks][myspace]', @user.social_networks[:myspace], :id => 'user_social_networks_myspace' %></td>
-	<td><%= info_box_for @user, :social_networks_myspace, %{Ex: <em>http://www.myspace.com/<span class="emphasis">XXXXXXXXX</span></em>} %></td>
+	<td>
+		<%= text_field_tag 'user[social_networks][myspace]', @user.social_networks[:myspace], :id => 'user_social_networks_myspace' %>
+		<%= info_box_for @user, :social_networks_myspace, %{Ex: <em>http://www.myspace.com/<span class="emphasis">XXXXXXXXX</span></em>} %>
+	</td>
 </tr>
 <tr>
 	<th><%= f.label :social_networks_linkedin, "LinkedIn ID" %></th>
-	<td class="input"><%= text_field_tag 'user[social_networks][linkedin]', @user.social_networks[:linkedin], :id => 'user_social_networks_linkedin' %></td>
-	<td><%= info_box_for @user, :social_networks_linkedin, %{Ex: <em>http://www.linkedin.com/in/<span class="emphasis">XXXXXXXXXXX</span></em>} %></td>
+	<td>
+		<%= text_field_tag 'user[social_networks][linkedin]', @user.social_networks[:linkedin], :id => 'user_social_networks_linkedin' %>
+		<%= info_box_for @user, :social_networks_linkedin, %{Ex: <em>http://www.linkedin.com/in/<span class="emphasis">XXXXXXXXXXX</span></em>} %>
+	</td>
 </tr>
 <tr>
 	<th><%= f.label :social_networks_msn, "MSN Messenger ID" %></th>
-	<td class="input"><%= text_field_tag 'user[social_networks][msn]', @user.social_networks[:msn], :id => 'user_social_networks_msn' %></td>
-	<td><%= info_box_for @user, :social_networks_msn, "Your full MSN Messenger handle" %></td>
+	<td>
+		<%= text_field_tag 'user[social_networks][msn]', @user.social_networks[:msn], :id => 'user_social_networks_msn' %>
+		<%= info_box_for @user, :social_networks_msn, "Your full MSN Messenger handle" %>
+	</td>
 </tr>
 <tr>
 	<th><%= f.label :social_networks_yim, "Yahoo Messenger ID" %></th>
-	<td class="input"><%= text_field_tag 'user[social_networks][yim]', @user.social_networks[:yim], :id => 'user_social_networks_yim' %></td>
-	<td><%= info_box_for @user, :social_networks_yim, "Your Yahoo Instant Messenger username" %></td>
+	<td>
+		<%= text_field_tag 'user[social_networks][yim]', @user.social_networks[:yim], :id => 'user_social_networks_yim' %>
+		<%= info_box_for @user, :social_networks_yim, "Your Yahoo Instant Messenger username" %>
+	</td>
 </tr>
 <tr>
 	<th><%= f.label :social_networks_twitter, "Twitter ID" %></th>
-	<td class="input"><%= text_field_tag 'user[social_networks][twitter]', @user.social_networks[:twitter], :id => 'user_social_networks_twitter' %></td>
-	<td><%= info_box_for @user, :social_networks_twitter, %{Ex: <em>http://www.twitter.com/<span class="emphasis">XXXXXXX</span></em>} %></td>
+	<td>
+		<%= text_field_tag 'user[social_networks][twitter]', @user.social_networks[:twitter], :id => 'user_social_networks_twitter' %>
+		<%= info_box_for @user, :social_networks_twitter, %{Ex: <em>http://www.twitter.com/<span class="emphasis">XXXXXXX</span></em>} %>
+	</td>
 </tr>
 <% end -%>
 <%= render :partial => 'pictures/form', :locals => { :pic_label => "Upload profile picture" } %>
