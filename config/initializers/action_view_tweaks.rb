@@ -1,3 +1,15 @@
+module ActiveSupport
+  class TimeWithZone
+    def this_year?
+      self.year == Time.zone.now.year
+    end
+    
+    def recent?
+      self > 2.weeks.ago
+    end
+  end
+end
+
 module ActionView::Helpers
   module ActiveRecordHelper
     def error_messages_for_with_format(*params)
