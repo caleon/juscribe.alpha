@@ -4,14 +4,16 @@
 var ToggleInfoField = Behavior.create({
 	onfocus: function(e) {
 		targetId = this.element.id + '-info';
-		if($(targetId)) {
+		errorId = this.element.id + '-error';
+		if($(targetId) && (!$(errorId) || $(errorId).innerHTML == '')) {
 			$(targetId).show();
 		}
 		return false;		
 	},
 	onblur: function(e) {
 		targetId = this.element.id + '-info';
-		if($(targetId)) {
+		errorId = this.element.id + '-error';
+		if($(targetId) && (!$(errorId) || $(errorId).innerHTML == '')) {
 			$(targetId).hide();
 		}
 		return false;

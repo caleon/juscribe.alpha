@@ -48,7 +48,7 @@ class MessagesController < ApplicationController
   end  
   
   def create
-    @message = Message.new(params[:message].merge(:sender => get_viewer))
+    @message = Message.new(params[:message].merge(:sender => get_viewer, :recipient => params[:message][:recipient] || params[:recipient]))
     @page_title = "Compose new message"
     if @message.save
       msg = "You have sent your message to #{params[:message][:recipient]}."

@@ -1,4 +1,4 @@
-<% content_tag_for(html_tag ||= :li, message, :class => (message.read? ? 'message-read' : 'message-unread')) do %>
+<% content_tag_for(html_tag ||= :li, message, :class => (message.read? || (message.recipient != get_viewer) ? 'message-read' : 'message-unread')) do %>
 	<% if message.sender == get_viewer %>
 		<%= picture_for(message.recipient, :with_text => true, :link => true) %>
 	<% else %>
@@ -9,4 +9,5 @@
 		<%= link_to message.subject, message, :class => 'message-subject' %><br />
 	<% end %>
 	<%=h (full_text ||= false) ? truncate(message.body, 30) : message.body %>
+	<%# TODO: Need timestamp too. -%>
 <% end %>

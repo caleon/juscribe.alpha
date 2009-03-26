@@ -338,9 +338,14 @@ form {
 	margin-bottom: 0px;
 }
 
+label {
+	color: #444;
+}
+
 .userForm th {
 	width: 150px;
 	text-align: right;
+	padding-top: 0.5em;
 }
 
 .userForm th,
@@ -352,6 +357,15 @@ form {
 .userForm input {
 	display: block;
 	padding: 4px;
+}
+
+.userForm .unrequired label {
+	font-weight: normal;
+	color: #999;
+}
+
+.userForm .unrequired input {
+	background-color: #eee;
 }
 
 .userForm .info {
