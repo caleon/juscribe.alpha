@@ -1,4 +1,4 @@
 <% @pictures.each do |pic| %>
-	<%= link_to image_tag(pic.public_filename, :class => [ 'pictureShow', ((pic.width.nil? || pic.width > 500) ? 'large' : nil) ].compact.join(' ')),
+	<%= link_to image_tag(pic.public_original_filename, :class => [ 'pictureShow', ((pic.width.nil? || pic.width > 500) ? 'large' : nil) ].compact.join(' ')),
 							picture_path_for(pic) %>
 <% end %>

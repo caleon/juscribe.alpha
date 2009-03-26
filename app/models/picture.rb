@@ -1,5 +1,5 @@
 class Picture < ActiveRecord::Base
-  include_custom_plugins  
+  include_custom_plugins :except => :acts_as_depictable
   
   belongs_to :user
   belongs_to :depictable, :polymorphic => true, :inherits_layout => true
@@ -14,6 +14,7 @@ class Picture < ActiveRecord::Base
                   #:resize_to => '800x800>', # Used by RMagick, so probably not needed.
                   :thumbnails => { :thumb => '100x100', :feature => '300x400' },
                   :processor => 'ImageScience'
+  has_one :thumb, :class_name => 'Picture', :foreign_key => 'parent_id', :conditions => "thumbnail = 'thumb'"
   
   validates_as_attachment
   # ...does the following:  validates_presence_of :size, :content_type, :filename
@@ -80,7 +81,7 @@ class Picture < ActiveRecord::Base
   end
   
   def other_picture_thumbs
-    other_pictures.map{|pic| pic.thumbnails.find_by_thumbnail('thumb') }
+    other_pictures.map(&:thumb)
   end
   
   def feature?; self.thumbnail == 'feature'; end

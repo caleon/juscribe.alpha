@@ -50,7 +50,7 @@ class ArticlesController < ApplicationController
   end
   
   def show
-    return unless setup(:permission)
+    return unless setup([:permission, { :pictures => :thumb }])
     if @article.draft?
       return unless authorize(@article, :editable => true)
     end

@@ -54,7 +54,7 @@
 <% content_for :side_column do -%>
 	<% with_options :layout => :framed do |framed| %>
 		<%= framed.wrender :user %>
-		<%= framed.wrender :thumbs if @article.primary_picture %>
+		<%= framed.wrender :pictures if @article.primary_picture %>
 		<%= framed.wrender :original if @article.original %>
 		<%= framed.wrender :responses unless @article.responses.empty? %>
 		<%= framed.wrender :google_ads %>

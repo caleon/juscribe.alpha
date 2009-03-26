@@ -16,7 +16,7 @@ class PicturesController < ApplicationController
   end
   
   def show
-    return unless setup(:permission)
+    return unless setup([:permission, { :depictable => { :pictures => :thumb } }])
     @page_title = @picture.display_name
     respond_to do |format|
       format.html { trender }
@@ -32,7 +32,7 @@ class PicturesController < ApplicationController
   end
   
   def new
-    return unless get_depictable(:message => "Unable to find the object to depict. Please check the address.") && authorize(@depictable)
+    return unless get_depictable(:message => "Unable to find the object to depict. Please check the address.") && authorize(@depictable, :editable => true)
     @picture = @depictable.pictures.new
     @page_title = "New Picture for #{@depictable.display_name}"
     respond_to do |format|
@@ -42,7 +42,7 @@ class PicturesController < ApplicationController
   end
   
   def create
-    return unless get_depictable(:message => "Unable to find_the_object to depict. Please check the address.") && authorize(@depictable)
+    return unless get_depictable(:message => "Unable to find_the_object to depict. Please check the address.") && authorize(@depictable, :editable => true)
     @page_title = "New Picture for #{@depictable.display_name}"
     @picture = create_uploaded_picture_for(@depictable, :save => true, :respond => true)
     return if @picture.errors.empty?

@@ -2,6 +2,7 @@
 	<%= rounded_shim(:top) %>
 	<p id="debugger-inner">
 		<%=h 'hello <script type="text/javascript">colin</script>' %>
+		<%=h main_object.inspect if main_object %>
 	<% if false %>
 		COMMENT PATH: <%= comment_path_for(Comment.find(:first)) %><br />
 		BLAH: <%= escape_javascript form_authenticity_token %><br />

@@ -7,6 +7,7 @@ class UsersController < ApplicationController
 
   def show
     return unless setup([ :permission, :placed_widgets, :comments ])
+    #return unless setup([ { :permission => :permission_rule }, { :placed_widgets => :widgetable }, { :comments => :user } ])
     @page_title = "#{@user.display_name}"
     @widgets = @user.placed_widgets.sort_by(&:position).inject([]) {|arr, wid| arr[wid.position - 1] = wid; arr }
     # TODO: write custom sql for widgetable
@@ -39,8 +40,7 @@ class UsersController < ApplicationController
       return
     end
     @page_title = "Become a new Juscribe member!"
-    @user = User.new
-    @blog = Blog.new
+    @user, @blog = User.new, Blog.new
     @registration_closed = registration_closed?
     respond_to do |format|
       format.html { trender }

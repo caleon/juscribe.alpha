@@ -115,7 +115,7 @@ class PicturesControllerTest < ActionController::TestCase
   end
   
   def test_new
-    get :new, users(:keira).to_path(true), as(:colin)
+    get :new, users(:keira).to_path(true), as(:keira)
     assert_equal users(:keira), assigns(:depictable)
     assert_template 'new'
     assert_not_nil assigns(:picture)
@@ -152,7 +152,7 @@ class PicturesControllerTest < ActionController::TestCase
   end
   
   def test_create
-    post :create, users(:keira).to_path(true).merge(:picture => { :uploaded_data => fixture_file_upload("keira.jpg", "image/jpg") }), as(:colin)
+    post :create, users(:keira).to_path(true).merge(:picture => { :uploaded_data => fixture_file_upload("keira.jpg", "image/jpg") }), as(:keira)
     assert_not_nil assigns(:picture)
     assert assigns(:picture).valid?
     assert_not_nil assigns(:picture).depictable
@@ -175,7 +175,7 @@ class PicturesControllerTest < ActionController::TestCase
   end
   
   def test_create_with_invalidly_huge_image
-    post :create, users(:jessica).to_path(true).merge(:picture => { :uploaded_data => fixture_file_upload("jessica.jpg", "image/jpg") }), as(:colin)
+    post :create, users(:jessica).to_path(true).merge(:picture => { :uploaded_data => fixture_file_upload("jessica.jpg", "image/jpg") }), as(:jessica)
     assert assigns(:picture).new_record?
     assert_flash_equal "Sorry, could not save the uploaded picture. Please upload another picture.", :warning
     assert_template 'new'
@@ -228,7 +228,7 @@ class PicturesControllerTest < ActionController::TestCase
   end
   
   def test_crop
-    post :create, users(:keira).to_path(true).merge(:picture => { :uploaded_data => fixture_file_upload("keira.jpg", "image/jpeg") }), as(:colin)
+    post :create, users(:keira).to_path(true).merge(:picture => { :uploaded_data => fixture_file_upload("keira.jpg", "image/jpeg") }), as(:keira)
     pic = assigns(:picture)
     crop_params = { :crop_left => 0, :crop_top => 0, :crop_width => 300, :crop_height => 300, :stencil_width => 300, :stencil_height => 300, :resize_to_stencil => 'false', :crop_cancel => 'false' }
     url_hash = assigns(:picture).to_path.merge(:picture_crop => crop_params, :picture => { :do_crop => 'Crop' })
@@ -257,7 +257,7 @@ class PicturesControllerTest < ActionController::TestCase
   end
   
   def test_just_update_with_wrong_crop
-    post :create, users(:keira).to_path(true).merge(:picture => { :uploaded_data => fixture_file_upload("keira.jpg", "image/jpeg") }), as(:colin)
+    post :create, users(:keira).to_path(true).merge(:picture => { :uploaded_data => fixture_file_upload("keira.jpg", "image/jpeg") }), as(:keira)
     pic = assigns(:picture)
     crop_params = { :crop_left => 0, :crop_top => 0, :crop_width => -100, :crop_height => 300, :stencil_width => 200, :stencil_height => 300, :resize_to_stencil => 'false', :crop_cancel => 'false' }
     put :update, pic.to_path.merge(:picture_crop => crop_params, :picture => { :do_crop => 'Crop' }), as(:colin)
