@@ -1,12 +1,12 @@
 <% content_tag :ul, :id => "#{dom_id(@article)}-actions", :class => 'article-actions' do %>
 	<%= content_tag :li, (link_to 'Edit', article_path_for(@article, :prefix => 'edit')) if @article.editable_by?(get_viewer) %>
 	<%= content_tag :li, (link_to 'Publish', article_path_for(@article, :prefix => 'publish'), :method => :put) if !@article.published? && @article.editable_by?(get_viewer) %>
-	<% if logged_in? && article && !article.new_record? && article.published? %>
+	<% if article && !article.new_record? && article.published? %>
 		<% if @article.clip_for?(get_viewer) %>
 			<%= content_tag :li, (link_to 'Unclip', clip_path_for(@article.clip_for(get_viewer)), :method => :delete) %>
 		<% else %>
 			<%= content_tag :li, (link_to 'Clip', clip_path_from_widgetable(@article, :prefix => 'new')) %>
 		<% end %>
 	<% end %>
-	<%= content_tag :li, (link_to 'Respond', article_path_from_blog(@article.blog, :prefix => 'new', :params => { :re => @article.id })) if logged_in? && article && !article.new_record? && article.published? %>
+	<%= content_tag :li, (link_to 'Respond', article_path_from_blog(get_viewer.default_blog, :prefix => 'new', :params => { :re => @article.id })) if article && !article.new_record? && article.published? %>
 <% end if logged_in? %>
