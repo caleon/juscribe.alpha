@@ -1,4 +1,6 @@
+<% unless article.continuations.empty? -%>
 <h3 class="sectionHeader">Continue reading...</h3>
 <% content_tag :ul, :id => "#{dom_id(article)}-continuations", :class => 'article-continuations continuations' do %>
 	<%= render :partial => 'articles/article_line', :collection => article.continuations, :locals => { :append_class => "article-continuation continuation", :without_excerpt => true } %>
+<% end %>
 <% end %>

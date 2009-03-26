@@ -13,7 +13,7 @@
 		<%# subnavi_el "Galleries", user_galleries_path(@user) %>
 	<% end %>
 	<%# subnavi_el "About", about_user_path(@user), :current => controller.action_name == 'about' if @user && !@user.new_record? %>
-	<%= clip_subnavi_el(@user) if @user != get_viewer %>
+	<%# clip_subnavi_el(@user) if @user != get_viewer %>
 	<% if logged_in? && @user && !@user.new_record? %>
 			<%= subnavi_el "Message", new_message_path(:recipient => @user), :conditions => !this_is_viewer? %>		
 		<% if get_viewer.friends_with?(@user) %>
