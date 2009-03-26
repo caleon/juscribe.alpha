@@ -7,10 +7,12 @@
 		<%# error_messages_for :user %>
 		<fieldset>
 			<legend>Register</legend>
-		
-			<%= render :partial => 'form', :layout => 'new_form', :locals => { :f => f } %>
+			<table>
+				<%= render :partial => 'form', :layout => 'new_form', :locals => { :f => f } %>
+			</table>
 			<%= submit_tag "Register", :disable_with => "Please wait..." %>
 		</fieldset>
+		
 	<% end -%>
 	<%= cancel_button %>
 <% end -%>

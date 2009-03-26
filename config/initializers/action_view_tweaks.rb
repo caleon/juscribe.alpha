@@ -43,6 +43,11 @@ module ActionView::Helpers
     alias_method_chain :simple_format, :options
   end
   
+  class FormBuilder
+
+###### STUBBED
+  end
+  
   module JavaScriptHelper
     def javascript_tag_with_flip_flop(content, html_options={})
       if @config[:scripts_at_bottom]

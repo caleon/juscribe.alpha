@@ -15,7 +15,7 @@
 	
 <% if print_scripts_block?(:top) -%>
 	<script type="text/javascript">
-	<%= extra_behaviors %>
+	<%= extra_behaviors unless @config[:scripts_at_bottom] %>
 	<%= extra_scripts(:top) %>
 	</script>
 <% end -%>

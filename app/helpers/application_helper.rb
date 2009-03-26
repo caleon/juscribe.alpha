@@ -147,7 +147,7 @@ module ApplicationHelper
   end
   
   def registration_closed?
-    RAILS_ENV != 'test' && ((SITE[:defcon] == 0 && RAILS_ENV != 'development') || SITE[:disable_registration])
+    RAILS_ENV == 'production' && (SITE[:defcon] == 0 || SITE[:disable_registration])
   end
   
 end

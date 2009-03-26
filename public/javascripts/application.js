@@ -1,5 +1,23 @@
 // Place your application-specific JavaScript functions and classes here
 // This file is automatically included by javascript_include_tag :defaults
+
+var ToggleInfoField = Behavior.create({
+	onfocus: function(e) {
+		targetId = this.element.id + '-info';
+		if($(targetId)) {
+			$(targetId).show();
+		}
+		return false;		
+	},
+	onblur: function(e) {
+		targetId = this.element.id + '-info';
+		if($(targetId)) {
+			$(targetId).hide();
+		}
+		return false;
+	}
+});
+
 var Browser = Class.create();
 Browser.prototype = {
 	domEl: '',

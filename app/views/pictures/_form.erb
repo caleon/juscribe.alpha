@@ -1,8 +1,13 @@
 <% pic_label ||= 'Upload picture' -%>
-<br />
-<%= label :picture, :uploaded_data, pic_label %>
-<%= error_message_on :picture, :uploaded_data %>
-<%= file_field :picture, :uploaded_data %>
-<p class="note">
-	(supported file types: gif/jpeg/png. max size: 2 Mb, min size: 100 bytes)
-</p>
+<tr>
+	<th>
+		<%= label :picture, :uploaded_data, pic_label %>
+	</th>
+	<td class="input" colspan="2">
+		<%= file_field :picture, :uploaded_data %>
+		<p class="info">
+			Choose a picture to upload from your computer.
+			<span class="note">(supported file types: gif/jpeg/png. max size: 2 Mb, min size: 100 bytes)</span>
+		</p>
+	</td>
+</tr>

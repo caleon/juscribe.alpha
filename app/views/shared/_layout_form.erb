@@ -1,4 +1,5 @@
-<%= f.label :layout_name, 'Layout (if not default)' %>
-<%= f.error_message_on :layout_name %>
-<%= f.select :layout_name, Layouting::LAYOUTS, :include_blank => true %>
-<br />
+<tr>
+	<th><%= f.label :layout_name, 'Layout' %></th>
+	<td class="input"><%= f.select :layout_name, Layouting::LAYOUTS, :include_blank => true %></td>
+	<td>&nbsp;</td>
+</tr>

@@ -93,16 +93,16 @@ module JavascriptHelper
   end
   
   def add_to_behaviors(content)
-    add_to_js_array(:behaviors, content)
+    add_to_js_array(:behaviors, content, :no_semicolon => true)
   end
   
   def add_to_scripts(content)
     add_to_js_array(:scripts, content)
   end
   
-  def add_to_js_array(kind, content)
+  def add_to_js_array(kind, content, opts={})
     content.strip!
-    content += ';' unless content.rstrip.last == ';'
+    content += ';' if content.rstrip.last != ';' && !opts[:no_semicolon]
     case kind
     when :behaviors
       (@extra_behaviors ||= []) << content
