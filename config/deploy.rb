@@ -19,7 +19,7 @@ set :deploy_to, "/home/colin/public_html/#{application}"
 default_run_options[:pty] = true
 set :scm, :git
 set :scm_username, 'caleon'
-set :scm_passphrase, "redalert" #This is your custom users password
+set :scm_passphrase, "macchiato" #This is your custom users password
 set :repository,  "git@github.com:caleon/juscribe.git"
 set :branch, "master"
 set :deploy_via, :remote_cache
