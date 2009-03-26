@@ -59,7 +59,7 @@ after "deploy:cold", :create_shared_media_directory
 
 desc "Symlink shared/uploads into current release"
 task :symlink_shared_media, :roles => [ :app ] do
-  run "ln -s #{shared_path}/uploads #{release_path}/public/images/uploads"
+  run "ln -nsf #{shared_path}/uploads #{release_path}/public/images/uploads"
 end
 after "deploy:update_code", :symlink_shared_media
 
@@ -78,4 +78,9 @@ namespace :search do
       RAILS_ENV=production rake ultrasphinx:daemon:start &&
     EOF
   end
+end
+
+desc "Stream production log"
+task :tail_log, :roles => :app do
+  stream "juslog" # From alias in .profile
 end
