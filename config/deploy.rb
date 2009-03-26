@@ -44,24 +44,38 @@ namespace :deploy do
 end
 
 # moves over config files after deploying the code
+desc "Moves over config files from shared path to current release after code deploy"
 task :update_config, :roles => [ :app ] do
   run "cp -Rf #{shared_path}/config/* #{release_path}/config/"
 end
 after "deploy:update_code", :update_config
 
 # yes, the conditional might seem redundant, but it's here mostly for placeholding purposes
+desc "If shared/uploads doesn't exist, create directory"
 task :create_shared_media_directory, :roles => [ :app ] do
   run "[ ! -d #{shared_path}/uploads ] && mkdir -p #{shared_path}/uploads"
 end
 after "deploy:cold", :create_shared_media_directory
 
+desc "Symlink shared/uploads into current release"
 task :symlink_shared_media, :roles => [ :app ] do
   run "ln -s #{shared_path}/uploads #{release_path}/public/images/uploads"
 end
 after "deploy:update_code", :symlink_shared_media
 
-task :generate_ultrasphinx_conf, :roles => [ :app ] do
-  run "cd #{current_release} && RAILS_ENV=production rake ultrasphinx:configure && cp #{current_release}/config/ultrasphinx/production.conf #{shared_path}/config/"
-  # This will occur after :update_config.
+desc "Ultrasphinx related tasks"
+namespace :search do
+  desc "Generate config/ultrasphinx/production.conf configuration file on production"
+  task :generate_conf, :roles => :app do
+    run "cd #{current_release} && RAILS_ENV=production rake ultrasphinx:configure && cp #{current_release}/config/ultrasphinx/production.conf #{shared_path}/config/"
+  end
+  
+  desc "Index and start ultrasphinx daemon"
+  task :index_and_start, :roles => :app do
+    run <<-EOF
+      cd #{current_release} &&
+      RAILS_ENV=production rake ultrasphinx:index &&
+      RAILS_ENV=production rake ultrasphinx:daemon:start &&
+    EOF
+  end
 end
-after "deploy:cold", :generate_ultrasphinx_conf

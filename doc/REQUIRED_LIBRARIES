@@ -1,3 +1,11 @@
+Apache
+MySQL
+Ruby
+RubyGems
+Rails
+
+gem install passenger (then type 'passenger-install-apache2-module')
+
 FreeImage (http://seattlerb.rubyforge.org/ImageScience.html)
 sphinx0.9.8 (http://www.sphinxsearch.com/downloads.html)
 sudo gem install chronic (0.2.3)
