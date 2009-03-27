@@ -5,6 +5,5 @@
 <% unless bare ||= false %>
 <%= subnavi_el 'New Thoughtlet', new_user_thoughtlet_path(@user.to_path(true)), :current => controller.action_name == 'new' if this_is_viewer? %>
 <%= subnavi_el 'Edit', edit_user_thoughtlet_path(@thoughtlet.to_path), :current => controller.action_name == 'edit' if @thoughtlet && !@thoughtlet.new_record? && @thoughtlet.editable_by?(get_viewer) %>
-<%= subnavi_el 'Clip', new_user_thoughtlet_clip_path(@thoughtlet.to_path(true)) if @thoughtlet && !@thoughtlet.new_record? %>
 <%= clip_subnavi_el(@thoughtlet) %>
 <% end %>
