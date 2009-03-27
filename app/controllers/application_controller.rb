@@ -167,7 +167,7 @@ class ApplicationController < ActionController::Base
   ##                                                                  ##
   ######################################################################
 
-  def error; render :template => 'shared/warning', :layout => false; end
+  def error; render :template => 'shared/warning', :layout => false; end # don't think this is being used...
 
   # Example call from PermissionRulesController:
   # display_error(:class_name => 'Permission Rule', :message => 'Kaboom!',
@@ -188,7 +188,7 @@ class ApplicationController < ActionController::Base
     klass = opts[:class]
     klass_name = opts[:class_name] || klass.class_name.humanize rescue nil
     msg = opts[:message] || "Error accessing #{klass_name || 'action'}."
-    error_pathing = opts[:error_path]
+    error_pathing, error_url = opts[:error_path], opts[:error_url]
     if opts[:redirect] ||= false
       flash[:warning] = msg
       redirect_to error_pathing || error_url, :status => 404
@@ -196,6 +196,13 @@ class ApplicationController < ActionController::Base
       flash.now[:warning] = msg
       render error_pathing || { :template => 'shared/error' }
     end
+  end
+  
+  # Reference: /Library/Ruby/Gems/1.8/gems/actionpack-2.3.2/lib/action_controller/rescue.rb
+  def rescue_action_in_public(exception)
+    # render something
+    display_error(:message => %{Your request could not be processed. The developers have been notified of the issue.})
+    # Mail error, or at least log it.
   end
   
   def authenticate
