@@ -180,6 +180,7 @@ module ArticlesHelper
     "p-#{Digest::SHA1.hexdigest(hp_el.to_s)[0..6]}"
   end
 
+  # Might want to consider making this a Javascript addition after DOM loads, if only to be semantic.
   def create_comment_mixin(hp_el, paragraph_id)
     hp_el.inner_html += content_tag(:span, "#{@article.comments_for(paragraph_id).size}", :class => paragraph_id + "-comment article-mixedComment mixedComment")
   end

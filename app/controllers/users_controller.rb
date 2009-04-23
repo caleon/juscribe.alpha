@@ -152,7 +152,7 @@ class UsersController < ApplicationController
   def login
     @page_title = "Login"
     if request.post?
-      user = User.find_by_nick(params[:user][:nick])
+      user = User.primary_find(params[:user][:nick])
       if user && user.authenticate(params[:user][:password])
         @user = user
         session[:id] = @user.id

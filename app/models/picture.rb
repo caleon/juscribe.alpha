@@ -215,7 +215,8 @@ class Picture < ActiveRecord::Base
   #######
   
   def crop_with_image_science!(par=crop_params)
-    self.temp_data = self.current_data(:original) if attachment_options[:storage] == :s3
+    #self.temp_data = self.current_data(:original) if attachment_options[:storage] == :s3
+    self.set_temp_data(self.current_data(:original)) if attachment_options[:storage] == :s3
     self.temp_path = copy_to_temp_file(full_original_filename) if attachment_options[:storage] != :s3
     self.with_image do |img|
       raise InvalidCropRect unless par.valid_with?(img.width, img.height)

@@ -325,7 +325,7 @@ CommentEngine.prototype = {
 	}
 };
 
-Comment = Class.create();
+var Comment = Class.create();
 Comment.prototype = {
 	id: null,
 	referenceIds: null,

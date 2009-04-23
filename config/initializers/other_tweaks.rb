@@ -4,6 +4,7 @@ class Fixnum
   def to_id; self; end;
 end
 
+# this is for test_helper #as method
 class PathHash < Hash
   def with(opts)
     opts.each {|key, val| self[key] = val }

@@ -19,26 +19,13 @@ class User < ActiveRecord::Base
   end
   
   def user; self; end
-  
   def display_name; self.nick; end
-  
-  def self.primary_find(*args)
-    find_by_nick(*args)
-  end
-  
+  def self.primary_find(*args); find_by_nick(*args); end
   def users; self; end
-    
-  def wheel?
-    self.id == DB[:wheel_id]
-  end
+  def wheel?; self.id == DB[:wheel_id]; end
+  def admin?; self.wheel? || self[:admin]; end
   
-  def admin?
-    self.wheel? || self[:admin]
-  end
-  
-  def editable_by?(user)
-    (user && user.admin?) || self == user
-  end
+  def editable_by?(user); (user && user.admin?) || self == user; end
   
   def wants_notifications_for?(arg)
     self[:notify] ||= {}
@@ -51,18 +38,14 @@ class User < ActiveRecord::Base
   end
     
   def to_param; self.nick; end
-  
   def to_s; self.nick; end
   
   def to_path(for_associated=false)
     { :"#{for_associated ? 'user_id' : 'id'}" => self.to_param }
   end
   
-  def path_name_prefix; "user"; end
-  
-  def name_and_nick
-    self.full_name + " (#{self.nick})"
-  end
+  def path_name_prefix; "user"; end 
+  def name_and_nick; self.full_name + " (#{self.nick})"; end
   
   def full_name #test
     self.first_name.to_s + " " +

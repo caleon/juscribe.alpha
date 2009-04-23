@@ -22,4 +22,7 @@
 			<%= subnavi_el "#{@user.kinda_friends_with?(get_viewer) ? 'Confirm' : 'Request'} Friendship", befriend_user_path(@user), { :method => :put } %>
 		<% end %>
 	<% end %>
+	<% if @user && !@user.new_record? && this_is_viewer? %>
+		<%= subnavi_el "New Thoughtlet", new_user_thoughtlet_path(get_viewer) %>
+	<% end %>
 <% end %>

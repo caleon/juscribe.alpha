@@ -16,6 +16,8 @@ class Article < ActiveRecord::Base
   validates_presence_of :blog_id, :user_id, :title, :permalink, :content
   validates_length_of :title, :in => (3..70)
   validate do |article|
+    # FIXME: This failed when I set a past publication date on a draft.
+    # could be because of #publish= method
     article.errors.add(:published_at, "must be in the future") unless (article.published? || article.published_at.nil? || article.published_at > Time.now)
   end
   validates_uniqueness_of :permalink, :scope => :blog_id
@@ -84,6 +86,8 @@ class Article < ActiveRecord::Base
     self.published_date, self.published_at = datetime.to_date, datetime
   end
   def publish=(val) # This is for automatically setting published fields from form data.
+    # FIXME: Users who press "Public Now" when they schedule something for post will not
+    # get the desired effect because this calls #publish on self...
     self.publish if [ "Publish Now", "yes", "Yes", "y", "Y", "1", 1, "true", true].include?(val)
   end
     

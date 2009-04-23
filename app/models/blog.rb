@@ -73,6 +73,7 @@ class Blog < ActiveRecord::Base
     self.find_by_permalink(*args)
   end
   
+  # Why is this necessary?
   def name=(str)
     self[:name] = str
   end

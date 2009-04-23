@@ -16,6 +16,7 @@
 			<a name="navigation"></a>
 			<div class="sub navigation">
 				<ul class="navigationList">
+					<%# is the following line needed? %>
 					<%= render :partial => flash[:warning] ? 'shared/subnavigation_error' : 'subnavigation' %>
 					<%= navi_skin_info %>
 					<%= navi_customize(user_widgets_path(@user.to_path(true))) if @user && @user.editable_by?(get_viewer) %>
