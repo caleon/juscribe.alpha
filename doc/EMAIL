@@ -1,0 +1,327 @@
+These are instructions for setting up Email on Ubuntu (Intrepid) on Slicehost.
+
+First, note your FQDN, which is the same thing as the slice name unless you changed it since you built the slice. In this case it was 'juscribe'.
+
+'hostname -f' should return 'juscribe'.
+
+We need to change this by editing two files.
+
+First 'sudo vi /etc/hostname' and change 'juscribe' to 'juscribe.com'. If this is a separate slice specifically set for email, this should be 'mail.juscribe.com'.
+
+Now 'sudo vi /etc/hosts' and change 'juscribe' to 'juscribe.com' or 'mail.juscribe.com'.
+
+Do a soft reboot 'sudo reboot', then log back in and run 'hostname -f' to verify that it now returns 'juscribe.com'.
+
+Go into your Slicehost manager, click DNS, click Reverse DNS, then edit the field to the domain you set (either 'juscribe.com.' or 'mail.juscribe.com.') and note the period at the end.
+
+This should be it. Now install postfix and some utilities for testing email.
+
+sudo aptitude install postfix telnet mailx
+
+Choose "Internet Site" when prompted. Once installation is complete, you can test email by doing the following:
+
+mail caleon@gmail.com
+
+Replace email address to a working address you wish to receive the test email from.
+
+Enter the subject you desire, press return,
+Enter the body you desire (there won't be a prompt), hit enter, and on the new line, enter a single period to mark the end of the body.
+Enter nothing to leave CC blank.
+
+There will not be a response, but now you can check your email.
+
+Done.
+
+Next do sudo vi /etc/aliases and add an entry:
+root: colin
+assuming colin is the user who receives all default email.
+sudo newaliases
+
+
+Now do sudo vi /etc/postfix/main.cf
+and change myhostname to main.demoslice.com or in my case, a bs name like 'chloe.juscribe.com'.
+
+set myorigin to $mydomain,
+set mydestination to $mydomain, localhost.$mydomain, localhost
+set mynetworks to 127.0.0.0/8
+
+sudo /etc/init.d/postfix restart
+
+then test email again and verify address is correct.
+
+
+Now create two dns records.
+Type A:
+Name: mail
+Data: slice ip address
+auxiliary info: 0
+
+and a Type MX:
+Name: juscribe.com.
+Data: mail.juscribe.com.
+Auxiliary Info: 10
+
+And you can now dig to verify changes:
+
+dig mail.juscribe.com @ns1.slicehost.net
+
+and you want to see:
+mail.juscribe.com. 86400 IN A (sliceip)
+
+dig juscribe.com MX @ns1.slicehost.net
+
+and you want to see:
+juscribe.com. 86400 IN MX 10 mail.juscribe.com.
+
+Now we need to open up firewall to allow incoming mail.
+
+sudo vi /etc/iptables.test.rules
+
+Add this after "Allows al outbound traffic" entry:
+# Allows postfix to accept incoming connections
+-A INPUT -p tcp --dport 25 -j ACCEPT
+
+sudo iptables-restore < /etc/iptables.test.rules
+sudo iptables -L
+
+and you should see:
+ACCEPT tcp -- anywhere anywhere tcp dpt:smtp
+
+now become root:
+sudo -i
+iptables-save > /etc/iptables.up.rules
+exit
+
+Done.
+
+To deal with unauthorized spammers, this will allow the mx server and google mail server to send through domain:
+
+Create a TXT DNS record:
+v=spf1 mx include:aspmx.googlemail.com ~all
+
+
+Now create mail users:
+sudo groupadd -g 5000 vmail
+sudo useradd -s /usr/sbin/nologin -g vmail -u 5000 vmail -d /home/vmail -m
+
+
+Now run:
+sudo aptitude install postfix postfix-mysql mysql-server postfix-tls libsasl2-2 libsasl2-modules libsasl2-modules-sql sasl2-bin libpam-mysql openssl telnet mailx
+Some of those are already installed.
+
+mysqladmin -u root -p create mail
+mysql -u root -p
+CREATE USER 'mailadmin'@'localhost' IDENTIFIED BY 'newpassword';
+(substitute newpassword with password of choice)
+FLUSH PRIVILEGES;
+GRANT SELECT, INSERT, UPDATE, DELETE ON `mail` . * TO 'mailadmin'@'localhost';
+FLUSH PRIVILEGES;
+USE mail;
+CREATE TABLE domains (
+domain varchar(50) NOT NULL,
+PRIMARY KEY (domain)
+)
+TYPE=MyISAM;
+CREATE TABLE users (
+email varchar(80) NOT NULL,
+password varchar(20) NOT NULL,
+PRIMARY KEY (email)
+)
+TYPE=MyISAM;
+CREATE TABLE forwards (
+source varchar(80) NOT NULL,
+destination TEXT NOT NULL,
+PRIMARY KEY (source)
+)
+TYPE=MyISAM;
+quit;
+
+sudo nano /etc/postfix/mysql-domains.cf
+Enter these details:
+
+user = mailadmin
+password = newpassword
+dbname = mail
+query = SELECT domain AS virtual FROM domains WHERE domain='%s'
+hosts = 127.0.0.1
+
+sudo nano /etc/postfix/mysql-forwards.cf
+Enter:
+
+user = mailadmin
+password = newpassword
+dbname = mail
+query = SELECT destination FROM forwards WHERE source='%s'
+hosts = 127.0.0.1
+
+sudo nano /etc/postfix/mysql-mailboxes.cf
+Enter:
+
+user = mailadmin
+password = newpassword
+dbname = mail
+query = SELECT CONCAT(SUBSTRING_INDEX(email,'@',-1),'/',SUBSTRING_INDEX(email,'@',1),'/') FROM users WHERE email='%s'
+hosts = 127.0.0.1
+
+sudo nano /etc/postfix/mysql-email.cf
+Enter:
+
+user = mailadmin
+password = newpassword
+dbname = mail
+query = SELECT email FROM users WHERE email='%s'
+hosts = 127.0.0.1
+
+sudo chmod o= /etc/postfix/mysql-*
+sudo chgrp postfix /etc/postfix/mysql-*
+
+
+Remove mydestination from /etc/postfix/main.cf
+
+and add at the end of file:
+
+virtual_alias_domains =
+virtual_alias_maps = proxy:mysql:/etc/postfix/mysql-forwards.cf, mysql:/etc/postfix/mysql-email.cf
+virtual_mailbox_domains = proxy:mysql:/etc/postfix/mysql-domains.cf
+virtual_mailbox_maps = proxy:mysql:/etc/postfix/mysql-mailboxes.cf
+virtual_mailbox_base = /home/vmail
+virtual_uid_maps = static:5000
+virtual_gid_maps = static:5000
+
+proxy_read_maps = $local_recipient_maps $mydestination $virtual_alias_maps $virtual_alias_domains $virtual_mailbox_maps $virtual_mailbox_domains $relay_recipient_maps $relay_domains $canonical_maps $sender_canonical_maps $recipient_canonical_maps $relocated_maps $transport_maps $mynetworks $virtual_mailbox_limit_maps
+
+Now for Saslauthd
+sudo vi /etc/default/saslauthd
+Change START to yes on first lines.
+
+At the end, change OPTIONS like the following:
+OPTIONS="-c -m /var/spool/postfix/var/run/saslauthd -r"
+
+sudo mkdir -p /var/spool/postfix/var/run/saslauthd
+
+sudo vi /etc/pam.d/smtp
+and enter:
+auth    required   pam_mysql.so user=mailadmin passwd=newpassword host=127.0.0.1 db=mail table=users usercolumn=email passwdcolumn=password crypt=1
+account sufficient pam_mysql.so user=mailadmin passwd=newpassword host=127.0.0.1 db=mail table=users usercolumn=email passwdcolumn=password crypt=1
+
+making sure to change the password to one set before.
+
+sudo vi /etc/postfix/sasl/smtpd.conf
+
+pwcheck_method: saslauthd
+mech_list: plain login
+allow_plaintext: true
+auxprop_plugin: mysql
+sql_hostnames: 127.0.0.1
+sql_user: mailadmin
+sql_passwd: newpassword
+sql_database: mail
+sql_select: select password from users where email = '%u'
+
+sudo adduser postfix sasl
+
+sudo /etc/init.d/postfix restart
+sudo /etc/init.d/saslauthd restart
+
+Certificates:
+sudo make-ssl-cert /usr/share/ssl-cert/ssleay.cnf /etc/ssl/certs/mailcert.pem
+Set hostname to juscribe.com (or mail.juscribe.com if that was the mail server's hostname)
+
+
+Now enable secure connection:
+sudo vi /etc/postfix/main.cf
+
+remove the defaults under TLS parameters and instead type:
+
+smtpd_sasl_auth_enable = yes
+broken_sasl_auth_clients = yes
+smtpd_sasl_authenticated_header = yes
+smtpd_recipient_restrictions = permit_mynetworks, permit_sasl_authenticated, reject_unauth_destination
+smtpd_use_tls = yes
+smtpd_tls_cert_file = /etc/ssl/certs/mailcert.pem
+smtpd_tls_key_file = $smtpd_tls_cert_file
+
+If you purchased a certificate, use:
+smtpd_tls_cert_file = /etc/ssl/cert/mailcert.cert
+smtpd_tls_key_file = /etc/ssl/private/mailcert.key
+
+
+Now install courier to get access to imap and pop
+sudo aptitude install courier-authdaemon courier-authlib-mysql courier-pop courier-pop-ssl courier-imap courier-imap-ssl
+
+Answer no to "Create directories for web-based administration?"
+
+sudo vi /etc/courier/authdaemonrc
+change authmodulelist to "authmysql"
+
+save
+
+sudo vi /etc/courier/authmysqlrc
+make these changes:
+MYSQL_SERVER localhost
+MYSQL_USERNAME mailadmin
+MYSQL_PASSWORD newpassword
+MYSQL_PORT 0
+MYSQL_DATABASE mail
+MYSQL_USER_TABLE users
+MYSQL_CRYPT_PWFIELD password
+MYSQL_UID_FIELD 5000
+MYSQL_GID_FIELD 5000
+MYSQL_LOGIN_FIELD email
+MYSQL_HOME_FIELD "/home/vmail"
+MYSQL_MAILDIR_FIELD CONCAT(SUBSTRING_INDEX(email,'@',-1),'/',SUBSTRING_INDEX(email,'@',1),'/')
+
+remember to change newpassword to mysql password for mail.
+IMPORTANT: Comment out MYSQL_OPT 0
+and Comment out MYSQL_NAME_FIELD name
+
+Now restart courier services:
+sudo /etc/init.d/courier-authdaemon restart
+sudo /etc/init.d/courier-imap restart
+sudo /etc/init.d/courier-imap-ssl restart
+sudo /etc/init.d/courier-pop restart
+sudo /etc/init.d/courier-pop-ssl restart
+
+
+Now, edit the firewall for pop/imap.
+sudo vi /etc/iptables.test.rules
+
+Add the following after the port 25 (for postfix/smtp):
+# Allows pop and pops connections
+-A INPUT -p tcp --dport 110 -j ACCEPT
+-A INPUT -p tcp --dport 995 -j ACCEPT
+
+# Allows imap and imaps connections 
+-A INPUT -p tcp --dport 143 -j ACCEPT
+-A INPUT -p tcp --dport 993 -j ACCEPT
+
+
+sudo iptables-restore < /etc/iptables.test.rules
+sudo iptables -L
+
+Which should look like:
+
+ACCEPT     all  --  anywhere             anywhere            state RELATED,ESTABLISHED 
+ACCEPT     tcp  --  anywhere             anywhere            tcp dpt:smtp 
+ACCEPT     tcp  --  anywhere             anywhere            tcp dpt:pop3 
+ACCEPT     tcp  --  anywhere             anywhere            tcp dpt:pop3s 
+ACCEPT     tcp  --  anywhere             anywhere            tcp dpt:imap2 
+ACCEPT     tcp  --  anywhere             anywhere            tcp dpt:imaps
+
+sudo -i
+iptables-save > /etc/iptables.up.rules
+exit
+
+
+mysql -u root -p
+USE mail;
+INSERT INTO `domains` (`domain`) VALUES ('juscribe.com');
+INSERT INTO `users` (`email`, `password`) VALUES ('colin@juscribe.com', ENCRYPT('secretpassword'));
+quit;
+sudo postfix reload
+ls /home/vmail
+mail colin@juscribe.com
+ls /home/vmail
+sudo ls /home/vmail/juscribe.com/
+
+Make sure you send an email to each account you create - this will ensure the file structure is created.

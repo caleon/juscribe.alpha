@@ -1,7 +1,7 @@
 --- 
-:address: "smtp.example.com" 
-:port: 587 
-:domain: "smtp.example.com" 
-:user_name: "test@topfunky.com" 
-:password: "not-the-real-password" 
+:address: "juscribe.com" 
+:port: 25 
+:domain: "juscribe.com" 
+:user_name: "notify@juscribe.com" 
+:password: "SIe41LzZGDSKXb" 
 :authentication: :plain

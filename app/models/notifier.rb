@@ -26,15 +26,20 @@ class Notifier < ActionMailer::Base
   
   def comment_notification(comment)
     if comment.secondary_id && orig_comment = comment.original
-      @user = orig_comment.user
-      @subject = "Your comment has a responding comment"
+      user = orig_comment.user
+      subject "Your comment has a responding comment"
       # URLS to be generated according to routes in VIEW
       #@body["url"] = generate_url_for(comment)
     else
-      @user = comment.commentable.user
-      @subject = "Your #{comment.commentable_type.downcase} has a comment"
+      user = comment.commentable.user
+      subject "Your #{comment.commentable_type.downcase} has a comment"
       #@body["url"] = generate_url_for(comment.responsible)
     end
+    recipients @user.email
+    from "Juscribe<no-reply@juscribe.com>"
+    sent_on Time.now
+    body { :comment => comment, :user => user }
+    content_type "text/plain"
   end
     
   def message_notification(msg_record)
