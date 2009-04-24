@@ -56,6 +56,10 @@ class CommentsController < ApplicationController
                                  :comment_type => 'comment', :comment_author => (get_viewer.nick rescue @comment.nick), :comment_author_email => (get_viewer.email rescue @comment.email))
       if !is_comment_spam && @comment.save
         msg = "You have commented on #{flash_name_for(@commentable)}."
+        Notifier.deliver_comment_notification_to_commentable(@comment) if @commentable.user.notify_for?(:comments)
+        @comment.references.each do |com|
+          Notifier.deliver_comment_notification_to_orig_comment(@comment, com) if com.notifies_commenter?
+        end
         respond_to do |format|
           format.html { flash[:notice] = msg; redirect_to comment_url_for(@comment) }
           format.js { flash.now[:notice] = msg }

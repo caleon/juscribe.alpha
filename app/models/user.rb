@@ -10,6 +10,7 @@ class User < ActiveRecord::Base
   is_indexed :fields => [ 'first_name', 'last_name', 'nick' ]
   # TODO: acts_as_cached
   serialize :social_networks
+  serialize :notifications
     
   attr_protected :nick, :email, :password_salt, :password_hash, :type
   attr_accessor :tos_agreement
@@ -26,16 +27,6 @@ class User < ActiveRecord::Base
   def admin?; self.wheel? || self[:admin]; end
   
   def editable_by?(user); (user && user.admin?) || self == user; end
-  
-  def wants_notifications_for?(arg)
-    self[:notify] ||= {}
-    self[:notify][arg].nil? ? true : self[:notify][arg] # TODO: stubbed :event_share
-  end
-  
-  def set_notification_for(arg, bool=nil)
-    self[:notify] ||= {}
-    self[:notify][arg] = bool
-  end
     
   def to_param; self.nick; end
   def to_s; self.nick; end
@@ -126,6 +117,32 @@ class User < ActiveRecord::Base
   
   def social_networks=(hash={})
     self[:social_networks] = hash.blank? ? nil : hash.symbolize_keys.delete_if {|k, v| v.blank? }
+  end
+  
+  def notifications
+    { :comments => true, :friendship => true, :message => true, :article_response => true }.merge(self[:notifications] || {})
+  end
+  
+  def notify_for?(arg)
+    notifications[arg]
+  end
+  
+  def set_notification_for(arg, bool, opts={})
+    temp_hash = notifications
+    temp_hash[arg.is_a?(Symbol) ? arg : arg.intern] = bool
+    self[:notifications] = temp_hash
+    save if opts[:save]
+  end
+  
+  def set_notification_for!(arg, bool)
+    set_notification_for(arg, bool, :save => true)
+  end
+  
+  # This is to handle data from web form hash parameters.
+  def notifications=(hash={})
+    hash.delete_if {|k, v| v.blank?}.each_pair do |k, v|
+      set_notification_for(k, v == '1')
+    end unless hash.blank?
   end
   
   def accessible_by?(user=nil)

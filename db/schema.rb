@@ -9,39 +9,39 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20080614230048) do
+ActiveRecord::Schema.define(:version => 20090424093152) do
 
   create_table "articles", :force => true do |t|
     t.string   "title"
     t.string   "permalink"
     t.text     "content"
-    t.integer  "comments_count", :limit => 11
-    t.integer  "user_id",        :limit => 11
+    t.integer  "comments_count"
+    t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.date     "published_date"
     t.datetime "published_at"
-    t.integer  "blog_id",        :limit => 11
+    t.integer  "blog_id"
     t.datetime "imported_at"
-    t.integer  "original_id",    :limit => 11
+    t.integer  "original_id"
   end
 
   create_table "blogs", :force => true do |t|
     t.string   "bloggable_type"
-    t.integer  "bloggable_id",   :limit => 11
+    t.integer  "bloggable_id"
     t.string   "name"
     t.string   "permalink"
     t.text     "description"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "user_id",        :limit => 11
+    t.integer  "user_id"
     t.string   "short_name"
   end
 
   create_table "comments", :force => true do |t|
-    t.integer  "user_id",          :limit => 11
+    t.integer  "user_id"
     t.string   "commentable_type"
-    t.integer  "commentable_id",   :limit => 11
+    t.integer  "commentable_id"
     t.text     "body"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -50,8 +50,9 @@ ActiveRecord::Schema.define(:version => 20080614230048) do
     t.string   "ip_addr"
     t.string   "paragraph_hash"
     t.text     "reference_ids"
-    t.integer  "position",         :limit => 11
-    t.integer  "replies_count",    :limit => 11, :default => 0
+    t.integer  "position"
+    t.integer  "replies_count",       :default => 0
+    t.boolean  "wants_notifications"
   end
 
   create_table "events", :force => true do |t|
@@ -60,13 +61,13 @@ ActiveRecord::Schema.define(:version => 20080614230048) do
     t.text     "content"
     t.datetime "begins_at"
     t.datetime "ends_at"
-    t.integer  "user_id",    :limit => 11
+    t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "galleries", :force => true do |t|
-    t.integer  "user_id",     :limit => 11
+    t.integer  "user_id"
     t.string   "name"
     t.text     "description"
     t.datetime "created_at"
@@ -76,27 +77,27 @@ ActiveRecord::Schema.define(:version => 20080614230048) do
   create_table "groups", :force => true do |t|
     t.string   "name"
     t.text     "description"
-    t.integer  "user_id",     :limit => 11
+    t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "permalink"
   end
 
   create_table "items", :force => true do |t|
-    t.integer  "user_id",    :limit => 11
-    t.integer  "list_id",    :limit => 11
+    t.integer  "user_id"
+    t.integer  "list_id"
     t.string   "type"
     t.string   "name"
     t.text     "content"
-    t.integer  "position",   :limit => 11
+    t.integer  "position"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "uri"
   end
 
   create_table "layoutings", :force => true do |t|
-    t.integer  "user_id",         :limit => 11
-    t.integer  "layoutable_id",   :limit => 11
+    t.integer  "user_id"
+    t.integer  "layoutable_id"
     t.string   "layoutable_type"
     t.string   "skin"
     t.string   "name"
@@ -106,7 +107,7 @@ ActiveRecord::Schema.define(:version => 20080614230048) do
   end
 
   create_table "lists", :force => true do |t|
-    t.integer  "user_id",    :limit => 11
+    t.integer  "user_id"
     t.string   "type"
     t.string   "name"
     t.text     "content"
@@ -117,17 +118,17 @@ ActiveRecord::Schema.define(:version => 20080614230048) do
   end
 
   create_table "memberships", :force => true do |t|
-    t.integer  "user_id",    :limit => 11
-    t.integer  "group_id",   :limit => 11
+    t.integer  "user_id"
+    t.integer  "group_id"
     t.string   "title"
-    t.integer  "rank",       :limit => 11
+    t.integer  "rank"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "messages", :force => true do |t|
-    t.integer  "recipient_id", :limit => 11
-    t.integer  "sender_id",    :limit => 11
+    t.integer  "recipient_id"
+    t.integer  "sender_id"
     t.string   "subject"
     t.text     "body"
     t.datetime "created_at"
@@ -137,8 +138,8 @@ ActiveRecord::Schema.define(:version => 20080614230048) do
 
   create_table "partials", :force => true do |t|
     t.text     "content"
-    t.integer  "position",   :limit => 11
-    t.integer  "article_id", :limit => 11
+    t.integer  "position"
+    t.integer  "article_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -150,16 +151,16 @@ ActiveRecord::Schema.define(:version => 20080614230048) do
     t.text     "description"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "user_id",     :limit => 11
-    t.boolean  "private",                   :default => false
+    t.integer  "user_id"
+    t.boolean  "private",     :default => false
     t.text     "bosses"
     t.text     "options"
   end
 
   create_table "permissions", :force => true do |t|
     t.string   "permissible_type"
-    t.integer  "permission_rule_id", :limit => 11
-    t.integer  "permissible_id",     :limit => 11
+    t.integer  "permission_rule_id"
+    t.integer  "permissible_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -167,31 +168,31 @@ ActiveRecord::Schema.define(:version => 20080614230048) do
   create_table "pictures", :force => true do |t|
     t.string   "name"
     t.text     "caption"
-    t.integer  "depictable_id",   :limit => 11
-    t.integer  "user_id",         :limit => 11
+    t.integer  "depictable_id"
+    t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "depictable_type"
-    t.integer  "position",        :limit => 11
+    t.integer  "position"
     t.string   "content_type"
     t.string   "filename"
     t.string   "thumbnail"
-    t.integer  "size",            :limit => 11
-    t.integer  "width",           :limit => 11
-    t.integer  "height",          :limit => 11
+    t.integer  "size"
+    t.integer  "width"
+    t.integer  "height"
     t.string   "source"
-    t.integer  "parent_id",       :limit => 11
+    t.integer  "parent_id"
   end
 
   create_table "projects", :force => true do |t|
     t.string   "name"
     t.string   "description"
     t.text     "skillset"
-    t.integer  "user_id",     :limit => 11
+    t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "list_id",     :limit => 11
-    t.integer  "position",    :limit => 11
+    t.integer  "list_id"
+    t.integer  "position"
   end
 
   create_table "songs", :force => true do |t|
@@ -200,19 +201,19 @@ ActiveRecord::Schema.define(:version => 20080614230048) do
     t.string   "featuring"
     t.string   "genre"
     t.string   "miscellany"
-    t.integer  "user_id",    :limit => 11
+    t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "list_id",    :limit => 11
-    t.integer  "position",   :limit => 11
+    t.integer  "list_id"
+    t.integer  "position"
     t.string   "permalink"
   end
 
   create_table "taggings", :force => true do |t|
     t.string   "taggable_type"
-    t.integer  "taggable_id",   :limit => 11
-    t.integer  "user_id",       :limit => 11
-    t.integer  "tag_id",        :limit => 11
+    t.integer  "taggable_id"
+    t.integer  "user_id"
+    t.integer  "tag_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -227,10 +228,10 @@ ActiveRecord::Schema.define(:version => 20080614230048) do
   create_table "thoughtlets", :force => true do |t|
     t.string   "content"
     t.string   "location"
-    t.integer  "user_id",    :limit => 11
+    t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "event_id",   :limit => 11
+    t.integer  "event_id"
   end
 
   create_table "users", :force => true do |t|
@@ -247,20 +248,21 @@ ActiveRecord::Schema.define(:version => 20080614230048) do
     t.string   "layout"
     t.string   "skin"
     t.date     "birthdate"
-    t.integer  "sex",             :limit => 11
+    t.integer  "sex"
     t.string   "type"
-    t.boolean  "admin",                         :default => false
+    t.boolean  "admin",           :default => false
     t.text     "about"
     t.text     "social_networks"
     t.string   "time_zone"
+    t.text     "notifications"
   end
 
   create_table "widgets", :force => true do |t|
-    t.integer  "user_id",         :limit => 11
-    t.integer  "widgetable_id",   :limit => 11
+    t.integer  "user_id"
+    t.integer  "widgetable_id"
     t.string   "type"
     t.string   "widgetable_type"
-    t.integer  "position",        :limit => 11
+    t.integer  "position"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "name"

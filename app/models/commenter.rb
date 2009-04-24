@@ -20,4 +20,8 @@ class Commenter
   def email_address
     "#{@nick}<#{@email}>"
   end
+  
+  def notify_for?(arg)
+    false
+  end
 end

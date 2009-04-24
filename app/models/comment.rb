@@ -5,9 +5,6 @@ class Comment < ActiveRecord::Base
   is_indexed :fields => [ 'nick', 'body' ]
 
   belongs_to :user
-  def commenter
-    user ? user : Commenter.new(:nick => nick, :email => email)
-  end
   belongs_to :commentable, :polymorphic => true, :inherits_layout => true
   acts_as_list :scope => :commentable
   
@@ -52,12 +49,20 @@ class Comment < ActiveRecord::Base
   end
   
   def anonymous?
-    self.user.nil?
+    user.nil?
+  end
+  
+  def commenter
+    anonymous? ? Commenter.new(:nick => nick, :email => email) : user
+  end
+  
+  def notifies_commenter?
+    wants_notifications? || commenter.notify_for?(:comments)
   end
   
   def deleted?
-    self.body.blank?
-  end
+    body.blank?
+  end 
   
   def accessible_by?(user=nil)
     (self.user == user || self.commentable.accessible_by?(user) rescue true) && self.rule.accessible_by?(user)

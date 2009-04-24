@@ -1,9 +1,10 @@
 class Notifier < ActionMailer::Base
+  helper :comments
   # TODO: setup Postman intermediary that decides whether to use Notifier or
   # in-system Message model.
   
   def setup_email
-    @from = "#{APP[:name].capitalize}<#{APP[:mailer_from]}>"
+    @from = "#{APP[:name].capitalize}<no-reply@juscribe.com>"
     @sent_on = Time.now
   end
   
@@ -38,18 +39,17 @@ class Notifier < ActionMailer::Base
          :commentable => commentable, :user => user
   end
   
-  def comment_notification_to_orig_comment(comment, index=0)
+  def comment_notification_to_orig_comment(comment, orig_comment)
     setup_email
     
     commenter = comment.commenter
     commentable = comment.commentable
-    orig_comment = comment.references[index]
     orig_commenter = orig_comment.commenter
 
     content_type "text/plain"
     subject %{#{commenter.full_name} responded to your comment on "#{commentable.display_name}"}
     recipients orig_commenter.email_address
-    body :comment => comment, :commenter => commenter,
+    body :comment => comment, :commenter => commenter, :commentable => commentable,
          :orig_comment => orig_comment, :orig_commenter => orig_commenter
   end
     
