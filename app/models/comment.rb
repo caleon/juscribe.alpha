@@ -5,6 +5,9 @@ class Comment < ActiveRecord::Base
   is_indexed :fields => [ 'nick', 'body' ]
 
   belongs_to :user
+  def commenter
+    user ? user : Commenter.new(:nick => nick, :email => email)
+  end
   belongs_to :commentable, :polymorphic => true, :inherits_layout => true
   acts_as_list :scope => :commentable
   

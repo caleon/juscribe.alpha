@@ -3,7 +3,7 @@ class Notifier < ActionMailer::Base
   # in-system Message model.
   
   def setup_email
-    @from = APP[:mailer_from]
+    @from = "#{APP[:name].capitalize}<#{APP[:mailer_from]}>"
     @sent_on = Time.now
   end
   
@@ -24,30 +24,33 @@ class Notifier < ActionMailer::Base
     
   end
   
-  def comment_notification_to_commentable(comment)    
-    user = comment.commentable.user
-    name = comment.user ? comment.user.full_name : comment.nick
-    
-    subject %{#{name} commented on your #{comment.commentable_type.humanize.downcase}: #{comment.commentable.display_name}}
+  def comment_notification_to_commentable(comment)
+    setup_email
+      
+    commenter = comment.commenter
+    commentable = comment.commentable
+    user = commentable.user
+        
     content_type "text/plain"
+    subject %{#{commenter.full_name} commented on "#{commentable.display_name}"}
     recipients user.email_address
-    from "#{APP[:name].capitalize}<#{APP[:mailer_from]}>"
-    sent_on Time.now
-    body :user => user, :comment => comment, :name => name
+    body :comment => comment, :commenter => commenter,
+         :commentable => commentable, :user => user
   end
   
   def comment_notification_to_orig_comment(comment, index=0)
-    orig_comment = comment.references[index]    
-    orig_name = orig_comment.user ? orig_comment.user.full_name : orig_comment.nick
-    name = comment.user ? comment.user.full_name : comment.nick
-    orig_recipient = orig_comment.user ? orig_comment.user.email_address : "#{orig_comment.nick}<#{comment.email}>"
+    setup_email
     
+    commenter = comment.commenter
+    commentable = comment.commentable
+    orig_comment = comment.references[index]
+    orig_commenter = orig_comment.commenter
+
     content_type "text/plain"
-    subject %{#{name} responded to your comment on #{comment.commentable_type.humanize.downcase}: #{comment.commentable.display_name}}
-    recipients orig_recipient
-    from "#{APP[:name].capitalize}<#{APP[:mailer_from]}>"
-    sent_on Time.now
-    body :comment => comment, :name => name, :orig_name => orig_name
+    subject %{#{commenter.full_name} responded to your comment on "#{commentable.display_name}"}
+    recipients orig_commenter.email_address
+    body :comment => comment, :commenter => commenter,
+         :orig_comment => orig_comment, :orig_commenter => orig_commenter
   end
     
   def message_notification(msg_record)
