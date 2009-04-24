@@ -54,7 +54,7 @@ class User < ActiveRecord::Base
   end
   
   def email_address #test
-    "#{self.full_name} <#{self.email}>"
+    "#{self.full_name}<#{self.email}>"
   end
   
   def age

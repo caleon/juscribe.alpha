@@ -24,22 +24,30 @@ class Notifier < ActionMailer::Base
     
   end
   
-  def comment_notification(comment)
-    if comment.secondary_id && orig_comment = comment.original
-      user = orig_comment.user
-      subject "Your comment has a responding comment"
-      # URLS to be generated according to routes in VIEW
-      #@body["url"] = generate_url_for(comment)
-    else
-      user = comment.commentable.user
-      subject "Your #{comment.commentable_type.downcase} has a comment"
-      #@body["url"] = generate_url_for(comment.responsible)
-    end
-    recipients @user.email
-    from "Juscribe<no-reply@juscribe.com>"
-    sent_on Time.now
-    body { :comment => comment, :user => user }
+  def comment_notification_to_commentable(comment)    
+    user = comment.commentable.user
+    name = comment.user ? comment.user.full_name : comment.nick
+    
+    subject %{#{name} commented on your #{comment.commentable_type.humanize.downcase}: #{comment.commentable.display_name}}
     content_type "text/plain"
+    recipients user.email_address
+    from "#{APP[:name].capitalize}<#{APP[:mailer_from]}>"
+    sent_on Time.now
+    body :user => user, :comment => comment, :name => name
+  end
+  
+  def comment_notification_to_orig_comment(comment, index=0)
+    orig_comment = comment.references[index]    
+    orig_name = orig_comment.user ? orig_comment.user.full_name : orig_comment.nick
+    name = comment.user ? comment.user.full_name : comment.nick
+    orig_recipient = orig_comment.user ? orig_comment.user.email_address : "#{orig_comment.nick}<#{comment.email}>"
+    
+    content_type "text/plain"
+    subject %{#{name} responded to your comment on #{comment.commentable_type.humanize.downcase}: #{comment.commentable.display_name}}
+    recipients orig_recipient
+    from "#{APP[:name].capitalize}<#{APP[:mailer_from]}>"
+    sent_on Time.now
+    body :comment => comment, :name => name, :orig_name => orig_name
   end
     
   def message_notification(msg_record)

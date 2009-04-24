@@ -1,0 +1,11 @@
+<%= @user.display_name %>,
+
+<%= @name %> responded to "<%= @comment.commentable.display_name %>":
+
+"<%= format_comment(@comment) %>"
+
+To see or reply to the comment, follow the link below:
+<%= comment_url_for(@comment, :anchor => true) %>
+
+Thanks,
+The Juscribe Team

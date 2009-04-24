@@ -6,6 +6,10 @@ module CommentsHelper
       instance_eval %{ #{opts[:prefix] ? "#{opts[:prefix]}_" : ''}#{comment.path_name_prefix}_path(comment.to_path.merge(opts[:params] || {})) }
     end
   end
+  
+  def comment_url_for(comment, opts={})
+    "http://www.juscribe.com" + comment_path_for(comment, opts)
+  end
     
   def comment_path_from_commentable(commentable, opts={})
     instance_eval %{ #{opts[:prefix] ? "#{opts[:prefix]}_" : ''}#{commentable.path_name_prefix}_#{opts[:suffix] || 'comment'}_path(commentable.to_path(true).merge(opts[:params] || {})) }
