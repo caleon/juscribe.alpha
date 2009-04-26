@@ -1,9 +1,10 @@
 <%# FIXME. is this implementation even being used now, or necessary at all? %>
 <% @user ||= @depictable || @widgetable || @commentable %>
 <%= bread_el "Users", users_path, :current => controller.action_name != 'new', :rel => controller.action_name != 'index' ? 'directory' : nil if controller.controller_name == 'users' && (@user.nil? || @user.new_record?) %>
-<%= bread_el image_tag('shim.gif', :class => 'shim') + @user.nick, @user, :class => 'bread-home', :current => %w(show about).include?(controller.action_name) && controller.controller_name == 'users', :rel => 'home' unless @user.nil? || @user.new_record? %>
+<%= bread_el image_tag('shim.gif', :class => 'shim') + @user.nick, @user, :class => 'bread-home', :current => %w(show about friends).include?(controller.action_name) && controller.controller_name == 'users', :rel => 'home' unless @user.nil? || @user.new_record? %>
 <%= bread_el "Register", registration_path, :current => true if controller.controller_name == 'users' && controller.action_name == 'new' %>
 <%= bread_el "Preferences", edit_user_path(@user), :current => true if controller.controller_name == 'users' && controller.action_name == 'edit' %>
+<%# bread_el "Friends", friends_user_path(@user), :current => true if controller.controller_name == 'users' && controller.action_name == 'friends' %>
 
 <% if controller.controller_name == 'users' %>
 	<% if @user && !@user.new_record? %>
@@ -12,6 +13,7 @@
 			<%= subnavi_el "Thoughtlets", user_thoughtlets_path(@user) if this_is_viewer? %>
 			<%# subnavi_el "Events", user_events_path(@user) %>
 			<%# subnavi_el "Galleries", user_galleries_path(@user) %>
+			<%= subnavi_el "Friends", friends_user_path(@user), :current => true if controller.controller_name == 'users' && controller.action_name == 'friends' %>
 		<% else %>
 		
 		<% end %>

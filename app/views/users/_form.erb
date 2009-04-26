@@ -21,6 +21,13 @@
 	</td>
 </tr>
 <tr>
+	<th><%= f.label :sex %></th>
+	<td>
+		<%= f.radio_button :sex, 1 %>Male<br />
+		<%= f.radio_button :sex, 0 %>Female
+	</td>
+</tr>
+<tr>
 	<th><%= f.label :birthdate %></th>
 	<td>
 		<%= date_select :user, :birthdate, :start_year => 8.years.ago.year, :end_year => 70.years.ago.year, :default => 13.years.ago %>

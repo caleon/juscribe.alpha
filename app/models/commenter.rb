@@ -1,7 +1,7 @@
 class Commenter
   def initialize(attrs={})
-    raise ArgumentError unless attrs[:nick]
-    @nick = attrs[:nick]
+    raise ArgumentError unless attrs[:email]
+    @nick = attrs[:nick] || attrs[:email]
     @email = attrs[:email]
   end
   

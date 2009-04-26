@@ -44,8 +44,12 @@ class User < ActiveRecord::Base
     self.last_name.to_s
   end
   
+  def first_and_last_name
+    [first_name, last_name].join(' ')
+  end
+  
   def email_address #test
-    "#{self.full_name}<#{self.email}>"
+    "#{self.first_and_last_name}<#{self.email}>"
   end
   
   def age
@@ -83,6 +87,7 @@ class User < ActiveRecord::Base
     self.rule = PermissionRule.create!(attrs)          
   end
   
+  # What's the point of this?
   def email=(addy)
     @old_email = self.email
     self[:email] = addy
