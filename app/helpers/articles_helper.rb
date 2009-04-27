@@ -71,7 +71,7 @@ module ArticlesHelper
   end
   
   def allowed_attributes
-    %w(href src width height alt target cite datetime title class name xml:lang abbr wmode type value)
+    %w(href src width height alt target cite datetime title class name xml:lang abbr wmode type value flashvars allowScriptAccess)
   end
   
   # format_article will create a proper DOM structure so that unwrapped text nodes are wrapped in P
