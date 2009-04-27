@@ -8,6 +8,7 @@
 */
 
 #canvas {
+	overflow: hidden;
 	min-width: 1002px;
 	background-color: #dadada;
 }
