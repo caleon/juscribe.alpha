@@ -52,6 +52,7 @@ class MessagesController < ApplicationController
     @page_title = "Compose new message"
     if @message.save
       msg = "You have sent your message to #{params[:message][:recipient]}."
+      Notifier.deliver_message_notification(@message)
       respond_to do |format|
         format.html { flash[:notice] = msg; redirect_to message_url(@message) }
         format.js { flash.now[:message] = msg }

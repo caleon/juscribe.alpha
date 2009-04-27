@@ -5,14 +5,14 @@
 			<tr>
 				<th><%= f.label :nick %></th>
 				<td>
-					<%= f.text_field :nick, params[:nick] %>
+					<%= f.text_field :nick %>
 					<%= info_box_for @user, :nick %>
 				</td>
 			</tr>
 			<tr>
 				<th><%= f.label :password %></th>
 				<td>
-					<%= f.password_field :password, params[:password] %>
+					<%= f.password_field :password %>
 					<%= info_box_for @user, :password %>
 				</td>
 			</tr>

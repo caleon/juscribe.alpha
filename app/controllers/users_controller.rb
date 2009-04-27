@@ -152,7 +152,7 @@ class UsersController < ApplicationController
   def login
     @page_title = "Login"
     if request.post?
-      user = User.primary_find(params[:user][:nick])
+      user = User.find_by_nick(params[:user][:nick])
       if user && user.authenticate(params[:user][:password])
         @user = user
         session[:id] = @user.id
@@ -166,6 +166,8 @@ class UsersController < ApplicationController
       else
         flash.now[:warning] = "There was an error logging you in."
         @user = User.new
+        @user.write_attribute(:nick, params[:user][:nick])
+        @user.instance_variable_set(:@password, params[:user][:password])
         @user.errors.add(:nick, "is not a user in our database.") unless user && user.nick
         @user.errors.add(:password, user.errors.on(:password)) if user
         respond_to do |format|
