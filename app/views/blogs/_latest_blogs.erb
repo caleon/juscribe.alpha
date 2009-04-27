@@ -1,6 +1,6 @@
 <% collection ||= bloggable.blogs.find(:all, :order => 'id DESC', :limit => 5) -%>
 <% user ||= nil %>
-<h3>Latest Blogs <%= user ? rss_link_for(:articles, articles_path(user, :format => :xml)) : nil %></h3>
+<h3 class="withRss">Latest Blogs <%= user ? rss_link_for(:articles, articles_path(user, :format => :xml)) : nil %></h3>
 <% content_tag(:ul, :id => 'msm_other_main_widgets') do -%>
 	<% collection.each do |art| %>
 		<li>
