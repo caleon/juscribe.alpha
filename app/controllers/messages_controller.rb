@@ -48,11 +48,13 @@ class MessagesController < ApplicationController
   end  
   
   def create
+    # This works because the Message model can accept either a User or a nick
+    # for #recipient=(arg)
     @message = Message.new(params[:message].merge(:sender => get_viewer, :recipient => params[:message][:recipient] || params[:recipient]))
     @page_title = "Compose new message"
     if @message.save
       msg = "You have sent your message to #{params[:message][:recipient]}."
-      Notifier.deliver_message_notification(@message)
+      Notifier.deliver_message_notification(@message) unless @message.recipient == get_viewer
       respond_to do |format|
         format.html { flash[:notice] = msg; redirect_to message_url(@message) }
         format.js { flash.now[:message] = msg }

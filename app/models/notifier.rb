@@ -53,8 +53,16 @@ class Notifier < ActionMailer::Base
          :orig_comment => orig_comment, :orig_commenter => orig_commenter
   end
     
-  def message_notification(msg_record)
+  def message_notification(message)
+    setup_email
     
+    sender = message.sender
+    recipient = message.recipient
+    
+    content_type "text/plain"
+    subject %{#{sender.full_name} send you a message on Juscribe}
+    recipients recipient.email_address
+    body :message => message, :sender => sender, :recipient => recipient
   end
   
   def event_invitation

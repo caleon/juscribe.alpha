@@ -2,7 +2,7 @@
 
 <%= @commenter.first_name %> responded to your comment on "<%= @commentable.display_name %>":
 
-"<%= strip_tags(@comment.body) %>"
+"<%=h strip_tags(@comment.body) %>"
 
 To see or reply to the comment, follow the link below:
 <%= comment_url_for(@comment, :anchor => true) %>

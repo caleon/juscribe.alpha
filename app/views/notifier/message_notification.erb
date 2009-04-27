@@ -1,0 +1,15 @@
+<%= @recipient.first_name %>,
+
+<%= @sender %> sent you this message:
+
+-------------------
+<%=h @message.subject %>
+
+<%=h strip_tags(@message.body) %>
+-------------------
+
+To see or reply to this message, follow the link below:
+<%= message_url(@message) %>
+
+Thanks,
+The Juscribe Team
