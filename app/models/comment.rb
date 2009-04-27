@@ -37,8 +37,8 @@ class Comment < ActiveRecord::Base
   # comment[:references] = "@47, @8, @92"
   def references=(list, with_save=false)
     @references = nil
-    list = list.gsub(/,/, ' ')
-    list.gsub(/\s+([a-z0-9]{7})\s*/, ' ')
+    list.gsub!(/,/, ' ')
+    list.gsub!(/\s*([a-z0-9]{7})\s*/, ' ')
     self.paragraph_hash = $1
     self.reference_ids = list.split(/\s+/).select{|mark| mark.is_a?(String) && mark.match(/^@\d+$/) }.map {|str| str[1..-1].to_i }.reject{|id| self.position == id }
     self.save if with_save

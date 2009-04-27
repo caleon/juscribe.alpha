@@ -6,6 +6,6 @@
 :disable_registration: true
 :disable_search: true
 :disable_akismet: true
-:disable_google_ads: true
+:disable_google_ads: false
 :disable_comments: false
 :disable_anonymous_comments: false
