@@ -125,7 +125,7 @@ class User < ActiveRecord::Base
   end
   
   def notifications
-    { :comments => true, :friendship => true, :message => true, :article_response => true }.merge(self[:notifications] || {})
+    { :comments => true, :friendships => true, :messages => true, :article_responses => true }.merge(self[:notifications] || {})
   end
   
   def notify_for?(arg)
