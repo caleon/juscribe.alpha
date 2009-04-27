@@ -43,6 +43,7 @@
 
 #header {
 	position: relative;
+	min-width: 989px;
 	height: 25px;
 	padding: 7px 0 7px 13px;
 	background: #888 url(/images/header_gradient.png) repeat-x;
@@ -66,6 +67,8 @@
 	text-align: center;
 	margin-top: 0;
 }
+
+.search { width: 320px; }
 
 .search #query {
 	width: 200px;
