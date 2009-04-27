@@ -27,6 +27,11 @@ config.action_view.cache_template_loading            = true
 config.action_mailer.default_url_options = { :host =>
 "juscribe.com" }
 
+# defaults to exception.notifier@default.com
+ExceptionNotifier.sender_address = %("Application Error" <errors@juscribe.com>)
+ExceptionNotifier.exception_recipients = %w( caleon@gmail.com )
+
+
 # Disable delivery errors, bad email addresses will be ignored
 # config.action_mailer.raise_delivery_errors = false
 
