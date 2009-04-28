@@ -4,6 +4,6 @@
 <% end -%>
 <% if blog_lead.primary_article -%>
 	<%= render :partial => 'articles/article_lead', :object => blog_lead.primary_article %>
-<% else -%>
+<% elsif blog_lead.editable_by?(get_viewer) -%>
 	<%= render :partial => 'blogs/article_empty' %>
 <% end -%>
