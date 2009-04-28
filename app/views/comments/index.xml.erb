@@ -8,7 +8,7 @@
 		<comment id="<%= comment.scoped_id %>">
 			<replies_count><%= comment.replies_count %></replies_count>
 		<% if comment.paragraph_hash %>
-			<paragraph_hash><%= paragraph_hash %></paragraph_hash>
+			<paragraph_hash><%= comment.paragraph_hash %></paragraph_hash>
 		<% end %>
 		<% comment.references.each do |ref| %>
 			<reference_id><%= ref.scoped_id %></reference_id>

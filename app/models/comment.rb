@@ -30,6 +30,8 @@ class Comment < ActiveRecord::Base
   end
   
   # This needs to get references of its references until there is no more...
+  # If you're confused about the usage of position, it's because position numbers
+  # are the internal ids within the scope of the commentable.
   def references
     @references ||= Comment.find(:all, :conditions => ["(comments.commentable_type = ? AND comments.commentable_id = ?) AND comments.position IN (?)", self.commentable_type, self.commentable_id, self.reference_ids], :order => 'comments.position ASC')
   end

@@ -602,8 +602,8 @@ li.message {
 .article .articleContent span.mixedComment {
 	display: none;
 	position: absolute;
-	width: 40px;
-	height: 23px;
+	width: 44px;
+	height: 25px;
 	margin-right: -40px;
 	background: transparent url(/images/commentBubble.png) no-repeat top left;
 	color: #fff;

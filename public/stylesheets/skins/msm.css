@@ -507,6 +507,10 @@
 		margin: 0 18px 18px 0;
 	}
 	
+	.msm_layout .article .articleContent span.mixedComment.available {
+		background-image: url(/images/skins/msm/commentBubbleRed.png);
+	}
+	
 	.msm_layout img.article-picture {
 		border: 1px solid #ccc;
 	}
@@ -820,6 +824,16 @@
 	
 	.msm_layout .article-continuations {
 		text-align: right;
+	}
+	
+	#msm_layout .article-continuation {
+		display: inline;
+		padding-left: 8px;
+		background: transparent url(/images/skins/msm/dot.gif) no-repeat scroll 0 7px;
+	}
+	
+	#msm_layout .article-continuation span {
+		display: inline;
 	}
 	
 	.msm_layout .article-actions {

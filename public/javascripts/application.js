@@ -171,6 +171,7 @@ CommentEngine.prototype = {
 				if(!origVal.match(new RegExp(paragraph_id))){
 					var returnVal = origVal.strip() + ' ' + paragraph_id;
 					$('comment_references').value = returnVal.strip();
+					Scroller.to('commentForm');
 				};
 		//		if(this.showingThread && this.showingThread)
 			}
@@ -221,18 +222,19 @@ CommentEngine.prototype = {
 		for(var i = 0; i < commentNodes.length; i++){
 			var commentNode = commentNodes[i];
 			var commentId = commentNode.getAttribute('id');
+			var paragraphHash = commentNode.getAttribute('paragraph_hash');
 			var references = commentNode.getElementsByTagName('reference_id');
 			var referenceIds = new Array;
 			for(var j = 0; j < references.length; j++){
 				var reference = references[j];
 				referenceIds.push(reference.firstChild.nodeValue);
 			};
-			this.addComment(commentId, referenceIds);
+			this.addComment(commentId, referenceIds, paragraphHash);
 		};
 	},
 	
-	addComment: function(commentId, referenceIds){
-		var comment = new Comment(commentId, referenceIds);
+	addComment: function(commentId, referenceIds, paragraphHash){
+		var comment = new Comment(commentId, referenceIds, paragraphHash);
 		this.indexReference(comment);
 		this.comments.push(comment);
 	},
@@ -329,11 +331,13 @@ var Comment = Class.create();
 Comment.prototype = {
 	id: null,
 	referenceIds: null,
+	paragraphHash: null,
 	
-	initialize: function(id, referenceIds){
+	initialize: function(id, referenceIds, paragraphHash){
 		this.id = id;
 		if(referenceIds){
 			this.referenceIds = referenceIds;
 		};
+		this.paragraphHash = paragraphHash;
 	}
 };

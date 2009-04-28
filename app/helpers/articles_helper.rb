@@ -153,7 +153,7 @@ module ArticlesHelper
       if child.elem?
         # IMPORTANT: the following digest code cannot change, else it will mess up associations
         # It should also be set before modifications to the entire element, like class, id, inner_html...
-        paragraph_id = paragraph_id_for(child, opts) unless opts[:truncate] || opts[:without_comps]
+        paragraph_id, paragraph_hash = paragraph_id_and_hash_for(child, opts) unless opts[:truncate] || opts[:without_comps]
         child.set_attribute('class', opts[:class] || 'articleContent')
         unless opts[:truncate] || opts[:without_comps]
           child.set_attribute('id', paragraph_id)
@@ -167,21 +167,23 @@ module ArticlesHelper
           else
             aggregate_length += child.inner_text.mb_chars.length
           end
-          create_comment_mixin(child, paragraph_id) unless %w(pre).include?(child.name) || child.inner_text.mb_chars.length < 150
+          create_comment_mixin(child, paragraph_id, paragraph_hash) unless %w(pre).include?(child.name) || child.inner_text.mb_chars.length < 150
         end
       end
     end
   end
   
-  def paragraph_id_for(hp_el, opts={})
+  def paragraph_id_and_hash_for(hp_el, opts={})
     raise ArgumentError unless article = opts[:article] || @article
-    "#{opts[:prefix] ? "#{opts[:prefix]}_" : ''}" +
+    p_hash = Digest::SHA1.hexdigest(hp_el.to_s)[0..6]
+    [ "#{opts[:prefix] ? "#{opts[:prefix]}_" : ''}" +
     "a-#{article.id}-" + 
-    "p-#{Digest::SHA1.hexdigest(hp_el.to_s)[0..6]}"
+    "p-#{p_hash}", p_hash]
   end
 
   # Might want to consider making this a Javascript addition after DOM loads, if only to be semantic.
-  def create_comment_mixin(hp_el, paragraph_id)
-    hp_el.inner_html += content_tag(:span, "#{@article.comments_for(paragraph_id).size}", :class => paragraph_id + "-comment article-mixedComment mixedComment")
+  def create_comment_mixin(hp_el, paragraph_id, paragraph_hash)
+    count = @article.comments_for(paragraph_hash).size
+    hp_el.inner_html += content_tag(:span, "#{count}", :class => paragraph_id + "-comment article-mixedComment mixedComment#{' available' if count > 0}")
   end
 end
