@@ -2,7 +2,10 @@
 	<% if get_viewer && get_viewer.admin? %>
 		<!-- Comment ID: <%= comment.id %> -->
 	<% end %>
-	<div class="shim top shim-top"></div>
+	<% without_shim ||= false %>
+	<% unless without_shim %>
+		<div class="shim top shim-top"></div>
+	<% end %>
 	<a name="comment-<%= comment.scoped_id %>"></a>
 	<div class="comment-inner">
 		<%= picture_for(comment.user, :class => 'User', :prefix => "comment-#{comment.id}", :type => :thumb, :link => (comment.user.nil? ? "#comment-#{comment.scoped_id}" : user_path(comment.user)), :text => comment.scoped_id) %>
@@ -19,5 +22,7 @@
 			<%= format_comment(comment) %>
 		</div>		
 	</div>
-	<div class="shim bottom shim-bottom"></div>
+	<% unless without_shim %>
+		<div class="shim bottom shim-bottom"></div>
+	<% end %>
 <% end %>
