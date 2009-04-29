@@ -47,7 +47,7 @@ module PicturesHelper
     includes = opts.delete(:include) || []
     includes.push(record) if includes.last != record
     with = opts.delete(:with) || {}
-    
+    opts[:class] ||= record.class.class_name rescue nil
     begin
       case opts[:type]
       when nil
@@ -84,7 +84,7 @@ module PicturesHelper
   def default_picture_for(klass_name=nil, html_opts={})
     klass_name = klass_name.blank? ? "" : klass_name
     # TODO: Should the default picture be uploaded to S3 as well? If so, can this be "seeded"?
-    file_path = [ klass_name.underscore, 'default.png' ].join('/')
+    file_path = [ klass_name.downcase.underscore, 'default.png' ].join('/')
     image_tag(file_path, { :alt => "Default #{klass_name.humanize.downcase} picture" }.merge(html_opts))
   end
 end
