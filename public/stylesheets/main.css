@@ -50,15 +50,16 @@
 }
 
 #logo_link {
-	width: 18px;
+	width: 21px;
 	height: 25px;
 }
 
 #logo {
 	float: left;
-	width: 18px;
+	width: 21px;
 	height: 25px;
-	background: transparent url(/images/logo-symbol-white-small.png) no-repeat left top;
+	/*background: transparent url(/images/logo-symbol-white-small.png) no-repeat left top;*/
+	background: transparent url(/images/logo-symbol-inverted-small.png) no-repeat left top;
 	margin-right: 14px;
 }
 
