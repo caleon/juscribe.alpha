@@ -7,17 +7,20 @@
 	</td>
 </tr>
 <tr>
-	<th>&nbsp;</th>
+	<th><%= f.label :allow_comments %></th>
 	<td>
-		<%= f.check_box :allow_comments, :style => "display: inline;" %><%= f.label :allow_comments %>
+		<%= f.check_box :allow_comments, :style => "display: inline;" %>
 		<br />
 		<%= info_box_for @blog, :allow_comments, "You can turn off commenting on this blog" %>
 	</td>
 </tr>
 <tr>
-	<th>&nbsp;</th>
+	<th>
+		<%= f.label :allow_anonymous_comments, "Allow non-registered users to comment" %> 
+		<em>Only matters if you checked "Allow comments"</em>
+	</th>
 	<td>
-		<%= f.check_box :allow_anonymous_comments, :style => "display: inline;" %><%= f.label :allow_anonymous_comments %>
+		<%= f.check_box :allow_anonymous_comments, :style => "display: inline;" %>
 		<br />
 		<%= info_box_for @blog, :allow_anonymous_comments, "Only matters if you checked <em>Allow comments</em>" %>
 	</td>

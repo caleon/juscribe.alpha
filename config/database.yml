@@ -17,6 +17,7 @@
 development:
   adapter: mysql
   encoding: utf8
+  collation: utf8_general_ci
   database: colinsite_development
   username: root
   password:
@@ -28,6 +29,7 @@ development:
 test:
   adapter: mysql
   encoding: utf8
+  collation: utf8_general_ci
   database: colinsite_test
   username: root
   password:
@@ -36,6 +38,7 @@ test:
 production:
   adapter: mysql
   encoding: utf8
+  collation: utf8_general_ci
   database: juscribe
   username: root
   password: 
