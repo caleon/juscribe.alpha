@@ -1,0 +1,9 @@
+<%= @target.first_name %>,
+
+<%= @requester.first_name %> requested to be your friend on Juscribe.
+
+To confirm the friendship request, follow the link below to <%= @requester.first_name %>'s page and click "Confirm Friendship":
+<%= user_url(@requester, :anchor => true) %>
+
+Thanks,
+The Juscribe Team

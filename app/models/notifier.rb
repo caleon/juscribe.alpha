@@ -73,8 +73,13 @@ class Notifier < ActionMailer::Base
     
   end
   
-  def friendship_request(*args)
+  def friendship_request(target, requester)
+    setup_email
     
+    content_type = "text/plain"
+    subject %{#{requester.full_name} requested to be your friend on Juscribe}
+    recipients target.email_address
+    body :target => target, :requester => requester
   end
   
   def group_invitation(opts)

@@ -220,6 +220,9 @@ class UsersController < ApplicationController
     if res = get_viewer.befriend(@user) # This sends out notifier in model.
       @notice = [ "You have requested friendship with #{flash_name_for(@user)}.",
                   "You are now friends with #{flash_name_for(@user)}." ][res]
+      if res == 0
+        Notifier.deliver_friendship_request(@user, get_viewer)
+      end
       respond_to do |format|
         format.html { flash[:notice] = @notice; redirect_to @user }
         format.js          
