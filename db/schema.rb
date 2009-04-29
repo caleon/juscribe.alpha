@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090424093152) do
+ActiveRecord::Schema.define(:version => 20090429074125) do
 
   create_table "articles", :force => true do |t|
     t.string   "title"
@@ -255,6 +255,7 @@ ActiveRecord::Schema.define(:version => 20090424093152) do
     t.text     "social_networks"
     t.string   "time_zone"
     t.text     "notifications"
+    t.datetime "last_logged_at"
   end
 
   create_table "widgets", :force => true do |t|

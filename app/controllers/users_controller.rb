@@ -159,6 +159,7 @@ class UsersController < ApplicationController
         before_login = session[:before_login]
         session[:before_login] = nil
         msg = "You are now logged in."
+        @user.update_attribute(:last_logged_at, Time.now)
         respond_to do |format|
           format.html { flash[:notice] = msg; redirect_to before_login || previous_view || @user }
           format.js { flash.now[:notice] = msg; render :action => 'login_success' }

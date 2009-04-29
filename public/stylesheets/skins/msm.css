@@ -105,6 +105,11 @@
 	
 }
 
+.msm_layout #errorBody {
+	background-color: #fff;
+	padding: 18px;
+}
+
 /* @group General */
 
 	#msm_layout,
