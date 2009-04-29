@@ -814,6 +814,11 @@
 		margin: 0 0 17px;
 	}
 	
+	.msm_layout .articleContent object,
+	.msm_layout .articleContent embed {
+		max-width: 556px;
+	}
+	
 	#canvas.articles-show .article > embed {
 		margin-bottom: 17px;
 	}

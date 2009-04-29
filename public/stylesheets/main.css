@@ -659,6 +659,10 @@ li.message {
 	height: 250px;
 }
 
+.thoughtlets li {
+	overflow: hidden;
+}
+
 .commentForm input,
 .commentForm textarea {
 	border: 1px solid #ccc;
