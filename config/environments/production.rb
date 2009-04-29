@@ -25,7 +25,7 @@ config.action_view.cache_template_loading            = true
 # config.action_controller.asset_host                  = "http://assets.example.com"
 
 config.action_mailer.default_url_options = { :host =>
-"juscribe.com" }
+"www.juscribe.com" }
 
 config.after_initialize do
   # defaults to exception.notifier@default.com
