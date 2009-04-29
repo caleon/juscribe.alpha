@@ -2,8 +2,15 @@
 <%= picture_for(user, :link => true, :with_text => true, :type => :thumb) %>
 <h4><%= user.full_name %></h4>
 <p>
-	Blogs: <%= user.blogs.count %><br />
-	Articles: <%= user.articles.count %><br />
+	<%= pluralize(user.articles.count, 'article') %> in <%= pluralize(user.blogs.count, 'blog') %>
+	<br />
+	<% if logged_in? %>
+		<% if get_viewer.friends_with?(user) %>
+			<%= link_to "Unfriend", unfriend_user_path(user), { :method => :put } %>
+		<% elsif get_viewer != user && !get_viewer.kinda_friends_with?(user) %>
+			<%= link_to "#{user.kinda_friends_with?(get_viewer) ? 'Confirm' : 'Request'} Friendship", befriend_user_path(user), { :method => :put } %>
+		<% end %>	
+	<% end %>
 	
 	<ul class="social_networks" id="user-<%= user.id %>-social_networks">
 		<%= social_network_el(:facebook, user) %>
