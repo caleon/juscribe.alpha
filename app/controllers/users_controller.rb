@@ -3,6 +3,10 @@ class UsersController < ApplicationController
 
   verify_login_on :edit, :update, :edit_password, :update_password, :befriend, :unfriend, :logout
   authorize_on :show, :edit, :update, :destroy, :edit_password, :update_password
+  
+  def index
+    redirect_to root_url
+  end
       
 
   def show
