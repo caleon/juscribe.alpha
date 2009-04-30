@@ -4,7 +4,7 @@ class WidgetsController < ApplicationController
   authorize_on :index, :show, :edit, :update, :destroy, :place, :unplace
 
   def index
-    return unless get_user(:message => "Unable to find the user specified. Please check the address.") && authorize(@user)
+    return unless get_user(:message => "Unable to find the user specified. Please check the address.") && authorize(@user, :editable => true)
     find_opts = get_find_opts(:order => 'id DESC')
     @widgets = @user.widgets.find(:all, find_opts)
     @page_title = "Customize Widgets"

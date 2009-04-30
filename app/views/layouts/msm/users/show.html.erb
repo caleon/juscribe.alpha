@@ -77,11 +77,11 @@
 		<% end -%>
 		
 		<% content_tag :div, :class => 'footer-box' do -%>
-			<%= render :partial => 'owned_comments', :object => @user.owned_comments.find(:all, :limit => 5, :order => 'id DESC'), :locals => { :without_user => true, :without_commentable => true, :prefix => :footer } %>
+			<%= render :partial => 'owned_comments', :object => @user.owned_comments.find(:all, :limit => 7, :order => 'id DESC'), :locals => { :without_user => true, :without_commentable => true, :prefix => :footer } %>
 		<% end -%>
 		
 		<% content_tag :div, :class => 'footer-box' do -%>
-			<%= render :partial => 'blogs', :object => @user.blogs.find(:all, :limit => 5), :locals => { :bloggable => @user, :prefix => :footer } %>
+			<%= render :partial => 'blogs', :object => @user.blogs.find(:all, :limit => 10), :locals => { :bloggable => @user, :prefix => :footer } %>
 		<% end -%>
 
 		<%= br_clear %>
