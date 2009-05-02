@@ -111,7 +111,7 @@ module ApplicationHelper
   end
   
   def digg_button(javascript=false)
-    if javascript || RAILS_ENV == 'production'
+    if !SITE[:disable_digg] && (javascript || RAILS_ENV == 'production')
   		#javascript_tag nil, :src => "http://digg.com/tools/diggthis.js"
   		%{<script type="text/javascript" src="http://digg.com/tools/diggthis.js"></script>}
 		else
