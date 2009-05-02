@@ -4,6 +4,11 @@ class WidgetsControllerTest < ActionController::TestCase
 
   def test_index
     get :index, users(:colin).to_path(true)
+    assert_redirected_to login_url
+  end
+
+  def test_index_as_user
+    get :index, users(:colin).to_path(true), as(:colin)
     assert_response :success
     assert_equal users(:colin), assigns(:user)
     assert_not_nil assigns(:widgets)

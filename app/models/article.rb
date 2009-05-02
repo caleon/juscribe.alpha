@@ -41,6 +41,20 @@ class Article < ActiveRecord::Base
     make_permalink
   end
   
+  # A class method for articleshelper
+  def self.default_lede_tag
+    "(#{APP[:name].upcase})"
+  end
+  
+  def lede_tag
+    ((blog && blog.premium? && (self[:lede_tag] || blog.lede_tag)) || Article.default_lede_tag).upcase
+  end
+  
+  def lede_tag=(val)
+    val = nil if val.blank?
+    self[:lede_tag] = val
+  end
+  
   def to_path(for_associated=false)
     if self.draft?
       { :"#{for_associated ? 'article_id' : 'id'}" => self.to_param }.merge(self.blog.to_path(true))

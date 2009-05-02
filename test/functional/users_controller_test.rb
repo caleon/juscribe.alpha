@@ -7,22 +7,23 @@ class UsersControllerTest < ActionController::TestCase
     assert_routing '/u/colin', :controller => 'users', :action => 'show', :id => 'colin'
   end
   
-  def test_index
-    get :index
-    assert_nil assigns(:viewer)
-    assert_response :success
-    assert_not_nil assigns(:users)
-    assert_template 'index'
-    xhr :get, :index
-    assert_nil assigns(:viewer)
-    assert_response :success
-    assert_not_nil assigns(:users)
-    assert_template 'index'
-    get :index, :format => 'xml'
-    assert_response :success
-    assert_not_nil assigns(:users)
-    assert_template 'index'
-  end
+  # FIXME: Turned off users index page for now.
+  #def test_index
+  #  get :index
+  #  assert_nil assigns(:viewer)
+  #  assert_response :success
+  #  assert_not_nil assigns(:users)
+  #  assert_template 'index'
+  #  xhr :get, :index
+  #  assert_nil assigns(:viewer)
+  #  assert_response :success
+  #  assert_not_nil assigns(:users)
+  #  assert_template 'index'
+  #  get :index, :format => 'xml'
+  #  assert_response :success
+  #  assert_not_nil assigns(:users)
+  #  assert_template 'index'
+  #end
   
   def test_show
     get :show, users(:colin).to_path

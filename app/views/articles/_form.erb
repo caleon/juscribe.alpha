@@ -1,3 +1,9 @@
+<% if @article.blog.premium? %>
+	<%= f.label :lede_tag %>
+	<%= error_message_on @article, :lead_tag %>
+	<%= f.text_field :lede_tag, "i.e. (JUSCRIBE) &mdash;" %>
+	<br />
+<% end %>
 <%= f.label :content %>
 <%= error_message_on @article, :content %>
 <%= f.text_area :content %>

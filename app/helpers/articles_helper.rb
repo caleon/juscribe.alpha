@@ -46,8 +46,8 @@ module ArticlesHelper
   ################################
   
   # TODO: A blog can remove/customize this intro on premium accounts
-  def article_intro
-    content_tag :strong, "(#{APP[:name].upcase}) &mdash;", :class => 'articleIntro'
+  def article_intro_for(article=nil)
+    content_tag :strong, h(article.nil? ? Article.default_lede_tag : article.lede_tag) + "&mdash;", :class => 'articleIntro'
   end
   
   # Here is where to add more types of components per article
@@ -95,7 +95,7 @@ module ArticlesHelper
   def format_article(article, opts={})
     opts[:article] ||= article || @article
     text = escape_code_html(article.content)
-    text = article_intro + text unless opts[:without_intro]
+    text = article_intro_for(article) + text unless opts[:without_intro]
     formatted = Hpricot(p_wrap(text)) # This already escapes invalid HTML tags...
     clean_code_breaks(formatted)       # But this needs to escape all HTML tags within CODE/PRE
     clarify_external_links(formatted)

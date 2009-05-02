@@ -83,6 +83,11 @@ class Blog < ActiveRecord::Base
     make_permalink
   end
   
+  def premium?; premium_since?; end
+  
+  def make_premium!; update_attribute(:premium_since, Time.now); end
+  def unmake_premium!; update_attribute(:premium_since, nil); end
+  
   def to_path(for_associated=false)
     { :"#{for_associated ? 'blog_id' : 'id'}" => self.to_param }.merge(self.bloggable.to_path(true))
   end

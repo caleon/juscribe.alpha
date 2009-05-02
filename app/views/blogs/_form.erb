@@ -2,10 +2,19 @@
 <tr class="unrequired">
 	<th><%= f.label :description %></th>
 	<td>
-		<%= f.text_area :description %>
+		<%= f.text_area :description, :rows => 5 %>
 		<%= info_box_for @blog, :description %>
 	</td>
 </tr>
+<% if @blog.premium? %>
+<tr class="unrequired">
+	<th><%= f.label :lede_tag %></th>
+	<td>
+		<%= f.text_field :lede_tag %>
+		<%= info_box_for @blog, :lede_tag, "i.e. (JUSCRIBE) &mdash;" %>
+	</td>
+</tr>
+<% end %>
 <tr>
 	<th><%= f.label :allow_comments %></th>
 	<td>
@@ -16,7 +25,8 @@
 </tr>
 <tr>
 	<th>
-		<%= f.label :allow_anonymous_comments, "Allow non-registered users to comment" %> 
+		<%= f.label :allow_anonymous_comments, "Allow non-registered users to comment" %>
+		<br />
 		<em>Only matters if you checked "Allow comments"</em>
 	</th>
 	<td>

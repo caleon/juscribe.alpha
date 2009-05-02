@@ -3,7 +3,7 @@ require File.dirname(__FILE__) + '/../test_helper'
 class BlogTest < ActiveSupport::TestCase
 
   def test_basics
-    assert blogs(:first).valid?
+    assert blogs(:first).valid?, blogs(:first).errors.inspect
     assert_equal blogs(:first).short_name.gsub(/['"]+/i, '').gsub(/[^a-z0-9]+/i, '-').gsub(/-{2,}/, '-').gsub(/^-/, '').gsub(/-$/, '').upcase, blogs(:first).permalink
     assert_equal blogs(:first).permalink, blogs(:first).to_param
     assert_not_nil blogs(:first).bloggable

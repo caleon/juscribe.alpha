@@ -40,6 +40,8 @@ REGEX = Hash[*REGEXP_STR.to_a.map do |arr|
     end ]
 end.flatten]
 
+
+# REGEXP matches the entire string (note the caret and dollar signs)
 REGEXP = Hash[*REGEXP_STR.to_a.map do |arr|
   [ arr[0],
     if arr[1].is_a?(Hash)
