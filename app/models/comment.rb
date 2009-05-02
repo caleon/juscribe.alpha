@@ -47,7 +47,7 @@ class Comment < ActiveRecord::Base
   end
   
   def add_references(*comment_ids)
-    
+    raise NotImplementedError
   end
   
   def anonymous?
@@ -58,8 +58,10 @@ class Comment < ActiveRecord::Base
     anonymous? ? Commenter.new(:nick => nick, :email => email) : user
   end
   
-  def notifies_commenter?
-    wants_notifications? || commenter.notify_for?(:comments)
+  # This method is asking whether or not a response to this comment
+  # triggers a notification.
+  def notifies_commenter? # ...of direct responses to this comment
+    wants_notifications?
   end
   
   def deleted?
@@ -74,6 +76,7 @@ class Comment < ActiveRecord::Base
     user && (self.commentable.editable_by?(user) || super)
   end
   
+  # FIXME: are we gonna use nullification?
   def nullify!(user=nil)
     self.update_attribute(:body, nil) if self.editable_by?(user)
   end

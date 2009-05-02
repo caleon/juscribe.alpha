@@ -7,7 +7,8 @@
 		<%= content_tag :h4, "Re: " + link_to("#{@article.original.display_name}", article_path_for(@article.original)) if @article.original %>
 	</div>
 	<div class="msm_column msm_column-b">
-		<%= digg_button %>
+		<%= reddit_button_for(@article) %>
+		<%= digg_button if false %>
 		<%= render :partial => 'tags/tags', :object => @article  %>
 	</div>
 <% end -%>

@@ -40,6 +40,23 @@ module ArticlesHelper
     Article.find(session[:articles_history] ||= []).compact.sort_by {|art| session[:articles_history].index(art.id) }
   end
   
+  def digg_button(javascript=false)
+    if !SITE[:disable_digg] && (javascript || RAILS_ENV == 'production')
+  		#javascript_tag nil, :src => "http://digg.com/tools/diggthis.js"
+  		%{<script type="text/javascript" src="http://digg.com/tools/diggthis.js"></script>}
+		else
+		  image_tag 'digg.png', :width => 51, :height => 79, :class => 'digg'
+	  end
+  end
+  
+  def reddit_button_for(article)
+    %{<script type="text/javascript">
+      reddit_url = "#{article_url_for(article)}";
+      reddit_title = "#{article.title}";
+    </script>
+    <script type="text/javascript" src="http://www.reddit.com/button.js?t=2"></script>} if !SITE[:disable_reddit]
+  end
+  
   
   ################################
   ##     ARTICLE FORMATTING     ##
@@ -47,7 +64,7 @@ module ArticlesHelper
   
   # TODO: A blog can remove/customize this intro on premium accounts
   def article_intro_for(article=nil)
-    content_tag :strong, h(article.nil? ? Article.default_lede_tag : article.lede_tag) + "&mdash;", :class => 'articleIntro'
+    content_tag :strong, h(article.nil? ? Article.default_lede_tag : article.lede_tag) + " &mdash;", :class => 'articleIntro'
   end
   
   # Here is where to add more types of components per article

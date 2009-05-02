@@ -110,15 +110,6 @@ module ApplicationHelper
     render :partial => 'shared/debugger' if RAILS_ENV == 'development' || (get_viewer && get_viewer.admin? && SITE[:enable_debugger])
   end
   
-  def digg_button(javascript=false)
-    if !SITE[:disable_digg] && (javascript || RAILS_ENV == 'production')
-  		#javascript_tag nil, :src => "http://digg.com/tools/diggthis.js"
-  		%{<script type="text/javascript" src="http://digg.com/tools/diggthis.js"></script>}
-		else
-		  image_tag 'digg.png', :width => 51, :height => 79, :class => 'digg'
-	  end
-  end
-  
   def preview_path_for(record)
     instance_eval %{ preview_#{record.path_name_prefix}_path(record.to_path) }
   end
