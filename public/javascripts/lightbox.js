@@ -215,7 +215,6 @@ Lightbox.prototype = {
 
         if ((imageLink.rel == 'lightbox')){
             // if image is NOT part of a set, add single image to imageArray
-						if
             this.imageArray.push([imageLink.href + '.js', imageLink.title]);         
         } else {
             // if image is part of a set..
