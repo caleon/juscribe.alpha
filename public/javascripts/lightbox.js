@@ -68,6 +68,7 @@ var Lightbox = Class.create();
 
 Lightbox.prototype = {
     imageArray: [],
+		urlArray: [],
     activeImage: undefined,
     
     // initialize()
@@ -211,6 +212,7 @@ Lightbox.prototype = {
         new Effect.Appear(this.overlay, { duration: this.overlayDuration, from: 0.0, to: LightboxOptions.overlayOpacity });
 
         this.imageArray = [];
+				this.urlArray = [];
         var imageNum = 0;       
 
         if ((imageLink.rel == 'lightbox')){
@@ -220,14 +222,15 @@ Lightbox.prototype = {
             // if image is part of a set..
             this.imageArray = 
                 $$(imageLink.tagName + '[href][rel="' + imageLink.rel + '"]').
-                collect(function(anchor){ return [anchor.href + '.js', anchor.title]; }).
-                uniq();
-            
+                collect(function(anchor){
+									if (!this.urlArray.find(function(url){ return url == anchor.href + '.js'})) {
+										this.urlArray.push(anchor.href + '.js');
+										return [anchor.href + '.js', anchor.title];
+									}
+								}.bind(this)).compact().uniq();
+           
             while (this.imageArray[imageNum][0] != imageLink.href + '.js') { imageNum++; }
         }
-
-				// There may be duplicates (change by colin)
-				this.imageArray = this.imageArray.uniq();
 
         // calculate top and left offset for the lightbox 
         var arrayPageScroll = document.viewport.getScrollOffsets();
