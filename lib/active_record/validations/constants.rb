@@ -21,7 +21,7 @@ REGEXP_STR = { # Defaults
                                 :caption => "([^\\s].+[^\\s])?"},
                :project    => {},
                :song       => { :artist => "[^\\s].+[^\\s]" },
-               :tag        => {},
+               :tag        => { :name => "[^\\s]{2,}" },
                :thoughtlet => { :location => "([^\\s].+[^\\s])?",
                                 :content => "([^\\s].+[^\\s])?" },
                :user       => { :nick => "[a-zA-Z][_a-zA-Z0-9]+",
