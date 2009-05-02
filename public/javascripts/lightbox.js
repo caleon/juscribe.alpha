@@ -1,3 +1,5 @@
+// Modified significantly to cater to the needs of this particular app (Juscribe) by colin chun.
+
 // -----------------------------------------------------------------------------------
 //
 //	Lightbox v2.04
