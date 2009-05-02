@@ -46,8 +46,8 @@
 //  Configurationl
 //
 LightboxOptions = Object.extend({
-    fileLoadingImage:        'images/loading.gif',     
-    fileBottomNavCloseImage: 'images/closelabel.gif',
+    fileLoadingImage:        '/images/loading.gif',     
+    fileBottomNavCloseImage: '/images/closelabel.gif',
 
     overlayOpacity: 0.8,   // controls transparency of shadow overlay
 
@@ -215,6 +215,7 @@ Lightbox.prototype = {
 
         if ((imageLink.rel == 'lightbox')){
             // if image is NOT part of a set, add single image to imageArray
+						if
             this.imageArray.push([imageLink.href + '.js', imageLink.title]);         
         } else {
             // if image is part of a set..
@@ -225,6 +226,9 @@ Lightbox.prototype = {
             
             while (this.imageArray[imageNum][0] != imageLink.href + '.js') { imageNum++; }
         }
+
+				// There may be duplicates (change by colin)
+				this.imageArray = this.imageArray.uniq();
 
         // calculate top and left offset for the lightbox 
         var arrayPageScroll = document.viewport.getScrollOffsets();
