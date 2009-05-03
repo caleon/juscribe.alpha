@@ -52,13 +52,15 @@ class TagsController < ApplicationController
           format.html { flash[:notice] = msg; redirect_to taggable_url_for(@taggable) }
         end
       else
-        flash.now[:warning] = "There was an error tagging #{flash_name_for(@taggable)}."
-        respond_to do |format|
-          format.js { render :action => 'create_error' }
-          format.html { trender :new }
-        end
+        raise 
       end
     end
+  rescue
+    flash.now[:warning] = "There was an error tagging #{flash_name_for(@taggable)}."
+    respond_to do |format|
+      format.js { render :action => 'create_error' }
+      format.html { trender :new }
+    end    
   end
   
   # Don't think I need edit and update

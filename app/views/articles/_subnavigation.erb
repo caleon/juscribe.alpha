@@ -16,5 +16,5 @@
 <%# FIXME: as per _actions, do we need article && !article.new_record? here? %>
 <%= clip_subnavi_el(article) if article && article.published? %>
 <%= subnavi_el 'Respond', article_path_from_blog(get_viewer.default_blog, :prefix => :new, :params => { :re => article.id }) if logged_in? && article && !article.new_record? && article.published? %>
-<%= subnavi_el 'Tag', tag_path_from_taggable(article, :prefix => 'new'), :id => 'article-tagLink' if article && !article.new_record? && article.editable_by?(get_viewer) %>
+<%= subnavi_el image_tag('shim.gif', :class => 'shim') + 'Tag', tag_path_from_taggable(article, :prefix => 'new'), :id => 'article-tagLink', :class => 'tagLink' if article && !article.new_record? && article.editable_by?(get_viewer) %>
 <% end %>

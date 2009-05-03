@@ -57,7 +57,7 @@ module ApplicationHelper
     css_class << 'right' if opts.delete(:right)
     css_class << 'first' if @navi_count == 0
     @navi_count += 1
-    opts[:title] ||= text
+    opts[:title] ||= strip_tags(text)
     content_tag(:li, link_to(text, path, opts), :class => css_class.join(' ')) if conditions
   end
   
@@ -85,6 +85,7 @@ module ApplicationHelper
     opts[:style] = [ opts[:style], "z-index: #{z_index};" ].compact.join(' ')
     css_class << 'current' if opts.delete(:current)
     css_class << 'first' if opts.delete(:first)
+    opts[:title] ||= strip_tags(text)
     content_tag(:li, link_to(text, path, opts), :class => css_class.join(' '), :style => "z-index: #{z_index};")
   end
 								
