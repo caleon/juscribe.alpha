@@ -84,7 +84,7 @@ module ArticlesHelper
   def allowed_tags(trunc=false)
     %w(strong em b i code pre tt samp kbd var sub 
       sup dfn cite big small address br span h1 h2 h3 h4 h5 h6 ul ol li abbr 
-      acronym a img blockquote embed object param p) - (trunc ? %w( embed object param pre ) : [])
+      acronym a img blockquote embed object param p) - (trunc ? %w( embed object param pre h1 h2 h3 h4 h5 h6 img ) : [])
   end
   
   def allowed_attributes
