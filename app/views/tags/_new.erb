@@ -1,0 +1,3 @@
+<% form_for :tagging, @taggable.taggings.new, :url => tags_path_from_taggable(@taggable) do |f| %>
+	<%= render :partial => 'form', :locals => { :f => f } %>
+<% end %>

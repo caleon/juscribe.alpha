@@ -16,5 +16,5 @@
 <%# FIXME: as per _actions, do we need article && !article.new_record? here? %>
 <%= clip_subnavi_el(article) if article && article.published? %>
 <%= subnavi_el 'Respond', article_path_from_blog(get_viewer.default_blog, :prefix => :new, :params => { :re => article.id }) if logged_in? && article && !article.new_record? && article.published? %>
-<%# subnavi_el 'Add Tags', taggings_path_from_taggable(article, :prefix => 'new') if article && !article.new_record? && article.editable_by?(get_viewer) %>
+<%= subnavi_el 'Add Tags', tag_path_from_taggable(article, :prefix => 'new'), :onclick => "Modalbox.show(this.href + '.js', {title: this.title, width: 600}); return false;" if article && !article.new_record? && article.editable_by?(get_viewer) %>
 <% end %>

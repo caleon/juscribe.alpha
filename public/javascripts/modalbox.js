@@ -239,7 +239,7 @@ Modalbox.Methods = {
 							return eval(script.replace("<!--", "").replace("// -->", ""));
 						}.bind(window));
 					}.bind(this));
-				} else // URL given as a parameter. We'll request it via Ajax
+				} else { // URL given as a parameter. We'll request it via Ajax
 					new Ajax.Request( this.content, { method: this.options.method.toLowerCase(), parameters: this.options.params, 
 						onSuccess: function(transport) {
 							var response = new String(transport.responseText);
@@ -255,7 +255,7 @@ Modalbox.Methods = {
 							throw('Modalbox Loading Error: ' + exception);
 						}
 					});
-					
+				}	
 			} else if (typeof this.content == 'object') {// HTML Object is given
 				this._insertContent(this.content);
 				this._putContent();

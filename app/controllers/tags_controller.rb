@@ -35,7 +35,7 @@ class TagsController < ApplicationController
       @page_title = "New Tag on #{@taggable.display_name}"
       respond_to do |format|
         format.html { trender }
-        format.js
+        format.js { render :partial => 'new', :content_type => :html }
       end
     end
   end
