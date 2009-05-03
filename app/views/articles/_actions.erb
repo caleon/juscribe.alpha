@@ -7,6 +7,8 @@
 		<% else %>
 			<%= content_tag :li, (link_to 'Clip', clip_path_from_widgetable(@article, :prefix => 'new')) %>
 		<% end %>
+		<%= content_tag :li, (link_to 'Respond', article_path_from_blog(get_viewer.default_blog, :prefix => 'new', :params => { :re => @article.id })) %>
+		<%= content_tag :li, (link_to 'Tag', tag_path_from_taggable(article, :prefix => 'new'), :class => 'tagLink') %>
 	<% end %>
-	<%= content_tag :li, (link_to 'Respond', article_path_from_blog(get_viewer.default_blog, :prefix => 'new', :params => { :re => @article.id })) if article && !article.new_record? && article.published? %>
+
 <% end if logged_in? %>

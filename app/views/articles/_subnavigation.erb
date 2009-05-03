@@ -18,3 +18,6 @@
 <%= subnavi_el 'Respond', article_path_from_blog(get_viewer.default_blog, :prefix => :new, :params => { :re => article.id }) if logged_in? && article && !article.new_record? && article.published? %>
 <%= subnavi_el image_tag('shim.gif', :class => 'shim') + 'Tag', tag_path_from_taggable(article, :prefix => 'new'), :id => 'article-tagLink', :class => 'tagLink' if article && !article.new_record? && article.editable_by?(get_viewer) %>
 <% end %>
+
+
+<% add_behavior(".tagLink", "ShowTaggingModalBox") %>

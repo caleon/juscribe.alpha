@@ -1,5 +1,3 @@
-<%# tags is actuall the taggable object. I'm assuming I did this because wrender auto assigns variables into partial name. %>
+<%# tags is actually the taggable object. I'm assuming I did this because wrender auto assigns variables into partial name. %>
 <%= render :partial => 'tags/list', :object => tags %>
-<% form_for :tagging, tags.taggings.new, :url => tags_path_from_taggable(tags) do |f| %>
-	<%= render :partial => 'tags/form', :locals => { :f => f } %>
-<% end if false && tags.editable_by?(get_viewer) %>
+
