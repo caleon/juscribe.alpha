@@ -31,6 +31,7 @@ class Group < ActiveRecord::Base
   
   class << self
     def primary_find(*args); self.find_by_permalink(*args); end
+    def abbreviation; 'g'; end
   end
   
   def to_param; self.permalink; end

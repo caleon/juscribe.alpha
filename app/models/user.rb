@@ -19,6 +19,8 @@ class User < ActiveRecord::Base
     User.find(:all, :conditions => ["admin = ?", true], :select => :id).map(&:id)
   end
   
+  def self.abbreviation; 'u'; end
+  
   def user; self; end
   def display_name; self.nick; end
   def self.primary_find(*args); find_by_nick(*args); end

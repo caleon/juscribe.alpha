@@ -59,9 +59,9 @@ module ActiveRecord::Acts::Taggable
       return_val = opts.delete(:return)
       arr = Tag.parse(list).each do |name|
         if acts_as_taggable_options[:from]
-          send(acts_as_taggable_options[:from]).tags.find_or_create_by_name(name).on(self, opts)
+          tag = send(acts_as_taggable_options[:from]).tags.find_or_create_by_name(name).on(self, opts)
         else
-          self.add_tag(name, opts)
+          tag = self.add_tag(name, opts)
         end
       end
       return_val == :last ? arr.last : arr

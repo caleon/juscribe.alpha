@@ -86,6 +86,7 @@ class ArticlesController < ApplicationController
     @page_title = "New Article"
     if @blog.editable_by?(get_viewer) && @article.save
       create_uploaded_picture_for(@article, :save => true) if picture_uploaded?
+      @article.tag_with(params[:tagsField]) unless params[:tagsField].blank?
       @article.clip!(:position => params[:widget][:position], :user => get_viewer) unless params[:widget].blank? || params[:widget][:position].blank?
       msg = "You have successfully created your article."
       respond_to do |format|

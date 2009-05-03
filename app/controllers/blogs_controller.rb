@@ -84,6 +84,7 @@ class BlogsController < ApplicationController
     @blog.attributes = params[:blog]
     @page_title = "New Blog"
     if @blog.save
+      @blog.tag_with(params[:tagsField]) unless params[:tagsField].blank?
       create_uploaded_picture_for(@blog, :save => true) if picture_uploaded?
       msg = "You have successfully created your blog."
       respond_to do |format|

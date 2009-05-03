@@ -1,6 +1,3 @@
-<% content_tag :ul, :class => "tags #{list.class.class_name.underscore}-tags" do -%>
-	<% list.composite_taggings.each do |tagging| %>
-		<li class="tag"><nobr><%= link_to tagging.tag.name, '#', :rel => 'tag' %></nobr></li>
-		<%# tagging_path_for(tagging) %>
-	<% end %>
+<% content_tag :ul, :class => "tags #{list.class.class_name.underscore}-tags", :id => dom_id(list) + '-tags' do -%>
+	<%= render :partial => 'tags/tagging', :collection => list.composite_taggings %>
 <% end if list && !list.composite_taggings.empty? %>

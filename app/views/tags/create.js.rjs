@@ -1,0 +1,4 @@
+page.call 'Modalbox.hide'
+page.replace_html "#{dom_id(@taggable)}-tags", :partial => 'tags/tagging', :collection => @taggable.composite_taggings
+page.replace_html 'flashNotice-inner', flash[:notice]
+page.show 'flashNotice'

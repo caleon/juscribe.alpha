@@ -20,7 +20,7 @@ module JavascriptHelper
   def add_inline_scripts(content, *args)
     html_opts = args.extract_options!
     kind = args.shift
-    if @config[:scripts_at_bottom]
+    if SITE[:scripts_at_bottom]
       add_by_type(content, kind, true)
     else
       javascript_tag((kind == :add_behavior ? "Event.addBehavior({#{content}});" : content), html_opts)
@@ -28,7 +28,7 @@ module JavascriptHelper
   end
   
   def add_scripts(kind=nil, &block)
-    if @config[:scripts_at_bottom]
+    if SITE[:scripts_at_bottom]
       res = capture(&block)
       add_by_type(res, kind)
     else

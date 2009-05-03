@@ -1,0 +1,3 @@
+page.call 'Modalbox.hide'
+page.replace_html 'flashWarning', flash[:warning]
+page.show 'flashWarning'

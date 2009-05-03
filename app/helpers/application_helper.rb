@@ -41,12 +41,12 @@ module ApplicationHelper
   
   def warning_field
     content_tag(:div, 
-      content_tag(:div, flash[:warning]), :id => 'flashWarning', :class => 'flashBox') if flash[:warning]
+      content_tag(:div, flash[:warning], :id => 'flashWarning-inner'), :id => 'flashWarning', :class => 'flashBox', :style => "#{'display: none;' unless flash[:warning]}")
   end
   
   def notice_field
     content_tag(:div, 
-      content_tag(:div, flash[:notice]), :id => 'flashNotice', :class => 'flashBox') if flash[:notice]
+      content_tag(:div, flash[:notice], :id => 'flashNotice-inner'), :id => 'flashNotice', :class => 'flashBox', :style => "#{'display: none;' unless flash[:notice]}")
   end
   
   def navi_el(text, path, opts={})
@@ -57,6 +57,7 @@ module ApplicationHelper
     css_class << 'right' if opts.delete(:right)
     css_class << 'first' if @navi_count == 0
     @navi_count += 1
+    opts[:title] ||= text
     content_tag(:li, link_to(text, path, opts), :class => css_class.join(' ')) if conditions
   end
   

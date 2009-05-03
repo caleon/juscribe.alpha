@@ -48,14 +48,14 @@ class TagsController < ApplicationController
       if @taggable.tag_with(params[:tagging][:name], :user => get_viewer)
         msg = "You have tagged #{flash_name_for(@taggable)}."
         respond_to do |format|
-          format.html { flash[:notice] = msg; redirect_to taggable_url_for(@taggable) }
           format.js { flash.now[:notice] = msg }
+          format.html { flash[:notice] = msg; redirect_to taggable_url_for(@taggable) }
         end
       else
         flash.now[:warning] = "There was an error tagging #{flash_name_for(@taggable)}."
         respond_to do |format|
-          format.html { trender :new }
           format.js { render :action => 'create_error' }
+          format.html { trender :new }
         end
       end
     end

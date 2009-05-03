@@ -7,6 +7,7 @@
 		<h4>by <%= @blog.bloggable.display_name %></h4>				
 	</div>
 	<div class="msm_column msm_column-b">
+		<%# FIXME %>
 		<%= @blog.tags.map(&:to_s).join(', ') %>
 	</div>
 <% end -%>	

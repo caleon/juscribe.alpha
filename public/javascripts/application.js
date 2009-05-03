@@ -30,6 +30,23 @@ var ToggleInfoField = Behavior.create({
 	}
 });
 
+var ShowTaggingModalBox = Behavior.create({
+	onclick: function(e) {
+		Modalbox.show(this.element.href + '.js', {title: this.element.title, width: 600});
+		return false;
+	}
+});
+
+// Didn't work.
+var MakeRemoteForm = Behavior.create({
+	onsubmit: function(e) {
+		//new Ajax.Request(this.element.action, {asynchronous:true, evalScripts:true, parameters:Form.serialize(this)});
+		//return false;
+		alert('that works');
+		return false;
+	}
+});
+
 var Browser = Class.create();
 Browser.prototype = {
 	domEl: '',

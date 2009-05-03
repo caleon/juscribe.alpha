@@ -9,7 +9,14 @@
 	<th><%= f.label :short_name %></th>
 	<td>
 		<%= f.text_field :short_name %>
-		<%= info_box_for @blog, :short_name, %{http://www.juscribe.com/#{@bloggable.class.class_name.underscore.first rescue "u"}/#{@bloggable.is_a?(User) ? @bloggable.nick : @bloggable.name rescue "your_nick" }/blogs/<span class="emphasis" style="text-transform: uppercase;">XXXXXXX</span>} %>
+		<%= info_box_for @blog, :short_name, %{http://www.juscribe.com/#{@bloggable.class.abbreviation rescue "u"}/#{@bloggable.is_a?(User) ? @bloggable.nick : @bloggable.name rescue "your_nick" }/blogs/<span class="emphasis" style="text-transform: uppercase;">XXXXXXX</span>} %>
+	</td>
+</tr>
+<tr class="unrequired">
+	<th><%= label_tag 'tagsField', 'Blog-wide tags' %></th>
+	<td>
+		<%= text_field_tag 'tagsField', nil, :placeholder => 'Separate multiple tags with commas', :id => 'tagsField', :size => 30 %>
+		<%= info_box 'tagsField', :info => 'Separate with commas; These are tags that ALL articles within this blog will share by default; you cannot change this later' %>
 	</td>
 </tr>
 <%= yield %>
