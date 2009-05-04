@@ -1,9 +1,12 @@
 class PermissionsController < ApplicationController
   # TODO: view lets you MERGE parts of each of the rules. Need to feed model attrs hash.
+  #             \\=> huh?
   use_shared_options :permission_rule, :collection_owner => :get_viewer
   verify_login_on :index, :show, :new, :create, :edit, :update, :destroy
   authorize_on :index, :show, :new, :create, :edit, :update, :destroy
   
+  # TODO: these views need to check editable_by? to at least check that the owner
+  # is initially the one to make changes to a rule.
   def index
     @user = get_viewer
     @permission_rules = @user.permission_rules

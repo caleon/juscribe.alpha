@@ -57,7 +57,8 @@ module ActiveRecord::Acts::Accessible #:nodoc:
       raise ActiveRecord::RecordNotFound if prule.nil?
       prule
     rescue NoMethodError, ActiveRecord::RecordNotFound
-      self.create_rule(:user => self.user)
+      #self.create_rule(:user => self.user)
+      self.rule = PermissionRule.find(DB[:public_rule])
     end
       
     def create_rule(attrs={})
@@ -66,6 +67,9 @@ module ActiveRecord::Acts::Accessible #:nodoc:
       self.rule = PermissionRule.create!(attrs) # TODO: Why the exclamation mark? I forgot my reasoning...
     end
   
+    # This can potentially allow an article to be attached with a rule that the owner doesn't have control
+    # over, as in the case with the public_rule. It'll be up to the controller to make sure this doesn't
+    # happen.
     def rule=(permission_rule)
       if p = Permission.find(:first, :conditions => ["permissible_type = ? AND permissible_id = ?", self.class.to_s, self.id])
         p.update_attribute(:permission_rule_id, permission_rule.id)

@@ -1,10 +1,10 @@
 class BlogsController < ApplicationController
   use_shared_options :collection_owner => :bloggable
   verify_login_on :new, :create, :edit, :update, :destroy
-  authorize_on :show, :new, :create, :edit, :update, :destroy
+  authorize_on :index, :show, :new, :create, :edit, :update, :destroy
   
   def index
-    return unless get_bloggable
+    return unless get_bloggable && authorize(@bloggable)
     find_opts = get_find_opts
     @blogs = @bloggable.blogs.find(:all, find_opts.merge(:include => :latest_articles))
     redirect_to blog_url_for(@blogs.first) and return if @blogs.size == 1 && !@bloggable.editable_by?(get_viewer)
@@ -46,7 +46,7 @@ class BlogsController < ApplicationController
   end
   
   def show
-    return unless setup([:permission, :primary_article])
+    return unless setup([:permission, :primary_article]) && authorize(@blog)
     find_opts = get_find_opts
     @page_title = @blog.display_name
     respond_to do |format|

@@ -32,7 +32,7 @@ module ApplicationHelper
     opts = args.extract_options!
     record = args.shift
     concat content_tag(:body, capture(&block),
-                       (opts.merge(record ? { :id => "#{record.class.class_name.downcase}Page" } : {:id => 'Page'})))
+                       (opts.merge(record ? { :id => "#{record.class.class_name}Page" } : {:id => 'Page'})))
   end
 
   def get_canvas_class
@@ -71,10 +71,11 @@ module ApplicationHelper
   
   def clip_subnavi_el(record)
     return nil unless logged_in? && record && !record.new_record? && record.accessible_by?(get_viewer)
-    if clip = record.clip_for(get_viewer)
-      subnavi_el image_tag('shim.gif', :class => 'shim') + "Unclip", clip_path_for(clip), :method => :delete, :class => 'un clipLink', :id => record.class.class_name.downcase + "-clipLink"
-    else
-      subnavi_el image_tag('shim.gif', :class => 'shim') + "Clip", clip_path_from_widgetable(record, :prefix => :new), :class => 'clipLink', :id => record.class.class_name.downcase + "-clipLink"
+    #if clip = record.clip_for(get_viewer)
+    #  subnavi_el image_tag('shim.gif', :class => 'shim') + "Unclip", clip_path_for(clip), :method => :delete, :class => 'un clipLink', :id => record.class.class_name.downcase + "-clipLink"
+    #else
+    unless record.clip_for?(get_viewer)
+      subnavi_el image_tag('shim.gif', :class => 'shim'), clip_path_from_widgetable(record, :prefix => :new), :class => 'clipLink', :id => record.class.class_name.downcase + "-clipLink", :title => "Clip this #{record.class_name}"
     end
   end
   

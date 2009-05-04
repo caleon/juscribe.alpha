@@ -10,15 +10,21 @@
 <% if controller.controller_name == 'articles' %>
 <%= subnavi_el "Edit", blog_path_for(blog, :prefix => :edit) if %w(new import).include?(controller.action_name) && blog.editable_by?(get_viewer) %>
 
-<%# The following is for clipping on articles-index since the main_object is like the blog %>
-<%# subnavi_el image_tag('shim.gif', :class => 'shim') + 'Clip', clip_path_from_widgetable(blog, :prefix => :new) if logged_in? && %(new import).include?(controller.action_name) %>
-<%= subnavi_el 'Import Articles', articles_path_from_blog(blog, :prefix => :import), :current => controller.action_name == 'import' if %(new import).include?(controller.action_name) && blog.editable_by?(get_viewer) %>
-<%= subnavi_el "New Article", article_path_from_blog(blog, :prefix => :new), :current => controller.action_name == 'new' if blog.editable_by?(get_viewer) && (article.nil? || article.new_record?) %>
-<%= subnavi_el "Edit", article_path_for(article, :prefix => :edit), :current => controller.action_name == 'edit' if article && !article.new_record? && article.editable_by?(get_viewer) %>
-<%# FIXME: as per _actions, do we need article && !article.new_record? here? %>
-<%= clip_subnavi_el(article) if article && article.published? %>
-<%= subnavi_el 'Respond', article_path_from_blog(get_viewer.default_blog, :prefix => :new, :params => { :re => article.id }) if logged_in? && article && !article.new_record? && article.published? %>
-<%= subnavi_el image_tag('shim.gif', :class => 'shim') + 'Tag', tag_path_from_taggable(article, :prefix => 'new'), :id => 'article-tagLink', :class => 'tagLink' if article && !article.new_record? && article.editable_by?(get_viewer) %>
+
+	<% if logged_in? %>
+		<%# The following is for clipping on articles-index since the main_object is like the blog %>
+		<%# subnavi_el image_tag('shim.gif', :class => 'shim') + 'Clip', clip_path_from_widgetable(blog, :prefix => :new) if logged_in? && %(new import).include?(controller.action_name) %>
+		<%= subnavi_el 'Import Articles', articles_path_from_blog(blog, :prefix => :import), :current => controller.action_name == 'import' if %(new import).include?(controller.action_name) && blog.editable_by?(get_viewer) %>
+		<%= subnavi_el "New Article", article_path_from_blog(blog, :prefix => :new), :current => controller.action_name == 'new' if blog.editable_by?(get_viewer) && (article.nil? || article.new_record?) %>
+		<%= subnavi_el "Edit", article_path_for(article, :prefix => :edit), :current => controller.action_name == 'edit' if article.try(:editable_by?, get_viewer) %>
+		<%= subnavi_el "Delete", article_path_for(article), :method => :delete, :title => 'Delete this article' if get_viewer.admin? || false && article.try(:editable_by?, get_viewer) %>
+		<%# FIXME: as per _actions, do we need article && !article.new_record? here? %>
+		<%= subnavi_el 'Respond', article_path_from_blog(get_viewer.default_blog, :prefix => :new, :params => { :re => article.id }), :title => 'Respond to this article' if article && !article.new_record? && article.try(:published?) %>
+		<%= clip_subnavi_el(article) if article.try(:published?) %>
+		<%= subnavi_el image_tag('shim.gif', :class => 'shim'), tag_path_from_taggable(article, :prefix => 'new'), :id => 'article-tagLink', :class => 'tagLink', :title => 'Tag this article' if article && !article.new_record? && article.published? && article.editable_by?(get_viewer) %>
+		<%= subnavi_el image_tag('shim.gif', :class => 'shim'), '#', :class => 'privacyLink', :title => "Privacy for this article" if article && !article.new_record? && article.editable_by?(get_viewer) %>
+		<%# TODO: NEED TO RETHINK WHETHER OR NOT A NEW_RECORD CAN BE EDITABLE BY ITS INTENDED OWNER. This is for convenience's sake, being able to write into the default #editable_by? method to return false if new_record? %>
+	<% end %>
 <% end %>
 
 

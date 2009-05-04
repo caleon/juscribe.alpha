@@ -83,8 +83,11 @@ class ArticlesController < ApplicationController
     return unless get_blog
     @article = @blog.articles.new(:user => get_viewer)
     @article.attributes = params[:article]
+    # Setting blog manually because the above line doesn't set refresh @article.blog
+    @article.blog = Blog.find(params[:article][:blog_id])
     @page_title = "New Article"
-    if @blog.editable_by?(get_viewer) && @article.save
+    if (@article.original_id.blank? || @article.original.accessible_by?(get_viewer)) &&
+        @blog.editable_by?(get_viewer) && @article.save
       create_uploaded_picture_for(@article, :save => true) if picture_uploaded?
       @article.tag_with(params[:tagsField]) unless params[:tagsField].blank?
       @article.clip!(:position => params[:widget][:position], :user => get_viewer) unless params[:widget].blank? || params[:widget][:position].blank?

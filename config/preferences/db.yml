@@ -2,6 +2,7 @@
 development:
   :wheel_id: 1
   :garbage_id: 1
+  :public_rule: 208
   
 staging:
   :wheel_id: ~
@@ -13,3 +14,4 @@ test:
 production:
   :wheel_id: 1
   :garbage_id: 3
+  :public_rule: 189

@@ -2,6 +2,8 @@ module ActiveRecord
   class Base    
     def self.primary_find(*args); find(*args); end
     
+    def class_name; self.class.table_name.gsub('_', ' ').singularize; end
+    
     # The following is to allow either a model or its ID to be supplied as
     # arguments to a method.  
     def to_id; self[:id].to_i; end

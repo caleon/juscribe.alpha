@@ -67,13 +67,13 @@
 
 .sub.navigation li.navigationEl > a img.shim {
 	height: 10px;
-	margin-right: 6px;
 	background: transparent url(/images/skins/msm/sprites.png) no-repeat -500px -500px;
 	vertical-align: baseline;
 }
 
 .sub.navigation li.breadcrumbEl > a.bread-home img.shim {
 	width: 13px;
+	margin-right: 6px;
 	background-position: 0 0;
 }
 
@@ -104,6 +104,16 @@
 .sub.navigation li.navigationEl.current > a.tagLink img.shim,
 .sub.navigation li.navigationEl > a.tagLink:hover img.shim {
 	background-position: -36px -10px;
+}
+
+.sub.navigation li.navigationEl > a.privacyLink img.shim {
+	width: 10px;
+	background-position: -46px 0;
+}
+
+.sub.navigation li.navigationEl.current > a.privacyLink img.shim,
+.sub.navigation li.navigationEl > a.privacyLink:hover img.shim {
+	background-position: -46px -10px;
 }
 
 .sub.navigation li.navigationEl > a.nav-customize img.shim {
@@ -215,7 +225,7 @@
 	.msm_layout .rss_link > img {
 		width: 27px;
 		height: 15px;
-		background: transparent url(/images/skins/msm/sprites.png) no-repeat -56px 0;
+		background: transparent url(/images/skins/msm/sprites.png) no-repeat -61px 0;
 	}
 		
 	.msm_layout span.timeago {

@@ -68,7 +68,8 @@ module ActionController::CommonMethods
     def theme_render(*args)
       opts = args.extract_options!
       method_sym = args.shift || action_name.intern
-      if main_object && (main_object.layouting || !Layouting::DEFAULT_LAYOUT.nil?) # FIXME
+      if main_object && (main_object.layouting || !Layouting::DEFAULT_LAYOUT.nil?) # FIXME (...)
+        # seroiusly. a year down the line, i'm not necessarily gonna remember why i said "FIXME"
         render opts.merge(:template => main_object.layout_file(shared_setup_options[:plural_sym], method_sym))
       else
         render opts.merge(:action => method_sym.to_s)

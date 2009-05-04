@@ -68,7 +68,7 @@ class ArticlesControllerTest < ActionController::TestCase
   
   def test_create
     post :create, { :article => { :title => "Blah blahdy la la la", :content => "dum dum dum dum dum", :publish => "1", :blog_id => blogs(:first).id }, :user_id => 'colin', :blog_id => blogs(:first).to_param }, as(:colin)
-    article = Article.find(:first, :order => 'id DESC', :conditions => ["title = ?", "Blah blahdy la la la"])
+    assert article = Article.find(:first, :order => 'id DESC', :conditions => ["title = ?", "Blah blahdy la la la"])
     assert article.valid?
     assert_redirected_to user_blog_article_url(article.to_path)
     assert_equal "You have successfully created your article.", flash[:notice]
