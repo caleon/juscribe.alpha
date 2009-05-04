@@ -1,0 +1,8 @@
+Clipping will this <%= @widgetable.class.class_name.downcase %> will allow you to place it on your pages.
+<br /><br />
+Are you sure you want to procced?
+<br /><br />
+<% remote_form_for :clip, @clip, :url => clips_path_from_widgetable(@widgetable), :html => { :method => :post } do |f| %>
+	<%= render :partial => 'form', :locals => { :f => f } %>
+	<%= submit_tag "Clip!" %>
+<% end %>

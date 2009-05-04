@@ -86,6 +86,16 @@
 	padding-left: 9px;
 }
 
+.sub.navigation li.navigationEl > a.clipLink img.shim {
+	width: 12px;
+	background-position: -23px 0;
+}
+
+.sub.navigation li.navigationEl.current > a.clipLink img.shim,
+.sub.navigation li.navigationEl > a.clipLink:hover img.shim {
+	background-position: -23px -10px;
+}
+
 .sub.navigation li.navigationEl > a.tagLink img.shim {
 	width: 10px;
 	background-position: -36px 0;

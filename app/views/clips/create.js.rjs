@@ -1,0 +1,4 @@
+page.call 'Modalbox.hide'
+page.replace "#{@widgetable.class.class_name.downcase}-clipLink", link_to(image_tag('shim.gif', :class => 'shim') + "Unclip", clip_path_for(@clip), :method => :delete, :class => 'un clipLink', :id => @widgetable.class.class_name.downcase + "-clipLink")
+page.replace_html 'flashNotice-inner', flash[:notice]
+page.show 'flashNotice'

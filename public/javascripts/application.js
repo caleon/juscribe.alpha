@@ -30,12 +30,25 @@ var ToggleInfoField = Behavior.create({
 	}
 });
 
+
+// The following can potentially be refactored, unless usage cases diverge too much.
 var ShowTaggingModalBox = Behavior.create({
 	onclick: function(e) {
 		Modalbox.show(this.element.href + '.js', {title: this.element.title, width: 600});
 		return false;
 	}
 });
+
+var ShowClippingModalBox = Behavior.create({
+	onclick: function(e) {
+		Modalbox.show(this.element.href + '.js', {title: this.element.title, width: 600});
+		return false;
+	}
+});
+
+var ShowUnclippingModalBox = Behavior.create({
+	
+})
 
 // Didn't work.
 var MakeRemoteForm = Behavior.create({

@@ -72,9 +72,9 @@ module ApplicationHelper
   def clip_subnavi_el(record)
     return nil unless logged_in? && record && !record.new_record? && record.accessible_by?(get_viewer)
     if clip = record.clip_for(get_viewer)
-      subnavi_el "Unclip", clip_path_for(clip), :method => :delete
+      subnavi_el image_tag('shim.gif', :class => 'shim') + "Unclip", clip_path_for(clip), :method => :delete, :class => 'un clipLink', :id => record.class.class_name.downcase + "-clipLink"
     else
-      subnavi_el "Clip", clip_path_from_widgetable(record, :prefix => :new)
+      subnavi_el image_tag('shim.gif', :class => 'shim') + "Clip", clip_path_from_widgetable(record, :prefix => :new), :class => 'clipLink', :id => record.class.class_name.downcase + "-clipLink"
     end
   end
   
