@@ -3,12 +3,12 @@
 	<%= content_tag :li, (link_to 'Publish', article_path_for(@article, :prefix => 'publish'), :method => :put) if !@article.published? && @article.editable_by?(get_viewer) %>
 	<% if article && !article.new_record? && article.published? %>
 		<% if @article.clip_for?(get_viewer) %>
-			<%= content_tag :li, (link_to 'Unclip', clip_path_for(@article.clip_for(get_viewer)), :method => :delete) %>
+			<%= content_tag :li, (link_to 'Unclip', clip_path_for(@article.clip_for(get_viewer), :title => 'Unclip'), :method => :delete) %>
 		<% else %>
-			<%= content_tag :li, (link_to 'Clip', clip_path_from_widgetable(@article, :prefix => 'new')) %>
+			<%= content_tag :li, (link_to 'Clip', clip_path_from_widgetable(@article, :prefix => 'new'), :title => 'Clip') %>
 		<% end %>
-		<%= content_tag :li, (link_to 'Respond', article_path_from_blog(get_viewer.default_blog, :prefix => 'new', :params => { :re => @article.id })) %>
-		<%= content_tag :li, (link_to 'Tag', tag_path_from_taggable(article, :prefix => 'new'), :class => 'tagLink') %>
+		<%= content_tag :li, (link_to 'Respond', article_path_from_blog(get_viewer.default_blog, :prefix => 'new', :params => { :re => @article.id }), :title => 'Respond') %>
+		<%= content_tag :li, (link_to 'Tag', tag_path_from_taggable(article, :prefix => 'new'), :class => 'tagLink', :title => 'Tag') %>
 	<% end %>
 
 <% end if logged_in? %>
