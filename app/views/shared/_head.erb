@@ -2,6 +2,7 @@
 	<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
 	<meta http-equiv="Content-Language" content="en-us" />
 	<title><%= APP[:name] %>: <%= @page_title || (main_object ? main_object.to_s : 'Welcome') %></title>
+	<link rel="icon" href="/favicon.ico" type="image/x-icon" />
 	<%= meta_tags %>
 	<%= auto_discovery_link_tag(:rss, { :format => :rss }) if action_accepts?(:rss) %>
 	<%= link_tags %>	
