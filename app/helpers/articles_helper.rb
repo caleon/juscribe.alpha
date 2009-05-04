@@ -35,9 +35,10 @@ module ArticlesHelper
     instance_eval %{ #{opts[:prefix] ? "#{opts[:prefix]}_" : ''}#{object.path_name_prefix}_latest_articles_url(object.to_path(true)) }
   end
   
-  # FIXME: If the article record no longer exists, this will error out.
   def articles_history(limit=5)
     Article.find(session[:articles_history] ||= []).compact.sort_by {|art| session[:articles_history].index(art.id) }
+  rescue
+    session[:articles_history] = []
   end
   
   def digg_button(javascript=false)

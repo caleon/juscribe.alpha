@@ -18,7 +18,7 @@ development:
   adapter: mysql
   encoding: utf8
   collation: utf8_general_ci
-  database: colinsite_development
+  database: colinsite_development # colinsite2_development was used for korean testing
   username: root
   password:
   socket: /tmp/mysql.sock
