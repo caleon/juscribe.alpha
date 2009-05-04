@@ -295,6 +295,10 @@ p.spaceMessaging {
 	background-color: #EFFF72;
 }
 
+.flashBox .recordName {
+	font-weight: bold;
+}
+
 #footer {
 	min-height: 80px;
 	background: url(/images/logo-symbol-grey.png) no-repeat center center;	
