@@ -22,7 +22,7 @@ class ClipsControllerTest < ActionController::TestCase
   end
   
   def test_index_with_diff_user_but_private
-    users(:colin).rule.toggle_privacy!
+    users(:colin).create_rule.toggle_privacy!
     assert users(:colin).private?
     assert !users(:colin).accessible_by?(users(:nana))
     get :index, users(:colin).to_path(true), as(:nana)
@@ -31,7 +31,7 @@ class ClipsControllerTest < ActionController::TestCase
   end
   
   def test_index_with_no_user_but_private
-    users(:colin).rule.toggle_privacy!
+    users(:colin).create_rule.toggle_privacy!
     assert users(:colin).private?
     get :index, users(:colin).to_path(true)
     assert_redirected_to login_url
@@ -57,7 +57,7 @@ class ClipsControllerTest < ActionController::TestCase
   end
   
   def test_show_without_login_but_private
-    users(:colin).rule.toggle_privacy!
+    users(:colin).create_rule.toggle_privacy!
     assert users(:colin).private?
     get :show, widgets(:colin_clip).to_path
     assert_redirected_to login_url
@@ -65,7 +65,7 @@ class ClipsControllerTest < ActionController::TestCase
   end
   
   def test_show_with_diff_login_but_private
-    users(:colin).rule.toggle_privacy!
+    users(:colin).create_rule.toggle_privacy!
     assert users(:colin).private?
     get :show, widgets(:colin_clip).to_path, as(:keira)
     assert_redirected_to user_url(users(:keira))
@@ -99,7 +99,7 @@ class ClipsControllerTest < ActionController::TestCase
   end
   
   def test_new_with_diff_user_but_private
-    users(:colin).rule.toggle_privacy!
+    users(:colin).create_rule.toggle_privacy!
     assert users(:colin).private?
     assert !users(:colin).accessible_by?(users(:nana))
     get :new, users(:colin).to_path(true), as(:nana)
@@ -108,7 +108,7 @@ class ClipsControllerTest < ActionController::TestCase
   end
   
   def test_new_with_same_user_but_private
-    users(:colin).rule.toggle_privacy!
+    users(:colin).create_rule.toggle_privacy!
     assert users(:colin).private?
     assert users(:colin).accessible_by?(users(:colin))
     get :new, users(:colin).to_path(true), as(:colin)
@@ -141,7 +141,7 @@ class ClipsControllerTest < ActionController::TestCase
   end
   
   def test_create_with_diff_user_but_private
-    users(:keira).rule.toggle_privacy!
+    users(:keira).create_rule.toggle_privacy!
     assert users(:keira).private?
     assert !users(:keira).accessible_by?(users(:nana))
     post :create, users(:keira).to_path(true).merge(:clip => { :name => 'blahwidget' }), as(:nana)
@@ -150,7 +150,7 @@ class ClipsControllerTest < ActionController::TestCase
   end
   
   def test_create_with_same_user_but_private
-    users(:keira).rule.toggle_privacy!
+    users(:keira).create_rule.toggle_privacy!
     assert users(:keira).private?
     assert users(:keira).accessible_by?(users(:keira))
     post :create, users(:keira).to_path(true).merge(:clip => { :name => 'blahwidget' }), as(:keira)
@@ -223,7 +223,7 @@ class ClipsControllerTest < ActionController::TestCase
     assert widgets(:article_clip).accessible_by?(users(:nana))
     assert widgets(:article_clip).accessible_by?(users(:colin))
     assert articles(:blog).public?
-    articles(:blog).rule.toggle_privacy!
+    articles(:blog).create_rule.toggle_privacy!
     assert articles(:blog).private?
     assert widgets(:article_clip).reload.accessible_by?(users(:colin))
     assert !widgets(:article_clip).reload.accessible_by?(users(:nana)), widgets(:article_clip).inspect

@@ -33,14 +33,14 @@ class ThoughtletsControllerTest < ActionController::TestCase
   end
   
   def test_show_without_login_but_private
-    thoughtlets(:happenings).rule.toggle_privacy!
+    thoughtlets(:happenings).create_rule.toggle_privacy!
     get :show, thoughtlets(:happenings).to_path
     assert_redirected_to login_url
     assert_equal "You are not authorized for that action.", flash[:warning]
   end
   
   def test_show_as_unauthorized
-    thoughtlets(:happenings).rule.toggle_privacy!
+    thoughtlets(:happenings).create_rule.toggle_privacy!
     get :show, thoughtlets(:happenings).to_path, as(:nana)
     assert_redirected_to user_url(users(:nana))
     assert_equal "You are not authorized for that action.", flash[:warning]

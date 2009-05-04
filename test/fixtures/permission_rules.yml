@@ -6,3 +6,7 @@ blog:
   name:
   description:
   user: colin
+public_rule:
+  name: Public
+  user: colin
+  description: Anyone can access

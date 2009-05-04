@@ -9,7 +9,17 @@ class PermissionRule < ActiveRecord::Base
   serialize :options
   before_save :check_integrity
   
-  has_many :permissions
+  #has_many :permissions
+  has_many :users
+  has_many :blogs
+  has_many :articles
+  has_many :comments
+  has_many :pictures
+  has_many :groups
+  has_many :galleries
+  has_many :projects
+  has_many :events
+
   belongs_to :user
   
   
@@ -32,6 +42,7 @@ class PermissionRule < ActiveRecord::Base
   def protected?; !self.private? && (!self.denied[:user].empty? || !self.denied[:group].empty?); end
   
   def toggle_privacy!
+    raise "Cannot modify public_rule!" if id == DB[:public_rule]
     self.toggle!(:private)
   end
   
@@ -76,6 +87,7 @@ class PermissionRule < ActiveRecord::Base
   def options; DEFAULTS[:options].merge(self[:options] || {}); end
   
   def set_option!(key, val)
+    raise "Cannot modify public_rule!" if id == DB[:public_rule]
     self.options = self.options.merge(key => val)
     self.save!
   end
@@ -85,6 +97,7 @@ class PermissionRule < ActiveRecord::Base
   end
   
   def reset_options!
+    raise "Cannot modify public_rule!" if id == DB[:public_rule]
     self.options = DEFAULTS[:options]
     self.save!
   end
@@ -109,7 +122,7 @@ class PermissionRule < ActiveRecord::Base
       
   def apply_to!(permissible)
     raise ArgumentError, 'Target not a permissible type' unless permissible.respond_to?(:rule)
-    permissible.rule = self
+    permissible.update_attribute(:permission_rule_id, id)
   end
   
   def duplicate(attrs={})
@@ -118,12 +131,12 @@ class PermissionRule < ActiveRecord::Base
     PermissionRule.create(attrs)
   end
   
-  def reassign_all_to!(rule, opts={})
-    Permission.update_all("permission_rule_id = #{rule.id}", ["permission_rule_id = ?", self.id])
-    self.reload
-    self.destroy if opts[:delete]
-    rule.reload
-  end
+  #def reassign_all_to!(rule, opts={})
+  #  Permission.update_all("permission_rule_id = #{rule.id}", ["permission_rule_id = ?", self.id])
+  #  self.reload
+  #  self.destroy if opts[:delete]
+  #  rule.reload
+  #end
   
   private  
   def check_integrity
@@ -133,6 +146,8 @@ class PermissionRule < ActiveRecord::Base
   def add_rule(act, args); rule_helper(act, args, :|); end
   def remove_rule(act, args); rule_helper(act, args, :-); end
   def rule_helper(act, args, proc)
+    raise "Cannot modify public_rule!" if id == DB[:public_rule]
+    
     raise ArgumentError, 'Need to specify permittable type' unless VALID_TYPES.include?(args.first)
     kind, hash = args.shift, self.send(PASTS[act]) # kind is :user, hash is formatted
     self[PASTS[act]] = hash.merge(kind => hash[kind].send(proc, args.map(&:to_id))) # NOTE: to_id is used HERE!

@@ -10,6 +10,7 @@ staging:
 test:
   :wheel_id: 690249644
   :garbage_id: 690249644
+  :public_rule: 491014080
 
 production:
   :wheel_id: 1

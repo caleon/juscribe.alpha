@@ -16,7 +16,7 @@ class EventsController < ApplicationController
   end
   
   def show
-    return unless setup(:permission)
+    return unless setup(:permission_rule)
     @page_title = @event.display_name
     respond_to do |format|
       format.html { trender }
@@ -58,7 +58,7 @@ class EventsController < ApplicationController
   end
   
   def edit
-    return unless setup(:permission) && authorize(@event, :editable => true)
+    return unless setup(:permission_rule) && authorize(@event, :editable => true)
     @page_title = "#{@event.display_name} - Edit"
     respond_to do |format|
       format.html { trender }
@@ -67,7 +67,7 @@ class EventsController < ApplicationController
   end
   
   def update
-    return unless setup(:permission) && authorize(@event, :editable => true)
+    return unless setup(:permission_rule) && authorize(@event, :editable => true)
     @page_title = "#{@event.display_name} - Edit"
     if @event.update_attributes(params[:event])
       create_uploaded_picture_for(@event, :save => true) if picture_uploaded?
@@ -86,7 +86,7 @@ class EventsController < ApplicationController
   end
   
   def begin_event
-    return unless setup(:permission) && authorize(@event, :editable => true)
+    return unless setup(:permission_rule) && authorize(@event, :editable => true)
     @page_title = "#{@event.display_name} - Edit"
     if @event.begin!
       msg = "Your event #{flash_name_for(@event)} has officially begun!"
@@ -104,7 +104,7 @@ class EventsController < ApplicationController
   end
   
   def end_event
-    return unless setup(:permission) && authorize(@event, :editable => true)
+    return unless setup(:permission_rule) && authorize(@event, :editable => true)
     @page_title = "#{@event.display_name} - Edit"
     if @event.end!
       msg = "Your event #{flash_name_for(@event)} has officially ended!"
@@ -122,7 +122,7 @@ class EventsController < ApplicationController
   end
   
   def destroy
-    return unless setup(:permission) && authorize(@event, :editable => true)
+    return unless setup(:permission_rule) && authorize(@event, :editable => true)
     msg = "You have deleted #{flash_name_for(@event)}."
     respond_to do |format|
       format.html { flash[:notice] = msg; redirect_to :back }

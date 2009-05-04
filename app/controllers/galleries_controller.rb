@@ -16,7 +16,7 @@ class GalleriesController < ApplicationController
   end
   
   def show
-    return unless setup([:pictures, :permission])
+    return unless setup([:pictures, :permission_rule])
     find_opts = get_find_opts
     @pictures = @gallery.pictures.find(:all, find_opts)
     @page_title = @gallery.display_name
@@ -58,7 +58,7 @@ class GalleriesController < ApplicationController
   end
   
   def edit
-    return unless setup(:permission) && authorize(@gallery, :editable => true)
+    return unless setup(:permission_rule) && authorize(@gallery, :editable => true)
     @page_title = "#{@gallery.display_name} - Edit"
     respond_to do |format|
       format.html { trender }
@@ -67,7 +67,7 @@ class GalleriesController < ApplicationController
   end
   
   def update
-    return unless setup(:permission) && authorize(@gallery, :editable => true)
+    return unless setup(:permission_rule) && authorize(@gallery, :editable => true)
     @page_title = "#{@gallery.display_name} - Edit"
     if @gallery.update_attributes(params[:gallery])
       msg = "You have successfully updated #{flash_name_for(@gallery)}."
@@ -85,7 +85,7 @@ class GalleriesController < ApplicationController
   end
   
   def destroy
-    return unless setup(:permission) && authorize(@gallery, :editable => true)
+    return unless setup(:permission_rule) && authorize(@gallery, :editable => true)
     msg = "You have deleted #{flash_name_for(@gallery)}."
     respond_to do |format|
       format.html { flash[:notice] = msg; redirect_to :back }

@@ -18,7 +18,7 @@ class BlogsController < ApplicationController
   
   def latest_articles
     return unless get_bloggable
-    @blog = @bloggable.blogs.primary_find(params[:blog_id], :include => [:permission, :latest_articles])
+    @blog = @bloggable.blogs.primary_find(params[:blog_id], :include => [:permission_rule, :latest_articles])
     raise ActiveRecord::RecordNotFound if @blog.nil? || !authorize(@blog)
     @articles = @blog.latest_articles
     @page_title = "Latest Articles from #{@blog.display_name}"
@@ -46,7 +46,7 @@ class BlogsController < ApplicationController
   end
   
   def show
-    return unless setup([:permission, :primary_article]) && authorize(@blog)
+    return unless setup([:permission_rule, :primary_article]) && authorize(@blog)
     find_opts = get_find_opts
     @page_title = @blog.display_name
     respond_to do |format|
@@ -101,7 +101,7 @@ class BlogsController < ApplicationController
   end
   
   def edit
-    return unless setup(:permission) && authorize(@blog, :editable => true)
+    return unless setup(:permission_rule) && authorize(@blog, :editable => true)
     @page_title = "#{@blog.display_name} - Edit"
     respond_to do |format|
       format.html { trender }
@@ -110,7 +110,7 @@ class BlogsController < ApplicationController
   end
   
   def update
-    return unless setup(:permission) && authorize(@blog, :editable => true)
+    return unless setup(:permission_rule) && authorize(@blog, :editable => true)
     @page_title = "#{@blog.display_name} - Edit"
     if @blog.update_attributes(params[:blog])
       create_uploaded_picture_for(@blog, :save => true) if picture_uploaded?
@@ -129,7 +129,7 @@ class BlogsController < ApplicationController
   end
   
   def destroy
-    return unless setup(:permission) && authorize(@blog, :editable => true)
+    return unless setup(:permission_rule) && authorize(@blog, :editable => true)
     msg = "You have successfully deleted #{flash_name_for(@blog)}."
     @blog.nullify!(get_viewer)
     respond_to do |format|
@@ -156,7 +156,7 @@ class BlogsController < ApplicationController
       possible_bloggable_keys.include?(key)
     end
     bloggable_class = bloggable_id_key.gsub(/_id$/, '').classify.constantize
-    @bloggable = bloggable_class.primary_find(params[bloggable_id_key], :include => :permission)
+    @bloggable = bloggable_class.primary_find(params[bloggable_id_key], :include => :permission_rule)
     raise ActiveRecord::RecordNotFound if @bloggable.nil?
     @bloggable
   rescue ActiveRecord::RecordNotFound

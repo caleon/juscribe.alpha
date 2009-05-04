@@ -110,7 +110,7 @@ class CommentsController < ApplicationController
   end
   
   def destroy
-    return unless setup(:permission) && authorize(@comment, :editable => true)
+    return unless setup(:permission_rule) && authorize(@comment, :editable => true)
     @comment.nullify!(get_viewer)
     msg = "You have deleted a comment on #{flash_name_for(@commentable)}."
     respond_to do |format|
@@ -139,10 +139,10 @@ class CommentsController < ApplicationController
     begin
       klass_name = $1.size == 1 ? {'u' => 'users', 'g' => 'groups'}[$1] : $1
       klass, id = klass_name.singularize.classify.constantize, $2
-      @commentable = klass.primary_find(id, :include => :permission)
+      @commentable = klass.primary_find(id, :include => :permission_rule)
     rescue
       klass, id = Article, nil
-      @commentable = Article.primary_find(params, :for_association => true, :include => :permission)
+      @commentable = Article.primary_find(params, :for_association => true, :include => :permission_rule)
     end
     raise ActiveRecord::RecordNotFound if @commentable.nil?
     @commentable

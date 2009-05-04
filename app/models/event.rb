@@ -72,8 +72,8 @@ class Event < ActiveRecord::Base
   def share!(*users)
     opts = users.extract_options!
     users = users.shift if users.first.is_a?(Array)
-    rule = self.rule
-    rule.whitelist!(:user, *users) if self.user == opts[:from]
+    thisrule = self.rule.id == DB[:public_rule] ? self.create_rule : self.rule
+    thisrule.whitelist!(:user, *users) if self.user == opts[:from]
     # TODO: prevent multiple duplicate mailings
     # TODO: filter out users based on wants_notifications_for? in Notifier class.
     Notifier.deliver_event_share_notification(users, :from => opts[:from])

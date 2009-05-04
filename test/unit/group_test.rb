@@ -14,9 +14,9 @@ class GroupTest < ActiveSupport::TestCase
   end
   
   def test_accessible_by_check
+    rule = groups(:friends).create_rule
     assert groups(:friends).accessible_by?(users(:colin))
     assert groups(:friends).accessible_by?(users(:megan))
-    rule = groups(:friends).rule
     assert rule.public?
     rule.toggle_privacy!
     assert rule.private?

@@ -10,7 +10,7 @@ class UsersController < ApplicationController
       
 
   def show
-    return unless setup([ :permission, :placed_widgets, :comments ])
+    return unless setup([ :permission_rule, :placed_widgets, :comments ])
     #return unless setup([ { :permission => :permission_rule }, { :placed_widgets => :widgetable }, { :comments => :user } ])
     @page_title = "#{@user.display_name}"
     @widgets = @user.placed_widgets.sort_by(&:position).inject([]) {|arr, wid| arr[wid.position - 1] = wid; arr }
@@ -89,7 +89,7 @@ class UsersController < ApplicationController
   end
   
   def edit
-    return unless setup(:permission) && authorize(@user, :editable => true)
+    return unless setup(:permission_rule) && authorize(@user, :editable => true)
     @page_title = "#{@user.display_name} - Edit"
     respond_to do |format|
       format.html { trender }
@@ -117,7 +117,7 @@ class UsersController < ApplicationController
   end
   
   def edit_password
-    return unless setup(:permission) && authorize(@user, :editable => true)
+    return unless setup(:permission_rule) && authorize(@user, :editable => true)
     @page_title = "#{@user.display_name} - Edit Password"
     respond_to do |format|
       format.html { trender }
@@ -126,7 +126,7 @@ class UsersController < ApplicationController
   end
   
   def update_password
-    return unless setup(:permission) && authorize(@user, :editable => true)
+    return unless setup(:permission_rule) && authorize(@user, :editable => true)
     @page_title = "#{@user.display_name} - Edit Password"
     if @user.update_attributes(params[:user])
       msg = "You have successfully changed your password."
@@ -144,7 +144,7 @@ class UsersController < ApplicationController
   end
   
   def destroy
-    return unless setup(:permission) && authorize(@user, :editable => true)
+    return unless setup(:permission_rule) && authorize(@user, :editable => true)
     msg = "You have deleted #{flash_name_for(@user)}."
     @user.nullify!(get_viewer)
     respond_to do |format|
@@ -209,7 +209,7 @@ class UsersController < ApplicationController
   
   def friends
     return unless setup
-    @friends = @user.friends(:include => [ :primary_picture, :permission ])
+    @friends = @user.friends(:include => [ :primary_picture, :permission_rule ])
     @page_title = "#{@user.display_name}'s Friends"
     respond_to do |format|
       format.html { trender }

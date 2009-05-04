@@ -19,7 +19,7 @@ class GroupsControllerTest < ActionController::TestCase
   end
   
   def test_show_when_private
-    groups(:friends).rule.toggle_privacy!
+    groups(:friends).create_rule.toggle_privacy!
     assert groups(:friends).private?
     get :show, groups(:friends).to_path
     assert_redirected_to login_url
@@ -27,7 +27,7 @@ class GroupsControllerTest < ActionController::TestCase
   end
   
   def test_show_when_private_but_authorized
-    groups(:friends).rule.toggle_privacy!
+    groups(:friends).create_rule.toggle_privacy!
     assert groups(:friends).private?
     assert groups(:friends).accessible_by?(users(:colin))
     assert !groups(:friends).accessible_by?(users(:nana))
@@ -40,7 +40,7 @@ class GroupsControllerTest < ActionController::TestCase
   end
   
   def test_show_when_protected
-    groups(:friends).rule.deny!(:user, users(:nana))
+    groups(:friends).create_rule.deny!(:user, users(:nana))
     assert groups(:friends).protected?
     assert !groups(:friends).accessible_by?(users(:nana))
     get :show, groups(:friends).to_path, as(:nana)
@@ -103,7 +103,7 @@ class GroupsControllerTest < ActionController::TestCase
   
   def test_edit_with_wrong_user_whos_boss
     assert !groups(:company).editable_by?(users(:nana))
-    groups(:company).rule.add_boss!(:user, users(:nana))
+    groups(:company).create_rule.add_boss!(:user, users(:nana))
     assert groups(:company).editable_by?(users(:nana))
     get :edit, groups(:company).to_path, as(:nana)
     assert_response :success
@@ -132,7 +132,7 @@ class GroupsControllerTest < ActionController::TestCase
   
   def test_update_as_wrong_user_whos_boss
     assert !groups(:company).editable_by?(users(:nana))
-    groups(:company).rule.add_boss!(:user, users(:nana))
+    groups(:company).create_rule.add_boss!(:user, users(:nana))
     assert groups(:company).editable_by?(users(:nana))
     put :update, groups(:company).to_path.merge(:group => { :name => 'blah blah' }), as(:nana)
     assert_redirected_to group_url(groups(:company).reload)
@@ -160,7 +160,7 @@ class GroupsControllerTest < ActionController::TestCase
   
   def test_destroy_by_wrong_user_whos_boss
     @request.env["HTTP_REFERER"] = "http://www.cnn.com/"
-    groups(:company).rule.add_boss!(:user, users(:nana))
+    groups(:company).create_rule.add_boss!(:user, users(:nana))
     delete :destroy, groups(:company).to_path, as(:nana)
     assert_redirected_to 'http://www.cnn.com/'
     assert_equal "You have successfully disbanded #{flash_name_for(groups(:company))}.", flash[:notice]
@@ -242,7 +242,7 @@ class GroupsControllerTest < ActionController::TestCase
   end
   
   def test_kick_by_wrong_user_whos_boss
-    groups(:company).rule.add_boss!(:user, users(:nana))
+    groups(:company).create_rule.add_boss!(:user, users(:nana))
     groups(:company).join(users(:alessandra))
     put :kick, groups(:company).to_path.merge(:member => users(:alessandra).id), as(:nana)
     assert_redirected_to group_url(groups(:company))

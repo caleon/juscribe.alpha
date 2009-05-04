@@ -27,7 +27,7 @@ class CommentsControllerTest < ActionController::TestCase
   def test_index_with_diff_user_but_private
     articles(:promo).publish!
     assert articles(:promo).published?
-    articles(:promo).rule.toggle_privacy!
+    articles(:promo).create_rule.toggle_privacy!
     assert articles(:promo).private?
     assert !articles(:promo).accessible_by?(users(:nana))
     get :index, articles(:promo).to_path(true), as(:nana)
@@ -37,7 +37,7 @@ class CommentsControllerTest < ActionController::TestCase
   
   def test_index_with_no_user_but_private
     articles(:promo).publish!
-    articles(:promo).rule.toggle_privacy!
+    articles(:promo).create_rule.toggle_privacy!
     assert articles(:promo).private?
     get :index, articles(:promo).to_path(true)
     assert_redirected_to login_url
@@ -74,7 +74,7 @@ class CommentsControllerTest < ActionController::TestCase
   
   def test_show_without_login_but_private_commentable
     articles(:blog).publish!
-    articles(:blog).rule.toggle_privacy!
+    articles(:blog).create_rule.toggle_privacy!
     assert articles(:blog).reload.private?
     assert articles(:blog).accessible_by?(users(:colin))
     get :show, comments(:blog_comment).to_path
@@ -84,7 +84,7 @@ class CommentsControllerTest < ActionController::TestCase
   
   def test_show_with_diff_login_but_private_commentable
     articles(:blog).publish!
-    articles(:blog).rule.toggle_privacy!
+    articles(:blog).create_rule.toggle_privacy!
     assert articles(:blog).reload.private?
     get :show, comments(:blog_comment).to_path, as(:nana)
     assert_redirected_to user_url(users(:nana))
@@ -95,13 +95,16 @@ class CommentsControllerTest < ActionController::TestCase
     assert comments(:blog_comment).accessible_by?(users(:keira))
     assert !articles(:blog).accessible_by?(users(:keira))
     articles(:blog).publish!
+    new_rule = articles(:blog).create_rule(:user => articles(:blog).user)
+    assert_not_equal new_rule, PermissionRule.find(DB[:public_rule])
+    assert_equal new_rule, articles(:blog).rule
     articles(:blog).rule.toggle_privacy!
     assert !articles(:blog).reload.accessible_by?(users(:keira))
     assert_equal articles(:blog), comments(:blog_comment).commentable
     assert comments(:blog_comment).accessible_by?(users(:keira))
-    get :show, comments(:blog_comment).to_path, as(:keira)
+    get :show, comments(:blog_comment).reload.to_path, as(:keira)
     assert_response :success
-    assert_equal comments(:blog_comment), assigns(:comment)
+    assert_equal comments(:blog_comment), assigns(:comment), comments(:blog_comment).rule.inspect
   end
   
   def test_new # as owner of commentable
@@ -130,6 +133,7 @@ class CommentsControllerTest < ActionController::TestCase
   
   def test_new_without_login_when_not_allowed
     articles(:blog).publish!
+    articles(:blog).create_rule
     articles(:blog).disallow_anonymous_comments!
     assert articles(:blog).accessible_by?(nil)
     get :new, articles(:blog).to_path(true)
@@ -146,6 +150,7 @@ class CommentsControllerTest < ActionController::TestCase
   
   def test_new_with_non_user_when_not_allowed
     articles(:blog).publish!
+    articles(:blog).create_rule
     articles(:blog).disallow_comments!
     get :new, articles(:blog).to_path(true), as(123123123123)
     assert_redirected_to login_url
@@ -154,7 +159,7 @@ class CommentsControllerTest < ActionController::TestCase
   
   def test_new_with_diff_user_but_private
     articles(:blog).publish!
-    articles(:blog).rule.toggle_privacy!
+    articles(:blog).create_rule.toggle_privacy!
     assert articles(:blog).reload.private?
     assert !articles(:blog).accessible_by?(users(:nana))
     get :new, articles(:blog).to_path(true), as(:nana)
@@ -164,7 +169,7 @@ class CommentsControllerTest < ActionController::TestCase
   
   def test_new_as_owner_but_private
     articles(:blog).publish!
-    articles(:blog).rule.toggle_privacy!
+    articles(:blog).create_rule.toggle_privacy!
     assert articles(:blog).reload.private?
     assert_equal users(:colin), articles(:blog).user
     assert articles(:blog).accessible_by?(users(:colin))
@@ -201,6 +206,7 @@ class CommentsControllerTest < ActionController::TestCase
 
   def test_create_with_non_user_when_disallowed
     articles(:blog).publish!
+    articles(:blog).create_rule
     articles(:blog).disallow_anonymous_comments!
     assert articles(:blog).allows_comments?
     assert !articles(:blog).allows_anonymous_comments?
@@ -212,7 +218,7 @@ class CommentsControllerTest < ActionController::TestCase
   
   def test_create_with_diff_user_but_private
     articles(:blog).publish!
-    articles(:blog).rule.toggle_privacy!
+    articles(:blog).create_rule.toggle_privacy!
     assert articles(:blog).reload.private?
     assert !articles(:blog).accessible_by?(users(:nana))
     post :create, articles(:blog).to_path(true).merge(:comment => { :body => 'blah blah' }), as(:nana)
@@ -222,7 +228,7 @@ class CommentsControllerTest < ActionController::TestCase
   
   def test_create_with_same_user_but_private
     articles(:blog).publish!
-    articles(:blog).rule.toggle_privacy!
+    articles(:blog).create_rule.toggle_privacy!
     assert articles(:blog).reload.private?
     assert_equal users(:colin), articles(:blog).user
     assert articles(:blog).accessible_by?(users(:colin))

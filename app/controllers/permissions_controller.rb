@@ -18,7 +18,7 @@ class PermissionsController < ApplicationController
   end
   
   def show
-    return unless setup(:permissions)
+    return unless setup
     @page_title = @permission_rule.display_name
     respond_to do |format|
       format.html { trender }

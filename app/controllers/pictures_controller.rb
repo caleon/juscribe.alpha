@@ -16,7 +16,7 @@ class PicturesController < ApplicationController
   end
   
   def show
-    return unless setup([:permission, { :depictable => { :pictures => :thumb } }])
+    return unless setup([:permission_rule, { :depictable => { :pictures => :thumb } }])
     @page_title = @picture.display_name
     respond_to do |format|
       format.html { trender }
@@ -53,7 +53,7 @@ class PicturesController < ApplicationController
   end
   
   def edit
-    return unless setup(:permission) && authorize(@picture, :editable => true)
+    return unless setup(:permission_rule) && authorize(@picture, :editable => true)
     @use_kropper = true
     @page_title = "Edit #{@picture.display_name}"
     respond_to do |format|
@@ -63,7 +63,7 @@ class PicturesController < ApplicationController
   end
   
   def update
-    return unless setup(:permission) && authorize(@picture, :editable => true)
+    return unless setup(:permission_rule) && authorize(@picture, :editable => true)
     @page_title = "Edit #{@picture.display_name}"
     @use_kropper = true
     if params[:picture].delete(:crop_cancel) == "true"
@@ -96,7 +96,7 @@ class PicturesController < ApplicationController
   end
   
   def destroy
-    return unless setup(:permission) && authorize(@picture, :editable => true)
+    return unless setup(:permission_rule) && authorize(@picture, :editable => true)
     @picture.nullify!(get_viewer)
     msg = "You have deleted a picture on #{flash_name_for(@depictable)}."
     respond_to do |format|
@@ -124,10 +124,10 @@ class PicturesController < ApplicationController
     begin      
       klass_name = $1.size == 1 ? {'u' => 'users', 'g' => 'groups'}[$1] : $1
       klass, id = klass_name.singularize.classify.constantize, $2
-      @depictable = klass.primary_find(id, :include => :permission)
+      @depictable = klass.primary_find(id, :include => :permission_rule)
     rescue NameError
       klass, id = Article, nil
-      @depictable = Article.primary_find(params, :for_association => true, :include => :permission)
+      @depictable = Article.primary_find(params, :for_association => true, :include => :permission_rule)
     end
     raise ActiveRecord::RecordNotFound if @depictable.nil?
     setup_depictable_vars

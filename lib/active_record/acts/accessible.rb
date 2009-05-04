@@ -18,7 +18,8 @@ module ActiveRecord::Acts::Accessible #:nodoc:
     
       class_inheritable_reader :acts_as_accessible_options
     
-      has_one :permission, :as => :permissible, :include => :permission_rule, :dependent => :destroy
+      #has_one :permission, :as => :permissible, :include => :permission_rule, :dependent => :destroy
+      belongs_to :permission_rule
 
       include ActiveRecord::Acts::Accessible::InstanceMethods
       extend ActiveRecord::Acts::Accessible::SingletonMethods
@@ -53,7 +54,7 @@ module ActiveRecord::Acts::Accessible #:nodoc:
     end
   
     def rule
-      prule = self.permission.permission_rule
+      prule = self.permission_rule
       raise ActiveRecord::RecordNotFound if prule.nil?
       prule
     rescue NoMethodError, ActiveRecord::RecordNotFound
@@ -71,15 +72,8 @@ module ActiveRecord::Acts::Accessible #:nodoc:
     # over, as in the case with the public_rule. It'll be up to the controller to make sure this doesn't
     # happen.
     def rule=(permission_rule)
-      if p = Permission.find(:first, :conditions => ["permissible_type = ? AND permissible_id = ?", self.class.to_s, self.id])
-        p.update_attribute(:permission_rule_id, permission_rule.id)
-      else
-        p = Permission.create # FALSE, this will not save, since it it not valid.
-        self.permission = p # Upon save, this association should register in permissions table,
-      end
-      p.permission_rule_id = permission_rule.id
-      p.save unless self.new_record?
-      permission_rule
+      self.permission_rule = permission_rule
+      self.save unless self.new_record?
     end
   
     def accessible?; true; end

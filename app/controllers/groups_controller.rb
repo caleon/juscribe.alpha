@@ -15,7 +15,7 @@ class GroupsController < ApplicationController
   end
   
   def show
-    return unless setup([:permission, :primary_picture])
+    return unless setup([:permission_rule, :primary_picture])
     find_opts = get_find_opts(:order => 'memberships.id DESC')
     @users = @group.users.find(:all, find_opts)
     @page_title = @group.display_name
@@ -55,7 +55,7 @@ class GroupsController < ApplicationController
   end
   
   def edit
-    return unless setup(:permission) && authorize(@group, :editable => true)
+    return unless setup(:permission_rule) && authorize(@group, :editable => true)
     @page_title = "#{@group.display_name} - Edit"
     respond_to do |format|
       format.html { trender }
@@ -64,7 +64,7 @@ class GroupsController < ApplicationController
   end
   
   def update
-    return unless setup(:permission) && authorize(@group, :editable => true)
+    return unless setup(:permission_rule) && authorize(@group, :editable => true)
     @page_title = "#{@group.display_name} - Edit"
     if @group.update_attributes(params[:group])
       msg = "You have successfully updated #{flash_name_for(@group)}."
@@ -82,7 +82,7 @@ class GroupsController < ApplicationController
   end
   
   def destroy
-    return unless setup(:permission) && authorize(@group, :editable => true)
+    return unless setup(:permission_rule) && authorize(@group, :editable => true)
     msg = "You have successfully disbanded #{flash_name_for(@group)}."
     @group.disband!(get_viewer)
     respond_to do |format|
@@ -127,7 +127,7 @@ class GroupsController < ApplicationController
   end
   
   def kick
-    return unless setup(:permission) && authorize(@group, :editable => true)
+    return unless setup(:permission_rule) && authorize(@group, :editable => true)
     if @group.kick(user = User.find(params[:member]))
       msg = "You have successfully kicked #{flash_name_for(user)}."
       respond_to do |format|
@@ -146,7 +146,7 @@ class GroupsController < ApplicationController
   end
   
   def invite
-    return unless setup(:permission)
+    return unless setup(:permission_rule)
     if @group.invite({:to_user => (user = User.find(params[:member])), :from_user => get_viewer})
       msg = "You have invited #{flash_name_for(user)} to #{flash_name_for(@group)}."
       respond_to do |format|

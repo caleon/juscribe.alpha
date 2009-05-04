@@ -40,7 +40,7 @@ class EventsControllerTest < ActionController::TestCase
   end
   
   def test_show_without_login_on_protected
-    events(:birthday).rule.toggle_privacy!
+    events(:birthday).create_rule.toggle_privacy!
     get :show, events(:birthday).to_path, as(:keira)
     assert_redirected_to user_url(users(:keira))
     assert_equal "You are not authorized for that action.", flash[:warning]

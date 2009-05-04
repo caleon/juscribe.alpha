@@ -37,7 +37,7 @@ class PicturesControllerTest < ActionController::TestCase
   
   def test_index_on_protected_blog_as_non_user
     assert blogs(:company).public?
-    blogs(:company).rule.deny!(:user, users(:keira))
+    blogs(:company).create_rule.deny!(:user, users(:keira))
     assert blogs(:company).protected?
     get :index, blogs(:company).to_path(true)
     assert_redirected_to login_url
@@ -45,28 +45,28 @@ class PicturesControllerTest < ActionController::TestCase
   end
   
   def test_index_on_protected_blog_as_denied_user
-    blogs(:company).rule.deny!(:user, users(:keira))
+    blogs(:company).create_rule.deny!(:user, users(:keira))
     get :index, blogs(:company).to_path(true), as(:keira)
     assert_redirected_to user_url(users(:keira))
     assert_equal "You are not authorized for that action.", flash[:warning]
   end
   
   def test_index_on_private_blog_as_non_user
-    blogs(:company).rule.toggle_privacy!
+    blogs(:company).create_rule.toggle_privacy!
     get :index, blogs(:company).to_path(true)
     assert_redirected_to login_url
     assert_equal "You are not authorized for that action.", flash[:warning]
   end
   
   def test_index_on_private_blog_as_denied_user
-    blogs(:company).rule.toggle_privacy!
+    blogs(:company).create_rule.toggle_privacy!
     get :index, blogs(:company).to_path(true), as(:keira)
     assert_redirected_to user_url(users(:keira))
     assert_equal "You are not authorized for that action.", flash[:warning]
   end
   
   def test_index_on_private_blog_as_allowed_user
-    blogs(:company).rule.toggle_privacy!
+    blogs(:company).create_rule.toggle_privacy!
     blogs(:company).rule.allow!(:user, users(:nana))
     get :index, blogs(:company).to_path(true), as(:nana)
     assert_response :success
@@ -91,21 +91,21 @@ class PicturesControllerTest < ActionController::TestCase
   end
   
   def test_show_private_as_non_user
-    pictures(:gallery_item1).rule.toggle_privacy!
+    pictures(:gallery_item1).create_rule.toggle_privacy!
     get :show, pictures(:gallery_item1).to_path
     assert_redirected_to login_url
     assert_equal "You are not authorized for that action.", flash[:warning]
   end
   
   def test_show_private_as_denied_user
-    pictures(:gallery_item1).rule.toggle_privacy!
+    pictures(:gallery_item1).create_rule.toggle_privacy!
     get :show, pictures(:gallery_item1).to_path, as(:keira)
     assert_redirected_to user_url(users(:keira))
     assert_equal "You are not authorized for that action.", flash[:warning]
   end
   
   def test_show_private_as_owner
-    pictures(:gallery_item1).rule.toggle_privacy!
+    pictures(:gallery_item1).create_rule.toggle_privacy!
     get :show, pictures(:gallery_item1).to_path, as(:colin)
     assert_response :success
     assert_not_nil assigns(:picture)
@@ -129,14 +129,14 @@ class PicturesControllerTest < ActionController::TestCase
   end
   
   def test_new_on_private_depictable
-    users(:keira).rule.toggle_privacy!
+    users(:keira).create_rule.toggle_privacy!
     get :new, users(:keira).to_path(true), as(:colin)
     assert_redirected_to user_url(users(:colin))
     assert_equal "You are not authorized for that action.", flash[:warning]
   end
   
   def test_new_on_private_depictable_as_depictable
-    users(:keira).rule.toggle_privacy!
+    users(:keira).create_rule.toggle_privacy!
     get :new, users(:keira).to_path(true), as(:keira)
     assert_response :success
     assert_template 'new'
@@ -168,7 +168,7 @@ class PicturesControllerTest < ActionController::TestCase
   end
   
   def test_create_on_private_depictable_as_denied
-    users(:keira).rule.toggle_privacy!
+    users(:keira).create_rule.toggle_privacy!
     post :create, users(:keira).to_path(true).merge(:picture => { :uploaded_data => fixture_file_upload("keira.jpg", "image/jpg") }), as(:colin)
     assert_redirected_to user_url(users(:colin))
     assert_equal "You are not authorized for that action.", flash[:warning]
@@ -209,13 +209,13 @@ class PicturesControllerTest < ActionController::TestCase
   end
   
   def test_edit_with_depictable_editable_by_user
-    pictures(:for_blog).rule.toggle_privacy!
+    pictures(:for_blog).create_rule.toggle_privacy!
     assert !pictures(:for_blog).editable_by?(users(:keira))
     assert_equal articles(:blog), pictures(:for_blog).depictable
     articles(:blog).send(:make_permalink, :with_save => true)
     assert_not_nil pictures(:for_blog).depictable.pictures.find('for_blog'.hash.abs)
     assert !articles(:blog).editable_by?(users(:keira))
-    articles(:blog).rule.add_boss!(:user, users(:keira))
+    articles(:blog).create_rule.add_boss!(:user, users(:keira))
     assert articles(:blog).editable_by?(users(:keira))
     assert pictures(:for_blog).reload.editable_by?(users(:keira))
     assert pictures(:for_blog).accessible_by?(users(:keira))

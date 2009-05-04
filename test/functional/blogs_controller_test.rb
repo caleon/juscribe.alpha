@@ -40,7 +40,7 @@ class BlogsControllerTest < ActionController::TestCase
   end
   
   def test_show_without_login_on_protected
-    blogs(:first).rule.toggle_privacy!
+    blogs(:first).create_rule.toggle_privacy!
     get :show, blogs(:first).to_path, as(:keira)
     assert_redirected_to user_url(users(:keira))
     assert_equal "You are not authorized for that action.", flash[:warning]
@@ -68,7 +68,7 @@ class BlogsControllerTest < ActionController::TestCase
   end
   
   def test_new_with_no_user_but_private
-    groups(:company).rule.toggle_privacy!
+    groups(:company).create_rule.toggle_privacy!
     assert groups(:company).private?
     get :new, groups(:company).to_path(true)
     assert_redirected_to login_url
@@ -76,7 +76,7 @@ class BlogsControllerTest < ActionController::TestCase
   end
   
   def test_new_as_owner_but_private
-    groups(:company).rule.toggle_privacy!
+    groups(:company).create_rule.toggle_privacy!
     assert groups(:company).private?
     get :new, groups(:company).to_path(true), as(:colin)
     assert_response :success
@@ -167,7 +167,8 @@ class BlogsControllerTest < ActionController::TestCase
     assert groups(:company).accessible_by?(users(:keira))
     assert groups(:company).editable_by?(users(:keira))
     assert !blogs(:company).editable_by?(users(:keira))
-    blogs(:company).rule.add_boss!(:user, users(:keira))
+
+    blogs(:company).create_rule.add_boss!(:user, users(:keira))
     assert blogs(:company).editable_by?(users(:keira))
     get :edit, blogs(:company).to_path, as(:keira)
     assert_response :success
@@ -207,7 +208,7 @@ class BlogsControllerTest < ActionController::TestCase
   end
   
   def test_update_as_boss
-    blogs(:company).rule.add_boss!(:user, users(:keira))
+    blogs(:company).create_rule.add_boss!(:user, users(:keira))
     assert blogs(:company).editable_by?(users(:keira))
     put :update, blogs(:company).to_path.merge(:blog => { :description => 'laaaaaa' }), as(:keira)
     assert_redirected_to group_blog_url(blogs(:company).to_path)
@@ -215,7 +216,7 @@ class BlogsControllerTest < ActionController::TestCase
   end
   
   def test_update_as_boss_though_private
-    blogs(:company).rule.add_boss!(:user, users(:keira))
+    blogs(:company).create_rule.add_boss!(:user, users(:keira))
     blogs(:company).rule.toggle_privacy!
     assert blogs(:company).private?
     put :update, blogs(:company).to_path.merge(:blog => { :description => 'laaaaaa' }), as(:keira)

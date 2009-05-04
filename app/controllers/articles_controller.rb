@@ -50,7 +50,7 @@ class ArticlesController < ApplicationController
   end
   
   def show
-    return unless setup([:permission, { :pictures => :thumb }])
+    return unless setup([:permission_rule, { :pictures => :thumb }])
     if @article.draft?
       return unless authorize(@article, :editable => true)
     end
@@ -145,7 +145,7 @@ class ArticlesController < ApplicationController
   end
   
   def edit
-    return unless setup(:permission) && authorize(@article, :editable => true)
+    return unless setup(:permission_rule) && authorize(@article, :editable => true)
     @page_title = "#{@article.display_name} - Edit"
     @widget = @article.clip_for(get_viewer)
     respond_to do |format|
@@ -155,7 +155,7 @@ class ArticlesController < ApplicationController
   end
   
   def update
-    return unless setup(:permission) && authorize(@article, :editable => true)
+    return unless setup(:permission_rule) && authorize(@article, :editable => true)
     title = params[:article].delete(:title)
     @page_title = "#{@article.display_name} - Edit"
     if @article.update_attributes(params[:article])
@@ -182,7 +182,7 @@ class ArticlesController < ApplicationController
   end
   
   def publish
-    return unless setup(:permission)
+    return unless setup(:permission_rule)
     @article.publish!
     msg = "You have published #{flash_name_for(@article)}."
     respond_to do |format|
@@ -192,7 +192,7 @@ class ArticlesController < ApplicationController
   end
   
   def unpublish
-    return unless setup(:permission)
+    return unless setup(:permission_rule)
     @article.unpublish!
     msg = "You have unpublished #{flash_name_for(@article)}."
     respond_to do |format|

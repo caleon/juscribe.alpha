@@ -16,7 +16,7 @@ class ThoughtletsController < ApplicationController
   end
   
   def show
-    return unless setup(:permission)
+    return unless setup(:permission_rule)
     @page_title = @thoughtlet.display_name
     respond_to do |format|
       format.html { trender }
@@ -56,7 +56,7 @@ class ThoughtletsController < ApplicationController
   end
   
   def edit
-    return unless setup(:permission) && authorize(@thoughtlet, :editable => true)
+    return unless setup(:permission_rule) && authorize(@thoughtlet, :editable => true)
     @page_title = "#{@thoughtlet.display_name} - Edit"
     respond_to do |format|
       format.html { trender }
@@ -65,7 +65,7 @@ class ThoughtletsController < ApplicationController
   end
   
   def update
-    return unless setup(:permission) && authorize(@thoughtlet, :editable => true)
+    return unless setup(:permission_rule) && authorize(@thoughtlet, :editable => true)
     @page_title = "#{@thoughtlet.display_name} - Edit"
     if @thoughtlet.update_attributes(params[:thoughtlet])
       msg = "You have successfully updated #{flash_name_for(@thoughtlet)}."
@@ -83,7 +83,7 @@ class ThoughtletsController < ApplicationController
   end
   
   def destroy
-    return unless setup(:permission) && authorize(@thoughtlet, :editable => true)
+    return unless setup(:permission_rule) && authorize(@thoughtlet, :editable => true)
     msg = "You have deleted #{flash_name_for(@thoughtlet)}."
     respond_to do |format|
       format.html { flash[:notice] = msg; redirect_to :back }

@@ -112,10 +112,10 @@ class ClipsController < ApplicationController
     begin      
       klass_name = $1.size == 1 ? {'u' => 'users', 'g' => 'groups'}[$1] : $1
       klass, id = klass_name.singularize.classify.constantize, $2
-      @widgetable = klass.primary_find(id, :include => :permission)
+      @widgetable = klass.primary_find(id, :include => :permission_rule)
     rescue NameError
       klass, id = Article, nil
-      @widgetable = Article.primary_find(params, :for_association => true, :include => :permission)
+      @widgetable = Article.primary_find(params, :for_association => true, :include => :permission_rule)
     end
     raise ActiveRecord::RecordNotFound if @widgetable.nil?
     @widgetable

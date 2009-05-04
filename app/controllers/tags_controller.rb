@@ -93,10 +93,10 @@ class TagsController < ApplicationController
     else
       begin klass_name = $1.size == 1 ? {'u' => 'users', 'g' => 'groups'}[$1] : $1
         klass, id = klass_name.singularize.classify.constantize, $2
-        @taggable = klass.primary_find(id, :include => :permission)
+        @taggable = klass.primary_find(id, :include => :permission_rule)
       rescue
         klass, id = Article, nil
-        @taggable = Article.primary_find(params, :for_association => true, :include => :permission)
+        @taggable = Article.primary_find(params, :for_association => true, :include => :permission_rule)
       end
     end
     @taggable

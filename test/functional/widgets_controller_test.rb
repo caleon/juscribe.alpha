@@ -27,7 +27,7 @@ class WidgetsControllerTest < ActionController::TestCase
   end
   
   def test_index_with_diff_user_but_private
-    users(:colin).rule.toggle_privacy!
+    users(:colin).create_rule.toggle_privacy!
     assert users(:colin).private?
     assert !users(:colin).accessible_by?(users(:nana))
     get :index, users(:colin).to_path(true), as(:nana)
@@ -36,7 +36,7 @@ class WidgetsControllerTest < ActionController::TestCase
   end
     
   def test_index_with_no_user_but_private
-    users(:colin).rule.toggle_privacy!
+    users(:colin).create_rule.toggle_privacy!
     assert users(:colin).private?
     get :index, users(:colin).to_path(true)
     assert_redirected_to login_url
@@ -62,7 +62,7 @@ class WidgetsControllerTest < ActionController::TestCase
   end
   
   def test_show_without_login_but_private
-    users(:colin).rule.toggle_privacy!
+    users(:colin).create_rule.toggle_privacy!
     assert users(:colin).private?
     get :show, widgets(:colin_clip).to_path(:user)
     assert_redirected_to login_url
@@ -70,7 +70,7 @@ class WidgetsControllerTest < ActionController::TestCase
   end
   
   def test_show_with_diff_login_but_private
-    users(:colin).rule.toggle_privacy!
+    users(:colin).create_rule.toggle_privacy!
     assert users(:colin).private?
     get :show, widgets(:colin_clip).to_path(:user), as(:keira)
     assert_redirected_to user_url(users(:keira))
@@ -166,7 +166,7 @@ class WidgetsControllerTest < ActionController::TestCase
     assert widgets(:article_clip).accessible_by?(users(:nana))
     assert widgets(:article_clip).accessible_by?(users(:colin))
     assert articles(:blog).public?
-    articles(:blog).rule.toggle_privacy!
+    articles(:blog).create_rule.toggle_privacy!
     assert widgets(:article_clip).reload.accessible_by?(users(:colin))
     assert !widgets(:article_clip).reload.accessible_by?(users(:keira))
     

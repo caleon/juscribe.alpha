@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090501222946) do
+ActiveRecord::Schema.define(:version => 20090504230823) do
 
   create_table "articles", :force => true do |t|
     t.string   "title"
@@ -25,6 +25,7 @@ ActiveRecord::Schema.define(:version => 20090501222946) do
     t.datetime "imported_at"
     t.integer  "original_id"
     t.string   "lede_tag"
+    t.integer  "permission_rule_id", :default => 208
   end
 
   create_table "blogs", :force => true do |t|
@@ -39,6 +40,7 @@ ActiveRecord::Schema.define(:version => 20090501222946) do
     t.string   "short_name"
     t.string   "lede_tag"
     t.datetime "premium_since"
+    t.integer  "permission_rule_id", :default => 208
   end
 
   create_table "comments", :force => true do |t|
@@ -56,6 +58,7 @@ ActiveRecord::Schema.define(:version => 20090501222946) do
     t.integer  "position"
     t.integer  "replies_count",       :default => 0
     t.boolean  "wants_notifications"
+    t.integer  "permission_rule_id",  :default => 208
   end
 
   create_table "events", :force => true do |t|
@@ -67,6 +70,7 @@ ActiveRecord::Schema.define(:version => 20090501222946) do
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "permission_rule_id", :default => 208
   end
 
   create_table "galleries", :force => true do |t|
@@ -75,6 +79,7 @@ ActiveRecord::Schema.define(:version => 20090501222946) do
     t.text     "description"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "permission_rule_id", :default => 208
   end
 
   create_table "groups", :force => true do |t|
@@ -84,6 +89,7 @@ ActiveRecord::Schema.define(:version => 20090501222946) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "permalink"
+    t.integer  "permission_rule_id", :default => 208
   end
 
   create_table "items", :force => true do |t|
@@ -160,14 +166,6 @@ ActiveRecord::Schema.define(:version => 20090501222946) do
     t.text     "options"
   end
 
-  create_table "permissions", :force => true do |t|
-    t.string   "permissible_type"
-    t.integer  "permission_rule_id"
-    t.integer  "permissible_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "pictures", :force => true do |t|
     t.string   "name"
     t.text     "caption"
@@ -185,6 +183,7 @@ ActiveRecord::Schema.define(:version => 20090501222946) do
     t.integer  "height"
     t.string   "source"
     t.integer  "parent_id"
+    t.integer  "permission_rule_id", :default => 208
   end
 
   create_table "projects", :force => true do |t|
@@ -196,6 +195,7 @@ ActiveRecord::Schema.define(:version => 20090501222946) do
     t.datetime "updated_at"
     t.integer  "list_id"
     t.integer  "position"
+    t.integer  "permission_rule_id", :default => 208
   end
 
   create_table "songs", :force => true do |t|
@@ -210,6 +210,7 @@ ActiveRecord::Schema.define(:version => 20090501222946) do
     t.integer  "list_id"
     t.integer  "position"
     t.string   "permalink"
+    t.integer  "permission_rule_id", :default => 208
   end
 
   create_table "taggings", :force => true do |t|
@@ -235,6 +236,7 @@ ActiveRecord::Schema.define(:version => 20090501222946) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "event_id"
+    t.integer  "permission_rule_id", :default => 208
   end
 
   create_table "users", :force => true do |t|
@@ -253,12 +255,13 @@ ActiveRecord::Schema.define(:version => 20090501222946) do
     t.date     "birthdate"
     t.integer  "sex"
     t.string   "type"
-    t.boolean  "admin",           :default => false
+    t.boolean  "admin",              :default => false
     t.text     "about"
     t.text     "social_networks"
     t.string   "time_zone"
     t.text     "notifications"
     t.datetime "last_logged_at"
+    t.integer  "permission_rule_id", :default => 208
   end
 
   create_table "widgets", :force => true do |t|
@@ -270,6 +273,7 @@ ActiveRecord::Schema.define(:version => 20090501222946) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "name"
+    t.integer  "permission_rule_id", :default => 208
   end
 
 end
