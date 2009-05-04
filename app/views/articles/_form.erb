@@ -14,7 +14,7 @@
 <%= f.label :blog_id, "Blog"%>
 <%= f.select :blog_id, @author.all_blogs.map {|b| [ b.name, b[:id] ] } %>
 <br />
-<% unless @article.published? %>
+<% if !@article.published? && @article.blog.premium? %>
 	<%= f.label :published_at, 'Schedule publication for:' %>
 	<%= f.datetime_select :published_at, :start_year => Time.now.year, :include_blank => true %>
 	<br />

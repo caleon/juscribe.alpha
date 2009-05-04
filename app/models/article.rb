@@ -72,7 +72,7 @@ class Article < ActiveRecord::Base
   def author; self.blog.bloggable; end
   
   def imported?; self.imported_at?; end
-  def draft?; !self.published_at? && !self.published_date?; end
+  def draft?; !self.new_record? && !self.published_at? && !self.published_date?; end
   def published?; self.published_at? && self.published_date?; end
   def publish!
     unless self.published?
