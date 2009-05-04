@@ -199,8 +199,9 @@ CommentEngine.prototype = {
 		var commentId = node.id.split('-').last();
 		var threader = document.createElement('a');
 		threader.href = 'javascript:void(0)';
-		threader.className = 'commentAction';
-		threader.innerHTML = 'TH' + commentId;
+		threader.className = 'commentAction threadAction';
+		threader.title = 'Show comment #' + commentId + "'s thread";
+		threader.innerHTML = '<img src="/images/shim.gif" class="shim" />';
 		threader.onclick = function(){ commentEngine.toggleThread(commentId); return false; };
 		var listEl = document.createElement('li');
 		listEl.appendChild(threader);
@@ -211,8 +212,9 @@ CommentEngine.prototype = {
 			var commentId = node.id.split('-').last();
 			var responder = document.createElement('a');
 			responder.href = 'javascript:void(0)';
-			responder.className = 'commentAction';
-			responder.innerHTML = 'RE' + commentId;
+			responder.className = 'commentAction replyAction';
+			responder.title = 'Reply to comment #' + commentId;
+			responder.innerHTML = '<img src="/images/shim.gif" class="shim" />';
 			responder.onclick = function(){
 				var origVal = $('comment_references').value;
 				if(!origVal.match(new RegExp('@' + commentId + '\\W')) &&

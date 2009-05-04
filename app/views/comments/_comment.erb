@@ -12,7 +12,7 @@
 		<ul class="commentActions">
 		<% if comment.commentable.editable_by?(get_viewer) %>
 			<li>
-				<%= link_to 'X', comment_path_for(comment), :method => :delete, :class => 'commentAction' %>
+				<%= link_to 'X', comment_path_for(comment), :method => :delete, :class => 'commentAction', :confirm => 'Are you sure you want to delete this comment?' %>
 			</li>
 		<% end %>
 		</ul>
