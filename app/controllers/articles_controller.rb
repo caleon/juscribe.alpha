@@ -21,7 +21,7 @@ class ArticlesController < ApplicationController
         @articles = @blog.articles.find(:all, find_opts)
       end      
     end
-    @page_title = "Articles from #{flash_name_for(@author)}'s blog: #{flash_name_for(@blog)}"
+    @page_title = "Articles from #{@author.display_name}'s blog: #{@blog.display_name}"
     respond_to do |format|
       format.html { trender }
       format.js

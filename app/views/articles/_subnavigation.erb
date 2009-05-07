@@ -5,7 +5,7 @@
 <%= bread_el 'Blogs', blogs_path_from_bloggable(author) %>
 <%= bread_el truncate(blog.display_name, :length => 20), blog_path_for(blog), :current => controller.controller_name == 'articles' && %w(new import).include?(controller.action_name), :rel => 'home directory' %>
 <%= bread_el 'Drafts', drafts_path_from_blog(blog), :current => controller.controller_name == 'articles' && controller.action_name == 'index' if @drafts || article && article.draft? %>
-<%= bread_el truncate(article.title, :length => 20), article_path_for(article), :title => article.title :current => controller.controller_name == 'articles' if article && !article.new_record? %>
+<%= bread_el truncate(article.title, :length => 20), article_path_for(article), :title => article.title, :current => controller.controller_name == 'articles' if article && !article.new_record? %>
 
 <% if controller.controller_name == 'articles' %>
 <%= subnavi_el "Edit", blog_path_for(blog, :prefix => :edit) if %w(new import).include?(controller.action_name) && blog.editable_by?(get_viewer) %>
