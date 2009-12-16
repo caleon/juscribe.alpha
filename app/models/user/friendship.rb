@@ -18,7 +18,8 @@ module User::Friendship
   def friend_ids; self[:friend_ids].to_a; end
   
   def friends(opts={})
-    @friends ||= User.find(self.friend_ids, opts).select {|frnd| self.friends_with?(frnd)} # do opts.delete(:limit) and raise it by a
+    @friends ||= User.find(self.friend_ids, opts).select {|frnd| self.friends_with?(frnd)}
+                          # do opts.delete(:limit) and raise it by a
                           # buffer for the SQL, then release the number of
                           # results desired by subselecting the array...
   end

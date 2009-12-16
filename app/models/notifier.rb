@@ -1,4 +1,6 @@
 class Notifier < ActionMailer::Base
+  layout 'email'
+  
   helper :comments
   # TODO: setup Postman intermediary that decides whether to use Notifier or
   # in-system Message model.
@@ -6,6 +8,7 @@ class Notifier < ActionMailer::Base
   def setup_email
     @from = "#{APP[:name].capitalize}<no-reply@juscribe.com>"
     @sent_on = Time.now
+    content_type 'text/html' if RAILS_ENV == 'development'
   end
   
   def multipart_alternative(sent_at = Time.now)
